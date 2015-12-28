@@ -311,30 +311,33 @@
 
 							<div class="row">
 								<div class="col-sm-4">
-									<div class="form-group" id="id_fabricante">
-										<label class="control-label"><i class="fa fa-puzzle-piece"></i> Fabricante</label>
-										<select  ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" class="form-control input-sm" ng-model="produto.id_fabricante">
-												<option ng-repeat="item in fabricantes" value="{{ item.id }}">{{ item.nome_fabricante }}</option>
-										</select>
+									<div class="form-group" id="peso">
+											<label class="ccontrol-label">Fabricante</label> <i ng-click="modal('show','modal-novo-fabricante')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<select chosen ng-change="ClearChosenSelect('fabricante')"
+										    option="fabricantes"
+										    ng-model="produto.id_fabricante"
+										    ng-options="fabricante.id as fabricante.nome_fabricante for fabricante in fabricantes">
+											</select>
 									</div>
 								</div>
-
 								<div class="col-sm-4">
-									<div class="form-group" id="id_importador">
-										<label class="control-label"><i class="fa fa-plane"></i> Importador</label>
-										<select ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" class="form-control input-sm" ng-model="produto.id_importador">
-											<option ng-repeat="item in importadores" value="{{ item.id }}">{{ item.nome_importador }}</option>
-										</select>
-										</select>
+									<div class="form-group" id="peso">
+											<label class="ccontrol-label">Importador</label> <i ng-click="modal('show','modal-novo-importador')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<select chosen ng-change="ClearChosenSelect('importador')"
+										    option="importadores"
+										    ng-model="produto.id_importador"
+										    ng-options="importador.id as importador.nome_importador for importador in importadores">
+											</select>
 									</div>
 								</div>
-
 								<div class="col-sm-4">
-									<div class="form-group" id="id_categoria">
-										<label class="control-label"><i class="fa fa-tags"></i> Categoria</label>
-										<select ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" class="form-control input-sm" ng-model="produto.id_categoria" ng-enter="salvar()">
-											<option ng-repeat="item in categorias" value="{{ item.id }}">{{ item.descricao_categoria }}</option>
-										</select>
+									<div class="form-group" id="peso">
+											<label class="ccontrol-label">Categoria</label> <i ng-click="modal('show','modal-nova-categoria')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<select chosen ng-change="ClearChosenSelect('categoria')"
+										    option="categorias"
+										    ng-model="produto.id_categoria"
+										    ng-options="categoria.id as categoria.descricao_categoria for categoria in categorias">
+											</select>
 									</div>
 								</div>
 							</div>
@@ -421,7 +424,7 @@
 										<table class="table table-bordered table-condensed table-striped table-hover">
 											<thead>
 												<tr>
-													<td><i class="fa fa-truck"></i> Fornecedores</td>
+													<td><i class="fa fa-truck"></i> Fornecedores <!--<i ng-click="modal('show','modal-novo-fornecedor')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>--></td>
 													<td width="60" align="center">
 														<button ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-click="showFornecedores()"  class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"></i></button>
 													</td>
@@ -556,7 +559,7 @@
 								</div>
 							</div>
 
-							<div class="panel panel-default" ng-show="editing && userLogged.id_perfil==1">
+							<div class="panel panel-default" ng-show="userLogged.id_perfil==1">
 								<div class="panel-heading"><i class="fa fa-list-ol"></i> Estoque</div>
 								<div class="panel-body painel-estoque">
 									<div class="row">
@@ -1130,7 +1133,43 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+		<!-- /Modal novo importador-->
+		<div class="modal fade" id="modal-novo-importador" style="display:none">
+  			<div class="modal-dialog modal-sm">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Novo Importador</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="row">
+						    		<div class="col-sm-12" id="nome_importador">
+						    			<label class="control-label">importador:</label>
+						    			<div class="form-group ">
+						    					<input ng-model="importador.nome_importador" type="text"  class="form-control input-sm" >
+						    			</div>
+						    		</div>
+						    	</div>
+							</div>
+						</div>
+				    </div>
+				    <div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
+				    		id="btn-salvar-importador" ng-click="salvarImportador()">
+				    		<i class="fa fa-save"></i> Salvar
+				    	</button>
 
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-importador')" id="btn-aplicar-sangria">
+				    		<i class="fa fa-times-circle"></i> Cancelar
+				    	</button>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 		<!-- /Modal novo tamanho-->
 		<div class="modal fade" id="modal-novo-tamanho" style="display:none">
   			<div class="modal-dialog modal-sm">
@@ -1161,6 +1200,43 @@
 
 				    	<button type="button" data-loading-text=" Aguarde..."
 				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-tamanho')" id="btn-aplicar-sangria">
+				    		<i class="fa fa-times-circle"></i> Cancelar
+				    	</button>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		<!-- /Modal novo fabricante-->
+		<div class="modal fade" id="modal-novo-fabricante" style="display:none">
+  			<div class="modal-dialog modal-sm">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Novo Fabricante</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="row">
+						    		<div class="col-sm-12" id="nome_fabricante">
+						    			<label class="control-label">Fabricante:</label>
+						    			<div class="form-group ">
+						    					<input ng-model="fabricante.nome_fabricante" type="text"  class="form-control input-sm" >
+						    			</div>
+						    		</div>
+						    	</div>
+							</div>
+						</div>
+				    </div>
+				    <div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
+				    		id="btn-salvar-fabricante" ng-click="salvarFabricante()">
+				    		<i class="fa fa-save"></i> Salvar
+				    	</button>
+
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-fabricante')" id="btn-aplicar-sangria">
 				    		<i class="fa fa-times-circle"></i> Cancelar
 				    	</button>
 				    </div>
@@ -1199,6 +1275,43 @@
 
 				    	<button type="button" data-loading-text=" Aguarde..."
 				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-nova-cor')" id="btn-aplicar-sangria">
+				    		<i class="fa fa-times-circle"></i> Cancelar
+				    	</button>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		<!-- /Modal novo categoria-->
+		<div class="modal fade" id="modal-nova-categoria" style="display:none">
+  			<div class="modal-dialog modal-sm">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Nova Categoria</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="row">
+						    		<div class="col-sm-12" id="descricao_categoria">
+						    			<label class="control-label">Categoria:</label>
+						    			<div class="form-group ">
+						    					<input ng-model="categoria.descricao_categoria" type="text"  class="form-control input-sm" >
+						    			</div>
+						    		</div>
+						    	</div>
+							</div>
+						</div>
+				    </div>
+				    <div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
+				    		id="btn-salvar-categoria" ng-click="salvarCategoria()">
+				    		<i class="fa fa-save"></i> Salvar
+				    	</button>
+
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-categoria')" id="btn-aplicar-sangria">
 				    		<i class="fa fa-times-circle"></i> Cancelar
 				    	</button>
 				    </div>
