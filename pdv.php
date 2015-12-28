@@ -184,7 +184,7 @@
 			</div><!-- /sidebar-inner -->
 		</aside>
 
-		<div id="main-container">
+		<div id="main-container" style="min-height: 0px !important;">
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
@@ -317,20 +317,24 @@
 				</div>
 			</div>
 
-			<div class="padding-md" id="content-pdv" ng-if="caixa_aberto && abrir_pdv == false && caixa_configurado == true">
-
-				<div class="panel panel-primary">
+			<div class="padding-md" id="content-pdv" ng-if="caixa_aberto && abrir_pdv == false && caixa_configurado == true" style="padding-bottom: 0px !important;">
+				<div class="panel panel-primary" style="margin-bottom: 0px !important;">
 					<div class="panel-heading">
 						<i class="fa fa-desktop"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
 						<div class="btn-group"  style="margin-left: 40px;" >
-							<i class="fa fa-user"></i> Vendedor - {{ vendedor.nome_vendedor }} <i style="cursor:pointer" ng-click="selVendedor()" class="fa fa-retweet fa-lg"></i>
+							<i class="fa fa-user"></i> Vendedor - {{ vendedor.nome_vendedor }}
 						</div>
 						<div class="btn-group pull-right">
+							<a href="#" class="btn btn-xs btn-default" ng-click="selVendedor()">
+								<i class="fa fa-retweet fa-lg"></i> Trocar Vendedor
+							</a>
+							<a href="#" class="btn btn-xs btn-default" ng-click="resizeScreen()">
+								<i class="fa fa-arrows-alt"></i> Tela Inteira
+							</a>
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-chevron-down"></i>
+								<i class="fa fa-chevron-down"></i> Mais Opções
 							</button>
 							<ul class="dropdown-menu slidedown">
-								<li><a href="#" ng-click="resizeScreen()"><i class="fa fa-arrows-alt"></i> Tela Inteira</a></li>
 								<li><a href="#" ng-click="modalTraferencia()"><i class="fa fa-external-link"></i> Transferência (deposito)</a></li>
 								<li ng-if="venda_aberta == false && finalizarOrcamento == false "><a href="#" ng-click="pagamentoFulso()"><i class="fa fa-money"></i> Pagamento</a></li>
 								<li ><a href="#" ng-click="showCadastroRapido()"><i class="fa fa-users"></i> Novo Cliente</a></li>
@@ -846,26 +850,26 @@
 										</div>
 									</div>
 									<br/>
-									<div class="row" style="min-height:200px">
+									<div class="row">
 										<div class="col-sm-12">
-											<div class="form-group">
+											<div class="form-group" style="overflow-y: scroll; min-height: 200px; max-height: 200px;">
 												<table id="tbl_carrinho" class="table table-condensed table-bordered">
 													<tr ng-hide="carrinho.length > 0" class="hidden-print">
 														<td colspan="4">
-															Não há Produtos para a venda
+															Carrinho de compras vazio
 														</td>
 													</tr>
 													<thead ng-show="carrinho.length  > 0">
 														<tr>
 															<th>Produto</th>
-															<th>Fabricante</th>
+															<!-- <th>Fabricante</th>
 															<th>Tamanho</th>
-															<th>Sabor/Cor</th>
+															<th>Sabor/Cor</th> -->
+															<th class="text-center" style="width: 80px;" >Qtd.</th>
 															<th class="text-center" style="width: 100px;" ng-if="show_vlr_real" >RV</th>
-															<th class="text-center" style="width: 80px;" >Qtd</th>
-															<th class="text-center" style="width: 100px;">Vlr. uni.</th>
+															<th class="text-center" style="width: 100px;">Vlr. Unit.</th>
 															<th class="text-center" style="width: 230px;" colspan="3">Desconto</th>
-															<th class="text-center" style="width: 100px;">Vlr ven.</th>
+															<th class="text-center" style="width: 100px;">Vlr. c/ Desc.</th>
 															<th class="text-center" style="width: 100px;">Subtotal</th>
 															<th class="text-center" style="width: 20px;" class="hidden-print"></th>
 														</tr>
@@ -873,14 +877,13 @@
 													<tbody>
 														<tr ng-repeat="item in carrinho" id="{{ item.id_produto }}" ng-class="{'error-estoque': verificaOutEstoque(item) }">
 															<td>{{ item.nome_produto }}</td>
-															<td>{{ item.nome_fabricante }}</td>
+															<!-- <td>{{ item.nome_fabricante }}</td>
 															<td>{{ item.peso }}</td>
-															<td>{{ item.sabor }}</td>
-															<td class="text-center" ng-if="show_vlr_real" > R${{ item.vlr_custo_real | numberFormat : 2 : ',' : '.' }}</td>
+															<td>{{ item.sabor }}</td> -->
 															<td class="text-center" width="20">
 																<input ng-keyUp="calcSubTotal(item)" ng-disabled="finalizarOrcamento" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" />
 															</td>
-
+															<td class="text-center" ng-if="show_vlr_real" > R${{ item.vlr_custo_real | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-right">R$ {{ item.vlr_real | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-center" style="width: 30px;">
 																<label class="label-checkbox">
@@ -921,7 +924,7 @@
 										<div class="col-sm-12">
 											<div class="form-group">
 												<div class="pull-right" ng-show="carrinho.length > 0">
-													<h2 style="font-size: 17px;">total de Itens : {{ total_itens }} </h2>
+													<h2 style="font-size: 17px;">{{ total_itens }} Itens</h2>
 												</div>
 											</div>
 										</div>
@@ -974,7 +977,7 @@
 							<button type="button" class="btn btn-lg btn-primary" ng-click="modalFechar()"> Fechar</button>
 						</div>-->
 						<div class="pull-right">
-							<button type="button" class="btn btn-lg btn-danger" ng-if="receber_pagamento == false" ng-click="cancelar()"><i class="fa fa-times-circle"></i> Cancelar Venda</button>
+							<!-- <button type="button" class="btn btn-lg btn-danger" ng-if="receber_pagamento == false" ng-click="cancelar()"><i class="fa fa-times-circle"></i> Cancelar Venda</button> -->
 							<button type="button" class="btn btn-lg btn-warning" ng-if="receber_pagamento" ng-click="cancelarPagamento()"><i class="fa fa-times-circle"></i> Cancelar Pagamento</button>
 							<button type="button" class="btn btn-lg btn-success" ng-if="receber_pagamento || modo_venda == 'est'" data-loading-text=" Aguarde..." id="btn-fazer-compra" ng-click="salvar()" ng-disabled=" (modo_venda == 'pdv' && (total_pg == 0 || total_pg < vlrTotalCompra)) || (modo_venda == 'est' && (carrinho.length <= 0))"><i class="fa fa-save"></i> Finalizar</button>
 							<button type="button" class="btn btn-lg btn-primary" ng-if="receber_pagamento == false" ng-disabled="carrinho.length == 0" ng-click="receberPagamento()"><i class="fa fa-money"></i> Receber</button>

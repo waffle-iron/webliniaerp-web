@@ -61,7 +61,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.resizeScreen = function() {
 		if($("#top-nav").css("display") == "block"){
 			$("#map_canvas").css("height", 700);
-			$("footer").css("margin-left", 0);
+			$("footer").addClass("hide");
+			$("#wrapper").css("min-height", "0px");
+			$("#main-container").css("min-height", "0px");
 			$("#main-container").css("margin-left", 0).css("padding-top", 0);
 			$("#top-nav").toggle();
 			$("aside").toggle();
@@ -69,7 +71,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}
 		else {
 			$("#map_canvas").css("height", 600);
-			$("footer").css("margin-left", 194);
+			$("footer").removeClass("hide");
+			$("#wrapper").css("min-height", "800px");
+			$("#main-container").css("min-height", "800px");
 			$("#main-container").css("margin-left", 194).css("padding-top", 45);
 			$("#top-nav").toggle();
 			$("aside").toggle();
@@ -142,7 +146,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		if(ng.busca.codigo != "") {
 			ng.msg = "";
 			ng.busca.ok = !ng.busca.ok;
-			$http.get(baseUrlApi()+'estoque/?group&prd->codigo_barra='+ng.busca.codigo+"&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
+			$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+ng.busca.codigo+"%20OR%20prd.id="+ng.busca.codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
 			.success(function(data, status, headers, config) {
 				ng.busca.codigo = "" ;
 				if(data.produtos.length == 1){
@@ -2301,4 +2305,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadBancos();
 	ng.loadPerfil();
 	ng.loadContas();
+
+	ng.resizeScreen(); // by default, set fullscreen
+	ng.abrirVenda('pdv'); // by default, set 'Modo Loja' mode
+	setTimeout(function(){
+		var txtBox = document.getElementById("buscaCodigo");
+			txtBox.focus();
+	}, 500);
+
 });
