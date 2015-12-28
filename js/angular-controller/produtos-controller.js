@@ -9,6 +9,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 							id_tamanho : null,
 							id_cor     : null,
 							flg_produto_composto : 0,
+							estoque:[],
 							preco:{
 										perc_venda_atacado:0,
 										valor_venda_atacado:0,
@@ -22,7 +23,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.campos_extras_produto  = [] ;
     ng.produtos		= null;
-    ng.fabricantes	= [];
+    //ng.fabricantes	= [];
     ng.importadores	= [];
     ng.categorias	= [];
     ng.valor_tabela = "";
@@ -80,11 +81,12 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.reset = function() {
-		ng.busca.produtos = '';
+		//ng.busca.produtos = '';
 		ng.insumos = []
 		ng.produto 		= {
 							id_tamanho : null,
 							id_cor     : null,
+							estoque:[],
 							preco:{
 										perc_venda_atacado:0,
 										valor_venda_atacado:0,
@@ -111,11 +113,15 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.loadProdutos(0,10);
 	}
 
+	var currentPaginacao = {} ;
 	ng.loadProdutos = function(offset, limit) {
 		ng.produtos = [];
 
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
+
+		currentPaginacao.offset = offset ;
+		currentPaginacao.limit  = limit  ;
 
 		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
 
@@ -202,10 +208,14 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.calVlrCustoInsumos();
 	}
 
-	ng.loadFabricantes = function() {
+	
+	ng.loadFabricantes = function(nome_fabricante) {
+		ng.fabricantes = [{id:"",nome_fabricante:"--- Selecione ---"}];
 		aj.get(baseUrlApi()+"fabricantes?id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
-				ng.fabricantes = data.fabricantes;
+				ng.fabricantes = ng.fabricantes.concat(data.fabricantes);
+				if(nome_fabricante != null)
+					ng.produto.id_fabricante = ng.getFabricanteByName(nome_fabricante);
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
@@ -213,10 +223,14 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			});
 	}
 
-	ng.loadImportadores = function() {
+	
+	ng.loadImportadores = function(nome_importador) {
+		ng.importadores = [{id:"",nome_importador:"--- Selecione ---"}];
 		aj.get(baseUrlApi()+"importadores?id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
-				ng.importadores = data.importadores;
+				ng.importadores = ng.importadores.concat(data.importadores);
+				if(nome_importador != null)
+					ng.produto.id_importador = ng.getImportadorByName(nome_importador);
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
@@ -224,10 +238,13 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			});
 	}
 
-	ng.loadCategorias = function() {
+	ng.loadCategorias = function(descricao_categoria) {
+		ng.categorias = [{id:"",descricao_categoria:"--- Selecione ---"}];
 		aj.get(baseUrlApi()+"categorias?id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
-				ng.categorias = data.categorias;
+				ng.categorias = ng.categorias.concat(data.categorias);
+				if(descricao_categoria != null)
+					ng.produto.id_categoria = ng.getCategoriaByName(descricao_categoria);
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
@@ -268,8 +285,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.salvar = function() {
-		 var btn = $('#btn-salvar');
-   		 btn.button('loading');
+		var btn = $('#btn-salvar');
+   		btn.button('loading');
 		var url = ng.editing ? 'produto/update' : 'produto';
 
 		var msg = ng.editing ? 'Produto Atualizado com sucesso' : 'Produto salvo com sucesso!';
@@ -296,86 +313,47 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			produto.preco.perc_venda_varejo        = produto.preco.perc_venda_varejo        / 100;
 		}
 
-		if(ng.editing){
-			data = new Date();
-			dia      = data.getDate();
-			mes 	 = data.getMonth()+1;
-			ano 	 = data.getFullYear();
-			hora 	 = data.getHours();
-			minutos  = data.getMinutes() < 10 ? "0"+data.getMinutes() : data.getMinutes() ;
-			segundos = data.getSeconds() < 10 ? "0"+data.getSeconds() : data.getSeconds() ; 
+		//if(ng.editing){
+		data = new Date();
+		dia      = data.getDate();
+		mes 	 = data.getMonth()+1;
+		ano 	 = data.getFullYear();
+		hora 	 = data.getHours();
+		minutos  = data.getMinutes() < 10 ? "0"+data.getMinutes() : data.getMinutes() ;
+		segundos = data.getSeconds() < 10 ? "0"+data.getSeconds() : data.getSeconds() ; 
 
 
-			var inventario   = [] ;
-			var inventarios  = [] ;
-			var estoques     = _.groupBy(ng.produto.estoque, "nome_deposito");
-			var dta_contagem = dia+"-"+mes+"-"+ano+" "+hora+":"+minutos+":"+segundos;
-			console.log(estoques);
-			$.each(estoques,function(i,itens){
-				inventario={
-						tipo                    : 'entrada',
-						id_deposito 			: null,
-						id_usuario_responsavel 	: ng.userLogged.id,
-						dta_contagem 			: dta_contagem,
-						itens                   : []               
-					}
-
-				$.each(itens,function(y,item){
-					if(!(Number(item.qtd_item) == Number(item.qtd_ivn))){
-						var qtd_ivn = Number(item.qtd_ivn);
-						inventario.id_deposito = item.id_deposito;
-						inventario.itens.push({
-							id           : ng.produto.id_produto,
-							dta_validade : item.dta_validade,
-							qtd_ivn      : qtd_ivn
-						});
-					}
-				});
-				if(inventario.itens.length > 0)
-					inventarios.push(inventario);
-			});
-
-			/*console.log(inventarios);
-			inventario = [];
-
-			$.each(ng.produto.estoque,function(i,x){
-				console.log(x);
-				var qtd_ivn = Number(x.qtd_ivn) - x.qtd_total ;
-
-				if(qtd_ivn > 0){
-					var itens = [
-									{
-										id 				: ng.produto.id_produto,
-										dta_validade 	: '2099-12-31',
-										qtd_ivn         : qtd_ivn
-									}
-								];
-					inventario.push(
-										{
-											tipo                    : 'entrada',
-											id_deposito 			: x.id_deposito,
-											id_usuario_responsavel 	: ng.userLogged.id,
-											dta_contagem 			: dia+"-"+mes+"-"+ano+" "+hora+":"+minutos+":"+segundos,
-											itens                   : itens               
-									    }
-								   );
-				}else if(qtd_ivn < 0){
-					var qtd_saida  = qtd_ivn * (-1) ;
-
-					inventario.push(
-										{
-											tipo              : 'saida',
-											id_empreendimento : ng.userLogged.id_empreendimento,
-											id_produto 		  : ng.produto.id ,
-											id_deposito 	  : x.id_deposito ,
-											qtd_saida         : qtd_saida
-										}
-								   )
+		var inventario   = [] ;
+		var inventarios  = [] ;
+		var estoques     = _.groupBy(ng.produto.estoque, "nome_deposito");
+		var dta_contagem = dia+"-"+mes+"-"+ano+" "+hora+":"+minutos+":"+segundos;
+		console.log(estoques);
+		$.each(estoques,function(i,itens){
+			inventario={
+					tipo                    : 'entrada',
+					id_deposito 			: null,
+					id_usuario_responsavel 	: ng.userLogged.id,
+					dta_contagem 			: dta_contagem,
+					itens                   : []               
 				}
-			});*/
 
-			produto.inventario = inventarios ;
-		}
+			$.each(itens,function(y,item){
+				if(!(Number(item.qtd_item) == Number(item.qtd_ivn))){
+					var qtd_ivn = Number(item.qtd_ivn);
+					inventario.id_deposito = item.id_deposito;
+					inventario.itens.push({
+						id           : ng.produto.id_produto,
+						dta_validade : item.dta_validade,
+						qtd_ivn      : qtd_ivn
+					});
+				}
+			});
+			if(inventario.itens.length > 0)
+				inventarios.push(inventario);
+		});
+
+		produto.inventario = inventarios ;
+		//}
 
 		if(!(ng.empreendimentosAssociados == null || ng.empreendimentosAssociados.length == undefined || ng.empreendimentosAssociados.length == 0)){
 			produto.empreendimentos = angular.copy(ng.empreendimentosAssociados) ;
@@ -395,11 +373,15 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		 	data:produto,
 		 	success:function(data){
 		 		btn.button('reset');
+		 		if(ng.editing)
+		 			ng.loadProdutos(currentPaginacao.offset,currentPaginacao.limit);
+		 		else
+		 			ng.loadProdutos(0,10);
 		 		ng.showBoxNovo();
 		 		ng.mensagens('alert-success','<strong>'+msg+'</strong>');
 		 		ng.produto = {fornecedores:[]} ;
 		 		ng.insumos = [] ;
-		 		ng.loadProdutos(0,10);
+		 		
 		 		ng.editing = false;
 		 		btn.button('reset');
 		 		ng.reset();
@@ -978,6 +960,100 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		});
 	}
 
+	ng.fabricante = {nome_fabricante:"",id_empreendimento:""} ;
+	ng.salvarFabricante = function() {
+		var url = 'fabricante';
+		var btn = $('#btn-salvar-fabricante');
+   		btn.button('loading');
+
+		ng.fabricante.id_empreendimento = ng.userLogged.id_empreendimento;
+
+		aj.post(baseUrlApi()+url, ng.fabricante)
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.loadFabricantes(ng.fabricante.nome_fabricante);
+				$('#modal-novo-fabricante').modal('hide');	
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+				if(status == 406) {
+					var errors = data;
+
+					$.each(errors, function(i, item) {
+						$("#"+i).addClass("has-error");
+
+						var formControl = $($("#"+i).find(".form-control")[0])
+							.attr("data-toggle", "tooltip")
+							.attr("data-placement", "bottom")
+							.attr("title", item)
+							.attr("data-original-title", item);
+						formControl.tooltip();
+					});
+				}
+			});
+	}
+	ng.importador = {nome_importador:"",id_empreendimento:""} ;
+	ng.salvarImportador = function() {
+		var url = 'importador';
+		var btn = $('#btn-salvar-importador');
+   		btn.button('loading');
+		ng.importador.id_empreendimento 	= ng.userLogged.id_empreendimento;
+		aj.post(baseUrlApi()+url, ng.importador)
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.loadImportadores(ng.importador.nome_importador);
+				$('#modal-novo-importador').modal('hide');
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+				if(status == 406) {
+					var errors = data;
+
+					$.each(errors, function(i, item) {
+						$("#"+i).addClass("has-error");
+
+						var formControl = $($("#"+i).find(".form-control")[0])
+							.attr("data-toggle", "tooltip")
+							.attr("data-placement", "bottom")
+							.attr("title", item)
+							.attr("data-original-title", item);
+						formControl.tooltip();
+					});
+				}
+			});
+	}
+
+	ng.categoria = {descricao_categoria:"",id_empreendimento:""} ;
+	ng.salvarCategoria = function() {
+		var url = 'categoria';
+		var btn = $('#btn-salvar-categoria');
+   		btn.button('loading');
+		ng.categoria.id_empreendimento 	= ng.userLogged.id_empreendimento;
+		aj.post(baseUrlApi()+url, ng.categoria)
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.loadCategorias(ng.categoria.descricao_categoria);
+				$('#modal-nova-categoria').modal('hide');
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+				if(status == 406) {
+					var errors = data;
+
+					$.each(errors, function(i, item) {
+						$("#"+i).addClass("has-error");
+
+						var formControl = $($("#"+i).find(".form-control")[0])
+							.attr("data-toggle", "tooltip")
+							.attr("data-placement", "bottom")
+							.attr("title", item)
+							.attr("data-original-title", item);
+						formControl.tooltip();
+					});
+				}
+			});
+	}
+
 	ng.getTamanhoByName = function(nome_tamanho){
 		var id_tamanho = {} ;
 		$.each(ng.tamanhos,function(i,v){
@@ -987,6 +1063,39 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		});
 
 		return id_tamanho ;
+	}
+
+	ng.getFabricanteByName = function(nome_fabricante){
+		var id_fabricante = {} ;
+		$.each(ng.fabricantes,function(i,v){
+			if(v.nome_fabricante == nome_fabricante){
+				id_fabricante = v.id ;
+			}
+		});
+
+		return id_fabricante ;
+	}
+
+	ng.getImportadorByName = function(nome_importador){
+		var id_importador = {} ;
+		$.each(ng.importadores,function(i,v){
+			if(v.nome_importador == nome_importador){
+				id_importador = v.id ;
+			}
+		});
+
+		return id_importador ;
+	}
+
+	ng.getCategoriaByName = function(descricao_categoria){
+		var id_categoria = {} ;
+		$.each(ng.categorias,function(i,v){
+			if(v.descricao_categoria == descricao_categoria){
+				id_categoria = v.id ;
+			}
+		});
+
+		return id_categoria ;
 	}
 
 	ng.showModalNovaCor = function(){
@@ -1087,6 +1196,15 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			.error(function(data, status, headers, config) {
 				
 		});
+	}
+
+	ng.modal = function(acao,id){
+		ng.fabricante.nome_fabricante = "";
+		ng.importador.nome_importador = "";
+		ng.categoria.descricao_categoria = "" ;
+		$(".has-error").tooltip('destroy');
+		$(".has-error").removeClass("has-error");
+		$("#"+id).modal(acao);
 	}
 
 	function defaulErrorHandler(data, status, headers, config) {
