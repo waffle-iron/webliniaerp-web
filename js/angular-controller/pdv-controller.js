@@ -20,7 +20,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.cdb_busca            = { status:false, codigo:null } ;
 	ng.show_vlr_real        = false ;
 	ng.orcamento            = false ;
-	ng.new_cliente          = {tipo_cadastro:'pf'} ;
+	ng.new_cliente          = {tipo_cadastro: 'pf', id_perfil: '6'} ;
 	ng.vendedor             = {};
 	ng.modal_senha_vendedor = {id_empreendimento:ng.userLogged.id_empreendimento, id_vendedor:null,nome_vendedor:null,senha_vendedor:null,show:false}
 	var params      = getUrlVars();
@@ -1756,6 +1756,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		if(tipo == 'pdv'){
 			ng.modo_venda = 'pdv' ;
 			ng.venda_aberta = true ;
+
+			setTimeout(function(){
+				var txtBox = document.getElementById("buscaCodigo");
+					txtBox.focus();
+			}, 500);
 		}else if (tipo == 'est'){
 			if(ng.cliente.id == undefined || ng.cliente.id == ""){
 				$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque e necessário selecionar um cliente</strong>');
@@ -1763,6 +1768,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			}
 			ng.modo_venda = 'est';
 			ng.venda_aberta = true ;
+			setTimeout(function(){
+				var txtBox = document.getElementById("buscaCodigo");
+					txtBox.focus();
+			}, 500);
 		}
 	}
 
@@ -2068,6 +2077,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		  backdrop: 'static',
 		  keyboard: false
 		});
+
+		$('#modal_cadastro_rapido_cliente').on('shown.bs.modal', function (e) {
+			$('#modal_cadastro_rapido_cliente input#nome').focus();
+		});
 	}
 
 	ng.salvarCliente = function(){
@@ -2307,10 +2320,5 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadContas();
 
 	ng.resizeScreen(); // by default, set fullscreen
-	ng.abrirVenda('pdv'); // by default, set 'Modo Loja' mode
-	setTimeout(function(){
-		var txtBox = document.getElementById("buscaCodigo");
-			txtBox.focus();
-	}, 500);
-
+	//ng.abrirVenda('pdv'); // by default, set 'Modo Loja' mode
 });
