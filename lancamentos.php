@@ -819,7 +819,10 @@
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-random"></i> Lançamentos <i class="pull-right fa fa-cog fa-lg" style="cursor:pointer" ng-click="configTable()"></i></div>
+					<div class="panel-heading">
+						<i class="fa fa-random"></i> Lançamentos 
+						<i class="pull-right fa fa-cog fa-lg" style="cursor:pointer" data-toggle="tooltip" data-placement="left" title="Opções de Exibição" ng-click="configTable()"></i>
+					</div>
 
 					<div class="panel-body">
 						<div class="row">
@@ -975,12 +978,13 @@
 									<table id="tabela-lancamentos" class="table table-condensed table-bordered table-hover">
 										<thead>
 											<tr>
+												<th ng-show="!config_table.groupPerDay">Data</td>
 												<th class="text-center" rowspan="2">Conta</th>
 												<th class="text-center" rowspan="2">Cliente/Fornecedor</th>
 												<th class="text-center" rowspan="2">Natureza da Operação</th>
 												<th class="text-center" rowspan="2">Forma de Pgto.</th>
 
-												<th class="text-center" rowspan="2">Banco</th>
+												<th class="text-center" rowspan="2" ng-if="config_table.cheque">Banco</th>
 												<th class="text-center" colspan="3" ng-if="config_table.cheque">Dados Cheque</th>
 												<th class="text-center" colspan="2" ng-if="config_table.boleto">Dados Boleto</th>
 												<th class="text-center" colspan="3" ng-if="config_table.transferencia">Dados Transferência</th>
@@ -1004,26 +1008,27 @@
 											</tr>
 										</thead>
 										<tr  ng-if="dataGroups.length <= 0 && dataGroups != null">
-												<td colspan="{{ calculaColspan(8) }} " style="text-align:center">
+												<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }} " style="text-align:center">
 													<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
 												</td>
 										</tr>
 										<tr  ng-if="dataGroups == null">
-												<td colspan="{{ calculaColspan(8) }}" style="text-align:center">
+												<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="text-align:center">
 													Nenhum lançamento encontrado
 												</td>
 										</tr>
 										<tbody ng-repeat="(key, value) in dataGroups">
-											<tr class="info">
-												<td colspan="{{ calculaColspan(8) }}">{{ key | dateFormat: 'date' }} <span class="badge pull-right">{{ value.items.length }}</span></td>
+											<tr class="info" ng-show="config_table.groupPerDay">
+												<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}">{{ key | dateFormat: 'date' }} <span class="badge pull-right">{{ value.items.length }}</span></td>
 											</tr>
 											<tr ng-repeat="item in value.items">
+												<td ng-show="!config_table.groupPerDay">{{ key | dateFormat: 'date' }} </td>
 												<td class="text-center">{{ item.dsc_conta_bancaria }}</td>
 												<td>{{ item.nome | uppercase }}</td>
 												<td>{{ item.cod_plano }} - {{ item.dsc_natureza_operacao | uppercase}}</td>
 												<td>{{ item.descricao_forma_pagamento }}</td>
 
-												<th class="text-center" >{{ item.nome_banco }}</th>
+												<th class="text-center" ng-if="config_table.cheque">{{ item.nome_banco }}</th>
 												<th class="text-center" ng-if="config_table.cheque">{{ item.num_conta_corrente }}</th>
 												<th class="text-center" ng-if="config_table.cheque">{{ item.num_cheque }}</th>
 												<th class="text-center" ng-if="item.flg_cheque_predatado == 1 && config_table.cheque == true">Sim</th>
@@ -1076,11 +1081,11 @@
 													</button>-->
 												</td>
 											</tr>
-											<tr>
-												<td class="text-center" colspan="{{ calculaColspan(8) }}" style="background-color: #898989;"><strong style="color: #FFF;">Totais - {{ key | dateFormat: 'date' }}</strong></td>
+											<tr ng-show="config_table.overviewOfDay">
+												<td class="text-center" colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="background-color: #898989;"><strong style="color: #FFF;">Totais - {{ key | dateFormat: 'date' }}</strong></td>
 											</tr>
-											<tr>
-												<td class="text-right" colspan="{{ calculaColspan(6) }}"><strong>A Receber</strong></td>
+											<tr ng-show="config_table.overviewOfDay">
+												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>A Receber</strong></td>
 												<td class="text-right">
 													<span class="label label-success">
 														R$ {{ value.a_receber | numberFormat: '2' : ',' : '.' }}
@@ -1088,8 +1093,8 @@
 												</td>
 												<td></td>
 											</tr>
-											<tr>
-												<td class="text-right" colspan="{{ calculaColspan(6) }}"><strong>A Pagar</strong></td>
+											<tr ng-show="config_table.overviewOfDay">
+												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>A Pagar</strong></td>
 												<td class="text-right">
 													<span class="label label-danger">
 														R$ {{ value.a_pagar | numberFormat: '2' : ',' : '.' }}
@@ -1097,8 +1102,8 @@
 												</td>
 												<td></td>
 											</tr>
-											<tr class="warning">
-												<td class="text-right" colspan="{{ calculaColspan(6) }}"><strong>Saldo</strong></td>
+											<tr class="warning" ng-show="config_table.overviewOfDay">
+												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Saldo</strong></td>
 												<td class="text-right">
 													<span class="label label-danger" ng-if="(value.a_receber - value.a_pagar ) < 0">
 														R$ {{ (value.a_receber - value.a_pagar ) | numberFormat: '2' : ',' : '.' }}
@@ -1109,15 +1114,13 @@
 												</td>
 												<td></td>
 											</tr>
-											<tr>
-												<td class="text-center" colspan="{{ calculaColspan(8) }}" style="background-color: #898989;padding: 2px;"><strong style="color: #FFF;"></strong></td>
+
+											<tr ng-show="config_table.overviewOfDay">
+												<td class="text-center" colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="background-color: #898989;padding: 2px;"><strong style="color: #FFF;"></strong></td>
 											</tr>
 
-
-
-
-											<tr>
-												<td class="text-right" colspan="{{ calculaColspan(6) }}"><strong>Recebido</strong></td>
+											<tr ng-show="config_table.overviewOfDay">
+												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Recebido</strong></td>
 												<td class="text-right">
 													<span class="label label-success">
 														R$ {{ value.recebido | numberFormat: '2' : ',' : '.' }}
@@ -1125,8 +1128,8 @@
 												</td>
 												<td></td>
 											</tr>
-											<tr>
-												<td class="text-right" colspan="{{ calculaColspan(6) }}"><strong>Pago</strong></td>
+											<tr ng-show="config_table.overviewOfDay">
+												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Pago</strong></td>
 												<td class="text-right">
 													<span class="label label-danger">
 														R$ {{ value.pago | numberFormat: '2' : ',' : '.' }}
@@ -1146,13 +1149,8 @@
 												</td>
 												<td></td>
 											</tr>-->
-
-
-
-
-
-											<tr class="warning">
-												<td class="text-right" colspan="{{ calculaColspan(6) }}"><strong>Saldo</strong></td>
+											<tr class="warning" ng-show="config_table.overviewOfDay">
+												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Saldo</strong></td>
 												<td class="text-right">
 													<span class="label label-success" ng-if="value.vlr_total_item > 0">
 														R$ {{ value.vlr_total_item | numberFormat: '2' : ',' : '.' }}
@@ -1168,7 +1166,7 @@
 											</tr>
 										</tbody>
 										<tr ng-hide="dataGroups.length <= 0 || dataGroups == null">
-											<td colspan="{{ calculaColspan(6) }}" class="text-right">Total Período</td>
+											<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}" class="text-right">Total Período</td>
 											<td class="text-right">
 												<span class="label label-success" ng-if="vlrTotalPeriodo > 0">
 													R$ {{ vlrTotalPeriodo | numberFormat: '2' : ',' : '.' }}
@@ -1582,18 +1580,20 @@
 		  			<div class="modal-dialog error modal-md">
 		    			<div class="modal-content">
 		      				<div class="modal-header">
-								<h4>Configuração da tabela de lançamentos</h4>
+								<h4>Opções de Exibição</h4>
 		      				</div>
 
 						    <div class="modal-body">
 						    	<div class="row">
-						    		<div class="col-sm-12" >
-						    			<b>Selecione os dados extras a ser exibidos: </b>
+						    		<div class="col-sm-6">
+						    			<b>Colunas extras:</b>
+									</div>
+									<div class="col-sm-6">
+						    			<b>Linhas extras:</b>
 									</div>
 								</div>
 								<div class="row">
-								<div class="col-lg-12" style="padding-left: 25px;margin-top: 7px;
-}">
+									<div class="col-lg-6">
 										<label class="label-checkbox">
 											<input type="checkbox" ng-model="config_table.cheque">
 											<span class="custom-checkbox"></span>
@@ -1607,9 +1607,22 @@
 										<label class="label-checkbox"> 
 											<input type="checkbox" ng-model="config_table.transferencia">
 											<span class="custom-checkbox"></span>
-											tranferência 	
+											Tranferência 	
 										</label>
-								</div>
+									</div>
+
+									<div class="col-lg-6">
+										<label class="label-checkbox">
+											<input type="checkbox" ng-model="config_table.groupPerDay">
+											<span class="custom-checkbox"></span>
+											Agrupamento por dia
+										</label>
+										<label class="label-checkbox">
+											<input type="checkbox" ng-model="config_table.overviewOfDay">
+											<span class="custom-checkbox"></span>
+											Totais por dia
+										</label>
+									</div>
 						    	</div>
 						    </div>
 						<div class="modal-footer">
