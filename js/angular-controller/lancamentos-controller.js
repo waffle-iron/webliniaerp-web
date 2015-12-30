@@ -95,7 +95,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 
     	if(onlyShow) {
 			$('i','#btn-novo').removeClass("fa-plus-circle").addClass("fa-minus-circle");
-			$('#box-novo').show();
+			$('#box-novo').show(400,function(){$("select").trigger("chosen:updated");});
 		}
 		else {
 			$('#box-novo').toggle(400, function(){
@@ -105,7 +105,9 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 					$('i','#btn-novo').removeClass("fa-minus-circle").addClass("fa-plus-circle");
 				}
 			});
+			$("select").trigger("chosen:updated");
 		}
+		$("select").trigger("chosen:updated");
 	}
 
 	var nParcelasAnt = 1 ;
@@ -266,9 +268,11 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 	}
 
 	ng.loadPlanoContas = function() {
+		ng.plano_contas = [{id:"",dsc_completa:"--- Selecione ---"}];
 		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.roleList = data;
+				ng.plano_contas = ng.plano_contas.concat(data);
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
