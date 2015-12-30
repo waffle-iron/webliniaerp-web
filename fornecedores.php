@@ -205,7 +205,7 @@
 							<div id="nome_fornecedor" class="form-group">
 								<label for="descricao" class="col-sm-1 control-label">Descrição</label>
 								<div class="col-sm-11">
-									<input type="text" class="form-control" id="descricao" ng-model="fornecedor.nome_fornecedor">
+									<input type="text" class="form-control" id="descricao" ng-model="fornecedor.nome_fornecedor" ng-enter="salvar()">
 								</div>
 							</div>
 
