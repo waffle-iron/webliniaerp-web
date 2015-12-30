@@ -238,3 +238,17 @@ div[data-tree-model] li .selected {
 .text-bold {
 	font-weight: bold;
 }
+
+@media print {
+	body {
+		color: red;
+	}
+
+	table.table {
+		margin-bottom: 0px !important;
+	}
+
+	legend {
+		margin-bottom: 0px !important;
+	}
+}
