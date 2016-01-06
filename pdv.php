@@ -828,16 +828,18 @@
 										</div>
 									</div>
 
-									<div class="row" ng-if="userLogged.id_perfil == 1 ">
+									<div class="row">
 										<div class="col-sm-6">
-											<button ng-if="show_vlr_real == false" ng-click="showVlrReal()" class="btn btn-xs btn-success" type="button">
-												<i class="fa fa-eye fa-lg"></i>
+											<button ng-click="showVlrReal()" class="btn btn-xs btn-success" type="button" ng-show="userLogged.id_perfil == 1">
+												<i ng-if="show_vlr_real == false" class="fa fa-eye fa-lg"></i>
+												<i ng-if="show_vlr_real == true" class="fa fa-eye-slash fa-lg"></i>
 											</button>
-											<button ng-if="show_vlr_real" ng-click="showVlrReal()" class="btn btn-xs btn-success" type="button">
-												<i class="fa fa-eye-slash fa-lg"></i>
+											<button ng-click="showAditionalColumns()" class="btn btn-xs btn-default" type="button">
+												<i ng-if="show_aditional_columns == true" class="fa fa-th-list fa-lg"></i>
+												<i ng-if="show_aditional_columns == false" class="fa fa-align-justify fa-lg"></i>
 											</button>
 										</div>
-										<div class="col-sm-6">
+										<div class="col-sm-6" ng-show="userLogged.id_perfil == 1">
 											<div style="float: right;font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor>0">
 												<span style="color:#000">Saldo Devedor :</span> <span style="color:green">R$ {{ cliente.vlr_saldo_devedor | numberFormat:2:',':'.' }}</span>
 											</div>
@@ -862,9 +864,9 @@
 													<thead ng-show="carrinho.length  > 0">
 														<tr>
 															<th>Produto</th>
-															<!-- <th>Fabricante</th>
-															<th>Tamanho</th>
-															<th>Sabor/Cor</th> -->
+															<th ng-show="show_aditional_columns">Fabricante</th>
+															<th ng-show="show_aditional_columns">Tamanho</th>
+															<th ng-show="show_aditional_columns">Sabor/Cor</th>
 															<th class="text-center" style="width: 80px;" >Qtd.</th>
 															<th class="text-center" style="width: 100px;" ng-if="show_vlr_real" >RV</th>
 															<th class="text-center" style="width: 100px;">Vlr. Unit.</th>
@@ -877,9 +879,9 @@
 													<tbody>
 														<tr ng-repeat="item in carrinho" id="{{ item.id_produto }}" ng-class="{'error-estoque': verificaOutEstoque(item) }">
 															<td>{{ item.nome_produto }}</td>
-															<!-- <td>{{ item.nome_fabricante }}</td>
-															<td>{{ item.peso }}</td>
-															<td>{{ item.sabor }}</td> -->
+															<td ng-show="show_aditional_columns">{{ item.nome_fabricante }}</td>
+															<td ng-show="show_aditional_columns">{{ item.peso }}</td>
+															<td ng-show="show_aditional_columns">{{ item.sabor }}</td>
 															<td class="text-center" width="20">
 																<input ng-keyUp="calcSubTotal(item)" ng-disabled="finalizarOrcamento" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" />
 															</td>

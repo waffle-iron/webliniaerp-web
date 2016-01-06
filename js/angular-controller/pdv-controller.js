@@ -19,6 +19,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.pagamento_fulso      = false;
 	ng.cdb_busca            = { status:false, codigo:null } ;
 	ng.show_vlr_real        = false ;
+	ng.show_aditional_columns = false ;
 	ng.orcamento            = false ;
 	ng.new_cliente          = {tipo_cadastro: 'pf', id_perfil: '6'} ;
 	ng.vendedor             = {};
@@ -2057,6 +2058,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.showVlrReal = function(){
 		ng.show_vlr_real = !ng.show_vlr_real ;
+	}
+
+	ng.showAditionalColumns = function(){
+		ng.show_aditional_columns = !ng.show_aditional_columns ;
 	}
 
 	//cadastro rapido de cliente
