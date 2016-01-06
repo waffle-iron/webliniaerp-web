@@ -362,7 +362,7 @@
 												<tr ng-repeat="item in pedido.coresEstampa">
 													<td class="text-middle">{{ item.nome_cor }}</td>
 													<td>
-														<input type="text" ng-model="item.local" class="form-control input-xs">
+														<input type="text" ng-model="item.dsc_local" class="form-control input-xs">
 													</td>
 													<td>
 														<button type="button" ng-click="deleteItemCorEstampa($index)" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
@@ -370,6 +370,22 @@
 												</tr>
 											</tbody>
 										</table>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Brinde?:</label> 
+									<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+										<label class="label-radio inline">
+											<input ng-model="pedido.flg_brinde" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="pedido.flg_brinde" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
 									</div>
 								</div>
 								<div class="form-group" ng-show="!(gradeInfantil.length > 0 || gradeAdulto.length > 0)">
@@ -524,9 +540,14 @@
 											<tbody>
 												<tr ng-repeat="(key, item)  in carrinhoPedido" bs-tooltip>
 													<td class="text-center">{{ item.qtd }}</td>
-													<td>{{ item.nome }}</td>
-													<td class="text-right">{{ item.valor_real_item | numberFormat:2:',':'.' }}</td>
-													<td class="text-right">{{ (item.qtd * item.valor_real_item) | numberFormat:2:',':'.' }}</td>
+													<td>
+														{{ item.nome }}
+														<i ng-if="item.flg_brinde == 1"  title="Produto Dado Como Brinde" data-toggle="tooltip" class="fa fa-gift fa-lg" style="float: right;color:rgba(128, 0, 82, 0.72);"></i>
+													</td>
+													<td class="text-right" ng-if="item.flg_brinde == 0">{{ item.valor_real_item | numberFormat:2:',':'.' }}</td>
+													<td class="text-right" ng-if="item.flg_brinde == 0">{{ (item.qtd * item.valor_real_item) | numberFormat:2:',':'.' }}</td>
+													<td class="text-right" ng-if="item.flg_brinde == 1">{{ 0 | numberFormat:2:',':'.' }}</td>
+													<td class="text-right" ng-if="item.flg_brinde == 1">{{ 0 | numberFormat:2:',':'.' }}</td>
                                                     <td align="center">
                                                         <button type="button" ng-click="editarItemPedido(item)" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-warning" title="editar">
                                                             <i class="fa fa-edit"></i>
@@ -943,7 +964,7 @@
                                             <td>{{ item.id }}</td>
                                             <td>{{ item.nome_cor }}</td>
                                             <td>
-                                                <input type="text" ng-model="item.local" class="form-control input-xs">
+                                                <input type="text" ng-model="item.dsc_local" class="form-control input-xs">
                                             </td>
                                             <td>
                                             <button ng-show="!existsCorEstampa(item)"  ng-click="addCorEstampa(item)"  class="btn btn-success btn-xs" type="button">
