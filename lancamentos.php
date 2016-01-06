@@ -1149,7 +1149,7 @@
 												</td>
 												<td></td>
 											</tr>-->
-											<tr class="warning" ng-show="config_table.overviewOfDay">
+											<tr class="warning" ng-show="config_table.groupPerDay">
 												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Saldo</strong></td>
 												<td class="text-right">
 													<span class="label label-success" ng-if="value.vlr_total_item > 0">
