@@ -234,7 +234,7 @@
 										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 											<i class="fa fa-times-circle"></i> Cancelar
 										</button>
-										<button ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
+										<button id="salvar-cor" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde" ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
 											<i class="fa fa-save"></i> Salvar
 										</button>
 									</div>
@@ -347,7 +347,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/faixa-desconto-controller.js"></script>
+	<script src="js/angular-controller/faixa-desconto-controller.js?<?php echo filemtime("js/angular-controller/faixa-desconto-controller.js")?>"></script>
 	<?php include("google_analytics.php"); ?>
 
   </body>

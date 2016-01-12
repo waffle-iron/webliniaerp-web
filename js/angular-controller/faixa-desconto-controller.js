@@ -69,6 +69,8 @@ app.controller('FaixaDescontoController', function($scope, $http, $window, $dial
 	}
 
 	ng.salvar = function() {
+		var btn 	 = $('#salvar-cor');
+			btn.button('loading');
 		var url 	 = 'faixadesconto';
 		var itemPost = angular.copy(ng.faixa);
 		var msg      = 'Faixa salva com sucesso!';
@@ -93,8 +95,10 @@ app.controller('FaixaDescontoController', function($scope, $http, $window, $dial
 				ng.reset();
 				ng.loadFaixas();
 				ng.loadCores();
+				btn.button('reset');
 			})
 			.error(function(data, status, headers, config) {
+				btn.button('reset');
 				if(status == 406) {
 					var errors = data;
 
