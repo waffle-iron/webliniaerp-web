@@ -745,7 +745,7 @@
 									<div class="row">
 										<div class="col-sm-10" id="col-sm-auto-complete-cliente">
 											<div class="form-group">
-												<label class="control-label"><h4>Cliente <span> <button style="cursor:auto;height: 18px;padding-top: 0;
+												<label class="control-label"><h4>Cliente <span> <button ng-disabled="finalizarOrcamento" style="cursor:auto;height: 18px;padding-top: 0;
 " class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 												<div class="input-group">
 													<input id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)" ng-disabled="finalizarOrcamento" ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
@@ -854,7 +854,7 @@
 									<br/>
 									<div class="row">
 										<div class="col-sm-12">
-											<div class="form-group" style="overflow-y: scroll; min-height: 200px; max-height: 200px;">
+											<div class="form-group" >
 												<table id="tbl_carrinho" class="table table-condensed table-bordered">
 													<tr ng-hide="carrinho.length > 0" class="hidden-print">
 														<td colspan="4">
@@ -895,11 +895,11 @@
 															</td>
 															<td class="text-right" style="width:100px;">
 																<span style="display: block;float: left;" ng-if="item.flg_desconto == 1">%</span>
-																<input style="width:50px;float:right" ng-disabled="finalizarOrcamento" ng-keyUp="aplicarDesconto($index,$event,false,false)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto" type="text" class="form-control input-xs" />
+																<input style="width:80%;float:right" ng-disabled="finalizarOrcamento" ng-keyUp="aplicarDesconto($index,$event,false,false)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto" type="text" class="form-control input-xs" />
 															</td>
 															<td class="text-right" style="width:100px;">
 																<span style="display: block;float: left;" ng-if="item.flg_desconto == 1">R$</span>
-																<input style="width:50px;float:right" ng-disabled="finalizarOrcamento" ng-keyUp="aplicarDesconto($index,$event,false,true)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto_real" type="text" class="form-control input-xs" id="teste_teste" />
+																<input style="width:80%;float:right" ng-disabled="finalizarOrcamento" ng-keyUp="aplicarDesconto($index,$event,false,true)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto_real" type="text" class="form-control input-xs" id="teste_teste" />
 															</td>
 															<td class="text-right">R$ {{ item.vlr_unitario    | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-right">R$ {{ item.sub_total    | numberFormat : 2 : ',' : '.' }}</td>

@@ -558,7 +558,7 @@
 						<p class="muted" style="margin: 0 0 1px;" ng-if="venda.nme_cliente != null">Perfil : {{ venda.perfil_cliente }}</p>
 						<p class="muted" style="margin: 0 0 1px;">ID #{{ venda.id }}</p>
       				</div>
-				    <div class="modal-body">
+				    <div class="modal-body" sty>
 				   		<div class="row">
 				   			<div class="col-sm-12">
 				   				<table class="table table-bordered table-condensed table-striped table-hover">

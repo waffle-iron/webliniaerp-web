@@ -151,6 +151,16 @@
 								<?php include("menu-relatorios.php") ?>
 							</ul>
 						</li>
+						<?php if($_SESSION['user']['id_perfil'] == 1 || $_SESSION['user']['id_perfil'] == 8){ ?>
+						<li>
+							<a href="pdv.php">
+								<i class="fa fa-desktop fa-lg"></i>
+								<span class="text">PDV</span>
+								<span class="menu-hover"></span>
+							</a>
+							
+						</li>
+						<?php } ?>
 					</ul>
 
 					<!-- Exemplos de Alerta -->

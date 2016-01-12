@@ -94,12 +94,19 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					ng.id_orcamento = orcamento.id ;
 					ng.cliente = data.cliente;
 					$.each(orcamento.itens,function(i,v){
-						v.qtd_total = v.qtd;
+						v.valor_desconto_real = Number(v.valor_desconto)/100;
+						v.flg_desconto        = Number(v.desconto_aplicado);
+						v.nome_produto        = v.nome ;
+						ng.incluirCarrinho(v);
+						/*v.qtd_total = v.qtd;
 						v.vlr_unitario    	 = v.valor_real_item;
 						v.vlr_real        	 = v.vlr_produto;
 						v.valor_desconto     = v.valor_desconto * 100 ;
 						v.flg_desconto = v.desconto_aplicado;
-						ng.carrinho.push(v);
+						ng.carrinho.push(v);*/
+					});
+					$.each(ng.carrinho,function(i,item){
+						ng.aplicarDesconto(i,null,false,false);
 					});
 					ng.calcTotalCompra();
 					ng.totalPagamento();
@@ -238,7 +245,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			produto.vlr_real        	 = produto.vlr_venda_varejo;
 			produto.perc_margem_aplicada = produto.margem_varejo;
 		}
-		produto.valor_desconto = 0;
+		produto.valor_desconto = empty(produto.valor_desconto) ?  0 : produto.valor_desconto ; 
+
 		produto.qtd_total = isNaN(Number(produto.qtd_total)) ? 1 : Number(produto.qtd_total) ;
 		produto.sub_total = produto.qtd_total * produto.vlr_unitario;
 
@@ -719,6 +727,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.aplicarDesconto = function(index,$event,checkebox,calc){
+		console.log(ng.carrinho[index]);
 		if(calc == true){
 			var prc_dsc =(ng.carrinho[index].valor_desconto_real * 100)/ng.carrinho[index].vlr_real;
 				ng.carrinho[index].valor_desconto = Math.round( prc_dsc * 100) /100 ;
@@ -726,19 +735,20 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			ng.carrinho[index].valor_desconto_real = (ng.carrinho[index].vlr_real * (ng.carrinho[index].valor_desconto/100)) ;
 		}
 
+
 		checkebox = checkebox == null ? true : false ;
-		if(checkebox)
+		/*if(checkebox)
 			var element = $event.target ;
 		else if(calc != true){
 	    	var element = $($event.target).parent().prev().children().children('input');
 		}else if(calc == true){
 			var element = $($event.target).parent().prev().prev().children().children('input');
-		}
+		}*/
 
 
 		var valor_desconto = ng.carrinho[index].valor_desconto/100 ;
 		var vlr_real     = ng.carrinho[index].vlr_real ;
-		if($(element).is(':checked')){
+		if(Number(ng.carrinho[index].flg_desconto) == 1){
 			if(checkebox)
 			ng.carrinho[index].vlr_unitario =  vlr_real - (vlr_real * valor_desconto) ;
 			else{

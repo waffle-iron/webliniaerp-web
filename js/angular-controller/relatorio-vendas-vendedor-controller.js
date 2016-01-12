@@ -5,6 +5,7 @@ app.controller('RelatorioVendasVendedorController', function($scope, $http, $win
 	ng.itensPorPagina 	= 10;
 	ng.itens 			= [];
 	ng.paginacao 		= {};
+	ng.vendas           = null ;
 
 	var params = getUrlVars();
 
@@ -24,10 +25,12 @@ app.controller('RelatorioVendasVendedorController', function($scope, $http, $win
 		ng.loadItens(0,10);
 	}
 
+	ng.itensPorPagina = 10 ;
 	ng.loadVendas = function(offset, limit) {
 		var queryString = "?ven->id_empreendimento="+ng.userLogged.id_empreendimento;
 			queryString += "&vdd->id="+params.id_vendedor;
-
+			queryString += !empty(ng.configuracoes.id_produto_debito_anterior_cliente) ? "&itv->id_produto[exp]=<>"+ng.configuracoes.id_produto_debito_anterior_cliente : '' ;
+		ng.vendas = null ;
 		aj.get(baseUrlApi()+"relatorio/vendas/analitico/vendedor/"+offset+'/'+limit+"/"+queryString)
 			.success(function(data, status, headers, config) {
 				ng.vendas = data.vendas;
@@ -68,7 +71,22 @@ app.controller('RelatorioVendasVendedorController', function($scope, $http, $win
 			});
 	}
 
+	ng.configuracoes = {} ;
+	ng.loadConfig = function(){
+		var error = 0 ;
+		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				ng.configuracoes = data ;
+				ng.loadVendas(0,ng.itensPorPagina);
+			})
+			.error(function(data, status, headers, config) {
+				ng.loadVendas(0,10);
+				if(status == 404){
+					ng.caixa_configurado = false ;
+				}
+			});
+	}
+	ng.loadConfig();
 	ng.reset();
-	ng.loadVendas(0,10);
 	ng.loadCliente();
 });

@@ -204,538 +204,19 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-tag"></i> Pedidos Customizados</li>
+					 <li><i class="fa fa-tag"></i> <a>Pedidos Personalizados</a></li>
 				</ul>
 			</div>
 			<!-- breadcrumb -->
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-tag"></i> Pedidos Customizados</h3>
-					<br>
-					<a class="btn btn-info" id="btn-novo" ng-if="receber_pagamento==false"  ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Pedido</a>
+					<h3 class="no-margin"><i class="fa fa-tag"></i> Pedidos Personalizados</h3>
 				</div>
 			</div>
 			<!-- /main-header -->
 
 			<div class="padding-md">
 				<div class="alert alert-sistema" style="display:none"></div>
-
-				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i> {{ receber_pagamento == false && 'Novo Pedido' || 'Pagamento' }}</div>
-
-					<div class="panel-body" ng-if="receber_pagamento==false">
-						<form id="formProdutos" role="form" enctype="multipart/form-data">
-								<div class="row">
-						    			<div class="col-sm-12">
-						    				<div class="form-group" id="id_cliente">
-													<label class="control-label">Cliente</label>
-													<div class="input-group">
-														<input ng-click="selCliente(0,10)"  type="text" class="form-control" ng-model="cliente.nome" readonly="readonly" style="cursor: pointer;" />
-														<span class="input-group-btn">
-															<button ng-click="selCliente(0,10)" type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
-														</span>
-													</div>
-													
-											</div>
-						    			</div>
-					    			</div>
-							<div class="panel panel-default" ng-if="tela=='escolher_bases'">
-								<div class="panel-heading">Base</div>
-								<div class="panel-body">
-									<div class="row">
-										<div class="col-sm-12">
-											<table class="table table-condensed">
-													<thead>
-														<tr>
-															<th width="80" style="background: #E8E8E8;">Cor</th>
-															<th ng-repeat="tamanho in base.tamanhos" style="background: #E8E8E8;" class="text-center">
-																{{ tamanho.nome_tamanho }}
-															</th>														
-														</tr>
-													</thead>
-												<tbody>
-													<tr ng-repeat="produto in base.produtos">
-														<td>{{ produto.nome_cor }}</td>
-														<th ng-repeat="tamanho in produto.tamanhos" id="input-base-{{ produto.id_cor }}-{{tamanho.id_tamanho}}" >
-															<input ng-keyup="calcularValorBase()" ng-disabled="tamanho.status==false"  onkeypress="return SomenteNumero(event);" ng-model="tamanho.qtd" type="text" style="width: 70px;margin: 0 auto;" align="center" class="text-center form-control input-xs ng-pristine ng-valid ng-touched" width="50">
-														</th>	
-													</tr>
-												</tbody>
-											</table>
-										</div>	
-									</div>	
-								</div>
-							</div>
-							<!-- acessórios : background-color: rgba(80, 79, 99, 0.23) / tiras background-color: rgba(154, 210, 104, 0.54) -->
-							<div class="panel panel-default" ng-if="tela == 'escolher_tiras'">
-								<div class="panel-heading">Tiras</div>
-								<div class="panel-body">
-									<div class="row">
-										<div class="col-sm-12">
-											<table class="table table-condensed">
-												<tbody>	
-													<tr ng-repeat-start="(key,item) in base_selecionadas" ng-if="item.qtd > 0">
-														<td style="background: #E8E8E8;width: 90%;">
-															{{item.nome_produto}} {{ item.nome_tamanho }} {{ item.nome_cor }} 
-															<button class="btn btn-xs btn-success" ng-click="addTira($index,item)" type="button">Add Tiras</button>
-															<button class="btn btn-xs btn-primary" ng-click="addAcessorio($index,item)" type="button">Add Acessórios</button>
-														</td>	
-														<td style="background: #E8E8E8;" class="text-center">{{item.qtd}}</td>
-													</tr>
-													<tr>
-														<td ng-if=" item.tiras_acessorios.length == 0" class="text-center" colspan="2">Nenhuma tira selecionada</td>
-													</tr>
-													<tr ng-repeat-end ng-repeat="tira in item.tiras_acessorios" bs-tooltip>
-														<td colspan="2">
-															<table class="table table-condensed" style="margin-bottom: 0;">
-																<tbody>	
-																	<tr ng-class="{'tr-tira':tira.tipo_produto == 'tira', 'tr-acessorio': tira.tipo_produto == 'acessorio'}">
-																		<td style="width: 35px;" class="text-center">
-																			<button class="btn btn-xs btn-danger" ng-click="DeltiraAcessorio(key,$index)" type="button">
-																				<i class="fa fa-trash-o fa-xs"></i>
-																			</button>
-																		</td>
-																		<td style="width:87.5%;padding-left: 20px;">{{tira.nome_produto}} {{ tira.nome_tamanho }} {{ tira.nome_cor }}</td>	
-																		<td style="" class="text-center">{{ tira.qtd }}</td>
-																	</tr>
-																</tbody>
-															</table>
-														</td>	
-													</tr>							
-												</tbody>
-											</table>
-										</div>	
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default" ng-if="tela == 'definir_valores'">
-								<div class="panel-heading">Definir Valores</div>
-								<div class="panel-body">
-									<div class="row">
-										<div class="col-md-1">
-											<div class="form-group">
-												<label for="inputEmail1" class="col-lg-1 control-label">Desconto</label>
-											</div>
-										</div>
-										<div class="col-md-2" style="width: 98px;padding-left: 0;">
-											<div class="form-group" id="desconto-all">					
-												<input thousands-formatter ng-model="view.desconto_all" class="form-control input-xs text-center">
-											</div><!-- /form-group -->
-										</div>	
-										<div class="col-md-2" style="padding-left: 0;">
-											<button  ng-click="aplicarDescontoAll()"type="submit" id="btn-salvar" class="btn btn-success btn-xs">
-												Aplicar Desconto
-											</button>
-										</div>	
-									</div>
-
-									<div class="row">
-										<div class="col-sm-12">
-											<table class="table table-condensed">
-												<tbody>	
-													<thead>
-														<tr>
-															<th class="text-left" >Chinelo</th>
-															<th class="text-center" >Qtd</th>
-															<th class="text-center" style="width:100px">Desconto(%)</th>
-															<th class="text-center" style="width:100px">Valor</th>
-														</tr>
-													</thead>
-													<tr ng-repeat="item in chinelos_gerados">
-														<td>{{ item.nome }}</td>
-														<td class="text-center" >{{ item.qtd }}</td>
-														<td class="text-center" >
-															<input ng-keyUp="calcSubTotal('desconto')"  thousands-formatter ng-model="item.valor_desconto_cal" type="text" class="form-control text-center input-xs" />
-														</td>	
-														<td class="text-center" >
-															<input   thousands-formatter ng-model="item.valor_real_item" type="text" class="form-control text-center input-xs" />
-														</td>	
-													</tr>	
-													<tr>
-														<td class="text-right" colspan="3"><strong>Total</strong></td>
-														<td class="text-center" ng-bind-html="calTotalChinelos()">
-															
-														</td>
-													</tr>			
-												</tbody>
-											</table>
-										</div>	
-									</div>
-								</div>
-							</div>
-
-
-							<div class="row"  ng-if="tela=='escolher_bases'">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
-											<i class="fa fa-times-circle"></i> Cancelar
-										</button>
-										<button  ng-click="telaTiras(true)"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
-											<i class="fa fa-random"></i> Escolher Tiras
-										</button>
-									</div>
-								</div>
-							</div>
-
-							<div class="row"  ng-if="tela == 'escolher_tiras'">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button ng-click="telaTiras(false)" type="submit" class="btn btn-warning btn-sm">
-											<i class="fa fa-reply"></i> voltar
-										</button>
-										<button data-loading-text="Aguarde ... " ng-click="TelaDefinirPreco()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Definir Valores
-										</button>
-									</div>
-								</div>
-							</div>
-
-							<div class="row"  ng-if="tela == 'definir_valores'">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button ng-click="telaTiras(true)" type="submit" class="btn btn-warning btn-sm">
-											<i class="fa fa-reply"></i> voltar
-										</button>
-										<button type="button" class="btn btn-primary btn-sm" ng-if="receber_pagamento == false" ng-disabled="carrinho.length == 0" ng-click="telaPagamento()" disabled="disabled">
-											<i class="fa fa-money"></i> Receber
-										</button>
-										<button data-loading-text="Aguarde ... " ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
-										</button>
-									</div>
-								</div>
-							</div>
-						</form>
-						</div>
-					<div class="panel-body" ng-if="tela == 'receber_pagamento'">
-							<div class="alert alert-pagamento" style="display:none"></div>
-					    	<div class="row">
-					    		<div class="col-sm-9">
-					    		<div class="row" ng-if="pagamento_fulso">
-					    			<div class="col-sm-12">
-					    				<div class="form-group">
-												<label class="control-label">Cliente</label>
-												<div class="input-group">
-													<input ng-click="selCliente(0,10)"  type="text" class="form-control" ng-model="cliente.nome" readonly="readonly" style="cursor: pointer;" />
-													<span class="input-group-btn">
-														<button ng-click="selCliente(0,10)" type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
-													</span>
-												</div>
-												
-										</div>
-					    			</div>
-					    		</div>
-					    		<div class="row">
-					    			<div class="col-sm-12">
-					    				<div class="form-group">
-											<div style="font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor>0">
-												<span style="color:#000">Saldo Devedor :</span> <span style="color:green">R$ {{ cliente.vlr_saldo_devedor | numberFormat:2:',':'.' }}</span>
-											</div>
-											<div style="font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor<0">
-												<span style="color:#000">Saldo Devedor :</span> <span style="color:red">R$ {{ cliente.vlr_saldo_devedor | numberFormat:2:',':'.' }}</span>
-											</div>
-											<div style="font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor==0">
-												<span style="color:#000">Saldo Devedor :</span> <span style="color:blue">R$ {{ cliente.vlr_saldo_devedor | numberFormat:2:',':'.' }}</span>
-											</div>
-											</div>
-										</div>
-					    		</div>
-						    	<div class="row">
-						    		<div class="col-sm-6" id="pagamento_forma_pagamento">
-						    			<label class="control-label">Forma de Pagamento</label>
-										<select ng-model="pagamento.id_forma_pagamento" ng-change="selectChange()" class="form-control input-sm">
-											<option ng-if="pagamento.id_forma_pagamento != null" value=""></option>
-											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.nome }}</option>
-										</select>
-									</div>
-									<div class="col-sm-6" id="pagamento_valor" ng-if="pagamento.id_forma_pagamento == 7" >
-										<label class="control-label">Vale troca</label>
-										<div class="input-group">
-											<input ng-click="showValeTroca()" thousands-formatter type="text" class="form-control input-sm" ng-model="pagamento.valor" readonly="readonly" style="cursor: pointer;" />
-											<span class="input-group-btn">
-												<button ng-click="showValeTroca()" type="button" class="btn btn-info btn-sm"><i class="fa fa-exchange"></i></button>
-											</span>
-										</div>
-									</div>
-
-									<div class="col-sm-2" id="pagamento_id_banco" ng-if="pagamento.id_forma_pagamento == 8">
-										<div class="form-group" >
-											<label class="control-label">Banco</label>
-											<select ng-model="pagamento.id_banco" class="form-control">
-												<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
-											</select>
-										</div>
-									</div>
-
-									<div class="col-sm-2" id="pagamento_agencia_transferencia" ng-if="pagamento.id_forma_pagamento == 8">
-						    			<label class="control-label">Agência</label>
-						    			<div class="form-group ">
-						    					<input ng-model="pagamento.agencia_transferencia"  type="text" class="form-control input-sm" />
-						    			</div>
-						    		</div>
-
-						    		<div class="col-sm-2" id="pagamento_conta_transferencia" ng-if="pagamento.id_forma_pagamento == 8">
-						    			<label class="control-label">Conta</label>
-						    			<div class="form-group ">
-						    					<input ng-model="pagamento.conta_transferencia"  type="text" class="form-control input-sm" />
-						    			</div>
-						    		</div>
-
-						    		<div class="col-sm-6" id="pagamento_valor" ng-if="pagamento.id_forma_pagamento != 7 && pagamento.id_forma_pagamento != 8">
-						    			<label class="control-label">Valor</label>
-						    			<div class="form-group ">
-						    					<input ng-disabled="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 4" ng-model="pagamento.valor" thousands-formatter type="text" class="form-control input-sm" />
-						    			</div>
-						    		</div>
-						    	</div>
-
-						    	<div class="row">
-						    		<div class="col-sm-6" id="pagamento_maquineta" ng-if="pagamento.id_forma_pagamento == 5 || pagamento.id_forma_pagamento == 6 ">
-						    			<label class="control-label">Maquineta</label>
-										<select ng-model="pagamento.id_maquineta" class="form-control input-sm">
-											<option ng-repeat="item in maquinetas" value="{{ item.id_maquineta }}">#{{ item.id_maquineta }} - {{ item.dsc_conta_bancaria }}</option>
-										</select>
-									</div>
-						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 6 || pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 4">
-						    			<label class="control-label">parcelas</label>
-						    			<div class="form-group ">
-						    					<input ng-blur="pushCheques()" ng-focus="qtdCheque()" ng-model="pagamento.parcelas" type="text" class="form-control input-sm" >
-						    			</div>
-						    		</div>
-						    		<div class="col-sm-4" id="proprietario_conta_transferencia" ng-if="pagamento.id_forma_pagamento == 8">
-						    			<label class="control-label">Proprietário</label>
-						    			<div class="form-group ">
-						    					<input ng-model="pagamento.proprietario_conta_transferencia" type="text" class="form-control input-sm" />
-						    			</div>
-						    		</div>
-						    		<div class="col-sm-4" id="pagamento_id_conta_transferencia_destino" ng-if="pagamento.id_forma_pagamento == 8 ">
-						    			<label class="control-label">Conta de Destino</label>
-										<select ng-model="pagamento.id_conta_transferencia_destino" class="form-control input-sm">
-											<option ng-repeat="item in contas" value="{{ item.id }}">#{{ item.id }} - {{ item.dsc_conta_bancaria }}</option>
-										</select>
-									</div>
-						    		<div class="col-sm-4" id="pagamento_valor" ng-if="pagamento.id_forma_pagamento == 8">
-						    			<label class="control-label">Valor</label>
-						    			<div class="form-group ">
-						    					<input ng-model="pagamento.valor" thousands-formatter type="text" class="form-control input-sm" />
-						    			</div>
-						    		</div>
-						    	</div>
-						    	<div class="alert error-cheque" style="display:none"></div>
-									<div class="row" ng-show="pagamento.id_forma_pagamento == 2" ng-repeat="item in cheques">
-										<div class="col-sm-3">
-											<div class="form-group cheque_data">
-												<label class="control-label">Data</label>
-												<div class="input-group">
-													<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="pagamento.data" type="text" id="pagamentoData" class="datepicker form-control chequeData">
-													<span class="input-group-addon" class="cld_pagameto" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group cheque_valor">
-												<label class="control-label">valor</label>
-												<div class="form-group ">
-						    						<input ng-blur="pushCheques()" ng-keyUp="calTotalCheque()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
-						    					</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group cheque_banco" >
-												<label class="control-label">Banco</label>
-												<select ng-model="item.id_banco" class="form-control">
-													<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
-												</select>
-											</div>
-										</div>
-
-										<div class="col-sm-2">
-											<div class="form-group cheque_cc">
-												<label class="control-label">Núm. C/C</label>
-												<input ng-model="item.num_conta_corrente" type="text" class="form-control">
-											</div>
-										</div>
-
-										<div class="col-sm-2">
-											<div class="form-group cheque_num">
-												<label class="control-label">Núm. Cheque</label>
-												<input ng-model="item.num_cheque" type="text" class="form-control">
-											</div>
-										</div>
-
-										<div class="col-sm-1">
-											<div class="row">
-					    						<div class="col-sm-6">
-													<label class="control-label"><br></label>
-													<label class="label-checkbox">
-														<input ng-model="item.flg_cheque_predatado" value="1" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0">
-														<span class="custom-checkbox"></span>
-														Pré?
-													</label>
-												</div>
-												<div class="col-sm-6" ng-if="cheques.length > 1">
-													<div class="form-group">
-														<label class="control-label"><br></label>
-														<label class="control-label">
-															<i ng-click="delItemCheque($index)" class="fa fa-times-circle-o fa-lg" style="color: red;cursor:pointer"></i>
-														</label>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-									<div class="row" ng-show="pagamento.id_forma_pagamento == 4" ng-repeat="item in boletos">
-										<div class="col-sm-3">
-											<div class="form-group boleto_data">
-												<label class="control-label">Data</label>
-												<div class="input-group">
-													<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="pagamento.data" type="text" id="pagamentoData" class="datepicker form-control boletoData">
-													<span class="input-group-addon" class="cld_pagameto" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group boleto_valor">
-												<label class="control-label">valor</label>
-												<div class="form-group ">
-						    						<input ng-blur="pushCheques()" ng-keyUp="calTotalBoleto()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
-						    					</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group boleto_banco" >
-												<label class="control-label">Banco</label>
-												<select ng-model="item.id_banco" class="form-control">
-													<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
-												</select>
-											</div>
-										</div>
-
-										<div class="col-sm-2">
-											<div class="form-group boleto_doc">
-												<label class="control-label">Doc. Boleto</label>
-												<input ng-model="item.doc_boleto" type="text" class="form-control">
-											</div>
-										</div>
-
-										<div class="col-sm-2">
-											<div class="form-group boleto_num">
-												<label class="control-label">Núm. Boleto</label>
-												<input ng-model="item.num_boleto" type="text" class="form-control">
-											</div>
-										</div>
-
-										<div class="col-sm-1">
-											<div class="row">
-					    						<div class="col-sm-6">
-													<label class="control-label"><br></label>
-													<label class="label-checkbox">
-														<input ng-model="item.status_pagamento" value="1" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0">
-														<span class="custom-checkbox"></span>
-														Pago?
-													</label>
-												</div>
-												<div class="col-sm-6" ng-if="boletos.length > 1">
-													<div class="form-group">
-														<label class="control-label"><br></label>
-														<label class="control-label">
-															<i ng-click="delItemBoleto($index)" class="fa fa-times-circle-o fa-lg" style="color: red;cursor:pointer"></i>
-														</label>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-					    		<div class="row">
-					    			<div class="col-sm-12 text-center">
-					    				<label class="control-label">&nbsp</label>
-						    			<div class="form-group ">
-						    				<button type="button" class="btn btn-md btn-success btn-block"   ng-click="aplicarRecebimento()">Receber</button>
-						    			</div>
-						    		</div>
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<table class="table table-bordered table-condensed table-striped table-hover">
-									<thead ng-show="(clientes.length != 0)">
-										<tr>
-											<th colspan="2" class="text-center">Recebidos</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-if="(recebidos.length == 0)">
-											<td colspan="2">Não há nenhum pagamento recebido</td>
-										</tr>
-										<tr ng-repeat="item in recebidos">
-											<td ng-if="item.id_forma_pagamento != 6 && item.id_forma_pagamento != 2 ">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-											<td ng-if="item.id_forma_pagamento == 6">C/C em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-											<td ng-if="item.id_forma_pagamento == 2">Cheque em {{ cheques.length }}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-											<td width="50" align="center">
-												<button type="button" class="btn btn-xs btn-danger" ng-click="deleteRecebidos($index)">
-													<i class="fa fa-times"></i>
-												</button>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="2" style="background: #A2A2A2;">
-
-											</td>
-										</tr>
-										<tr>
-											<td colspan="2">
-												Total Recebido <strong class="pull-right">R$ {{ total_pg | numberFormat:2:',':'.' }}</strong>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="2" ng-if="total_pg <= vlrTotalCompra">
-												Total a Receber <strong class="pull-right">R$ {{ vlrTotalCompra - total_pg | numberFormat:2:',':'.' }}</strong>
-											</td>
-											<td colspan="2" ng-if="total_pg > vlrTotalCompra" >
-												Total a Receber <strong class="pull-right">R$ 0,00</strong>
-											</td>
-										</tr>
-										<tr ng-if="modo_venda == 'pdv'">
-											<td colspan="2">
-												Troco <strong class="pull-right">R$ {{ troco | numberFormat:2:',':'.' }}</strong>
-											</td>
-										</tr>
-										<tr ng-if="modo_venda == 'est' && (total_pg > vlrTotalCompra)">
-											<td colspan="2">
-												Troco sugerido<strong class="pull-right">R$ {{ ((vlrTotalCompra - total_pg) * (-1)) | numberFormat:2:',':'.' }}</strong>
-											</td>
-										</tr>
-										<tr ng-if="modo_venda == 'est' && (total_pg > vlrTotalCompra)">
-											<td colspan="2">
-												<div class="row">
-													<div class="col-sm-10">
-														Troco
-													</div>
-													<div class="col-sm-2">
-														  <input ng-model="troco_opcional" thousands-formatter class="form-control input-sm" >
-													</div>
-												</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div class="row">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button type="button" class="btn btn-sm btn-warning"  ng-click="cancelarPagamento()"><i class="fa fa-times-circle"></i> Cancelar Pagamento</button>
-										<button ng-disabled="total_pg == 0 || total_pg < vlrTotalCompra" data-loading-text="Aguarde ... " ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
-										</button>
-												
-									</div>
-								</div>
-						</div>
-					</div>
-					</div><!-- /panel -->
 				<div class="panel panel-default">
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Pedidos</div>
 					<div class="panel-body">
@@ -821,14 +302,14 @@
 											</td>
 											<td class="text-right">R$ {{ item.vlr_total_venda | numberFormat : '2' : ',' : '.'}}</td>
 											<td class="text-center">
-
-												<!--<a href="separar_venda.php?id_venda={{ item.id }}" ng-if="item.id_status_venda == 1" type="button" tooltip="Separar venda no estoque" data-toggle="tooltip" class="btn btn-xs btn-info">
-													<i class="fa fa-th"></i>
-												</a>-->
-
-							
 												<button type="button" ng-click="loadDetalhesPedido(item)" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Detalhes">
 													<i class="fa fa-tasks"></i>
+												</button>
+												<a  href="pedido-personalizado.php?id_pedido={{ item.id }}" data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button"  ng-if="item.pedido_finalizado == 0"  tooltip="Editar pedido" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Editar pedido">
+													<i class="fa fa-edit"></i>
+												</a>
+												<button ng-click="imprimirRomaneio(item)"  ng-if="item.pedido_finalizado == 0" type="button" tooltip="Imprimir Romaneio" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir romaneio">
+													<i class="fa fa-print"></i>
 												</button>
 												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="finalizaPedido($index,$event)" ng-if="item.pedido_finalizado == 0"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-success"  data-toggle="tooltip" title="Finalizar Pedido">
 													<i class="fa fa-check"></i>
@@ -839,7 +320,6 @@
 												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1" ng-if="false" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-danger">
 													<i class="fa fa-trash-o"></i>
 												</button>
-
 											</td>
 										</tr>
 									</tbody>
@@ -1091,7 +571,7 @@
 		<!-- /Modal detalhes da venda-->
 		<div class="modal fade" id="list_detalhes" style="display:none">
   			<div class="modal-dialog">
-    			<div class="modal-content">
+    			<div class="modal-content" >
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4>Detalhes do Pedido</h4>
@@ -1100,8 +580,14 @@
 						<p class="muted" style="margin: 0px 0 1px;" ng-if=" pedido.pedido_finalizado == 1 ">ID venda  <a href="vendas.php?id_venda={{ pedido.id_venda }}" target="_blank">#{{ pedido.id_venda }}</a></p>
       					<p class="muted" style="margin: 0px 0 1px;">Total Pedido : R$ {{ pedido.vlr_total_venda | numberFormat : '2' : ',' : '.'}}</p>
       				</div>
-				    <div class="modal-body">
+				    <div class="modal-body" style="max-height: 400px;overflow: auto;"	>
 				   		<div class="row">
+				   			<div class="col-sm-12">
+								<div class="alert alert-out alert-warning" ng-if="pro_out_estoque.length > 0">
+									Desculpe, os produtos marcados em <span style="color:#FF9191">vermelho</span>
+								    não tem o estoque necessário para finalizar o pedido.
+								</div>
+							</div>
 				   			<div class="col-sm-12">
 				   				<div class="alert alert-detalhes-pedido" style="display:none">
 				   					
@@ -1148,6 +634,51 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<!-- /Modal Clientes-->
+		<div class="modal fade" id="list_pdf" style="display:none">
+  			<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+				    <div class="modal-body">
+				    <iframe src="http://localhost/webliniaerp-api/relPDF?classe=PedidoVendaDao&metodo=getRelRomaneio&parametros%5B%5D=10&template=romaneio_pedido_personalizado#zoom=103" style="zoom:0.60;height:800px" width="99.6%" frameborder="0"></iframe>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 		<!-- Footer
 		================================================== -->
@@ -1178,6 +709,9 @@
 
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Easy Modal -->
+    <script src="js/eModal.js"></script>
 
 	<!-- Chosen -->
 	<script src='js/chosen.jquery.min.js'></script>

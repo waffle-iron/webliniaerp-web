@@ -95,7 +95,7 @@
 						<h4>Empreendimentos</h4>
 						<p>Selecione o empreendimento que deseja trabalhar</p>
       				</div>
-				    <div class="modal-body" style="overflow-y: scroll; max-height: 300px;">
+				    <div class="modal-body" style="overflow-y: auto; max-height: 500px;">
 				   		<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>

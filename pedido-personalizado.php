@@ -224,7 +224,7 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li><i class="fa fa-tag"></i> <a href="pedidos-personalizados.php">Pedidos Personalizados</a></li>
+					 <li><i class="fa fa-tag"></i> <a href="lista_pedidos_personalizados.php">Pedidos Personalizados</a></li>
 					 <li class="active"><i class="fa fa-plus-circle"></i> Novo Pedido</li>
 				</ul>
 			</div>
@@ -249,7 +249,7 @@
 									<span class="">Dados do Cliente</span>
 									<div class="pull-right">
 										<button type="button" class="btn btn-xs btn-default" ng-click="selCliente()"><i class="fa fa-users"></i> Selecionar Cliente Existente</button>
-										<button type="button" class="btn btn-xs btn-primary" ng-click="cliente.acao_cliente='insert'"><i class="fa fa-plus-circle"></i> Cadastrar Novo Cliente</button>
+										<button type="button" class="btn btn-xs btn-primary" ng-click="btnInsertCliente()"><i class="fa fa-plus-circle"></i> Cadastrar Novo Cliente</button>
 									</div>
 								</legend>
 
@@ -410,25 +410,34 @@
 											<thead>
 												<th class="text-center">Numeração</th>
 												<th class="text-center danger" colspan="2">Feminino</th>
-												<th class="text-center info">Masculino</th>
+												<th class="text-center info" colspan="2">Masculino</th>
 											</thead>
 											<tbody>
 												<tr bs-tooltip ng-repeat="item in gradeInfantil" ng-show="(item.fem_valid || item.mas_valid)">
 													<td class="text-middle text-center">{{ item.nome_tamanho }}</td>
 													<td class="danger" width="65">
-														<input ng-model="item.fem_qtd" onKeyPress="return SomenteNumero(event);" type="text" ng-disabled="!item.fem_valid" class="form-control input-xs text-center">
+														<input ng-model="item.fem_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" type="text" ng-disabled="!item.fem_valid" class="form-control input-xs text-center">
 													</td>
 													<td class="text-center text-middle danger" width="70">
-														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessorios,$event,$index,'infantil')" data-popover-visible="0" id="popover-acessorio-infantil-{{ $index }}">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosFemininos,$event,$index,'feminino-infantil')" data-popover-visible="0" id="popover-acessorio-feminino-infantil-{{ $index }}">
 														<i class="fa fa-tags"></i>
-                                                        <span ng-if="item.acessorios != null && item.acessorios.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessorios) }}</span>
+                                                        <span ng-if="item.acessoriosFemininos != null && item.acessoriosFemininos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosFemininos) }}</span>
 														</button>
-														<button ng-click="openModalAcessorios(item)" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid   && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+														<button ng-click="openModalAcessorios(item,'feminino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid   && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
 															<i class="fa fa-plus-square"></i>
 														</button>
 													</td>
 													<td class="info" width="65">
-														<input ng-model="item.mas_qtd" onKeyPress="return SomenteNumero(event);" type="text" ng-disabled="!item.mas_valid" class="form-control input-xs text-center">
+														<input ng-model="item.mas_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" type="text" ng-disabled="!item.mas_valid" class="form-control input-xs text-center">
+													</td>
+													<td class="text-center text-middle info" width="70">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosMasculinos,$event,$index,'masculino-infantil')" data-popover-visible="0" id="popover-acessorio-masculino-infantil-{{ $index }}">
+														<i class="fa fa-tags"></i>
+                                                        <span ng-if="item.acessoriosMasculinos != null && item.acessoriosMasculinos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosMasculinos) }}</span>
+														</button>
+														<button ng-click="openModalAcessorios(item, 'masculino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid   && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+															<i class="fa fa-plus-square"></i>
+														</button>
 													</td>
 												</tr>
 											</tbody>
@@ -441,25 +450,34 @@
 											<thead>
 												<th class="text-center">Numeração</th>
 												<th class="text-center danger" colspan="2">Feminino</th>
-												<th class="text-center info">Masculino</th>
+												<th class="text-center info" colspan="2">Masculino</th>
 											</thead>
 											<tbody>
 												<tr bs-tooltip ng-repeat="item in gradeAdulto" bs-popover  ng-show="(item.fem_valid || item.mas_valid)">
 													<td class="text-middle text-center">{{ item.nome_tamanho }}</td>
 													<td class="danger" width="65">
-														<input type="text" ng-model="item.fem_qtd" onKeyPress="return SomenteNumero(event);" ng-disabled="!item.fem_valid" class="form-control input-xs text-center">
+														<input type="text" ng-model="item.fem_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" ng-disabled="!item.fem_valid" class="form-control input-xs text-center">
 													</td>
 													<td class="text-center text-middle danger" width="70">
-														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessorios,$event,$index,'adulto')" data-popover-visible="0" id="popover-acessorio-adulto-{{ $index }}">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosFemininos,$event,$index,'feminino-adulto')" data-popover-visible="0" id="popover-acessorio-feminino-adulto-{{ $index }}">
 															<i class="fa fa-tags"></i>
-                                                            <span ng-if="item.acessorios != null && item.acessorios.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessorios) }}</span>
+                                                            <span ng-if="item.acessoriosFemininos != null && item.acessoriosFemininos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosFemininos) }}</span>
 														</button>
-														<button ng-click="openModalAcessorios(item)" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+														<button ng-click="openModalAcessorios(item,'feminino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
 															<i class="fa fa-plus-square"></i>
 														</button>
 													</td>
 													<td class="info" width="65">
-														<input type="text"  ng-model="item.mas_qtd" onKeyPress="return SomenteNumero(event);" ng-disabled="!item.mas_valid" class="form-control input-xs text-center">
+														<input type="text"  ng-model="item.mas_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" ng-disabled="!item.mas_valid" class="form-control input-xs text-center">
+													</td>
+													<td class="text-center text-middle info" width="70">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosMasculinos,$event,$index,'masculino-adulto')" data-popover-visible="0" id="popover-acessorio-masculino-adulto-{{ $index }}">
+														<i class="fa fa-tags"></i>
+                                                        <span ng-if="item.acessoriosMasculinos != null && item.acessoriosMasculinos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosMasculinos) }}</span>
+														</button>
+														<button ng-click="openModalAcessorios(item,'masculino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid   && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+															<i class="fa fa-plus-square"></i>
+														</button>
 													</td>
 												</tr>
 											</tbody>
@@ -542,7 +560,7 @@
 													<td class="text-center">{{ item.qtd }}</td>
 													<td>
 														{{ item.nome }}
-														<i ng-if="item.flg_brinde == 1"  title="Produto Dado Como Brinde" data-toggle="tooltip" class="fa fa-gift fa-lg" style="float: right;color:rgba(128, 0, 82, 0.72);"></i>
+														<i ng-if="item.flg_brinde == 1"  title="Produto dado como brinde" data-toggle="tooltip" class="fa fa-gift fa-lg" style="float: right;color:rgba(128, 0, 82, 0.72);"></i>
 													</td>
 													<td class="text-right" ng-if="item.flg_brinde == 0">{{ item.valor_real_item | numberFormat:2:',':'.' }}</td>
 													<td class="text-right" ng-if="item.flg_brinde == 0">{{ (item.qtd * item.valor_real_item) | numberFormat:2:',':'.' }}</td>
@@ -901,7 +919,7 @@
                             <button type="button" class="btn btn-primary" ng-disabled="vlrTotalCompra <= 0" ng-click="telaPagamento()">
                                  <i class="fa fa-money"></i> Receber
                             </button>
-							<button type="button" ng-click="salvar()" class="btn btn-success" id="btn-salvar"><i class="fa fa-save"></i> Salvar Pedido</button>
+							<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde" type="button" ng-click="salvar()" class="btn btn-success" id="btn-salvar"><i class="fa fa-save"></i> Salvar Pedido</button>
 						</div>
                           <div class="pull-right" ng-show="tela=='receber_pagamento'">
                                 <button type="button" class="btn btn-warning" ng-disabled="length(carrinhoPedido) == 0"  ng-click="cancelarPagamento()"><i class="fa fa-times-circle"></i> Cancelar Pagamento</button>
@@ -1207,7 +1225,7 @@
       				<div class="modal-header"></div>
 				    <div class="modal-body">
 				    	<div class="row">
-				    		<div class="col-sm-12" id="valor_pagamento">
+				    		<div class="col-sm-12">
 				    			<i class='fa fa-refresh fa-spin'></i> Aguarde! Carregando Bases e Tiras.
 							</div>
 				    	</div>
@@ -1218,6 +1236,14 @@
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+
+
+
+
+
+
+
 
 		<!-- Footer
 		================================================== -->

@@ -146,11 +146,14 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 			item.valor_desconto = Math.round( valor_desconto * 100) /100 ;
 			valor_desconto = (valor_desconto / 100) * item.vlr_produto ;
 
-		}else{
+		}else if(Number(item.flg_desconto) == 1){
 			var valor_desconto     = isNaN(Number(item.valor_desconto)) ? 0 : Number(item.valor_desconto) ;
 			valor_desconto = (valor_desconto / 100) * item.vlr_produto ;
 			item.valor_desconto_real = valor_desconto ;
-		}
+		}else{
+			var valor_desconto = 0 ;
+			item.valor_desconto_real = 0 ;
+		}	
 		
 		item.valor_real_item = item.vlr_produto - valor_desconto ;
 		ng.calTotalVendaEdit() ;
@@ -235,7 +238,7 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
    		var itens = [] ;
    		$.each(ng.edit,function(i,v){
    			var item = angular.copy(v);
-   			if(empty(item.valor_desconto) || Number(item.valor_desconto) <= 0 || isNaN(Number(item.valor_desconto))){
+   			if( (empty(item.valor_desconto) || Number(item.valor_desconto) <= 0 || isNaN(Number(item.valor_desconto))) || ( empty(item.flg_desconto)) ){
    				item.desconto_aplicado = 0 ;
    				item.valor_desconto    = 0 ;
    			}else{

@@ -220,52 +220,68 @@
 						</div>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-sm-2 hidden-print">
+						<div class="form-group">
+							<label class="control-label">Itens por Página</label>
+							<select class="form-control" ng-change="loadVendas(0,itensPorPagina)" ng-model="itensPorPagina">
+								<option value="10">10</option>
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="50">100</option>
 
-
-				<ul class="pagination pagination-sm m-top-none pull-right hidden-print" ng-show="paginacao.itens.length > 1">
-					<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
-						<a href="" h ng-click="loadItens(item.offset,item.limit)">{{ item.index }}</a>
-					</li>
-				</ul>
-
-				<br>
-
-				<table id="data" class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<tr>
-							<th width="100" class="text-center">ID da Venda</th>
-							<th class="text-center">Data</th>
-							<th width="100" class="text-center">Qtd. Itens</th>
-							<th width="120" class="text-center">Total Venda</th>
-							<th width="100" class="text-center">% Comissão</th>
-							<th width="120" class="text-center">Total Comissão</th>
-							<th width="100" class="text-center hidden-print">Ações</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-if="vendas.length == 0 && vendas != null">
-							<td class="text-center" colspan="8">
-								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
-							</td>
-						</tr>
-						<tr ng-if="vendas.length < 0 && vendas == null">
-							<td colspan="8">
-								Nenhuma venda encontrada para este vendedor.
-							</td>
-						</tr>
-						<tr ng-repeat="item in vendas">
-							<td class="text-center">{{ item.id }}</td>
-							<td class="text-center">{{ item.dta_venda | dateFormat:'date'}}</td>
-							<td class="text-center">{{ item.qtd_itens }}</td>
-							<td class="text-right">R$ {{ item.vlr_total_venda | numberFormat:2:',':'.' }}</td>
-							<td class="text-right">{{ item.med_perc_comissao | numberFormat:2:',':'.' }} %</td>
-							<td class="text-right">R$ {{ item.vlr_total_comissao | numberFormat:2:',':'.' }}</td>
-							<td class="text-center hidden-print">
-								<button ng-click="view(item.id)" type="button" class="btn btn-xs btn-primary"><i class="fa fa-tasks"></i> Detalhes da Venda</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-10 pull-right">
+						<ul class="pagination pagination-sm m-top-none pull-right hidden-print" style="padding-top: 30px;" ng-show="paginacao.vendas.length > 1">
+							<li ng-repeat="item in paginacao.vendas" ng-class="{'active': item.current}">
+								<a href="" h ng-click="loadVendas(item.offset,item.limit)">{{ item.index }}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="row">
+					<div class="row col-sm-12">
+						<table id="data" class="table table-bordered table-hover table-striped table-condensed">
+							<thead>
+								<tr>
+									<th width="100" class="text-center">ID da Venda</th>
+									<th class="text-center">Data</th>
+									<th width="100" class="text-center">Qtd. Itens</th>
+									<th width="120" class="text-center">Total Venda</th>
+									<th width="100" class="text-center">% Comissão</th>
+									<th width="120" class="text-center">Total Comissão</th>
+									<th width="100" class="text-center hidden-print">Ações</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-if="vendas == null">
+									<td class="text-center" colspan="8">
+										<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
+									</td>
+								</tr>
+								<tr ng-if="vendas.length <= 0 ">
+									<td colspan="8">
+										Nenhuma venda encontrada.
+									</td>
+								</tr>
+								<tr ng-repeat="item in vendas">
+									<td class="text-center">{{ item.id }}</td>
+									<td class="text-center">{{ item.dta_venda | dateFormat:'date'}}</td>
+									<td class="text-center">{{ item.qtd_itens }}</td>
+									<td class="text-right">R$ {{ item.vlr_total_venda | numberFormat:2:',':'.' }}</td>
+									<td class="text-right">{{ item.med_perc_comissao | numberFormat:2:',':'.' }} %</td>
+									<td class="text-right">R$ {{ item.vlr_total_comissao | numberFormat:2:',':'.' }}</td>
+									<td class="text-center hidden-print">
+										<button ng-click="view(item.id)" type="button" class="btn btn-xs btn-primary"><i class="fa fa-tasks"></i> Detalhes da Venda</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div> 			
+				</div>
+				
 			</div><!-- /.padding20 -->
 		</div><!-- /main-container -->
 
@@ -405,7 +421,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/relatorio-vendas-vendedor-controller.js"></script>
+	<script src="js/angular-controller/relatorio-vendas-vendedor-controller.js?<?php echo filemtime('js/angular-controller/relatorio-vendas-vendedor-controller.js')?>"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#cld_pagameto").on("click", function(){ $("#pagamentoData").trigger("focus"); });

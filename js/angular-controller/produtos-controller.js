@@ -109,6 +109,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.resetFilter = function() {
+		ng.busca.produtos = "" ;
 		ng.reset();
 		ng.loadProdutos(0,10);
 	}
@@ -748,7 +749,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.busca_vazia = {} ;
-	ng.loadDepositos = function(offset, limit) {
+	ng.loadDepositos = function(offset, limit,loadPag) {
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 		ng.busca_vazia.depositos = false ;
@@ -758,7 +759,11 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
     	aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+query_string)
 		.success(function(data, status, headers, config) {
-			ng.depositos = data.depositos ;	
+			ng.depositos = data.depositos ;
+			if(loadPag == true){
+				if(ng.depositos.length == 1)
+					ng.addDeposito(ng.depositos[0]);
+			}
 			ng.paginacao.depositos = data.paginacao ;
 		})
 		.error(function(data, status, headers, config) {
@@ -1210,6 +1215,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
+	ng.loadDepositos(0,10,true);
 	ng.loadConfig();
 	ng.loadFabricantes();
 	ng.loadImportadores();

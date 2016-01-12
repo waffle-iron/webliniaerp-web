@@ -764,7 +764,7 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 				id_deposito       : ng.caixa_aberto.id_deposito,
 				id_caixa          : ng.caixa_aberto.id_caixa
 			}
-
+			ng.pro_out_estoque = [];
 			aj.post(baseUrlApi()+"pedido_venda/finalizar",{id_pedido_venda:ng.vendas[index].id,caixa:caixa})
 				.success(function(data, status, headers, config) {
 					ng.loadVendas(0,10);
@@ -774,7 +774,6 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 				.error(function(data, status, headers, config) {
 					btn.button('reset');
 					 if(status == 406){
-					 	ng.mensagens('alert-warning','<b>Os produtos a baixo marcados em vermelho não tem estoque para continuar com o processo</b>','.alert-detalhes-pedido');
 					 	ng.loadDetalhesPedido(ng.vendas[index],null,null,true);
 					 	ng.pro_out_estoque  = data.out_estoque ;
 					 }else{
@@ -1653,16 +1652,25 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 		ng.calcSubTotal('desconto');
 	}
 
-	ng.loadCorpoProduto();
-	ng.loadConfig();
-	ng.loadVendas(0,10);
-	ng.loadMaquinetas();
-	ng.loadBancos();
-	ng.loadContas()
-
+	ng.imprimirRomaneio = function(item){
+		var caminho = baseUrlApi()+'relPDF?'+$.param({classe:'PedidoVendaDao',metodo:'getRelRomaneio',parametros:[item.id],template:'romaneio_pedido_personalizado'});
+		eModal.setEModalOptions({ loadingHtml: '<div><div style="text-align: center;margin-top:5px;margin-bottom:3px"><span class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></span></div><div style="text-align: center;"><span class="h4">Carregando Romaneio</span></div></div>'});
+		var title = 'Romaneio';
+        eModal
+            .iframe({message:caminho, title:title,size:'lg'})
+            .then(function () { t8.success('iFrame loaded!!!!', title) });
+	}
 
 
 	
+	ng.loadConfig();
+	ng.loadVendas(0,10);
+	if(!($.cookie("alerta") == undefined)){
+		var alerta = JSON.parse($.cookie("alerta"));
+		$.removeCookie("alerta");
+		ng.mensagens(alerta.class,'<b>'+alerta.msg+'</b>','.alert-listagem');
+
+	}
 });
 
 app.directive('bsTooltip', function ($timeout) {
