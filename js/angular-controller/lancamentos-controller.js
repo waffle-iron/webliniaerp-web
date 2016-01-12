@@ -159,8 +159,8 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 				queryString += "&flg_tipo_lancamento="+ng.busca.flg_tipo_lancamento;
 			if(!empty(ng.busca.nome_clienteORfornecedor))
 				queryString +="&" + $.param({nome_clienteORfornecedor:{exp:"like '%"+ng.busca.nome_clienteORfornecedor+"%'"}}) ;
-			if(!empty(ng.busca.dsc_natureza_operacao))
-				queryString += "&dsc_natureza_operacao="+ng.busca.dsc_natureza_operacao.toLowerCase();
+			if(!empty(ng.busca.id_plano_conta))
+				queryString += "&id_plano_conta="+ng.busca.id_plano_conta;
 			if(!empty(ng.busca.id_forma_pagamento))
 				queryString += "&id_forma_pagamento="+ng.busca.id_forma_pagamento ;
 			if(ng.busca.status_pagamento == "0" || ng.busca.status_pagamento == "1")
@@ -1349,6 +1349,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 	}
 	ng.busca_avancada = false;
 	ng.buscaAvancada = function(){
+		$("select").trigger("chosen:updated");
 		ng.busca_avancada = !ng.busca_avancada ;
 	}
 

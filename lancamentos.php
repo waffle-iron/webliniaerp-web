@@ -489,26 +489,15 @@
 											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.nome }}</option>
 										</select>
 									</div>
-									<!--<div class="col-sm-6" id="id_plano_pagamento">
-					    				<div class="form-group">
-												<label class="control-label">Plano de conta</label>
-												<div class="input-group">
-													<input ng-click="modalPlanoContas()"  type="text" class="form-control" ng-model="pagamento.nome_plano_conta" readonly="readonly" style="cursor: pointer;" />
-													<span class="input-group-btn">
-														<button ng-click="modalPlanoContas()" type="button" class="btn btn-info"><i class="fa fa-code-fork"></i></button>
-													</span>
-												</div>
-										</div>
-					    			</div>-->
 					    			<div class="col-sm-8">
-											<div class="form-group" id="regimeTributario">
-												<label class="ccontrol-label">Plano de conta </label> 
-												<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
-											    option="plano_contas"
-											    ng-model="pagamento.id_plano_conta"
-											    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
-												</select>
-											</div>
+										<div class="form-group" id="regimeTributario">
+											<label class="ccontrol-label">Plano de conta </label> 
+											<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+										    option="plano_contas"
+										    ng-model="pagamento.id_plano_conta"
+										    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
+											</select>
+										</div>
 									</div>
 					    			<div class="col-sm-4" id="pagamento_id_banco" ng-if="pagamento.id_forma_pagamento == 8">
 										<div class="form-group" >
@@ -906,11 +895,15 @@
 									</div>
 								</div>
 								<div class="col-sm-3">
-									<div class="form-group">
-										<label class="control-label">Nat. da Operação</label>
-										<input ng-model="busca.dsc_natureza_operacao" ng-enter="" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+										<div class="form-group" id="regimeTributario">
+											<label class="ccontrol-label">Nat da Operação</label> 
+											<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+										    option="plano_contas"
+										    ng-model="busca.id_plano_conta"
+										    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
+											</select>
+										</div>
 									</div>
-								</div>
 								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Forma de Pag.</label>
@@ -1253,54 +1246,6 @@
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
-		</div>
-		<!-- /.modal -->
-
-		<!-- Modal plano  -->
-		<div class="modal fade" id="modal-plano-contas" style="display:none">
-  			<div class="modal-dialog error">
-    			<div class="modal-content">
-      				<div class="modal-header">
-						<h4>Plano de contas</h4>
-      				</div>
-
-				    <div class="modal-body">
-				    	<div class="alert alert-plano-contas" style="display:none"></div>
-
-				    	<div class="row">
-								<div class="col-sm-12" id="id_plano_conta">
-									<div class="panel panel-default no-border">
-										<div class="panel-body">
-											<div id="blockTree" style="width: 100%; height: 100%; position: absolute; background-color: #000; display: none; opacity: 0.1; z-index: 100;"></div>
-
-											<div id="tree"
-												data-angular-treeview="true"
-												data-tree-model="roleList"
-												data-node-id="id"
-												data-node-label="nme_completo"
-												data-node-children="children">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-				    	</div>
-
-				    <div class="modal-footer">
-				    	<button type="button" ng-disabled="currentNode == null" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-aplicar-sangria" ng-click="escolherPlano()">
-				    		<i class="fa fa-check-circle"></i> Escolher
-				    	</button>
-
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-plano-contas')" id="btn-plano-contas">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
-				    </div>
-			  	</div>
-			  	<!-- /.modal-content -->
-			</div>
-			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
 
