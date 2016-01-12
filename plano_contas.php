@@ -334,7 +334,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
 	<script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/plano_contas-controller.js"></script>
+	<script src="js/angular-controller/plano_contas-controller.js?<?php echo filemtime("js/angular-controller/plano_contas-controller.js")?>"></script>
 	<?php include("google_analytics.php"); ?>
 	</body>
 </html>

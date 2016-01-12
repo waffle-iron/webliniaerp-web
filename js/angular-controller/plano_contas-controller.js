@@ -38,7 +38,7 @@ app.controller('PlanoContasController', function($scope, $http, $window, $dialog
 	}
 
 	ng.loadPlanoContas = function() {
-		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"plano_contas_treeview?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.planoContas = data;
 			})
