@@ -727,7 +727,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.aplicarDesconto = function(index,$event,checkebox,calc){
-		console.log(ng.carrinho[index]);
 		if(calc == true){
 			var prc_dsc =(ng.carrinho[index].valor_desconto_real * 100)/ng.carrinho[index].vlr_real;
 				ng.carrinho[index].valor_desconto = Math.round( prc_dsc * 100) /100 ;
@@ -1822,7 +1821,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.loadEstoqueDep(0,10);
 	}
 
-	ng.loadEstoqueDep = function(offset,limit) {
+	ng.loadEstoqueDep = function(offset,limit,clear) {
+		clear = clear == null ? true : clear ; 
+		if(clear === true){
+			ng.paginacao_estoqueDep = [];
+			ng.estoqueDep = null ;
+		}
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
     	ng.pg_ant    = {offset:offset,limit:limit};
@@ -1830,7 +1834,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
     	if(ng.busca.estoqueDep != ""){
     		query_string += "?"+$.param(
 	    									{
-	    										'prd->nome':{exp:"like'%"+ng.busca.estoqueDep+"%' OR fab.nome_fabricante like'%"+ng.busca.estoqueDep+"%' OR dep.nme_deposito LIKE '%"+ng.busca.estoqueDep+"%'"}
+	    										'pro->nome':{exp:"like'%"+ng.busca.estoqueDep+"%' OR fab.nome_fabricante like'%"+ng.busca.estoqueDep+"%' OR dep.nme_deposito LIKE '%"+ng.busca.estoqueDep+"%'"}
 	    									}
     									);
     	}
@@ -1857,9 +1861,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.depositos = [];
 			});
 	}
-	ng.transferencia = false ;
-	ng.transferenciaEst = function(item){
-		console.log(item);
+
+	ng.transferenciaEst = function(item,event){
+		var btn = $(event.target) ;
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
 
 		if((item.qtd_transferencia == undefined || item.qtd_transferencia == '') || (item.id_deposito_trasferencia == undefined || item.id_deposito_trasferencia == '')){
 			$dialogs.notify('Atenção!','<strong>Informe a quantidade e o deposito para a transferência</strong>');
@@ -1872,17 +1878,39 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}
 
 		item.id_empreendimento = ng.userLogged.id_empreendimento ;
-		ng.transferencia = true;
-		ng.estoqueDep = [];
+		item.id_usuario = ng.userLogged.id ;
+		btn.button('loading');
+		btn.removeClass('btn-success').addClass('btn-primary');
 
 		aj.post(baseUrlApi()+"estoque/transferir",item)
 			.success(function(data, status, headers, config) {
-				ng.transferencia = false;
-				ng.mensagens('alert-success','<strong>Transferência relaizada com sucesso</strong>','.alert-transferencia');
-				ng.loadEstoqueDep(ng.pg_ant.offset,ng.pg_ant.limit);
+		    	var query_string = "";
+		    	if(ng.busca.estoqueDep != ""){
+		    		query_string += "?"+$.param(
+			    									{
+			    										'pro->nome':{exp:"like'%"+ng.busca.estoqueDep+"%' OR fab.nome_fabricante like'%"+ng.busca.estoqueDep+"%' OR dep.nme_deposito LIKE '%"+ng.busca.estoqueDep+"%'"}
+			    									}
+		    									);
+		    	}
+				ng.produtos = [];
+				aj.get(baseUrlApi()+"estoque/deposito/"+ng.userLogged.id_empreendimento+"/"+ng.pg_ant.offset+"/"+ng.pg_ant.limit+"/"+query_string)
+					.success(function(data, status, headers, config) {
+						$.gritter.add({title: '<i class="fa fa-check-circle"></i> <b style="font-size:12px">Transferência realizada com sucesso.<b>',text: '',sticky: false,time: '',class_name: 'gritter-success'});
+						ng.estoqueDep        = data.produtos ;
+						ng.paginacao_estoqueDep = data.paginacao;
+					})
+					.error(function(data, status, headers, config) {
+						btn.button('reset');
+						btn.removeClass('btn-primary').addClass('btn-success');
+						$.gritter.add({title: '<i class="fa fa-check-circle"></i> <b style="font-size:12px">Transferência realizada com sucesso, Porem ocorreu um erro ao atualizar a lista.<b>',text: '',sticky: false,time: '',class_name: 'gritter-warning'});
+						ng.estoqueDep = [];
+						ng.paginacao_estoqueDep = [];
+					});
 			})
 			.error(function(data, status, headers, config) {
-
+				btn.button('reset');
+				btn.removeClass('btn-primary').addClass('btn-success');
+				$.gritter.add({title: '<i class="fa fa-check-circle"></i> <b style="font-size:12px">Erro ao realizar transferência<b>',text: '',sticky: false,time: '',class_name: 'gritter-danger'});
 			});
 
 	}

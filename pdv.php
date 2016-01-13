@@ -20,6 +20,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Gritter -->
+	<link href="css/gritter/jquery.gritter.css" rel="stylesheet">
+
 	<!-- Datepicker -->
 	<link href="css/datepicker.css" rel="stylesheet"/>
 
@@ -883,7 +886,7 @@
 															<td ng-show="show_aditional_columns">{{ item.peso }}</td>
 															<td ng-show="show_aditional_columns">{{ item.sabor }}</td>
 															<td class="text-center" width="20">
-																<input ng-keyUp="calcSubTotal(item)" ng-disabled="finalizarOrcamento" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" />
+																<input onKeyPress="return SomenteNumero(event);" ng-keyUp="calcSubTotal(item)" ng-disabled="finalizarOrcamento" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" />
 															</td>
 															<td class="text-center" ng-if="show_vlr_real" > R${{ item.vlr_custo_real | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-right">R$ {{ item.vlr_real | numberFormat : 2 : ',' : '.' }}</td>
@@ -1424,7 +1427,7 @@
 											<td>{{ item.qtd_real_estoque }}</td>
 											<td>{{ item.peso }}</td>
 											<td>{{ item.sabor }}</td>
-											<td><input ng-keyUp="" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" /></td>
+											<td><input onKeyPress="return SomenteNumero(event);" ng-keyUp="" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" /></td>
 											<td>
 											<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
 												<i class="fa fa-check-square-o"></i> Selecionar
@@ -1455,17 +1458,17 @@
 
 		<!-- /Modal tranferencia-->
 		<div class="modal fade" id="modal-transferencia" style="display:none">
-  			<div class="modal-dialog  modal-lg">
+  			<div class="modal-dialog  modal-xl">
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4>Transferências entre depositos</span></h4>
       				</div>
-				    <div class="modal-body">
+				    <div class="modal-body" style="min-height:500px">
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.estoqueDep" type="text" class="form-control input-sm">
+						            <input ng-model="busca.estoqueDep" ng-enter="loadEstoqueDep(0,10)" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
 						            	<button ng-click="loadEstoqueDep(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
@@ -1492,16 +1495,19 @@
 											<th style="width:40px">Qtd</th>
 											<th >Validade</th>
 											<th style="width:30px">Qtd para tranferência</th>
-											<th >Dep. tranferência</th>
+											<th style="width: 200px;">Dep. tranferência</th>
 											<th colspan="2">selecionar</th>
 										</tr>
 									</thead>
 									<tbody>
+										<tr ng-show="(estoqueDep == null)">
+											<td colspan="9" class="text-center"><i class='fa fa-refresh fa-spin'></i> Aguarde, carregando ... </td>
+										</tr>
 										<tr ng-show="(estoqueDep.length == 0 && transferencia == false)">
-											<td colspan="2">Não há produtos cadastrados</td>
+											<td colspan="2">Nemhum produto foi encontrado.</td>
 										</tr>
 										<tr ng-show="(estoqueDep.length == 0 && transferencia == true)">
-											<td colspan="2" style="background: #FBFFA5;color: #000;">Aguarde, a transferencia está sendo realizada ...</td>
+											<td colspan="2" style="background: #FBFFA5;color: #000;"><i class='fa fa-refresh fa-spin'></i>Aguarde, a transferencia está sendo realizada ...</td>
 										</tr>
 										<tr ng-repeat="item in estoqueDep">
 											<td>{{ item.nome }}</td>
@@ -1511,7 +1517,7 @@
 											<td style="width:40px;font-weight: bold;">{{ item.qtd_item }}</td>
 											<td>{{ item.dta_validade | dateFormat:"" }}</td>
 											<td>
-												<input ng-model="item.qtd_transferencia" type="text" class="form-control input-sm" ng-if="item.qtd_item > 0">
+												<input onKeyPress="return SomenteNumero(event);" ng-model="item.qtd_transferencia" type="text" class="form-control input-sm" ng-if="item.qtd_item > 0">
 											</td>
 											<td>
 												<select class="form-control input-sm" ng-model="item.id_deposito_trasferencia" ng-if="item.qtd_item > 0">
@@ -1520,7 +1526,7 @@
 												</select>
 											</td>
 											<td width="50" align="center">
-												<button ng-disabled="(item.qtd_transferencia == undefined || item.qtd_transferencia == '') || (item.id_deposito_trasferencia == undefined || item.id_deposito_trasferencia == '')" type="button" class="btn btn-xs btn-success" ng-click="transferenciaEst(item)" ng-if="item.qtd_item > 0">
+												<button ng-disabled="(item.qtd_transferencia == undefined || item.qtd_transferencia == '') || (item.id_deposito_trasferencia == undefined || item.id_deposito_trasferencia == '')" type="button" class="btn btn-xs btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Transferindo" ng-click="transferenciaEst(item,$event)" ng-if="item.qtd_item > 0">
 													<i class="fa fa fa-external-link"></i> Transferir
 												</button>
 											</td>
@@ -1981,6 +1987,9 @@
 
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Gritter -->
+	<script src="js/jquery.gritter.min.js"></script>
 
 	<!-- Modernizr -->
 	<script src='js/modernizr.min.js'></script>

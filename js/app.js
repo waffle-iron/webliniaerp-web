@@ -72,6 +72,7 @@ angular.module('filters', [])
 	.filter('dateFormat', function () {
 		return function (inputFormat,tipo) {
 		  	function pad(s) { return (s < 10) ? '0' + s : s; }
+		  if (empty(inputFormat)) return "" ;
 		  if(inputFormat.length < 6){
 		  	return "" ;
 		  }else if(inputFormat == '0000-00-00'){
