@@ -446,7 +446,7 @@
 								</div>
 							</div>
 
-							<div class="row">
+							<div ng-show="!(userLogged.id_perfil == 8)" class="row">
 								<div class="col-sm-2">
 									<div class="form-group" id="vlr_custo">
 										<label class="control-label">Valor de Tabela</label>
@@ -484,7 +484,7 @@
 
 							</div>
 
-							<div class="row">
+							<div ng-show="!(userLogged.id_perfil == 8)" class="row">
 								<div class="col-sm-4" style="margin-bottom:8px;">
 									<div class="control-label text-center" style="font-weight: 700;background: #D6D5D5;">Valor de Atacado</div>
 								</div>
@@ -496,7 +496,7 @@
 								</div>
 
 							</div>
-							<div class="row">
+							<div ng-show="!(userLogged.id_perfil == 8)" class="row">
 								<div class="col-sm-2"
 									<div class="form-group" id="perc_venda_varejo">
 										<div class="control-label text-center">Margem(%)</div>
@@ -559,10 +559,10 @@
 								</div>
 							</div>
 
-							<div class="panel panel-default" ng-show="userLogged.id_perfil==1">
+							<div class="panel panel-default">
 								<div class="panel-heading"><i class="fa fa-list-ol"></i> Estoque</div>
 								<div class="panel-body painel-estoque">
-									<div class="row">
+									<div ng-show="userLogged.id_perfil==1" class="row">
 										<div class="col-sm-5" id="inventario_novo_deposito">
 											<label class="control-label">Deposito</label>
 											<div class="input-group">
@@ -610,7 +610,8 @@
 														<td>{{ value.nome_deposito }}</td>
 														<td class="text-center" ng-if="value.dta_validade != '2099-12-31'">{{ value.dta_validade | dateFormat:'date' }}</td>
 														<td class="text-center" ng-if="value.dta_validade == '2099-12-31'"></td>
-														<td class="text-center" ><input type="text"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" ></td>
+														<td ng-show="(userLogged.id_perfil == 1)" class="text-center" ><input type="text"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" ></td>
+														<td ng-show="!(userLogged.id_perfil == 1)" class="text-center">{{ value.qtd_ivn }} </td>
 													</tr>
 												</tbody>
 											</table>

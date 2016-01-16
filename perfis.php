@@ -14,6 +14,12 @@
     <!-- Bootstrap core CSS -->
       <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
 
+    <!-- ui treeview -->
+    <link rel="stylesheet" href="css/bootstrap-treeview.css"/>
+
+    <!-- ui switch -->
+    <link rel="stylesheet" href="css/angular-ui-switch.min.css"/>
+
 	<!-- Font Awesome -->
 	<link href="css/font-awesome-4.1.0.min.css" rel="stylesheet">
 
@@ -32,6 +38,22 @@
 
 		.modal {
 			display: block;
+		}
+		.panel-error {
+		  border-color: #a94442 !important;
+  		  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+           border-color: #843534 !important;
+		  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
+		          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483 !important;
+		}
+
+		.panel-error .panel-heading {
+			 background: rgb(255, 234, 234) !important;
+			  border-color: #a94442 !important;
+  		  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075) !important;
+          color: #a94442 !important ;
 		}
 
 		/* Custom dialog/modal headers */
@@ -56,13 +78,28 @@
 
 		#list_produtos .modal-dialog  {width:70%;}
 
-		#list_produtos .modal-content {min-height: 640px;;}
+		#list_produtos .modal-content {min-height: 640px;}
+
+		.switch{
+			background: #de3c3c;
+    		border: 1px solid #de3c3c;
+    		height: 20px;
+    		width: 33px;
+		}
+
+		.switch small{
+    		height: 20px;
+    		width: 20px;
+		}
+		.switch.checked small {
+		    left: 13px;
+		}
 
 
 	</style>
   </head>
 
-  <body class="overflow-hidden" ng-controller="CategoriasController" ng-cloak>
+  <body class="overflow-hidden" ng-controller="PerfisController" ng-cloak>
   	<!-- Overlay Div -->
 	<div id="overlay" class="transparent"></div>
 
@@ -182,76 +219,117 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-tags"></i> Categorias</li>
+					 <li class="active"><i class="fa  fa-user"></i> Perfis</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-tags"></i> Categorias</h3>
+					<h3 class="no-margin"><i class="fa  fa-user"></i> Perfis</h3>
 					<br/>
-					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Categoria</a>
+					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Perfil</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
 				<div class="alert alert-sistema" style="display:none"></div>
-
 				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Nova Categoria</div>
-
+					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Perfil</div>
 					<div class="panel-body">
-						<form class="form-horizontal" role="form">
-							<div id="descricao_categoria" class="form-group">
-								<label for="descricao" class="col-sm-1 control-label">Descrição</label>
-								<div class="col-sm-11">
-									<input type="text" class="form-control" id="descricao" ng-model="categoria.descricao_categoria">
-								</div>
-							</div>
+						<form name="myForm">
+							<div class="row">
+								<div class="col-sm-6">
+									<div id="nome" class="form-group">
+										<label for="descricao" class="control-label">Descrição</label>
+										<input type="text" class="form-control input sm" ng-model="perfil.nome">
 
-							<div class="form-group">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
-											<i class="fa fa-times-circle"></i> Cancelar
-										</button>
-										<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
-										</button>
 									</div>
 								</div>
+								<div class="col-sm-1">
+									<label for="descricao" class="control-label">&nbsp&nbsp</label>
+									<div class="control-label">
+										<switch id="enabled" name="enabled" ng-model="perfil.status" class="small"></switch>
+									</div> 	
+									
+								</div>
+								<div class="col-sm-5">
+									<div class="padding-md">
+										<div class="panel panel-default" id="modulos">
+											<div class="panel-heading"><i class="fa fa-th fa-lg"></i> Módulos
+													<span ng-show="perfil.modulos.length > 0" class="pull-right">Selecionados: <span style="background:#504f63" class="badge badge-primary">{{ perfil.modulos.length }}</span></span>
+											</div>
+											<div style="max-height:305px;min-height:305px;overflow:auto" class="panel-body" id="treeview-modulos">
+												
+									        </div>
+									    </div>
+									</div>
+								</div>		
 							</div>
 						</form>
+					</div>
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+								<i class="fa fa-times-circle"></i> Cancelar
+							</button>
+							<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde " ng-click="salvar($event)" type="submit" class="btn btn-success btn-sm">
+								<i class="fa fa-save"></i> Salvar
+							</button>
+						</div>
 					</div>
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-tasks"></i> Categorias Cadastradas</div>
+					<div class="panel-heading"><i class="fa fa-tasks"></i> Perfis cadastradas</div>
 
-					<div class="panel-body">
+					<div class="panel-body" id="panel-listagem">
+						<div id="alert" class="alert" style="display:none"></div>
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
 									<th>#</th>
 									<th>Descrição</th>
+									<th width="46" class="text-center">Status</th>
 									<th width="80" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="item in categorias">
+								<tr ng-show="perfis.perfis == null">
+									<td colspan="4" class="text-center">
+										<i class='fa fa-refresh fa-spin'></i> Carregando ...
+									</td>
+								</tr>
+								<tr ng-show="perfis.length == 0">
+									<td colspan="4" class="text-center">
+										Nunhum perfil encontrado
+									</td>
+								</tr>
+								<tr ng-repeat="item in perfis.perfis" bs-tooltip>
 									<td width="80">{{ item.id }}</td>
-									<td>{{ item.descricao_categoria }}</td>
+									<td>{{ item.nome }}</td>
+									<td ng-if="item.status == 0" class="text-center"><i data-toggle="tooltip" title="Inativo" style="color: #EF3232;" class="fa fa-circle fa-lg"></i></td>
+									<td ng-if="item.status == 1" class="text-center"><i  data-toggle="tooltip" style="color: #27A719;" title="Ativo" class="fa fa-circle fa-lg"></i></td>
 									<td align="center">
-										<button type="button" ng-click="editar(item)" tooltip="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
+										<button type="button" ng-click="editar(item)" title="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button type="button" ng-click="delete(item)" tooltip="Excluir" class="btn btn-xs btn-danger delete" data-toggle="tooltip">
+										<button ng-if="false" type="button" ng-click="delete(item)" title="Excluir" class="btn btn-xs btn-danger delete" data-toggle="tooltip">
 											<i class="fa fa-trash-o"></i>
 										</button>
 									</td>
 								</tr>
 							</tbody>
 						</table>
+						<div class="pull-right">
+							<ul class="pagination pagination-sm m-top-none" ng-show="perfis.paginacao.length > 1">
+								<li ng-repeat="item in perfis.paginacao" ng-class="{'active': item.current}">
+									<a href="" h ng-click="loadPerfis(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="panel-footer clearfix">
+						
 					</div>
 				</div>
 			</div>
@@ -312,16 +390,21 @@
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
+	<script src="js/bootstrap-treeview.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-ui-utils/mask.min.js"></script>
     <script src="js/angular-sanitize.min.js"></script>
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
+    <script src="js/angular-ui-switch.min.js"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/auto-complete/AutoComplete.js"></script>
-    <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/categorias-controller.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['uiSwitch'] ;
+    </script>
+    <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>
+    <script src="js/auto-complete/AutoComplete.js?version=<?php echo date("dmY-His", filemtime("js/auto-complete/AutoComplete.js")) ?>"></script>
+    <script src="js/angular-services/user-service.js?version=<?php echo date("dmY-His", filemtime("js/angular-services/user-service.js")) ?>"></script>
+	<script src="js/angular-controller/perfis-controller.js?version=<?php echo date("dmY-His", filemtime("js/angular-controller/Perfis-controller.js")) ?>"></script>
 	<script type="text/javascript"></script>>
 	<?php include("google_analytics.php"); ?>
   </body>
