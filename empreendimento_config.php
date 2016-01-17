@@ -30,6 +30,11 @@
 	<link href="css/endless-skin.css" rel="stylesheet">
 	<link href="css/custom.css" rel="stylesheet">
 	<style type="text/css">
+		.tab-content{
+			overflow: visible !important;
+			padding-bottom: 0 !important;
+			border-right: none !important;
+		}
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
 
 		.modal {
@@ -200,172 +205,208 @@
 				</div>
 				<br/>
 				<div class="panel panel-default" id="box-novo">
-					<div class="panel-body">
-						<form id="formEmprendimento" role="form" enctype="multipart/form-data">
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="panel-heading" style="padding: 10px 15px 10px 0px;margin-bottom:10px"></i>Confugurações da loja</div>
-								</div>
-							</div>
+					<div class="panel-body no-padding">
+						<div class="tab-right">
+							<ul class="tab-bar">
+								<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Básico</a></li>
+								<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Loja Virtual</a></li>
+								<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
+								<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane fade in active" id="basico" style="width: 980px;">
+									<form class="formEmprendimento" role="form" enctype="multipart/form-data">
 
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group" id="nome_empreendimento">
-										<label class="control-label">Nome</label>
-										<input ng-model="empreendimento.nome_empreendimento" type="text"  class="form-control input-sm">
+												<div class="alert alert-basico-loja" style="display:none"></div>	
+
+										<div class="row" style="height: 67px;">
+											<div class="col-sm-4">
+												<div class="form-group" id="nome_empreendimento">
+													<label class="control-label">Nome</label>
+													<input ng-model="empreendimento.nome_empreendimento" type="text"  class="form-control input-sm">
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group" id="nme_logo">
+													<label class="control-label"><i class="fa fa-camera"></i> Logo</label>
+													<div class="upload-file">
+														<input  id="foto-produto" name="nme_logo"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
+														<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
+														<label data-title="Selecione" for="foto-produto">
+															<span data-title="..."></span>
+														</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="pull-right">
+													<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
+														<i class="fa fa-save"></i> Salvar
+													</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+								<div class="tab-pane fade" id="loja" style="width: 980px;">
+									<form class="formEmprendimento" role="form" enctype="multipart/form-data">
+												<div class="alert alert-basico-loja" style="display:none"></div>	
+
+										<div class="row" style="height: 67px;">
+											<div class="col-sm-4">
+												<div class="form-group" id="nickname">
+													<label class="control-label">Nickname</label>
+													<input ng-model="empreendimento.nickname"   type="text" class="form-control input-sm">
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group" id="end_email_contato">
+													<label class="control-label">E-mail</label>
+													<input ng-model="empreendimento.end_email_contato"  type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+
+											<div class="col-sm-4">
+												<div class="form-group" id="num_telefone">
+													<label class="control-label">Telefone</label>
+													<input ng-model="empreendimento.num_telefone"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="form-group" id="dsc_empreendimento">
+													<label class="control-label">Descrição</label>
+													<textarea ng-model="empreendimento.dsc_empreendimento" class="form-control" rows="5"></textarea>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="form-group" id="url_facebook">
+													<label class="control-label">Link do facebook</label>
+													<input ng-model="empreendimento.url_facebook"  type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+
+											<div class="col-sm-4">
+												<div class="form-group" id="url_twitter">
+													<label class="control-label">Link do Twitter</label>
+													<input ng-model="empreendimento.url_twitter"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+												</div>
+											</div>
+
+											<div class="col-sm-4">
+												<div class="form-group" id="url_google_plus">
+													<label class="control-label">Link do Google Plus</label>
+													<input ng-model="empreendimento.url_google_plus"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="form-group" id="url_linkedin">
+													<label class="control-label">Link do Linkedin</label>
+													<input ng-model="empreendimento.url_linkedin"  type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+
+											<div class="col-sm-4">
+												<div class="form-group" id="url_pinterest">
+													<label class="control-label">Link do Pinterest</label>
+													<input ng-model="empreendimento.url_pinterest"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+												</div>
+											</div>
+										</div>
+										<div class="row" style="height: 67px;">
+											<div class="col-sm-12">
+												<div class="pull-right">
+													<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
+														<i class="fa fa-save"></i> Salvar
+													</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>		
+								<div class="tab-pane fade" id="pdv" style="width: 980px;">
+									<div class="alert alert-danger alert-error-config" <?php echo isset($_COOKIE['pth_local']) ? 'style="display:none"' :  'style="display:block"' ?>>
+										Para que sua <strong>frente de loja(PDV)</strong> possa funcionar correntamente, preencha os campos abaixo, marcados em vermelho
+									</div>
+									<div class="alert alert-config" style="display:none"></div>
+									<div class="row" style="height: 67px;">
+										<div class="col-sm-4" id="id_plano_caixa">
+											<div class="input-group">
+											<label class="control-label">Plano para movimentação de caixa</label>
+								            <input ng-model="config.nome_plano_movimentacao" type="text" class="form-control input-sm">
+
+								            <div class="input-group-btn" style="top: 11px;">
+								            	<button ng-click="modalPlanoContas('movimentacao')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
+								            </div> <!-- /input-group-btn -->
+								        </div> <!-- /input-group -->
+										</div>
+										<div class="col-sm-4" id="id_plano_fechamento_caixa">
+											<div class="input-group">
+											<label class="control-label">Plano para fechamento de caixa</label>
+								            <input ng-model="config.nome_plano_fechamento" type="text" class="form-control input-sm">
+
+								            <div class="input-group-btn" style="top: 11px;">
+								            	<button ng-click="modalPlanoContas('fechamento')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
+								            </div> <!-- /input-group-btn -->
+								        </div> <!-- /input-group -->
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group" id="pth_local"  >
+												<label class="control-label">IP do caixa</label>
+												<input ng-model="config.pth_local"  type="text" class="form-control input-sm parsley-validated">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="pull-right">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
+													<i class="fa fa-save"></i> Salvar
+												</button>
+											</div>
+										</div>
 									</div>
 								</div>
+								<div class="tab-pane fade" id="fiscal" style="width: 980px;">
+									<div class="col-sm-12">
+										<div class="alert alert-fiscal" style="display:none">
 
-								<div class="col-sm-4">
-									<div class="form-group" id="nickname">
-										<label class="control-label">Nickname</label>
-										<input ng-model="empreendimento.nickname"   type="text" class="form-control input-sm">
+										</div>
 									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group" id="nme_logo">
-										<label class="control-label"><i class="fa fa-camera"></i> Logo</label>
-										<div class="upload-file">
-											<input  id="foto-produto" name="nme_logo"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
-											<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
-											<label data-title="Selecione" for="foto-produto">
-												<span data-title="..."></span>
-											</label>
+									<div class="row" style="height: 67px;">
+										<div class="col-sm-12">
+											<div class="form-group" id="regimeTributario">
+												<label class="ccontrol-label">CFOP Padrão</label> 
+												<select chosen
+											    option="lista_cfop"
+											    ng-model="fiscal.cfop"
+											    ng-options="cfop.num_item as cfop.dsc_completa for cfop in lista_cfop">
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="pull-right">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
+													<i class="fa fa-save"></i> Salvar
+												</button>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group" id="end_email_contato">
-										<label class="control-label">E-mail</label>
-										<input ng-model="empreendimento.end_email_contato"  type="text" class="form-control input-sm parsley-validated">
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div class="form-group" id="num_telefone">
-										<label class="control-label">Telefone</label>
-										<input ng-model="empreendimento.num_telefone"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group" id="dsc_empreendimento">
-										<label class="control-label">Descrição</label>
-										<textarea ng-model="empreendimento.dsc_empreendimento" class="form-control" rows="5"></textarea>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group" id="url_facebook">
-										<label class="control-label">Link do facebook</label>
-										<input ng-model="empreendimento.url_facebook"  type="text" class="form-control input-sm parsley-validated">
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div class="form-group" id="url_twitter">
-										<label class="control-label">Link do Twitter</label>
-										<input ng-model="empreendimento.url_twitter"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div class="form-group" id="url_google_plus">
-										<label class="control-label">Link do Google Plus</label>
-										<input ng-model="empreendimento.url_google_plus"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group" id="url_linkedin">
-										<label class="control-label">Link do Linkedin</label>
-										<input ng-model="empreendimento.url_linkedin"  type="text" class="form-control input-sm parsley-validated">
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div class="form-group" id="url_pinterest">
-										<label class="control-label">Link do Pinterest</label>
-										<input ng-model="empreendimento.url_pinterest"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-									</div>
-								</div>
-							</div>
-							<br/>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button ng-click="update()" type="submit" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
-										</button>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="panel-heading" style="padding: 10px 15px 10px 0px;margin-bottom:10px"></i>Configurações de caixa</div>
-								</div>
-							</div>
-							<div class="row" id="config_caixa">
-								<div class="col-sm-12">
-									<div class="alert alert-danger alert-error-config" <?php echo isset($_COOKIE['pth_local']) ? 'style="display:none"' :  'style="display:block"' ?>>
-										Para que sua <strong>frente de loja(PDV)</strong> possa funcionar correntamente, preencha os campos abaixo, marcados em vermelho
-									</div>
-								</div>
-								<div class="col-sm-12">
-									<div class="alert alert-config" style="display:none">
-
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-4" id="id_plano_caixa">
-									<div class="input-group">
-									<label class="control-label">Plano para movimentação de caixa</label>
-						            <input ng-model="config.nome_plano_movimentacao" type="text" class="form-control input-sm">
-
-						            <div class="input-group-btn" style="top: 11px;">
-						            	<button ng-click="modalPlanoContas('movimentacao')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
-						            </div> <!-- /input-group-btn -->
-						        </div> <!-- /input-group -->
-								</div>
-								<div class="col-sm-4" id="id_plano_fechamento_caixa">
-									<div class="input-group">
-									<label class="control-label">Plano para fechamento de caixa</label>
-						            <input ng-model="config.nome_plano_fechamento" type="text" class="form-control input-sm">
-
-						            <div class="input-group-btn" style="top: 11px;">
-						            	<button ng-click="modalPlanoContas('fechamento')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
-						            </div> <!-- /input-group-btn -->
-						        </div> <!-- /input-group -->
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group" id="pth_local"  >
-										<label class="control-label">IP do caixa</label>
-										<input ng-model="config.pth_local"  type="text" class="form-control input-sm parsley-validated">
-									</div>
-								</div>
-							</div>
-
-							<br/>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button ng-click="salvarConfig()" type="submit" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
-										</button>
-									</div>
-								</div>
-							</div>
-						</form>
+						</div>
 					</div>
 				</div><!-- /panel -->
 				</div>
@@ -501,6 +542,10 @@
 	<!-- Mascaras para o formulario de produtos -->
 	<script src="js/scripts/mascaras.js"></script>
 
+	<!-- Chosen -->
+	<script src='js/chosen.jquery.min.js'></script>
+
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -513,6 +558,10 @@
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
+    <script src="js/angular-chosen.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['angular.chosen'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>

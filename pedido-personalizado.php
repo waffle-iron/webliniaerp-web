@@ -1278,9 +1278,6 @@
 	<!-- Chosen -->
 	<script src='js/chosen.jquery.min.js'></script>
 
-	<!-- Chosen -->
-	<script src='js/chosen.jquery.min.js'></script>
-
 	<!-- Mask-input -->
 	<script src='js/jquery.maskedinput.min.js'></script>
 	<script src='js/jquery.maskMoney.js'></script>
