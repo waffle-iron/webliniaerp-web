@@ -211,6 +211,8 @@
 			<div class="main-header clearfix">
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-tag"></i> Pedidos Personalizados</h3>
+					<br/>
+					<a href="pedido-personalizado.php" class="btn btn-primary" ng-if="userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6 "><i class="fa fa-tag"></i> Novo Pedido</a>
 				</div>
 			</div>
 			<!-- /main-header -->
@@ -308,7 +310,10 @@
 												<a  href="pedido-personalizado.php?id_pedido={{ item.id }}" data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button"  ng-if="item.pedido_finalizado == 0"  tooltip="Editar pedido" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Editar pedido">
 													<i class="fa fa-edit"></i>
 												</a>
-												<button ng-click="imprimirRomaneio(item)"  ng-if="item.pedido_finalizado == 0" type="button" tooltip="Imprimir Romaneio" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir romaneio">
+												<button ng-click="imprimirRomaneio(item)"  ng-if="item.pedido_finalizado == 0" type="button" tooltip="Imprimir Via Fábrica" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Fábrica">
+													<i class="fa fa-print"></i>
+												</button>
+												<button ng-click="imprimirRomaneioCliente(item)"  ng-if="item.pedido_finalizado == 0" type="button" tooltip="Imprimir Via Cliente" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Cliente">
 													<i class="fa fa-print"></i>
 												</button>
 												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="finalizaPedido($index,$event)" ng-if="item.pedido_finalizado == 0"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-success"  data-toggle="tooltip" title="Finalizar Pedido">

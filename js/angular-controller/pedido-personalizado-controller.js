@@ -490,6 +490,11 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 			return ;
 		}
 
+		if(ng.length(ng.carrinhoPedido) == 0){
+			$dialogs.notify('Atenção!','<strong>Nunhum Produto Foi Montado.</strong>');
+			return ;
+		}
+
 		if(empty(dtaVenda)){
 			error ++ ;
 			$("#label-dta-venda").addClass("has-error");
@@ -1637,7 +1642,8 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 	ng.addCorEstampa = function(item){
 		item = {
 			id_cor    : item.id,
-			dsc_local : item.dsc_local 
+			dsc_local : item.dsc_local,
+			nome_cor      : item.nome_cor
 		}
 		ng.pedido.coresEstampa.push(item);
 	}

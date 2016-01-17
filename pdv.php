@@ -12,10 +12,10 @@
     <meta name="author" content="">
 
     <!-- Bootstrap core CSS -->
-      <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
+      <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css?version=<?php echo date("dmY-His", filemtime("bootstrap/css/bootstrap.min.css")) ?>'>
 
 	<!-- Font Awesome -->
-	<link href="css/font-awesome-4.1.0.min.css" rel="stylesheet">
+	<link href="css/font-awesome-4.1.0.min.css?version<?php  echo date("dmY-His", filemtime("css/font-awesome-4.1.0.min.css")) ?>" rel="stylesheet">
 
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
@@ -2031,10 +2031,10 @@
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
   	<script src="js/auto-complete/ng-sanitize.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/auto-complete/AutoComplete.js"></script>
-    <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/pdv-controller.js?<?php echo filemtime('js/angular-controller/pdv-controller.js')?>"></script>
+    <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>
+    <script src="js/auto-complete/AutoComplete.js?version=<?php echo date("dmY-His", filemtime("js/auto-complete/AutoComplete.js")) ?>"></script>
+    <script src="js/angular-services/user-service.js?version=<?php echo date("dmY-His", filemtime("js/angular-services/user-service.js")) ?>"></script>
+	<script src="js/angular-controller/pdv-controller.js?version=<?php echo date("dmY-His", filemtime("js/angular-controller/pdv-controller.js")) ?>"></script>
 	<?php include("google_analytics.php"); ?>
 
   </body>

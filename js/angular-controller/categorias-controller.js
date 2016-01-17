@@ -1,5 +1,4 @@
 app.controller('CategoriasController', function($scope, $http, $window, $dialogs, UserService){
-
 	var ng = $scope
 		aj = $http;
 

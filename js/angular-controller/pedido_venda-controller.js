@@ -1654,8 +1654,17 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 
 	ng.imprimirRomaneio = function(item){
 		var caminho = baseUrlApi()+'relPDF?'+$.param({classe:'PedidoVendaDao',metodo:'getRelRomaneio',parametros:[item.id],template:'romaneio_pedido_personalizado'});
-		eModal.setEModalOptions({ loadingHtml: '<div><div style="text-align: center;margin-top:5px;margin-bottom:3px"><span class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></span></div><div style="text-align: center;"><span class="h4">Carregando Romaneio</span></div></div>'});
-		var title = 'Romaneio';
+		eModal.setEModalOptions({ loadingHtml: '<div><div style="text-align: center;margin-top:5px;margin-bottom:3px"><span class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></span></div><div style="text-align: center;"><span class="h4">Carregando, aguarde...</span></div></div>'});
+		var title = 'Controle Interno de Produção';
+        eModal
+            .iframe({message:caminho, title:title,size:'lg'})
+            .then(function () { t8.success('iFrame loaded!!!!', title) });
+	}
+
+	ng.imprimirRomaneioCliente = function(item){
+		var caminho = baseUrlApi()+'relPDF?'+$.param({classe:'PedidoVendaDao',metodo:'getRelRomaneio',parametros:[item.id],template:'romaneio_pedido_personalizado_cliente'});
+		eModal.setEModalOptions({ loadingHtml: '<div><div style="text-align: center;margin-top:5px;margin-bottom:3px"><span class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></span></div><div style="text-align: center;"><span class="h4">Carregando, aguarde...</span></div></div>'});
+		var title = 'Pedido de Venda (Via Cliente)';
         eModal
             .iframe({message:caminho, title:title,size:'lg'})
             .then(function () { t8.success('iFrame loaded!!!!', title) });
