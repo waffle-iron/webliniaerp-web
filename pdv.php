@@ -12,7 +12,7 @@
     <meta name="author" content="">
 
     <!-- Bootstrap core CSS -->
-      <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css?version=<?php echo date("dmY-His", filemtime("bootstrap/css/bootstrap.min.css")) ?>'>
+    <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css?version=<?php echo date("dmY-His", filemtime("bootstrap/css/bootstrap.min.css")) ?>'>
 
 	<!-- Font Awesome -->
 	<link href="css/font-awesome-4.1.0.min.css?version<?php  echo date("dmY-His", filemtime("css/font-awesome-4.1.0.min.css")) ?>" rel="stylesheet">
@@ -25,6 +25,9 @@
 
 	<!-- Datepicker -->
 	<link href="css/datepicker.css" rel="stylesheet"/>
+
+	<!-- Chosen -->
+	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
 
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
@@ -1670,40 +1673,62 @@
 										</table>
 						    		</div>
 						    	</div>
-
-						    		<div class="row" id="tbl_print_pg">
-							    		<div class="col-sm-12" id="valor_pagamento">
-							    			<table class="table table-bordered table-condensed table-striped table-hover">
-												<thead ng-if="pagamento_fulso != true" >
-													<tr>
-														<th colspan="2" class="text-center" >Pagamentos referentes a venda</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr ng-if="(recebidos.length == 0)">
-														<td colspan="1">Não foi recebido nenhum pagamento</td>
-													</tr>
-													<tr ng-repeat="item in recebidos">
-														<td ng-if="item.id_forma_pagamento != 6">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-														<td ng-if="item.id_forma_pagamento == 6">{{ item.forma_pagamento  }} em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-													</tr>
-												</tbody>
-											</table>
-							    		</div>
+					    		<div class="row" id="tbl_print_pg">
+						    		<div class="col-sm-12" id="valor_pagamento">
+						    			<table class="table table-bordered table-condensed table-striped table-hover">
+											<thead ng-if="pagamento_fulso != true" >
+												<tr>
+													<th colspan="2" class="text-center" >Pagamentos referentes a venda</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-if="(recebidos.length == 0)">
+													<td colspan="1">Não foi recebido nenhum pagamento</td>
+												</tr>
+												<tr ng-repeat="item in recebidos">
+													<td ng-if="item.id_forma_pagamento != 6">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+													<td ng-if="item.id_forma_pagamento == 6">{{ item.forma_pagamento  }} em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+												</tr>
+											</tbody>
+										</table>
 						    		</div>
+					    		</div>
+					    		<div class="row" ng-show="emitirNfe">
+									<div class="col-sm-12">
+										<div class="form-group" id="regimeTributario">
+											<label class="ccontrol-label">CFOP</label> 
+											<select chosen
+										    option="lista_cfop"
+										    ng-model="configuracoes.id_cfop_padrao_venda"
+										    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+											</select>
+										</div>
+									</div>
+								</div>
 
 						    </div>
 
 						    <div class="modal-footer">
-						    	<a href="client/launch.jnlp" class="btn btn-md btn-block btn-primary" ng-click="printTermic()">
+						    	<a ng-show="!emitirNfe" href="client/launch.jnlp" class="btn btn-md  btn-primary" ng-click="printTermic()">
 						    		<i class="fa fa-print"></i> Imprimir (via Impressora Térmica)
 						    	</a>
-						    	<button type="button" data-loading-text=" Aguarde..." id="btn-imprimir"
-						    		class="btn btn-md btn-block btn-success" ng-click="printDiv('modal-print')">
+						    	<button ng-show="!emitirNfe" type="button" data-loading-text=" Aguarde..." id="btn-imprimir"
+						    		class="btn btn-md  btn-success" ng-click="printDiv('modal-print')">
 						    		<i class="fa fa-print"></i> Imprimir (via Papel A4)
 						    	</button>
-						    	<a ng-click="cancelar()" class="btn btn-md btn-block btn-default">
+						    	<button ng-show="!emitirNfe" ng-click="emitirNfe = true" type="button" data-loading-text=" Aguarde..." 
+						    		class="btn btn-md  btn-info" ng-click="">
+						    		<i class="fa fa-print"></i> Emitir NF-e
+						    	</button>
+						    	<a ng-show="!emitirNfe" ng-click="cancelar()" class="btn btn-md  btn-default">
 						    		<i class="fa fa-reply"></i> Voltar ao PDV
+						    	</a>
+						    	<button ng-show="emitirNfe"  type="button" data-loading-text=" Aguarde..." 
+						    		class="btn btn-md  btn-info" ng-click="">
+						    		<i class="fa fa-print"></i> Confirmar Emissão NF-e
+						    	</button>
+						    	<a ng-show="emitirNfe" ng-click="emitirNfe = false" class="btn btn-md  btn-default">
+						    		<i class="fa fa-reply"></i> Voltar
 						    	</a>
 						    </div>
 					  	</div>
@@ -1988,6 +2013,9 @@
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- Chosen -->
+	<script src='js/chosen.jquery.min.js'></script>
+
     <!-- Gritter -->
 	<script src="js/jquery.gritter.min.js"></script>
 
@@ -2031,11 +2059,14 @@
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
   	<script src="js/auto-complete/ng-sanitize.js"></script>
+  	<script src="js/angular-chosen.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['angular.chosen'] ;
+    </script>
     <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>
     <script src="js/auto-complete/AutoComplete.js?version=<?php echo date("dmY-His", filemtime("js/auto-complete/AutoComplete.js")) ?>"></script>
     <script src="js/angular-services/user-service.js?version=<?php echo date("dmY-His", filemtime("js/angular-services/user-service.js")) ?>"></script>
 	<script src="js/angular-controller/pdv-controller.js?version=<?php echo date("dmY-His", filemtime("js/angular-controller/pdv-controller.js")) ?>"></script>
 	<?php include("google_analytics.php"); ?>
-
   </body>
 </html>

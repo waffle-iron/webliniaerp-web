@@ -44,16 +44,20 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 
-	ng.update = function() {
+	ng.update = function(event) {
+		var btn = $(event.target);
+		btn.button('loading');
 		ng.reset();
-		$('#formEmprendimento').ajaxForm({
+		$('.formEmprendimento').ajaxForm({
 		 	url: baseUrlApi()+"empreendimento/config/update",
 		 	type: 'post',
 		 	data: ng.empreendimento,
 		 	success:function(data){
-		 		ng.mensagens('alert-success', 'Configurações atualizadas com sucesso');
+		 		btn.button('reset');
+		 		ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-basico-loja');
 		 	},
 		 	error:function(data){
+		 		btn.button('reset');
 		 		if(data.status == 406){
 		 			$.each(data.responseJSON, function(i, item) {
 						$("#"+i).addClass("has-error");
@@ -105,9 +109,12 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	}
 
 	ng.loadConfig = function(){
+		var btn = $(event.target);
+		btn.button('loading');
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+				btn.button('reset');
 				ng.configuracoes = data;
 				if(data.id_plano_caixa == undefined){
 					$('#id_plano_caixa').addClass('has-error');
@@ -140,6 +147,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 
 			})
 			.error(function(data, status, headers, config) {
+				btn.button('reset');
 				if(status == 404){
 					ng.configuracoes = [];
 					$('#id_plano_caixa').addClass('has-error');
@@ -169,7 +177,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 	ng.config = {} ;
-	ng.salvarConfig = function(){
+	ng.salvarConfig = function(event){
+		var btn = $(event.target);
 		var chaves = [];
 		if(ng.id_plano_fechamento_caixa != undefined){
 			var item1 = {
@@ -189,6 +198,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 						}
 			chaves.push(item2);
 		}
+		btn.button('loading');
 		var pth_local_sucess = false ;
 		if(ng.config.pth_local != undefined){
 
@@ -201,18 +211,34 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				});
 		}
 
-		aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local } )
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local, cfop:ng.config.cfop } )
 			.success(function(data, status, headers, config) {
+				btn.button('reset');
 				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config');
 				ng.loadConfig();
 			})
 			.error(function(data, status, headers, config) {
+				btn.button('reset');
 			});
 	}
 
 	ng.cancelarModal = function(id){
 		$('#'+id).modal('hide');
 	}
+
+	ng.loadControleNfe = function(ctr,key) {
+		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
+			.success(function(data, status, headers, config) {
+				ng[key] = ng[key].concat(data) ;
+				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 3000);
+			})
+			.error(function(data, status, headers, config) {
+				
+		});
+	}
+
+	ng.lista_cfop = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+	ng.loadControleNfe('cfop','lista_cfop');
 
 
 	function defaulErrorHandler(data, status, headers, config) {

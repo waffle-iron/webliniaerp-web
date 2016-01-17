@@ -25,8 +25,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.vendedor             = {};
 	ng.modal_senha_vendedor = {id_empreendimento:ng.userLogged.id_empreendimento, id_vendedor:null,nome_vendedor:null,senha_vendedor:null,show:false}
 	var params      = getUrlVars();
-
-
+	ng.emitirNfe = false ;
 
 
 	ng.reforco             = {} ;
@@ -716,6 +715,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			.success(function(data, status, headers, config) {
 				var btn = $('#btn-fazer-compra');
 				btn.button('reset');
+				ng.loadControleNfe('cfop','lista_cfop');
 				ng.modalProgressoVenda('hide');
 				ng.vlr_saldo_devedor = data.vlr_saldo_devedor ;
 				ng.id_controle_pagamento = data.id_controle_pagamento ;
@@ -2351,6 +2351,20 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	    });
 	}
 
+	ng.nfe = {} ;
+	ng.loadControleNfe = function(ctr,key) {
+		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
+			.success(function(data, status, headers, config) {
+				ng[key] = ng[key].concat(data) ;
+				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 3000);
+			})
+			.error(function(data, status, headers, config) {
+				
+		});
+	}
+
+	ng.lista_cfop = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+	
 	ng.existsCookie();
 	ng.loadConfig();
 	ng.calcTotalCompra();
