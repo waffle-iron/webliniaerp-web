@@ -16,7 +16,7 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 							cod_operacao_estorno 	: null ,
 							cod_operacao_devolucao 	: null 
 						 };
-	ng.operacao    = operacao ;
+	ng.operacao    = angular.copy(operacao) ;
 	ng.paginacao   = {operacao:null} ;
     ng.operacoes   = [];
     ng.editing     = false;
@@ -81,6 +81,9 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0"+queryString)
 			.success(function(data, status, headers, config) {
 				ng.chosen_operacao = ng.chosen_operacao.concat(data.operacao);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
 			})
 			.error(function(data, status, headers, config) {
 					

@@ -449,7 +449,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		valor_campo_extra = angular.copy(ng.valor_campo_extra);
 		ng.produto.valor_campo_extra = valor_campo_extra ;
 		ng.getValorCamposExtras(ng.produto);
-
+		$('html,body').animate({scrollTop: 0 },'slow');
 
 
 
@@ -886,14 +886,16 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.produto.flg_produto_composto = 0 ;
 	ng.produto_normal = 0 ;
 	ng.valor_campo_extra = {};
+	ng.chosen_campo_extra = [{nome_campo:'',label:'--- Selecione ---'}];
 	ng.getCamposExtras = function(){
 		aj.get(baseUrlApi()+"campo_extra_prododuto_empreendimento?tcep->id_empreendimento="+ng.userLogged.id_empreendimento)
 		.success(function(data, status, headers, config) {
+			ng.chosen_campo_extra = ng.chosen_campo_extra.concat(data);
 			$.each(data,function(i,v){
-				ng.campos_extras_produto.push(v.nome_campo);
+				ng.campos_extras_produto.push(v);
 				ng.valor_campo_extra[v.nome_campo] = 0 ;
 			});
-			console.log(ng.valor_campo_extra);
+			console.log(ng.chosen_campo_extra);
 		})
 		.error(function(data, status, headers, config) {
 		
@@ -906,7 +908,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		.success(function(data, status, headers, config) {
 			$.each(data,function(i,v){
 				produto.valor_campo_extra[i] = v.valor_campo;
+				if(v.valor_campo == 1)
+					produto.campo_extra_selected = i ;
 			});
+			console.log(produto);
 		})
 		.error(function(data, status, headers, config) {
 	

@@ -615,7 +615,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 			id_cliente : ng.cliente.id,
 			venda_confirmada : 0,
 			id_empreendimento : ng.userLogged.id_empreendimento,
-			id_status_venda : 1,
+			id_status_pedido : 1,
 			itens : itens,
 			chinelos_gerados : chinelos_gerados,
 			estampas : estampas,
@@ -781,7 +781,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 	ng.chosen_cor_tira  = [] ;
 	ng.loadCoresTira = function(){
 		ng.chosen_cor_tira  = [{id:null,nome_cor:'--- Selecione ---'}] ;
-		aj.get(baseUrlApi()+"pedido_personalizado/cores_base?cplSql=tpe.id_empreendimento="+ng.userLogged.id_empreendimento+" AND tcep.nome_campo = 'flg_tira_personalizada' AND tvcep.valor_campo = 1 GROUP BY tcp.id ORDER BY tcp.nome_cor ASC")
+		aj.get(baseUrlApi()+"pedido_personalizado/cores_base?cplSql=tpe.id_empreendimento="+ng.userLogged.id_empreendimento+" AND (tcep.nome_campo IN ('flg_tira_personalizada_masculina','flg_tira_personalizada_feminina') ) AND tvcep.valor_campo = 1 GROUP BY tcp.id ORDER BY tcp.nome_cor ASC")
 			.success(function(data, status, headers, config) {
 				ng.chosen_cor_tira = ng.chosen_cor_tira.concat(data);
 				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 300);

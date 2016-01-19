@@ -201,6 +201,7 @@
 						<a href="regra_tributos.php" class="btn btn-sm btn-info" type="button">Regra Tributos</a>
 						<a href="situacao_especial.php" class="btn btn-sm btn-info" type="button">Situação Especial</a>
 						<a href="zoneamento.php" class="btn btn-sm btn-info" type="button">Zoneamento</a>
+						<a href="operacao.php" class="btn btn-sm btn-info" type="button">Operações</a>
 					</div>
 				</div>
 				<br/>
@@ -209,12 +210,12 @@
 						<div class="tab-right">
 							<ul class="tab-bar">
 								<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Básico</a></li>
-								<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Loja Virtual</a></li>
+								<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
 								<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
-								<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>
+								<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
 							</ul>
 							<div class="tab-content">
-								<div class="tab-pane fade in active" id="basico" style="width: 980px;">
+								<div class="tab-pane fade in active" id="basico" style="width: 975px;">
 									<form class="formEmprendimento" role="form" enctype="multipart/form-data">
 
 												<div class="alert alert-basico-loja" style="display:none"></div>	
@@ -239,7 +240,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="row">
+										<div class="row" style="height: 67px;">
 											<div class="col-sm-12">
 												<div class="pull-right">
 													<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
@@ -250,7 +251,7 @@
 										</div>
 									</form>
 								</div>
-								<div class="tab-pane fade" id="loja" style="width: 980px;">
+								<div class="tab-pane fade" id="loja" style="width: 975px;">
 									<form class="formEmprendimento" role="form" enctype="multipart/form-data">
 												<div class="alert alert-basico-loja" style="display:none"></div>	
 
@@ -334,7 +335,7 @@
 										</div>
 									</form>
 								</div>		
-								<div class="tab-pane fade" id="pdv" style="width: 980px;">
+								<div class="tab-pane fade" id="pdv" style="width: 975px;">
 									<div class="alert alert-danger alert-error-config" <?php echo isset($_COOKIE['pth_local']) ? 'style="display:none"' :  'style="display:block"' ?>>
 										Para que sua <strong>frente de loja(PDV)</strong> possa funcionar correntamente, preencha os campos abaixo, marcados em vermelho
 									</div>
@@ -367,35 +368,19 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="pull-right">
-												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
-													<i class="fa fa-save"></i> Salvar
-												</button>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade" id="fiscal" style="width: 980px;">
-									<div class="col-sm-12">
-										<div class="alert alert-fiscal" style="display:none">
-
-										</div>
-									</div>
 									<div class="row" style="height: 67px;">
-										<div class="col-sm-12">
+										<div class="col-sm-4">
 											<div class="form-group" id="regimeTributario">
-												<label class="ccontrol-label">CFOP Padrão</label> 
+												<label class="ccontrol-label">Operacao Padrão</label> 
 												<select chosen
-											    option="lista_cfop"
-											    ng-model="fiscal.cfop"
-											    ng-options="cfop.num_item as cfop.dsc_completa for cfop in lista_cfop">
+											    option="lista_operacao"
+											    ng-model="configuracoes.id_operacao_padrao_venda"
+											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
 												</select>
 											</div>
 										</div>
 									</div>
-									<div class="row">
+									<div class="row" style="height: 67px;">
 										<div class="col-sm-12">
 											<div class="pull-right">
 												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
@@ -405,6 +390,7 @@
 										</div>
 									</div>
 								</div>
+				
 							</div>
 						</div>
 					</div>

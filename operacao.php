@@ -252,7 +252,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
 								    option="chosen_operacao"
 								    ng-model="operacao.cod_operacao_estorno"
-								    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in chosen_operacao">
+								    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in chosen_operacao" change-chosen>
 									</select>
 								</div>
 							</div>

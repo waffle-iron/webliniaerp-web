@@ -211,8 +211,15 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-6">
+								<div class="col-sm-3">
 									<div class="form-group">
+										<label for="" class="control-label">Sub Tipo do produto</label>
+										<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
+									    option="chosen_campo_extra"
+									    ng-model="produto.campo_extra_selected"
+									    ng-options="campo.nome_campo as campo.label for campo in chosen_campo_extra">
+										</select>
+										<!--
 										<label for="" class="control-label">Sub Tipo do produto</label>
 										<div class="form-group">
 											<label class="label-radio inline" ng-if="produto.valor_campo_extra.flg_base != undefined">
@@ -230,10 +237,15 @@
 												<span class="custom-radio"></span>
 												<span>Tira</span>
 											</label>
-											<label class="label-radio inline" ng-if="produto.valor_campo_extra.flg_tira_personalizada != undefined">
-												<input ng-model="produto.valor_campo_extra.flg_tira_personalizada" ng-click="changeTipoProduto('flg_tira_personalizada','sub_tipo')" name="sub_tipo_produto" value="1" type="radio" class="inline-radio">
+											<label class="label-radio inline" ng-if="produto.valor_campo_extra.flg_tira_personalizada_masculina != undefined">
+												<input ng-model="produto.valor_campo_extra.flg_tira_personalizada_masculina" ng-click="changeTipoProduto('flg_tira_personalizada_masculina','sub_tipo')" name="sub_tipo_produto" value="1" type="radio" class="inline-radio">
 												<span class="custom-radio"></span>
-												<span>Tira Personalizada</span>
+												<span>Tira Personalizada Masculina</span>
+											</label>
+											<label class="label-radio inline" ng-if="produto.valor_campo_extra.flg_tira_personalizada_feminina != undefined">
+												<input ng-model="produto.valor_campo_extra.flg_tira_personalizada_feminina" ng-click="changeTipoProduto('flg_tira_personalizada_feminina','sub_tipo')" name="sub_tipo_produto" value="1" type="radio" class="inline-radio">
+												<span class="custom-radio"></span>
+												<span>Tira Personalizada feminina</span>
 											</label>
 											<label class="label-radio inline" ng-if="produto.valor_campo_extra.flg_acessorio != undefined">
 												<input ng-model="produto.valor_campo_extra.flg_acessorio" ng-click="changeTipoProduto('flg_acessorio','sub_tipo')" name="sub_tipo_produto" value="1" type="radio" class="inline-radio">
@@ -241,6 +253,7 @@
 												<span>Acessório</span>
 											</label>
 										</div>
+										-->
 									</div>
 								</div>
 							</div>

@@ -82,7 +82,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	}
 
 	ng.escolherPlano = function(){
-		console.log(ng.tipo_plano,ng.currentNode);
+		//console.log(ng.tipo_plano,ng.currentNode);
 		if(ng.tipo_plano =='movimentacao'){
 			ng.config.nome_plano_movimentacao = ng.currentNode.dsc_plano ;
 			ng.id_plano_movimentacao_caixa    = ng.currentNode.id;
@@ -108,14 +108,23 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		 });
 	}
 
+	ng.keysConfig = {} ;
 	ng.loadConfig = function(){
 		var btn = $(event.target);
 		btn.button('loading');
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+				$.each(data,function(i,x){
+					ng.keysConfig[i] = { 
+											nome : i,
+											valor : x,
+											id_empreendimento : ng.userLogged.id_empreendimento
+										}
+				});
 				btn.button('reset');
 				ng.configuracoes = data;
+				//console.log(ng.keysConfig);
 				if(data.id_plano_caixa == undefined){
 					$('#id_plano_caixa').addClass('has-error');
 					error++ ;
@@ -164,7 +173,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		var r  = false ;
 		aj.get(baseUrlApi()+"planoconta/"+id)
 			.success(function(data, status, headers, config) {
-				console.log(data);
+				//console.log(data);
 				if(tipo == 'movimentacao'){
 					ng.config.nome_plano_movimentacao = data.dsc_plano;
 					ng.id_plano_movimentacao_caixa = data.id;
@@ -188,8 +197,6 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 						}
 			chaves.push(item1);
 		}
-
-
 		if(ng.id_plano_movimentacao_caixa != undefined){
 			var item2 = {
 							nome 				:'id_plano_caixa',
@@ -197,6 +204,14 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 							id_empreendimento	:ng.userLogged.id_empreendimento
 						}
 			chaves.push(item2);
+		}
+		if(ng.configuracoes.id_operacao_padrao_venda != undefined){
+			var item3 = {
+							nome 				:'id_operacao_padrao_venda',
+							valor 				:ng.configuracoes.id_operacao_padrao_venda , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item3);
 		}
 		btn.button('loading');
 		var pth_local_sucess = false ;
@@ -211,7 +226,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				});
 		}
 
-		aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local, cfop:ng.config.cfop } )
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local} )
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
 				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config');
@@ -230,15 +245,25 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
 			.success(function(data, status, headers, config) {
 				ng[key] = ng[key].concat(data) ;
-				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 3000);
 			})
 			.error(function(data, status, headers, config) {
 				
 		});
 	}
 
-	ng.lista_cfop = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-	ng.loadControleNfe('cfop','lista_cfop');
+	 ng.loadOperacaoCombo = function() {
+		ng.lista_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
+		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+			.success(function(data, status, headers, config) {
+				ng.lista_operacao = ng.lista_operacao.concat(data.operacao);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+					
+			});
+	}
 
 
 	function defaulErrorHandler(data, status, headers, config) {
@@ -248,6 +273,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadEmpreendimento(ng.userLogged.id_empreendimento);
 	ng.existsCookie();
 	ng.loadConfig();
+	ng.loadOperacaoCombo();
 
 	
 });

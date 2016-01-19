@@ -351,7 +351,13 @@
 										</select>
 									</div>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-2">
+									<div class="form-group" id="vlr_custo">
+										<label class="control-label">Percentual Credito Simples</label>
+										<input  ng-model="empreendimento.num_percentual_credito_simples" thousands-formatter class="form-control input-sm">
+									</div>
+								</div>
+								<div class="col-sm-3">
 									<div class="form-group">
 										<label for="" class="control-label">Contribuinte ICMS</label>
 										<div class="form-group">
@@ -369,7 +375,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 									<div class="form-group">
 										<label for="" class="control-label">Contribuinte IPI</label>
 										<div class="form-group">

@@ -568,7 +568,7 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 			id_cliente : ng.cliente.id ,
 			venda_confirmada : 0,
 			id_empreendimento : ng.userLogged.id_empreendimento,
-			id_status_venda : 1,
+			id_status_pedido : 1,
 			itens : [],
 			chinelos_gerados : ng.chinelos_gerados 
 		}
@@ -749,6 +749,27 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 			.error(function(data, status, headers, config) {
 				alert(data);
 		});
+	}
+
+	ng.changeStatus = function(pedido,id_status,msg,event){
+		dlg = $dialogs.confirm('Atenção!!!' ,'<strong>'+msg+'</strong>');
+		var button = $(event.target);
+		if(!button.is(':button'))
+			button = $(event.target).parent();
+		
+		dlg.result.then(function(btn){
+			button.button('loading');
+			aj.get(baseUrlApi()+"pedido_venda/change_status/"+pedido.id+"/"+id_status)
+				.success(function(data, status, headers, config) {
+					button.button('reset');
+					ng.mensagens('alert-success','<b>Pedido alterado com sucesso</b>','.alert-listagem');
+					pedido.id_status_pedido = id_status ;
+				})
+				.error(function(data, status, headers, config) {
+					button.button('reset');
+					ng.mensagens('alert-danger','<b>Ocorreu um erro ao alterar o pedido</b>','.alert-listagem');				
+			});
+		}, undefined);
 	}
 
 	ng.finalizaPedido = function(index,event){

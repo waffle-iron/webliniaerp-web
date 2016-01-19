@@ -1696,11 +1696,11 @@
 					    		<div class="row" ng-show="emitirNfe">
 									<div class="col-sm-12">
 										<div class="form-group" id="regimeTributario">
-											<label class="ccontrol-label">CFOP</label> 
+											<label class="ccontrol-label">Operação</label> 
 											<select chosen
-										    option="lista_cfop"
-										    ng-model="configuracoes.id_cfop_padrao_venda"
-										    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+										    option="lista_operacao"
+										    ng-model="configuracoes.id_operacao_padrao_venda"
+										    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
 											</select>
 										</div>
 									</div>

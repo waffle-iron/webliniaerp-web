@@ -285,7 +285,7 @@
 											<th class="text-center">Cliente</th>
 											<th class="text-center" width="160">status</th>
 											<th class="text-center" width="100">Total</th>
-											<th class="text-center" width="160">Ações</th>
+											<th class="text-center" width="200">Ações</th>
 										</tr>
 									</thead>
 									<tbody> 
@@ -316,14 +316,25 @@
 												<button ng-click="imprimirRomaneioCliente(item)"  ng-if="item.pedido_finalizado == 0" type="button" tooltip="Imprimir Via Cliente" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Cliente">
 													<i class="fa fa-print"></i>
 												</button>
-												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="finalizaPedido($index,$event)" ng-if="item.pedido_finalizado == 0"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-success"  data-toggle="tooltip" title="Finalizar Pedido">
-													<i class="fa fa-check"></i>
-												</button>
-												<a href="vendas.php?id_venda={{ item.id_venda }}" target="_blank" type="button" ng-if="item.pedido_finalizado == 1"  tooltip="Ver venda" data-toggle="tooltip" class="btn btn-xs btn-info"  data-toggle="tooltip" title="Ver Venda Gerada">
+
+												<a href="vendas.php?id_venda={{ item.id_venda }}" target="_blank" type="button" ng-show="item.id_status_pedido >= 3"  tooltip="Ver venda" data-toggle="tooltip" class="btn btn-xs btn-info"  data-toggle="tooltip" title="Ver Venda Gerada">
 													<i class="fa fa-shopping-cart"></i>
 												</a>
-												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1" ng-if="false" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-danger">
-													<i class="fa fa-trash-o"></i>
+
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="changeStatus(item,2,'Tem Certeza que deseja eviar o pedido para produção?',$event)" ng-show="item.id_status_pedido == 1"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Enviar p/ Produção">
+													<i class="fa fa-cogs"></i>
+												</button>
+
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="finalizaPedido($index,$event)" ng-show="item.id_status_pedido == 2"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-info"  data-toggle="tooltip" title="Finalizar Pedido">
+													<i class="fa fa-check"></i>
+												</button>
+
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="changeStatus(item,4,'Tem certeza que deseja eviar o pedido para transporte?',$event)" ng-show="item.id_status_pedido == 3"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Enviar p/ Transporte">
+													<i class="fa fa-truck"></i>
+												</button>
+
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="changeStatus(item,5,'Tem certeza que deseja marcar o pedido como entegue?',$event)" ng-show="item.id_status_pedido == 4"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-success"  data-toggle="tooltip" title="Pedido Entegue">
+													<i class="fa fa-thumbs-up"></i>
 												</button>
 											</td>
 										</tr>

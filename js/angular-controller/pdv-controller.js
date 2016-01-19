@@ -715,7 +715,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			.success(function(data, status, headers, config) {
 				var btn = $('#btn-fazer-compra');
 				btn.button('reset');
-				ng.loadControleNfe('cfop','lista_cfop');
+				ng.loadControleNfe('cfop','lista_operacao');
 				ng.modalProgressoVenda('hide');
 				ng.vlr_saldo_devedor = data.vlr_saldo_devedor ;
 				ng.id_controle_pagamento = data.id_controle_pagamento ;
@@ -1790,6 +1790,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.configuracoes = data ;
+				ng.loadOperacaoCombo();
 				if(data.id_plano_caixa == undefined){
 					error++ ;
 				}
@@ -2350,20 +2351,31 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	    	}
 	    });
 	}
+ 	
+   ng.loadOperacaoCombo = function() {
+		ng.lista_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
+		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+			.success(function(data, status, headers, config) {
+				ng.lista_operacao = ng.lista_operacao.concat(data.operacao);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+					
+			});
+	}
 
-	ng.nfe = {} ;
 	ng.loadControleNfe = function(ctr,key) {
 		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
 			.success(function(data, status, headers, config) {
 				ng[key] = ng[key].concat(data) ;
-				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 3000);
+				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 300);
 			})
 			.error(function(data, status, headers, config) {
 				
 		});
 	}
-
-	ng.lista_cfop = [{num_item:'',nme_item:'--- Selecione ---'}] ;
 	
 	ng.existsCookie();
 	ng.loadConfig();
