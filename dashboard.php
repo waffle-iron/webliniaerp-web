@@ -151,16 +151,6 @@
 								<?php include("menu-relatorios.php") ?>
 							</ul>
 						</li>
-						<?php if($_SESSION['user']['id_perfil'] == 1 || $_SESSION['user']['id_perfil'] == 8){ ?>
-						<li>
-							<a href="pdv.php">
-								<i class="fa fa-desktop fa-lg"></i>
-								<span class="text">PDV</span>
-								<span class="menu-hover"></span>
-							</a>
-							
-						</li>
-						<?php } ?>
 					</ul>
 
 					<!-- Exemplos de Alerta -->
@@ -179,12 +169,43 @@
 				</ul>
 			</div><!-- /breadcrumb-->
 
-			<div class="main-header">
+			<div class="main-header clearfix">
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-dashboard"></i> Dashboard</h3>
 					<span>Bem vindo de volta Sr. {{ userLogged.nme_usuario }}</span>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
+
+			<div class="grey-container shortcut-wrapper">
+				<?php if($_SESSION['user']['id_perfil'] == 1 || $_SESSION['user']['id_perfil'] == 8){ ?>
+				<a href="pdv.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-desktop"></i>
+					</span>
+					<span class="text">PDV</span>
+				</a>
+				<?php } ?>
+				<a href="vendas.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-signal"></i></span>
+					<span class="text">Vendas</span>
+				</a>
+				<a href="produtos.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-archive"></i></span>
+					<span class="text">Produtos</span>
+				</a>
+				<a href="clientes.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-users"></i></span>
+					<span class="text">Clientes/Usuários</span>
+				</a>
+				<a href="empreendimento_config.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-cog"></i></span>
+					<span class="text">Configurações</span>
+				</a>
+			</div><!-- /grey-container -->
 
 			<div class="padding-md">
 				<div class="row">
