@@ -314,7 +314,8 @@
 										<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
 									    option="regimeTributario"
 									    ng-model="empreendimento.cod_regime_tributario"
-									    ng-options="regimeTributario.num_item as regimeTributario.nme_item for regimeTributario in regimeTributario">
+									    no-results-text="'Nenhum valor encontrado'"
+									    ng-options="regimeTributario.cod_controle_item_nfe as regimeTributario.nme_item for regimeTributario in regimeTributario">
 										</select>
 									</div>
 								</div>
@@ -323,8 +324,9 @@
 										<label class="ccontrol-label">Regime Pis Cofins  </label> 
 										<select chosen ng-change="ClearChosenSelect('cod_regime_pis_cofins')"
 									    option="regimePisCofins"
+									    no-results-text="'Nenhum valor encontrado'"
 									    ng-model="empreendimento.cod_regime_pis_cofins"
-									    ng-options="regime.num_item as regime.nme_item for regime in regimePisCofins">
+									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in regimePisCofins">
 										</select>
 									</div>
 								</div>
@@ -333,8 +335,9 @@
 										<label class="ccontrol-label">Tipo da Empresa</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa')"
 									    option="tipoEmpresa"
+									    no-results-text="'Nenhum valor encontrado'"
 									    ng-model="empreendimento.cod_tipo_empresa"
-									    ng-options="regime.num_item as regime.nme_item for regime in tipoEmpresa">
+									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in tipoEmpresa">
 										</select>
 									</div>
 								</div>
@@ -346,6 +349,7 @@
 										<label class="ccontrol-label">Zoneamento</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_zoneamento')"
 									    option="zoneamentos"
+									    no-results-text="'Nenhum valor encontrado'"
 									    ng-model="empreendimento.cod_zoneamento"
 									    ng-options="zoneamento.cod_zoneamento as zoneamento.dsc_zoneamento for zoneamento in zoneamentos">
 										</select>

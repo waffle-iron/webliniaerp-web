@@ -302,7 +302,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa_emitente')"
 								    option="chosen_tipo_empresa"
 								    ng-model="regra_tributos.filtro_tributos.cod_tipo_empresa_emitente"
-								    ng-options="tipo_empresa.num_item as tipo_empresa.nme_item for tipo_empresa in chosen_tipo_empresa">
+								    ng-options="tipo_empresa.cod_controle_item_nfe as tipo_empresa.nme_item for tipo_empresa in chosen_tipo_empresa">
 									</select>
 								</div>
 							</div>
@@ -312,7 +312,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario_emitente')"
 								    option="chosen_regime_tributario_emitente"
 								    ng-model="regra_tributos.filtro_tributos.cod_regime_tributario_emitente"
-								    ng-options="regime_tributario_emitente.num_item as regime_tributario_emitente.nme_item for regime_tributario_emitente in chosen_regime_tributario_emitente">
+								    ng-options="regime_tributario_emitente.cod_controle_item_nfe as regime_tributario_emitente.nme_item for regime_tributario_emitente in chosen_regime_tributario_emitente">
 									</select>
 								</div>
 							</div>
@@ -324,7 +324,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_crt_emitente')"
 								    option="chosen_crt_emitente"
 								    ng-model="regra_tributos.filtro_tributos.cod_crt_emitente"
-								    ng-options="crt_emitente.num_item as crt_emitente.nme_item for crt_emitente in chosen_crt_emitente">
+								    ng-options="crt_emitente.cod_controle_item_nfe as crt_emitente.nme_item for crt_emitente in chosen_crt_emitente">
 									</select>
 								</div>
 							</div>
@@ -392,7 +392,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa_destinatario')"
 								    option="chosen_tipo_empresa"
 								    ng-model="regra_tributos.filtro_tributos.cod_tipo_empresa_destinatario"
-								    ng-options="tipo_empresa.num_item as tipo_empresa.nme_item for tipo_empresa in chosen_tipo_empresa">
+								    ng-options="tipo_empresa.cod_controle_item_nfe as tipo_empresa.nme_item for tipo_empresa in chosen_tipo_empresa">
 									</select>
 								</div>
 							</div>
@@ -402,7 +402,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario_destinatario')"
 								    option="chosen_regime_tributario_destinatario"
 								    ng-model="regra_tributos.filtro_tributos.cod_regime_tributario_destinatario"
-								    ng-options="regime_tributario_destinatario.num_item as regime_tributario_destinatario.nme_item for regime_tributario_destinatario in chosen_regime_tributario_destinatario">
+								    ng-options="regime_tributario_destinatario.cod_controle_item_nfe as regime_tributario_destinatario.nme_item for regime_tributario_destinatario in chosen_regime_tributario_destinatario">
 									</select>
 								</div>
 							</div>
@@ -452,7 +452,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_destinacao')"
 								    option="chosen_cod_destinacao"
 								    ng-model="regra_tributos.filtro_tributos.cod_destinacao"
-								    ng-options="destinacao.num_item as destinacao.nme_item for destinacao in chosen_cod_destinacao">
+								    ng-options="destinacao.cod_controle_item_nfe as destinacao.nme_item for destinacao in chosen_cod_destinacao">
 									</select>
 								</div>
 							</div>
@@ -462,7 +462,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_origem_mercadoria')"
 								    option="chosen_origem_mercadoria"
 								    ng-model="regra_tributos.filtro_tributos.cod_origem_mercadoria"
-								    ng-options="origem_mercadoria.num_item as origem_mercadoria.nme_item for origem_mercadoria in chosen_origem_mercadoria">
+								    ng-options="origem_mercadoria.cod_controle_item_nfe as origem_mercadoria.nme_item for origem_mercadoria in chosen_origem_mercadoria">
 									</select>
 								</div>
 							</div>
@@ -482,7 +482,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_forma_aquisicao')"
 								    option="chosen_forma_aquisicao"
 								    ng-model="regra_tributos.filtro_tributos.cod_forma_aquisicao"
-								    ng-options="forma_aquisicao.num_item as forma_aquisicao.nme_item for forma_aquisicao in chosen_forma_aquisicao">
+								    ng-options="forma_aquisicao.cod_controle_item_nfe as forma_aquisicao.nme_item for forma_aquisicao in chosen_forma_aquisicao">
 									</select>
 								</div>
 							</div>	
@@ -520,6 +520,14 @@
 								    ng-model="regra_tributos.filtro_tributos.cod_especializacao_ncm"
 								    ng-options="especializacao_ncm.cod_especializacao_ncm as especializacao_ncm.dsc_especializacao_ncm for especializacao_ncm in chosen_especializacao_ncm">
 									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group" id="codigo_barra">
+									<label class="control-label">Número Cest</label>
+									<input ng-model="regra_tributos.filtro_tributos.num_cest" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
 								</div>
 							</div>
 						</div>
@@ -597,7 +605,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms')"
 								    option="chosen_base_icms"
 								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms"
-								    ng-options="base_icms.num_item as base_icms.nme_item for base_icms in chosen_base_icms">
+								    ng-options="base_icms.cod_controle_item_nfe as base_icms.nme_item for base_icms in chosen_base_icms">
 									</select>
 								</div>
 							</div>
@@ -683,7 +691,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms_st')"
 								    option="chosen_base_icms_st"
 								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms_st"
-								    ng-options="base_icms_st.num_item as base_icms_st.nme_item for base_icms_st in chosen_base_icms_st">
+								    ng-options="base_icms_st.cod_controle_item_nfe as base_icms_st.nme_item for base_icms_st in chosen_base_icms_st">
 									</select>
 								</div>
 							</div>
@@ -709,7 +717,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_motivo_des_icms')"
 								    option="chosen_motivo_des_icms"
 								    ng-model="regra_tributos.configuracao_icms.cod_motivo_des_icms"
-								    ng-options="motivo_des_icms.num_item as motivo_des_icms.nme_item for motivo_des_icms in chosen_motivo_des_icms">
+								    ng-options="motivo_des_icms.cod_controle_item_nfe as motivo_des_icms.nme_item for motivo_des_icms in chosen_motivo_des_icms">
 									</select>
 								</div>
 							</div>
@@ -727,7 +735,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_convenio_st')"
 								    option="chosen_convenio_st"
 								    ng-model="regra_tributos.configuracao_icms.cod_convenio_st"
-								    ng-options="convenio_st.num_item as convenio_st.nme_item for convenio_st in chosen_convenio_st">
+								    ng-options="convenio_st.cod_controle_item_nfe as convenio_st.nme_item for convenio_st in chosen_convenio_st">
 									</select>
 								</div>
 							</div>
@@ -774,7 +782,7 @@
 										<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_ipi')"
 									    option="chosen_tributacao_ipi"
 									    ng-model="regra_tributos.configuracao_ipi.cod_tipo_tributacao_ipi"
-									    ng-options="tributacao_ipi.num_item as tributacao_ipi.nme_item for tributacao_ipi in chosen_tributacao_ipi">
+									    ng-options="tributacao_ipi.cod_controle_item_nfe as tributacao_ipi.nme_item for tributacao_ipi in chosen_tributacao_ipi">
 										</select>
 									</div>
 								</div>
@@ -831,7 +839,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_pis_cofins')"
 								    option="chosen_tributacao_pis_cofins"
 								    ng-model="regra_tributos.configuracao_pis_cofins.cod_tipo_tributacao_pis_cofins"
-								    ng-options="tributacao_pis_cofins.num_item as tributacao_pis_cofins.nme_item for tributacao_pis_cofins in chosen_tributacao_pis_cofins">
+								    ng-options="tributacao_pis_cofins.cod_controle_item_nfe as tributacao_pis_cofins.nme_item for tributacao_pis_cofins in chosen_tributacao_pis_cofins">
 									</select>
 								</div>
 							</div>

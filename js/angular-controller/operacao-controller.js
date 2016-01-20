@@ -122,6 +122,7 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 				btn.button('reset');
 				if(status == 406) {
 					var errors = data;
+					var count  = 0 ;
 					$.each(errors, function(i, item) {
 						$("#"+i).addClass("has-error");
 						var formControl = $("#"+i)
@@ -129,7 +130,11 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 							.attr("data-placement", "bottom")
 							.attr("title", item)
 							.attr("data-original-title", item);
-						formControl.tooltip();
+						if(count == 0)
+							formControl.tooltip('show').focus();
+						else
+							formControl.tooltip();
+						count ++ ;
 					});
 				}else
 					ng.mensagens('alert-danger','<strong>Erro ao efetuar cadastro!</strong>');
@@ -140,6 +145,7 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 		ng.operacao = angular.copy(item);
 		ng.loadOperacaoCombo(item.cod_operacao);
 		ng.showBoxNovo(true);
+		$('html,body').animate({scrollTop: 0},'slow');
 	}
 
 	ng.delete = function(item){
@@ -157,6 +163,21 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 				});
 		}, undefined);
 	}
+
+	ng.loadControleNfe = function(ctr,key) {
+		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
+			.success(function(data, status, headers, config) {
+				ng[key] = ng[key].concat(data) ;
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				
+		});
+	}
+	ng.lista_cfop  = [{cod_controle_item_nfe:null}] ;
+    ng.loadControleNfe('cfop','lista_cfop');
 
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');

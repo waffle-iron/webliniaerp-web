@@ -237,7 +237,7 @@
 											<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_ipi')"
 										    option="chosen_tributacao_ipi"
 										    ng-model="base_tributaria_item.cod_tipo_tributacao_ipi"
-										    ng-options="tipo_tributacao_ipi.num_item as tipo_tributacao_ipi.nme_item for tipo_tributacao_ipi in chosen_tributacao_ipi">
+										    ng-options="tipo_tributacao_ipi.cod_controle_item_nfe as tipo_tributacao_ipi.nme_item for tipo_tributacao_ipi in chosen_tributacao_ipi">
 											</select>
 										</div>
 									</div>

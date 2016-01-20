@@ -505,14 +505,16 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		}
 	}
 
-	ng.regimeTributario = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-	ng.regimePisCofins  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-	ng.tipoEmpresa      = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-	ng.zoneamentos      = [{cod_zoneamento:'',dsc_zoneamento:'--- Selecione ---'}] ;
+	ng.regimeTributario = [] ;
+	ng.regimePisCofins  = [] ;
+	ng.tipoEmpresa      = [] ;
+	ng.zoneamentos      = [] ;
 
 	ng.loadControleNfe = function(ctr,key) {
+		ng[key] = [] ;
 		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
 			.success(function(data, status, headers, config) {
+				ng[key] = [{cod_controle_item_nfe:''}] ;
 				ng[key] = ng[key].concat(data) ;
 			})
 			.error(function(data, status, headers, config) {
@@ -523,6 +525,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.loadZoneamento = function() {
 		aj.get(baseUrlApi()+"zoneamento/get?cod_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+				ng.zoneamentos = [{cod_zoneamento:''}] ;
 				ng.zoneamentos = ng.zoneamentos.concat(data.zoneamentos);
 			})
 			.error(function(data, status, headers, config) {

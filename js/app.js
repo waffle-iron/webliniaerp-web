@@ -119,6 +119,7 @@ angular.module('filters', [])
 	})
 	.filter('phoneFormat', function () {
 		return function (inputFormat) {
+			inputFormat = ""+inputFormat;
 			if(empty(inputFormat)){
 				return "" ;
 			}

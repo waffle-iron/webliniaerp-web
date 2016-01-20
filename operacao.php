@@ -221,36 +221,73 @@
 						</div>
 						<div  class="row">
 							<div class="col-sm-3">
-								<div id="num_cfop_produto" class="form-group">
+								<div class="form-group" id="num_cfop_produto">
+									<label class="control-label">N° CFOP Produto</label> 
+									<select chosen
+								    option="lista_cfop"
+								    allow-single-deselect="true"
+								    ng-model="operacao.num_cfop_produto"
+								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+									</select>
+								</div>
+								<!--<div id="num_cfop_produto" class="form-group">
 									<label class="control-label">N° CFOP Produto</label>
 									<input maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_produto">
-								</div>
+								</div>-->
 							</div>
 							<div class="col-sm-3">
-								<div id="num_cfop_produto_st" class="form-group">
+								<div class="form-group" id="num_cfop_produto_st">
+									<label class="control-label">N° CFOP Produto ST</label> 
+									<select chosen
+								    option="lista_cfop"
+								    allow-single-deselect="true"
+								    ng-model="operacao.num_cfop_produto_st"
+								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+									</select>
+								</div>
+								<!--<div id="num_cfop_produto_st" class="form-group">
 									<label class="control-label">N° CFOP Produto ST</label>
 									<input  maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_produto_st">
-								</div>
+								</div>-->
 							</div>
 							<div class="col-sm-3">
-								<div id="num_cfop_mercadoria" class="form-group">
+								<div class="form-group" id="num_cfop_mercadoria">
+									<label class="control-label">N° CFOP Mercadoria</label> 
+									<select chosen
+								    option="lista_cfop"
+								    allow-single-deselect="true"
+								    ng-model="operacao.num_cfop_mercadoria"
+								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+									</select>
+								</div>
+								<!--<div id="num_cfop_mercadoria" class="form-group">
 									<label class="control-label">N° CFOP Mercadoria</label>
 									<input  maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_mercadoria">
-								</div>
+								</div>-->
 							</div>
 							<div class="col-sm-3">
-								<div id="num_cfop_mercadoria_st" class="form-group">
+								<div class="form-group" id="num_cfop_mercadoria_st">
+									<label class="control-label">N° CFOP Mercadoria ST</label> 
+									<select chosen
+								    option="lista_cfop"
+								    allow-single-deselect="true"
+								    ng-model="operacao.num_cfop_mercadoria_st"
+								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+									</select>
+								</div>
+								<!--<div id="num_cfop_mercadoria_st" class="form-group">
 									<label class="control-label">N° CFOP Mercadoria ST</label>
 									<input  maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_mercadoria_st">
-								</div>
+								</div>-->
 							</div>
 						</div>
 						<div  class="row">
 							<div class="col-sm-4">
 								<div class="form-group" id="cod_operacao_estorno">
-									<label class="ccontrol-label">Operação Para Estorno</label> 
+									<label class="control-label">Operação Para Estorno</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
 								    option="chosen_operacao"
+								    allow-single-deselect="true"
 								    ng-model="operacao.cod_operacao_estorno"
 								    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in chosen_operacao" change-chosen>
 									</select>
@@ -258,9 +295,10 @@
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group" id="cod_operacao_devolucao">
-									<label class="ccontrol-label">Operação Para Devolucação</label> 
+									<label class="control-label">Operação Para Devolucação</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
 								    option="chosen_operacao"
+								    allow-single-deselect="true"
 								    ng-model="operacao.cod_operacao_devolucao"
 								    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in chosen_operacao">
 									</select>

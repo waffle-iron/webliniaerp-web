@@ -35,10 +35,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
     ng.depositos = [] ;
     ng.empreendimentosAssociados = [{ id_empreendimento : ng.userLogged.id_empreendimento, nome_empreendimento : ng.userLogged.nome_empreendimento }];
 
-    ng.chosen_forma_aquisicao     = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-    ng.chosen_origem_mercadoria   = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-    ng.chosen_tipo_tributacao_ipi = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-    ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:'',dsc_especializacao_ncm:'--- Selecione ---'}] ;
+    ng.chosen_forma_aquisicao     = [{cod_controle_item_nfe:''}] ;
+    ng.chosen_origem_mercadoria   = [{cod_controle_item_nfe:''}] ;
+    ng.chosen_tipo_tributacao_ipi = [{cod_controle_item_nfe:''}] ;
+    ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:''}] ;
 
     ng.showBoxNovo = function(onlyShow){
     	if(onlyShow) {
@@ -1208,6 +1208,21 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		});
 	}
 
+	ng.loadRegraTributos = function() {
+		ng.chosen_regra_tributos = [] ;
+		aj.get(baseUrlApi()+"regra_tributos/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+			.success(function(data, status, headers, config) {
+				ng.chosen_regra_tributos = [{cod_regra_tributos:''}] ;
+				ng.chosen_regra_tributos = ng.chosen_regra_tributos.concat(data.regras) ;
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				
+		});
+	}
+
 	ng.modal = function(acao,id){
 		ng.fabricante.nome_fabricante = "";
 		ng.importador.nome_importador = "";
@@ -1233,5 +1248,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.loadControleNfe('origem_mercadoria','chosen_origem_mercadoria');
 	ng.loadControleNfe('tipo_tributacao_ipi','chosen_tipo_tributacao_ipi');
 	ng.loadEspecialazacaoNcm();
+	ng.loadRegraTributos();
 	
 });

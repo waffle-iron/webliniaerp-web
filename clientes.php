@@ -549,8 +549,10 @@
 										<label class="ccontrol-label">Regime Tributario </label> 
 										<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
 									    option="regimeTributario"
+									    no-results-text ="'Nenhum valor encontrado'"
+									    allow-single-deselect="true"
 									    ng-model="cliente.cod_regime_tributario"
-									    ng-options="regime.num_item as regime.nme_item for regime in regimeTributario">
+									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in regimeTributario">
 										</select>
 									</div>
 								</div>
@@ -559,8 +561,10 @@
 										<label class="ccontrol-label">Regime Pis Cofins  </label> 
 										<select chosen ng-change="ClearChosenSelect('cod_regime_pis_cofins')"
 									    option="regimePisCofins"
+									    no-results-text ="'Nenhum valor encontrado'"
+									    allow-single-deselect="true"
 									    ng-model="cliente.cod_regime_pis_cofins"
-									    ng-options="regime.num_item as regime.nme_item for regime in regimePisCofins">
+									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in regimePisCofins">
 										</select>
 									</div>
 								</div>
@@ -569,8 +573,10 @@
 										<label class="ccontrol-label">Tipo da Empresa</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa')"
 									    option="tipoEmpresa"
+									    no-results-text ="'Nenhum valor encontrado'"
+									    allow-single-deselect="true"
 									    ng-model="cliente.cod_tipo_empresa"
-									    ng-options="regime.num_item as regime.nme_item for regime in tipoEmpresa">
+									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in tipoEmpresa">
 										</select>
 									</div>
 								</div>
@@ -583,6 +589,8 @@
 										<label class="ccontrol-label">Zoneamento</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_zoneamento')"
 									    option="zoneamentos"
+									    no-results-text ="'Nenhum valor encontrado'"
+									    allow-single-deselect="true"
 									    ng-model="cliente.cod_zoneamento"
 									    ng-options="zoneamento.cod_zoneamento as zoneamento.dsc_zoneamento for zoneamento in zoneamentos">
 										</select>

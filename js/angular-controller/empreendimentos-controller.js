@@ -177,15 +177,16 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 		}
 	}
 
-	ng.regimeTributario = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-	ng.regimePisCofins  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-	ng.tipoEmpresa      = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+	ng.regimeTributario = [{cod_controle_item_nfe:'',nme_item:'--- Selecione ---'}] ;
+	ng.regimePisCofins  = [{cod_controle_item_nfe:'',nme_item:'--- Selecione ---'}] ;
+	ng.tipoEmpresa      = [{cod_controle_item_nfe:'',nme_item:'--- Selecione ---'}] ;
 	ng.zoneamentos       = [{cod_zoneamento:'',dsc_zoneamento:'--- Selecione ---'}] ;
 
 	ng.loadControleNfe = function(ctr,key) {
 		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
 			.success(function(data, status, headers, config) {
 				ng[key] = ng[key].concat(data) ;
+				setTimeout(function(){$("select").trigger("chosen:updated");},300);
 			})
 			.error(function(data, status, headers, config) {
 				
@@ -196,6 +197,7 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 		aj.get(baseUrlApi()+"zoneamento/get?cod_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.zoneamentos = ng.zoneamentos.concat(data.zoneamentos);
+				setTimeout(function(){$("select").trigger("chosen:updated");},300);
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)

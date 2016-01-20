@@ -37,7 +37,8 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 			cod_destinacao : null, 
 			cod_estado_destino : null, 
 			dta_inicio_vigencia : null, 
-			dta_fim_vigencia : null
+			dta_fim_vigencia : null,
+			num_cest:null
 		},
 		configuracao_icms : {
 			cod_filtro_tributos : null,

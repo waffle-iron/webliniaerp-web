@@ -211,7 +211,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-3" ng-if="ng.userLogged.id_empreendimento == 51 || ng.userLogged.id_empreendimento == 6">
 									<div class="form-group">
 										<label for="" class="control-label">Sub Tipo do produto</label>
 										<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
@@ -292,7 +292,7 @@
 							<div class="row">
 								<div class="col-sm-2">
 									<div class="form-group" id="peso">
-											<label class="ccontrol-label">Tamanho </label> <i ng-click="showModalNovoTamanho()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<label class="control-label">Tamanho </label> <i ng-click="showModalNovoTamanho()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
 											<select chosen ng-change="ClearChosenSelect('produto')"
 										    option="tamanhos"
 										    ng-model="produto.id_tamanho"
@@ -303,7 +303,7 @@
 
 								<div class="col-sm-3">
 									<div class="form-group" id="peso">
-											<label class="ccontrol-label">Cor/sabor</label> <i ng-click="showModalNovaCor()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<label class="control-label">Cor/sabor</label> <i ng-click="showModalNovaCor()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
 											<select chosen ng-change="ClearChosenSelect('cor')"
 										    option="cores"
 										    ng-model="produto.id_cor"
@@ -325,7 +325,7 @@
 							<div class="row">
 								<div class="col-sm-4">
 									<div class="form-group" id="peso">
-											<label class="ccontrol-label">Fabricante</label> <i ng-click="modal('show','modal-novo-fabricante')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<label class="control-label">Fabricante</label> <i ng-click="modal('show','modal-novo-fabricante')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
 											<select chosen ng-change="ClearChosenSelect('fabricante')"
 										    option="fabricantes"
 										    ng-model="produto.id_fabricante"
@@ -335,7 +335,7 @@
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group" id="peso">
-											<label class="ccontrol-label">Importador</label> <i ng-click="modal('show','modal-novo-importador')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<label class="control-label">Importador</label> <i ng-click="modal('show','modal-novo-importador')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
 											<select chosen ng-change="ClearChosenSelect('importador')"
 										    option="importadores"
 										    ng-model="produto.id_importador"
@@ -345,7 +345,7 @@
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group" id="peso">
-											<label class="ccontrol-label">Categoria</label> <i ng-click="modal('show','modal-nova-categoria')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+											<label class="control-label">Categoria</label> <i ng-click="modal('show','modal-nova-categoria')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
 											<select chosen ng-change="ClearChosenSelect('categoria')"
 										    option="categorias"
 										    ng-model="produto.id_categoria"
@@ -644,7 +644,7 @@
 								</div>
 								<div class="col-sm-1" id="ex_tipi">
 									<div class="form-group">
-										<label class="ccontrol-label">EX TIPI</label> 
+										<label class="control-label">EX TIPI</label> 
 											<input  ng-model="produto.ex_tipi" type="text" class="form-control input-sm">
 									</div>
 								</div>
@@ -654,17 +654,19 @@
 										<select chosen ng-change="ClearChosenSelect('cod_especializacao_ncm')"
 									    option="chosen_especializacao_ncm"
 									    ng-model="produto.cod_especializacao_ncm"
+									    allow-single-deselect="true"
 									    ng-options="especializacao_ncm.cod_especializacao_ncm as especializacao_ncm.dsc_especializacao_ncm for especializacao_ncm in chosen_especializacao_ncm">
 										</select>
 									</div>
 								</div>
 								<div class="col-sm-3">
 									<div class="form-group" id="cod_forma_aquisicao">
-										<label class="ccontrol-label">Forma Aquisição</label> 
+										<label class="control-label">Forma Aquisição</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_forma_aquisicao')"
 									    option="chosen_forma_aquisicao"
 									    ng-model="produto.cod_forma_aquisicao"
-									    ng-options="forma_aquisicao.num_item as forma_aquisicao.nme_item for forma_aquisicao in chosen_forma_aquisicao">
+									    allow-single-deselect="true"
+									    ng-options="forma_aquisicao.cod_controle_item_nfe as forma_aquisicao.nme_item for forma_aquisicao in chosen_forma_aquisicao">
 										</select>
 									</div>
 								</div>
@@ -673,22 +675,41 @@
 							<div class="row">
 								<div class="col-sm-5">
 									<div class="form-group" id="cod_origem_mercadoria">
-										<label class="ccontrol-label">Origem Mercadoria</label> 
+										<label class="control-label">Origem Mercadoria</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_origem_mercadoria')"
 									    option="chosen_origem_mercadoria"
 									    ng-model="produto.cod_origem_mercadoria"
-									    ng-options="origem_mercadoria.num_item as origem_mercadoria.nme_item for origem_mercadoria in chosen_origem_mercadoria">
+									    allow-single-deselect="true"
+									    ng-options="origem_mercadoria.cod_controle_item_nfe as origem_mercadoria.nme_item for origem_mercadoria in chosen_origem_mercadoria">
 										</select>
 									</div>
 								</div>
 								<div class="col-sm-2">
 									<div class="form-group" id="cod_tipo_tributacao_ipi">
-										<label class="ccontrol-label">Tipo Tributação IPI</label> 
+										<label class="control-label">Tipo Tributação IPI</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_ipi')"
 									    option="chosen_tipo_tributacao_ipi"
 									    ng-model="produto.cod_tipo_tributacao_ipi"
-									    ng-options="tipo_tributacao_ipi.num_item as tipo_tributacao_ipi.nme_item for tipo_tributacao_ipi in chosen_tipo_tributacao_ipi">
+									    allow-single-deselect="true"
+									    ng-options="tipo_tributacao_ipi.cod_controle_item_nfe as tipo_tributacao_ipi.nme_item for tipo_tributacao_ipi in chosen_tipo_tributacao_ipi">
 										</select>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group" id="cod_tipo_tributacao_ipi">
+										<label class="control-label">Regra Tributos</label> 
+										<select chosen 
+									    option="chosen_regra_tributos"
+									    ng-model="produto.cod_regra_tributos"
+									    allow-single-deselect="true"
+									    ng-options="regra.cod_regra_tributos as regra.dsc_regra_tributos for regra in chosen_regra_tributos">
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="form-group" id="codigo_barra">
+										<label class="control-label">Número Cest</label>
+										<input ng-model="produto.num_cest" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
 									</div>
 								</div>
 							</div>
@@ -699,7 +720,7 @@
 										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 											<i class="fa fa-times-circle"></i> Cancelar
 										</button>
-										<button data-loading-text="Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
+										<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
 											<i class="fa fa-save"></i> Salvar
 										</button>
 									</div>
