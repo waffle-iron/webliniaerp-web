@@ -749,6 +749,36 @@
 									</select>
 								</div>
 							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_diferimento" class="form-group">
+									<label class="control-label">Perc. Dif</label>
+									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento">
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div id="num_percentual_diferimento_icms" class="form-group">
+									<label class="control-label">Perc. Dif. ICMS</label>
+									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento_icms">
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group" id="flg_destacar_icms">
+									<label for="" class="control-label">Destacar ICMS</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
 						</div>
 					</fieldset>
 					<fieldset>

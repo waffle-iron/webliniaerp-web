@@ -219,6 +219,17 @@
 							<div class="panel-heading">Item</div>
 							<div class="panel-body">
 								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group" id="nome_produto">
+											<label class="control-label">Produto</label>
+											<div class="input-group"  >
+												<input readonly="readonly" ng-click="showProdutos()"  ng-model="base_tributaria_item.nome_produto" type="text" class="form-control input-sm" ng-click="showProdutos()" >
+												<span class="input-group-btn">
+														<button ng-click="showProdutos()" ng-disabled="finalizarOrcamento" type="button" class="btn btn-primary btn-sm"><i class="fa fa fa-archive"></i></button>
+												</span>
+											</div>
+										</div>
+									</div>				
 									<div class="col-sm-2">
 										<div id="vlr_base_calculo_icms" class="form-group">
 											<label class="control-label">Base Cálculo ICMS</label>
@@ -247,14 +258,14 @@
 											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_base_calculo_ipi">
 										</div>
 									</div>
+								</div>
+								<div class="row">
 									<div class="col-sm-2">
 										<div id="vlr_pis" class="form-group">
 											<label class="control-label">Vlr. PIS</label>
 											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_pis">
 										</div>
 									</div>
-								</div>
-								<div class="row">
 									<div class="col-sm-2">
 										<div id="vlr_cofins" class="form-group">
 											<label class="control-label">Vlr. COFINS</label>
@@ -400,6 +411,86 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+		<!-- /Modal Produtos-->
+		<div class="modal fade" id="list_produtos" style="display:none">
+  			<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Produtos</span></h4>	
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.produtos" ng-enter="loadProdutos(0,10)" type="text" class="form-control input-sm">
+
+						            <div class="input-group-btn">
+						            	<button tabindex="-1" class="btn btn-sm btn-primary" type="button"
+						            		ng-click="loadProdutos(0,10)">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="alert alert-produtos" style="display:none"></div>
+						   		<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(produtos.length != 0)">
+										<tr>
+											<th>#</th>
+											<th>Nome</th>
+											<th>Fabricante</th>
+											<th>Tamanho</th>
+											<th>Sabor/Cor</th>
+											<th width="80"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(produtos.produtos.length == null)">
+											<td colspan="6" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
+										</tr>
+										<tr ng-show="(produtos.produtos.length == 0)">
+											<td colspan="6">Não a resultados para a busca</td>
+										</tr>
+										<tr ng-repeat="item in produtos.produtos">
+											<td>{{ item.id_produto }}</td>
+											<td>{{ item.nome }}</td>
+											<td>{{ item.nome_fabricante }}</td>
+											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
+											<td>
+											<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
+												<i class="fa fa-check-square-o"></i> Selecionar
+											</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					    <div class="row">
+					    	<div class="col-md-12">
+								<div class="input-group pull-right">
+						             <ul class="pagination pagination-xs m-top-none" ng-show="produtos.paginacao.length > 1">
+										<li ng-repeat="item in produtos.paginacao" ng-class="{'active': item.current}">
+											<a href="" ng-click="loadProdutos(item.offset,item.limit)">{{ item.index }}</a>
+										</li>
+									</ul>
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+					</div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 		<!-- Footer
 		================================================== -->
 		<footer>

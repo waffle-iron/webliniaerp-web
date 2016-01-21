@@ -267,14 +267,14 @@
 							</div>
 
 							<div class="row" ng-if="cliente.tipo_cadastro == 'pj'">
-								<div class="col-lg-4">
+								<div class="col-lg-3">
 									<div id="razao_social" class="form-group">
 										<label class="control-label">Razão Social  <span style="color:red;font-weight: bold;">*</span></label>
 										<input class="form-control" ng-model="cliente.razao_social">
 									</div>
 								</div>
 
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 									<div id="nome_fantasia" class="form-group">
 										<label class="control-label">Nome Fantasia  <span style="color:red;font-weight: bold;">*</span></label>
 										<input class="form-control" ng-model="cliente.nome_fantasia">
@@ -292,6 +292,12 @@
 									<div id="inscricao_estadual" class="form-group">
 										<label class="control-label">I.E.  <span style="color:red;font-weight: bold;">*</span></label>
 										<input class="form-control" ng-model="cliente.inscricao_estadual">
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div id="inscricao_estadual" class="form-group">
+										<label class="control-label">I.M.  <span style="color:red;font-weight: bold;">*</span></label>
+										<input class="form-control" ng-model="cliente.num_inscricao_municipal">
 									</div>
 								</div>
 							</div>
@@ -401,14 +407,14 @@
 								<div class="col-sm-2">
 									<div id="id_estado" class="form-group">
 										<label class="control-label">Estado  <span style="color:red;font-weight: bold;">*</span></label>
-										<select id="id_select_estado" class="form-control" readonly="readonly" ng-model="cliente.id_estado" ng-options="item.id_ibge as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
+										<select id="id_select_estado" class="form-control" readonly="readonly" ng-model="cliente.id_estado" ng-options="item.id as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
 									</div>
 								</div>
 
 								<div class="col-sm-4">
 									<div id="id_cidade" class="form-group">
 										<label class="control-label">Cidade  <span style="color:red;font-weight: bold;">*</span></label>
-										<select class="form-control" readonly="readonly" ng-model="cliente.id_cidade" ng-options="a.id_ibge as a.nome for a in cidades"></select>
+										<select class="form-control" readonly="readonly" ng-model="cliente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
 									</div>
 								</div>
 							</div>
@@ -632,9 +638,17 @@
 										</div>
 									</div>
 								</div>
-
 							</div>
-
+							<div class="row" ng-show="cliente.tipo_cadastro == 'pj'">
+								<div class="col-sm-2">
+									<div class="form-group">
+										<div id="inscricao_estadual_st" class="form-group">
+											<label class="control-label">I.E. ST</label>
+											<input class="form-control" ng-model="cliente.inscricao_estadual_st">
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="row" ng-show="cliente.id != null">
 										<div class="col-sm-12">
 											<div class="empreendimentos form-group" id="produto_cliente">

@@ -397,7 +397,15 @@
 										</div>
 									</div>
 								</div>
-							</div>	
+							</div>
+							<div class="row">
+								<div class="col-sm-3">
+									<div id="num_inscricao_estadual_st" class="form-group">
+										<label class="control-label">I.E ST </label>
+										<input class="form-control" ng-model="empreendimento.num_inscricao_estadual_st">
+									</div>
+								</div>
+							</div>
 							<div class="row" ng-show="editing">
 										<div class="col-sm-12">
 											<div class="empreendimentos form-group" id="produto_cliente">

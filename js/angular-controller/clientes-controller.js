@@ -42,7 +42,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 			ng.cliente.endereco = data.logradouro;
 			ng.cliente.bairro = data.bairro;
 			var estado = ng.getEstado(data.estado);
-			ng.cliente.id_estado = estado.id_ibge;
+			ng.cliente.id_estado = estado.id;
 			ng.loadCidadesByEstado(data.cidade);
 			//ng.cliente.id_cidade = data.cidade_info.codigo_ibge.substr(0,6);
 			$("#num_logradouro").focus();
@@ -69,7 +69,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.getCidadeByIBGE = function(id){
 		var cidade = null ;
 		$.each(ng.cidades,function(i,x){
-			if(Number(id) == Number(x.id_ibge)){
+			if(Number(id) == Number(x.id)){
 			    cidade = x;
 				return false;
 			}
@@ -81,7 +81,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.getEstadoByidIBGE = function(id){
 		var estado = null ;
 		$.each(ng.estados,function(i,x){
-			if(Number(id) == Number(x.id_ibge) ){
+			if(Number(id) == Number(x.id) ){
 			    estado = x;
 				return false;
 			}
@@ -142,7 +142,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 			if(nome_cidade != null){
 				$.each(ng.cidades,function(i,x){
 					if(removerAcentos(nome_cidade) == removerAcentos(x.nome)){
-						ng.cliente.id_cidade = x.id_ibge;
+						ng.cliente.id_cidade = x.id;
 						return false ;
 					}
 				});
@@ -217,7 +217,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 				ng.clientes = [];
 				ng.paginacao.itens = data.paginacao;
 				$.each(data.usuarios,function(i, item){
-					console.log(( empty(item.id_como_encontrou) && !empty(item.como_entrou_outros)));
+					//console.log(( empty(item.id_como_encontrou) && !empty(item.como_entrou_outros)));
 					item.id_como_encontrou = item.id_como_encontrou == null && (empty(item.id_como_encontrou) && !empty(item.como_entrou_outros)) ? 'outros' : item.id_como_encontrou ; 
 					ng.clientes.push(item);
 				});

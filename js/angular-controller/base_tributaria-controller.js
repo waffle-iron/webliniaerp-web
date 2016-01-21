@@ -21,7 +21,8 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 			vlr_pis 							: null,
 			vlr_cofins 							: null,
 			vlr_pis_st 							: null,
-			vlr_cofins_st 						: null
+			vlr_cofins_st 						: null,
+			nome_produto                        : null
 	}
 	ng.busca = {clientes:'',produtos:''} ;
 	ng.editingBaseTributaria = false ;
@@ -211,7 +212,8 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 				vlr_pis             				: ng.base_tributaria_item.vlr_pis,
 				vlr_cofins             				: ng.base_tributaria_item.vlr_cofins,
 				vlr_pis_st             				: ng.base_tributaria_item.vlr_pis_st,
-				vlr_cofins_st             			: ng.base_tributaria_item.vlr_cofins_st
+				vlr_cofins_st             			: ng.base_tributaria_item.vlr_cofins_st,
+				cod_produto                         : ng.base_tributaria_item.cod_produto
 			};
 		}else{
 			ng.base_tributaria.base_tributaria_itens.push({
@@ -225,7 +227,8 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 				vlr_pis             				: ng.base_tributaria_item.vlr_pis,
 				vlr_cofins             				: ng.base_tributaria_item.vlr_cofins,
 				vlr_pis_st             				: ng.base_tributaria_item.vlr_pis_st,
-				vlr_cofins_st             			: ng.base_tributaria_item.vlr_cofins_st
+				vlr_cofins_st             			: ng.base_tributaria_item.vlr_cofins_st,
+				cod_produto                         : ng.base_tributaria_item.cod_produto
 			});
 		}
 
@@ -293,9 +296,47 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 		});
 	}
 
+	ng.loadProdutos = function(offset, limit) {
+		ng.produtos = null;
+
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+
+
+		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(ng.busca.produtos != ""){
+			if(isNaN(Number(ng.busca.produtos)))
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produtos+"%' OR codigo_barra like '%"+ng.busca.produtos+"%' OR fab.nome_fabricante like '%"+ng.busca.produtos+"%'"}})+")";
+			else
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produtos+"%' OR codigo_barra like '%"+ng.busca.produtos+"%' OR fab.nome_fabricante like '%"+ng.busca.produtos+"%' OR pro.id = "+ng.busca.produtos+""}})+")";
+		}
+
+		aj.get(baseUrlApi()+"produtos/"+ offset +"/"+ limit +"/"+query_string)
+			.success(function(data, status, headers, config) {
+				ng.produtos = data;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404) {
+					ng.produtos = [] ;
+				}
+			});
+	}
+
+	ng.showProdutos = function(){
+   		ng.loadProdutos(0,10);
+   		$('#list_produtos').modal('show');
+   	}
+
+   	ng.addProduto = function(item){
+   		ng.base_tributaria_item.nome_produto = item.nome;
+   		ng.base_tributaria_item.cod_produto = item.id_produto ;
+   		$('#list_produtos').modal('hide');
+   	}
+
+
 	ng.chosen_tributacao_ipi  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
    	ng.loadControleNfe('tipo_tributacao_ipi','chosen_tributacao_ipi');
-
 	ng.load(0,10);
 	ng.loadConfig() ;
 

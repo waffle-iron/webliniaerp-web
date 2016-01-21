@@ -172,7 +172,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
-					ng.chosen_zoneamento = [];
+					ng.chosen_regime_especial_destinatario = [];
 			});
 	}
 	ng.loadRegimeDestinatario();
@@ -185,7 +185,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
-					ng.chosen_zoneamento = [];
+					ng.chosen_regime_especial_emitente = [];
 			});
 	}
     ng.loadRegimeEmitente();
