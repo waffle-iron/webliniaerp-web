@@ -1,4 +1,4 @@
-findProductByBarCodeapp.controller('PDVController', function($scope, $http, $window,$dialogs, UserService) {
+app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService) {
 	var ng = $scope,
 		aj = $http;
 	ng.userLogged 	 		= UserService.getUserLogado();

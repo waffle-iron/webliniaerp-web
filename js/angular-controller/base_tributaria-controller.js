@@ -269,7 +269,9 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 			vlr_cofins 							: item.vlr_cofins,
 			vlr_pis_st 							: item.vlr_pis_st,
 			vlr_cofins_st 						: item.vlr_cofins_st,
-			index                               : index
+			index                               : index,
+			cod_produto                         : item.cod_produto,
+			nome_produto                        : item.nome_produto
 		}
 		ng.editingBaseTributaria = true ;
 	}
@@ -330,7 +332,7 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 
    	ng.addProduto = function(item){
    		ng.base_tributaria_item.nome_produto = item.nome;
-   		ng.base_tributaria_item.cod_produto = item.id_produto ;
+   		ng.base_tributaria_item.cod_produto  = item.id_produto ;
    		$('#list_produtos').modal('hide');
    	}
 
