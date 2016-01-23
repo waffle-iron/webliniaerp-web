@@ -390,7 +390,7 @@
 							</div>
 
 							<div class="tab-pane fade" id="fiscal">
-								<div class="alert alert-config" style="display:none"></div>
+								<div class="alert alert-config-fiscal" style="display:none"></div>
 
 								<div class="row">
 									<div class="col-sm-4">
@@ -408,34 +408,41 @@
 								<div class="row">
 									<form class="formEmprendimento" role="form">
 										<div class="col-sm-2">
-											<div class="form-group">
+											<div class="form-group" id="serie_documento_fiscal">
 												<label class="control-label">Série</label>
-												<input type="text" class="form-control input-sm">
+												<input type="text" ng-model="serie_documento_fiscal.serie_documento_fiscal" class="form-control input-sm">
 											</div>
 										</div>
 
 										<div class="col-sm-3">
-											<div class="form-group">
+											<div class="form-group" id="num_modelo_documento_fiscal">
 												<label class="control-label">Modelo</label>
 												<select chosen
-												    option="lista_operacao"
-												    ng-model="configuracoes.id_operacao_padrao_venda"
-												    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+												    option="chosen_modelo_nota_fiscal"
+												    allow-single-deselect="true"
+												    ng-model="serie_documento_fiscal.num_modelo_documento_fiscal"
+												    ng-options="modelo.num_item as modelo.descricao for modelo in chosen_modelo_nota_fiscal">
 												</select>
 											</div>
 										</div>
 
-										<div class="col-sm-2">
+										<div class="col-sm-2" id="num_ultimo_documento_fiscal">
 											<div class="form-group">
 												<label class="control-label">Últ. Número Utilizado</label>
-												<input type="text" class="form-control input-sm">
+												<input ng-model="serie_documento_fiscal.num_ultimo_documento_fiscal" type="text" class="form-control input-sm">
 											</div>
 										</div>
 
 										<div class="col-sm-1">
 											<div class="form-group">
 												<label class="control-label"><br></label>
-												<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-plus-circle"></i> Incluir</button>
+												<button  ng-if="edit_serie_documento_fiscal == false" ng-click="incluirSerieDocumentoFiscal($event)" type="button" class="btn btn-sm btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+													<i class="fa fa-plus-circle" ></i> Incluir
+												</button>
+												<button  ng-if="edit_serie_documento_fiscal" ng-click="incluirSerieDocumentoFiscal($event)" type="button" class="btn btn-sm btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+													<i class="fa fa-edit"></i> Incluir Alterações
+												</button>
+											
 											</div>
 										</div>
 									</form>
@@ -453,15 +460,26 @@
 														<th width="60"></th>
 													</thead>
 													<tbody>
-														<tr>
-															<td class="text-middle">serie aqui</td>
-															<td class="text-center text-middle">modelo aqui</td>
-															<td class="text-middle">últ. num util. aqui</td>
+														<tr ng-repeat="item in lista_serie_documento_fiscal" ng-if="item.flg_excluido != 1">
+															<td class="text-middle">{{item.serie_documento_fiscal}}</td>
+															<td class="text-center text-middle">{{item.num_modelo_documento_fiscal}}</td>
+															<td class="text-middle">{{item.num_ultimo_documento_fiscal}}</td>
 															<td class="text-center text-middle">
-																<button type="button" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></button>
-																<button type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
+																<button ng-disabled="index_edit_serie_documento_fiscal == $index" ng-click="editSerieDocumentoFiscal($index,item)" type="button" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></button>
+																<button ng-disabled="index_edit_serie_documento_fiscal == $index" ng-click="delSerieDocumentoFiscal($index)" type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
 															</td>
 														</tr>
+														<tr>
+															<td colspan="4" class="text-center" ng-if="lista_serie_documento_fiscal.length == 0">
+																Nenhum item encontrado
+															</td>
+														</tr>
+														<tr>
+															<td colspan="4" class="text-center" ng-if="lista_serie_documento_fiscal.length == null">
+																<i class='fa fa-refresh fa-spin'></i> Carregando...
+															</td>
+														</tr>
+														
 													</tbody>
 												</table>
 											</div>
@@ -474,9 +492,9 @@
 										<div class="form-group">
 											<label class="ccontrol-label">Modelo Documento/Série Padrão p/ NFC-e</label> 
 											<select chosen
-											    option="lista_operacao"
-											    ng-model="configuracoes.id_operacao_padrao_venda"
-											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											    option="lista_serie_documento_fiscal"
+											    ng-model="configuracoes.id_serie_padrao_nfce"
+											    ng-options="serie.id as serie.serie_documento_fiscal for serie in lista_serie_documento_fiscal">
 											</select>
 										</div>
 									</div>
@@ -485,9 +503,9 @@
 										<div class="form-group">
 											<label class="ccontrol-label">Modelo Documento/Série Padrão p/ NF-e</label> 
 											<select chosen
-											    option="lista_operacao"
-											    ng-model="configuracoes.id_operacao_padrao_venda"
-											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											    option="lista_serie_documento_fiscal"
+											    ng-model="configuracoes.id_serie_padrao_nfe"
+											    ng-options="serie.id as serie.serie_documento_fiscal for serie in lista_serie_documento_fiscal">
 											</select>
 										</div>
 									</div>
@@ -496,7 +514,7 @@
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">
-											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigFiscal($event)" type="submit" class="btn btn-success btn-sm">
 												<i class="fa fa-save"></i> Salvar
 											</button>
 										</div>

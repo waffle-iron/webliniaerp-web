@@ -7,6 +7,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.userLogged 	 = UserService.getUserLogado();
 	ng.currentNode 	 = null;
 	ng.exists_cookie = null ; 
+    serieDocumentoFiscalTO = {
+		cod_empreendimento : ng.userLogged.id_empreendimento,
+		serie_documento_fiscal : '',
+		num_modelo_documento_fiscal : '',
+		num_ultimo_documento_fiscal : '',
+    }
+    ng.serie_documento_fiscal = angular.copy(serieDocumentoFiscalTO) ;
+    ng.lista_serie_documento_fiscal = []; 
+    ng.edit_serie_documento_fiscal = false ;
 
 	 ng.loadPlanoContas = function() {
 	 	ng.currentNode 	= null;
@@ -201,14 +210,6 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 						}
 			chaves.push(item2);
 		}
-		if(ng.configuracoes.id_operacao_padrao_venda != undefined){
-			var item3 = {
-							nome 				:'id_operacao_padrao_venda',
-							valor 				:ng.configuracoes.id_operacao_padrao_venda , 
-							id_empreendimento	:ng.userLogged.id_empreendimento
-						}
-			chaves.push(item3);
-		}
 		btn.button('loading');
 		var pth_local_sucess = false ;
 		if(ng.config.pth_local != undefined){
@@ -261,7 +262,132 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 
+	 ng.loadControleNfe = function(ctr,key) {
+	 	ng[key] = [];
+		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
+			.success(function(data, status, headers, config) {
+				ng[key] = [{cod_controle_item_nfe:'',num_item:''}];
+				$.each(data,function(i,v){
+					data[i].descricao = v.nme_item+' - '+v.dsc_item ;
+				});
+				ng[key] = ng[key].concat(data) ;
+			})
+			.error(function(data, status, headers, config) {
+				
+		});
+	}
 
+	ng.loadSerieDocumentoFiscal = function() {
+		aj.get(baseUrlApi()+"serie_documento_fiscal/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+			.success(function(data, status, headers, config) {
+				ng.lista_serie_documento_fiscal = data;
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.lista_serie_documento_fiscal = null;
+			});
+	}
+
+	ng.incluirSerieDocumentoFiscal = function(event){
+		var btn = $(event.target) ;
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		btn.button('loading');
+		var item = angular.copy(ng.serie_documento_fiscal) ;
+		var error = 0 ;
+		$('.has-error').tooltip('destroy')
+		$('.has-error').removeClass('has-error')
+		$.each(item,function(i,v){
+			if(empty(v) && (i == 'serie_documento_fiscal' ||  i == 'num_modelo_documento_fiscal' ||  i == 'num_ultimo_documento_fiscal')){
+				$("#produto-cliente-nme_cliente").addClass("has-error");
+				var formControl = $("#"+i);
+					formControl.addClass("has-error")
+					.attr("data-toggle", "tooltip")
+					.attr("data-placement", "bottom")
+					.attr("title", "Campo  obrigatório")
+					.attr("data-original-title", "Campo  obrigatório");
+				if(error == 0) formControl.tooltip('show');
+				else  formControl.tooltip() ;
+				error ++ ;
+			}
+		});
+
+		if(error > 0){
+			btn.button('reset');
+			return ;
+		}
+
+		if(ng.edit_serie_documento_fiscal){
+			ng.lista_serie_documento_fiscal[ng.index_edit_serie_documento_fiscal] = item ;
+			ng.index_edit_serie_documento_fiscal = null ;
+			ng.edit_serie_documento_fiscal = false ;
+		}
+		else ng.lista_serie_documento_fiscal.push(item);
+		ng.serie_documento_fiscal = angular.copy(serieDocumentoFiscalTO) ;
+		btn.button('reset');
+	}
+
+	ng.indexEditSerieDocumentoFiscal ;
+	ng.editSerieDocumentoFiscal = function(index,item){
+		ng.edit_serie_documento_fiscal = true ;
+		ng.index_edit_serie_documento_fiscal = index ;
+		ng.serie_documento_fiscal = angular.copy(item);
+	}
+
+	var deleteSerieFiscal = [] ;
+	ng.delSerieDocumentoFiscal = function(index){
+		if(ng.lista_serie_documento_fiscal[index].id == undefined)
+			ng.lista_serie_documento_fiscal.splice(index,1);
+		else
+			ng.lista_serie_documento_fiscal[index].flg_excluido = 1 ;
+
+		console.log(deleteSerieFiscal);
+	}
+
+	ng.salvarConfigFiscal = function(event){
+		var serie = angular.copy(ng.serie_documento_fiscal);
+		var btn = $(event.target);
+		var chaves = [];
+		if(ng.configuracoes.id_operacao_padrao_venda != undefined){
+			var item = {nome:'id_operacao_padrao_venda',valor:ng.configuracoes.id_operacao_padrao_venda,id_empreendimento:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}
+
+		if(ng.configuracoes.id_serie_padrao_nfce != undefined){
+			var item = {nome :'id_serie_padrao_nfce',valor:ng.configuracoes.id_serie_padrao_nfce ,id_empreendimento:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}
+
+		if(ng.configuracoes.id_serie_padrao_nfe != undefined){
+			var item = {nome :'id_serie_padrao_nfe',valor:ng.configuracoes.id_serie_padrao_nfe , id_empreendimento	:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}
+
+		btn.button('loading');
+		aj.post(baseUrlApi()+"serie_documento_fiscal",{series:ng.lista_serie_documento_fiscal})
+			.success(function(data, status, headers, config) {
+				aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local} )
+					.success(function(data, status, headers, config) {
+						ng.loadSerieDocumentoFiscal();
+						btn.button('reset');
+						ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-fiscal');
+					})
+					.error(function(data, status, headers, config) {
+						btn.button('reset');
+					});
+			})
+			.error(function(data, status, headers, config) {
+				alert('Erro Fatal')
+				btn.button('reset');
+			});
+		
+	}
+
+
+	ng.loadControleNfe('modelo_nota_fiscal','chosen_modelo_nota_fiscal');
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
@@ -270,6 +396,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.existsCookie();
 	ng.loadConfig();
 	ng.loadOperacaoCombo();
+	ng.loadSerieDocumentoFiscal();
 
 	
 });
