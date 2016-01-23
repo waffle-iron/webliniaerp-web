@@ -206,191 +206,302 @@
 				</div>
 				<br/>
 				<div class="panel panel-default" id="box-novo">
-					<div class="panel-body no-padding">
-						<div class="tab-right">
-							<ul class="tab-bar">
-								<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Básico</a></li>
-								<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
-								<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
-								<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane fade in active" id="basico" style="width: 975px;">
-									<form class="formEmprendimento" role="form" enctype="multipart/form-data">
-
-												<div class="alert alert-basico-loja" style="display:none"></div>	
-
-										<div class="row" style="height: 67px;">
-											<div class="col-sm-4">
-												<div class="form-group" id="nome_empreendimento">
-													<label class="control-label">Nome</label>
-													<input ng-model="empreendimento.nome_empreendimento" type="text"  class="form-control input-sm">
-												</div>
-											</div>
-											<div class="col-sm-4">
-												<div class="form-group" id="nme_logo">
-													<label class="control-label"><i class="fa fa-camera"></i> Logo</label>
-													<div class="upload-file">
-														<input  id="foto-produto" name="nme_logo"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
-														<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
-														<label data-title="Selecione" for="foto-produto">
-															<span data-title="..."></span>
-														</label>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row" style="height: 67px;">
-											<div class="col-sm-12">
-												<div class="pull-right">
-													<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
-														<i class="fa fa-save"></i> Salvar
-													</button>
-												</div>
-											</div>
-										</div>
-									</form>
-								</div>
-								<div class="tab-pane fade" id="loja" style="width: 975px;">
-									<form class="formEmprendimento" role="form" enctype="multipart/form-data">
-												<div class="alert alert-basico-loja" style="display:none"></div>	
-
-										<div class="row" style="height: 67px;">
-											<div class="col-sm-4">
-												<div class="form-group" id="nickname">
-													<label class="control-label">Nickname</label>
-													<input ng-model="empreendimento.nickname"   type="text" class="form-control input-sm">
-												</div>
-											</div>
-											<div class="col-sm-4">
-												<div class="form-group" id="end_email_contato">
-													<label class="control-label">E-mail</label>
-													<input ng-model="empreendimento.end_email_contato"  type="text" class="form-control input-sm parsley-validated">
-												</div>
-											</div>
-
-											<div class="col-sm-4">
-												<div class="form-group" id="num_telefone">
-													<label class="control-label">Telefone</label>
-													<input ng-model="empreendimento.num_telefone"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-												</div>
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="col-sm-12">
-												<div class="form-group" id="dsc_empreendimento">
-													<label class="control-label">Descrição</label>
-													<textarea ng-model="empreendimento.dsc_empreendimento" class="form-control" rows="5"></textarea>
-												</div>
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="col-sm-4">
-												<div class="form-group" id="url_facebook">
-													<label class="control-label">Link do facebook</label>
-													<input ng-model="empreendimento.url_facebook"  type="text" class="form-control input-sm parsley-validated">
-												</div>
-											</div>
-
-											<div class="col-sm-4">
-												<div class="form-group" id="url_twitter">
-													<label class="control-label">Link do Twitter</label>
-													<input ng-model="empreendimento.url_twitter"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-												</div>
-											</div>
-
-											<div class="col-sm-4">
-												<div class="form-group" id="url_google_plus">
-													<label class="control-label">Link do Google Plus</label>
-													<input ng-model="empreendimento.url_google_plus"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-												</div>
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="col-sm-4">
-												<div class="form-group" id="url_linkedin">
-													<label class="control-label">Link do Linkedin</label>
-													<input ng-model="empreendimento.url_linkedin"  type="text" class="form-control input-sm parsley-validated">
-												</div>
-											</div>
-
-											<div class="col-sm-4">
-												<div class="form-group" id="url_pinterest">
-													<label class="control-label">Link do Pinterest</label>
-													<input ng-model="empreendimento.url_pinterest"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
-												</div>
-											</div>
-										</div>
-										<div class="row" style="height: 67px;">
-											<div class="col-sm-12">
-												<div class="pull-right">
-													<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
-														<i class="fa fa-save"></i> Salvar
-													</button>
-												</div>
-											</div>
-										</div>
-									</form>
-								</div>		
-								<div class="tab-pane fade" id="pdv" style="width: 975px;">
-									<div class="alert alert-danger alert-error-config" <?php echo isset($_COOKIE['pth_local']) ? 'style="display:none"' :  'style="display:block"' ?>>
-										Para que sua <strong>frente de loja(PDV)</strong> possa funcionar correntamente, preencha os campos abaixo, marcados em vermelho
-									</div>
-									<div class="alert alert-config" style="display:none"></div>
-									<div class="row" style="height: 67px;">
-										<div class="col-sm-4" id="id_plano_caixa">
-											<div class="input-group">
-											<label class="control-label">Plano para movimentação de caixa</label>
-								            <input ng-model="config.nome_plano_movimentacao" type="text" class="form-control input-sm">
-
-								            <div class="input-group-btn" style="top: 11px;">
-								            	<button ng-click="modalPlanoContas('movimentacao')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
-								            </div> <!-- /input-group-btn -->
-								        </div> <!-- /input-group -->
-										</div>
-										<div class="col-sm-4" id="id_plano_fechamento_caixa">
-											<div class="input-group">
-											<label class="control-label">Plano para fechamento de caixa</label>
-								            <input ng-model="config.nome_plano_fechamento" type="text" class="form-control input-sm">
-
-								            <div class="input-group-btn" style="top: 11px;">
-								            	<button ng-click="modalPlanoContas('fechamento')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
-								            </div> <!-- /input-group-btn -->
-								        </div> <!-- /input-group -->
-										</div>
+					<div class="panel-tab clearfix">
+						<ul class="tab-bar">
+							<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Básico</a></li>
+							<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
+							<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
+							<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> Fiscal</a></li>
+							<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
+						</ul>
+					</div>
+					<div class="panel-body">
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="basico">
+								<form class="formEmprendimento" role="form" enctype="multipart/form-data">
+									<div class="alert alert-basico-loja" style="display:none"></div>	
+									<div class="row">
 										<div class="col-sm-4">
-											<div class="form-group" id="pth_local"  >
-												<label class="control-label">IP do caixa</label>
-												<input ng-model="config.pth_local"  type="text" class="form-control input-sm parsley-validated">
+											<div class="form-group" id="nome_empreendimento">
+												<label class="control-label">Nome</label>
+												<input ng-model="empreendimento.nome_empreendimento" type="text"  class="form-control input-sm">
 											</div>
 										</div>
-									</div>
-									<div class="row" style="height: 67px;">
+
 										<div class="col-sm-4">
-											<div class="form-group" id="regimeTributario">
-												<label class="ccontrol-label">Operacao Padrão</label> 
-												<select chosen
-											    option="lista_operacao"
-											    ng-model="configuracoes.id_operacao_padrao_venda"
-											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
-												</select>
+											<div class="form-group" id="nme_logo">
+												<label class="control-label"><i class="fa fa-camera"></i> Logo</label>
+												<div class="upload-file">
+													<input  id="foto-produto" name="nme_logo"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
+													<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
+													<label data-title="Selecione" for="foto-produto">
+														<span data-title="..."></span>
+													</label>
+												</div>
 											</div>
 										</div>
 									</div>
-									<div class="row" style="height: 67px;">
+
+									<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
-												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
 													<i class="fa fa-save"></i> Salvar
 												</button>
 											</div>
 										</div>
 									</div>
+								</form>
+							</div>
+
+							<div class="tab-pane fade" id="loja">
+								<form class="formEmprendimento" role="form" enctype="multipart/form-data">
+									<div class="alert alert-basico-loja" style="display:none"></div>	
+
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="form-group" id="nickname">
+												<label class="control-label">Nickname</label>
+												<input ng-model="empreendimento.nickname"   type="text" class="form-control input-sm">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div class="form-group" id="end_email_contato">
+												<label class="control-label">E-mail</label>
+												<input ng-model="empreendimento.end_email_contato"  type="text" class="form-control input-sm parsley-validated">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div class="form-group" id="num_telefone">
+												<label class="control-label">Telefone</label>
+												<input ng-model="empreendimento.num_telefone"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group" id="dsc_empreendimento">
+												<label class="control-label">Descrição</label>
+												<textarea ng-model="empreendimento.dsc_empreendimento" class="form-control" rows="5"></textarea>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="form-group" id="url_facebook">
+												<label class="control-label">Link do facebook</label>
+												<input ng-model="empreendimento.url_facebook"  type="text" class="form-control input-sm parsley-validated">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div class="form-group" id="url_twitter">
+												<label class="control-label">Link do Twitter</label>
+												<input ng-model="empreendimento.url_twitter"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div class="form-group" id="url_google_plus">
+												<label class="control-label">Link do Google Plus</label>
+												<input ng-model="empreendimento.url_google_plus"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="form-group" id="url_linkedin">
+												<label class="control-label">Link do Linkedin</label>
+												<input ng-model="empreendimento.url_linkedin"  type="text" class="form-control input-sm parsley-validated">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div class="form-group" id="url_pinterest">
+												<label class="control-label">Link do Pinterest</label>
+												<input ng-model="empreendimento.url_pinterest"    type="text" class="form-control input-sm parsley-validated maskPorcentagem">
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="pull-right">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
+													<i class="fa fa-save"></i> Salvar
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+
+							<div class="tab-pane fade" id="pdv">
+								<div class="alert alert-danger alert-error-config" <?php echo isset($_COOKIE['pth_local']) ? 'style="display:none"' :  'style="display:block"' ?>>
+									Para que sua <strong>frente de loja(PDV)</strong> possa funcionar correntamente, preencha os campos abaixo, marcados em vermelho
 								</div>
-				
+
+								<div class="alert alert-config" style="display:none"></div>
+
+								<div class="row">
+									<div class="col-sm-4" id="id_plano_caixa">
+										<div class="input-group">
+											<label class="control-label">Plano para movimentação de caixa</label>
+							            	<input ng-model="config.nome_plano_movimentacao" type="text" class="form-control input-sm">
+							            	<div class="input-group-btn" style="top: 11px;">
+							            		<button ng-click="modalPlanoContas('movimentacao')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
+							            	</div>
+							        	</div>
+									</div>
+
+									<div class="col-sm-4" id="id_plano_fechamento_caixa">
+										<div class="input-group">
+											<label class="control-label">Plano para fechamento de caixa</label>
+								            <input ng-model="config.nome_plano_fechamento" type="text" class="form-control input-sm">
+
+								            <div class="input-group-btn" style="top: 11px;">
+								            	<button ng-click="modalPlanoContas('fechamento')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
+								            </div>
+								        </div>
+									</div>
+
+									<div class="col-sm-4">
+										<div class="form-group" id="pth_local"  >
+											<label class="control-label">IP do caixa</label>
+											<input ng-model="config.pth_local"  type="text" class="form-control input-sm parsley-validated">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="fiscal">
+								<div class="alert alert-config" style="display:none"></div>
+
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group" id="regimeTributario">
+											<label class="ccontrol-label">Operacao Padrão</label> 
+											<select chosen
+										    option="lista_operacao"
+										    ng-model="configuracoes.id_operacao_padrao_venda"
+										    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											</select>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<form class="formEmprendimento" role="form">
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label class="control-label">Série</label>
+												<input type="text" class="form-control input-sm">
+											</div>
+										</div>
+
+										<div class="col-sm-3">
+											<div class="form-group">
+												<label class="control-label">Modelo</label>
+												<select chosen
+												    option="lista_operacao"
+												    ng-model="configuracoes.id_operacao_padrao_venda"
+												    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+												</select>
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label class="control-label">Últ. Número Utilizado</label>
+												<input type="text" class="form-control input-sm">
+											</div>
+										</div>
+
+										<div class="col-sm-1">
+											<div class="form-group">
+												<label class="control-label"><br></label>
+												<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-plus-circle"></i> Incluir</button>
+											</div>
+										</div>
+									</form>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<div class="table-responsive">
+												<table class="table table-bordered table-condensed table-striped table-hover">
+													<thead>
+														<th>Série</th>
+														<th>Documento</th>
+														<th width="30%">Últ. Número Utilizado</th>
+														<th width="60"></th>
+													</thead>
+													<tbody>
+														<tr>
+															<td class="text-middle">serie aqui</td>
+															<td class="text-center text-middle">modelo aqui</td>
+															<td class="text-middle">últ. num util. aqui</td>
+															<td class="text-center text-middle">
+																<button type="button" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></button>
+																<button type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="ccontrol-label">Modelo Documento/Série Padrão p/ NFC-e</label> 
+											<select chosen
+											    option="lista_operacao"
+											    ng-model="configuracoes.id_operacao_padrao_venda"
+											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											</select>
+										</div>
+									</div>
+
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label class="ccontrol-label">Modelo Documento/Série Padrão p/ NF-e</label> 
+											<select chosen
+											    option="lista_operacao"
+											    ng-model="configuracoes.id_operacao_padrao_venda"
+											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											</select>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

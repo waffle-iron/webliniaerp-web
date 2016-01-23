@@ -109,9 +109,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	}
 
 	ng.keysConfig = {} ;
-	ng.loadConfig = function(){
-		var btn = $(event.target);
-		btn.button('loading');
+	ng.loadConfig = function(event){
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
@@ -122,7 +120,6 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 											id_empreendimento : ng.userLogged.id_empreendimento
 										}
 				});
-				btn.button('reset');
 				ng.configuracoes = data;
 				//console.log(ng.keysConfig);
 				if(data.id_plano_caixa == undefined){
@@ -156,7 +153,6 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 
 			})
 			.error(function(data, status, headers, config) {
-				btn.button('reset');
 				if(status == 404){
 					ng.configuracoes = [];
 					$('#id_plano_caixa').addClass('has-error');
