@@ -238,15 +238,6 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		$('#'+id).modal('hide');
 	}
 
-	ng.loadControleNfe = function(ctr,key) {
-		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
-			.success(function(data, status, headers, config) {
-				ng[key] = ng[key].concat(data) ;
-			})
-			.error(function(data, status, headers, config) {
-				
-		});
-	}
 
 	 ng.loadOperacaoCombo = function() {
 		ng.lista_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
@@ -270,7 +261,10 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				$.each(data,function(i,v){
 					data[i].descricao = v.nme_item+' - '+v.dsc_item ;
 				});
-				ng[key] = ng[key].concat(data) ;
+				ng[key] = ng[key].concat(data);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
 			})
 			.error(function(data, status, headers, config) {
 				
@@ -278,16 +272,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	}
 
 	ng.loadSerieDocumentoFiscal = function() {
+		ng.lista_serie_documento_fiscal = null ;
 		aj.get(baseUrlApi()+"serie_documento_fiscal/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
 				ng.lista_serie_documento_fiscal = data;
-				setTimeout(function(){
-					$("select").trigger("chosen:updated");
-				},300);
+				$("select").trigger("chosen:updated");
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
-					ng.lista_serie_documento_fiscal = null;
+					ng.lista_serie_documento_fiscal = [];
 			});
 	}
 

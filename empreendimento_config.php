@@ -414,7 +414,7 @@
 											</div>
 										</div>
 
-										<div class="col-sm-3">
+										<div class="col-sm-5">
 											<div class="form-group" id="num_modelo_documento_fiscal">
 												<label class="control-label">Modelo</label>
 												<select chosen
@@ -449,7 +449,7 @@
 								</div>
 
 								<div class="row">
-									<div class="col-sm-6">
+									<div class="col-sm-8">
 										<div class="form-group">
 											<div class="table-responsive">
 												<table class="table table-bordered table-condensed table-striped table-hover">

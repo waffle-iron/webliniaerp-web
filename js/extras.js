@@ -198,7 +198,12 @@ function numberFormat(number, decimals, dec_point, thousands_sep) {
 function getUrlVars()
 {
     var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+
+    var url =  window.location.href.split("#");
+   	if(url.length > 1)
+   		var hashes = url[0].slice(window.location.href.indexOf('?') + 1).split('&');
+   	else
+    	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < hashes.length; i++)
     {
         hash = hashes[i].split('=');

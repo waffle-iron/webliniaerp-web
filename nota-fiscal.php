@@ -71,7 +71,7 @@
 	</style>
   </head>
 
-  <body class="overflow-hidden" ng-controller="DepositosController" ng-cloak>
+  <body class="overflow-hidden" ng-controller="NotaFiscalController" ng-cloak>
   	<!-- Overlay Div -->
 	<div id="overlay" class="transparent"></div>
 
@@ -236,31 +236,31 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">CPF / CNPJ</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.emitente.CNPJ }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">I.E.</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.emitente.IE }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">I.E. Sub. Tributária</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.emitente.IEST }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Regime Tributário</label> 
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.emitente.CRT }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group" data-toggle="tooltip" title="Apenas Simples Nacional">
 											<label class="control-label">% Crédito</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.emitente.PercCreditoSimples }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -269,13 +269,13 @@
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Razão Social</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.emitente.xNome }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-4">
 										<div class="form-group">
 											<label class="control-label">Nome Fantasia</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.emitente.xFant }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -286,33 +286,37 @@
 
 								<div class="row">
 									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">CPF / CNPJ</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+										<div class="form-group" ng-if="NF.destinatario.tipo_cadastro == 'pj'">
+											<label class="control-label">CNPJ</label>
+											<input type="text" value="{{ NF.destinatario.CNPJ }}" class="form-control input-sm" readonly="readonly">
+										</div>
+										<div class="form-group" ng-if="NF.destinatario.tipo_cadastro == 'pf'">
+											<label class="control-label">CPF</label>
+											<input type="text" value="{{ NF.destinatario.CPF }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">I.E.</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.destinatario.IE }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">ID Sub. Tributária</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.destinatario.IEST }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Inscrição Municipal</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.destinatario.IM }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">ID Estrangeiro</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.destinatario.num_registro_estrangeiro }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -321,13 +325,13 @@
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Nome Fantasia</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.destinatario.xFant }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-4">
 										<div class="form-group">
 											<label class="control-label">E-mail</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.destinatario.email }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -340,14 +344,14 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">CNPJ</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.trasportadora.CNPJ }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Nome Fantasia</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" value="{{ NF.trasportadora.xFant }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
@@ -372,36 +376,36 @@
 												<th class="text-middle text-center" rowspan="2">Cód. EAN</th>
 												<th class="text-middle" rowspan="2">Descrição</th>
 												<th class="text-middle text-center" rowspan="2">Cód. NCM</th>
-												<th class="text-middle text-center" rowspan="2">CST</th>
+												<th class="text-middle text-center" rowspan="2">CST</th> <!-- Existe um CST para cada modalidade(IPI,PIS,COFINS) de imposto e tb um geral. Qual Mostrar ?  -->
 												<th class="text-middle text-center" rowspan="2">CFOP</th>
-												<th class="text-middle text-center" rowspan="2">Un. Medida</th>
-												<th class="text-middle text-center" rowspan="2">Qtd.</th>
+												<th class="text-middle text-center" rowspan="2">Un. Medida</th> 
+												<th class="text-middle text-center" rowspan="2">Qtd.</th> 
 												<th class="text-middle" rowspan="2">Valor Unit.</th>
 												<th class="text-middle" rowspan="2">Valor Total</th>
-												<th class="text-middle" rowspan="2">B.Calc. ICMS</th>
+												<th class="text-middle" rowspan="2">B.Calc. ICMS</th> 
 												<th class="text-middle" rowspan="2">Valor ICMS</th>
 												<th class="text-middle" rowspan="2">Valor IPI</th>
 												<th class="text-middle text-center" colspan="2">Aliquotas</th>
 											</tr>
 											<tr>
-												<th class="text-middle text-center">ICMS</th>
-												<th class="text-middle text-center">IPI</th>
+												<th class="text-middle text-center">ICMS</th> <!-- Não identifiquei este campo -->
+												<th class="text-middle text-center">IPI</th> <!-- Não identifiquei este campo -->
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td class="text-middle text-center">7.06.0006.07</td>
-												<td class="text-middle">CHINELO PERSONALIZADO CPT. S+P</td>
-												<td class="text-middle text-center">64022000</td>
-												<td class="text-middle text-center">0101</td>
-												<td class="text-middle text-center">6102</td>
-												<td class="text-middle text-center">PAR</td>
-												<td class="text-middle text-center">56</td>
-												<td class="text-middle text-right">R$ 2,81</td>
-												<td class="text-middle text-right">R$ 157,36</td>
-												<td class="text-middle text-right">R$ 0,00</td>
-												<td class="text-middle text-right">R$ 0,00</td>
-												<td class="text-middle text-right">R$ 0,00</td>
+											<tr ng-repeat="item in NF.itens">
+												<td class="text-middle text-center">{{ item.prod.cEAN }}</td>
+												<td class="text-middle">{{ item.prod.xProd }}</td>
+												<td class="text-middle text-center">{{ item.prod.cNCM }}</td>
+												<td class="text-middle text-center">{{ null }}</td>
+												<td class="text-middle text-center">{{ item.prod.CFOP }}</td>
+												<td class="text-middle text-center">{{ item.prod.uCom }}</td>
+												<td class="text-middle text-center">{{ item.prod.qCom }}</td>
+												<td class="text-middle text-right">R$ {{ item.prod.vUnCom | numberFormat:2:',':'.' }}</td>
+												<td class="text-middle text-right">R$ {{ item.prod.vProd | numberFormat:2:',':'.' }}</td>
+												<td class="text-middle text-right">R$ {{ item.imposto.ICMS.vBC | numberFormat:2:',':'.' }}</td>
+												<td class="text-middle text-right">R$ {{ item.imposto.ICMS.vICMS | numberFormat:2:',':'.' }}</td>
+												<td class="text-middle text-right">R$ {{ item.imposto.IPI.vIPI | numberFormat:2:',':'.' }}</td>
 												<td class="text-middle text-center">0%</td>
 												<td class="text-middle text-center">0%</td>
 											</tr>
@@ -417,35 +421,35 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">B. Cálc. ICMS</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vBC" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total ICMS</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vICMS" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total ICMS Deson.</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vICMSDeson" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">B. Cálc. ICMS ST</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vBCST" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total ICMS ST</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vST" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -454,21 +458,21 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total IPI</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vIPI" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total COFINS</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vCOFINS" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Outros</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vOutro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -477,35 +481,35 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total Produtos</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vProd" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total Frete</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vFrete" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total Seguros</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vSeg" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total Descontos</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vDesc" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total do II</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vII" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -514,14 +518,14 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total NF</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.emitente.vNF" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Aprox. Tributos</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.emitente.vTotTrib" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -530,7 +534,7 @@
 					</div>
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
-							<button type="button" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
+							<button type="button" ng-click="calcularNfe($event)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
 							<button type="button" class="btn btn-sm btn-success"><i class="fa fa-send"></i> Transmitir NF-e</button>
 							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-file-text-o"></i> Emitir DANFE (PDF)</button>
 							<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-times-circle"></i> Cancelar NF-e</button>
@@ -539,6 +543,25 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal Processando-->
+		<div class="modal fade" id="modal-calculando" style="display:none">
+  			<div class="modal-dialog error modal-sm">
+    			<div class="modal-content">
+      				<div class="modal-header"></div>
+				    <div class="modal-body">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+				    			<i class='fa fa-refresh fa-spin'></i> Aguarde! Calculando Nota
+							</div>
+				    	</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->
@@ -611,7 +634,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/depositos-controller.js"></script>
+	<script src="js/angular-controller/nota_fiscal-controller.js"></script>
 	<script type="text/javascript"></script>>
 	<?php include("google_analytics.php"); ?>
   </body>
