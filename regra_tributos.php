@@ -245,9 +245,9 @@
 								<div class="form-group" id="cod_estado_origem">
 									<label class="ccontrol-label">Estado de Origem</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_estado_origem')"
-								    option="chosen_estado"
-								    ng-model="regra_tributos.filtro_tributos.cod_estado_origem"
-								    ng-options="estado.id as estado.nome for estado in chosen_estado">
+									    option="chosen_estado"
+									    ng-model="regra_tributos.filtro_tributos.cod_estado_origem"
+									    ng-options="estado.id as estado.nome for estado in chosen_estado">
 									</select>
 								</div>
 							</div>

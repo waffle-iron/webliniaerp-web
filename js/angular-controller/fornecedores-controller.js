@@ -66,8 +66,17 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 			url += '/update';
 		}
 
-		itemPost.id_empreendimento 	= ng.userLogged.id_empreendimento;
-		itemPost.nome_fornecedor 	= ng.fornecedor.nome_fornecedor;
+		itemPost.id_empreendimento 		= ng.userLogged.id_empreendimento;
+		itemPost.nome_fornecedor 		= ng.fornecedor.nome_fornecedor; // razão social
+		itemPost.nme_fantasia 			= ng.fornecedor.nme_fantasia;
+		itemPost.num_cnpj 				= ng.fornecedor.num_cnpj;
+		itemPost.num_inscricao_estadual = ng.fornecedor.num_inscricao_estadual;
+		itemPost.num_cep 				= ng.fornecedor.num_cep;
+		itemPost.nme_endereco 			= ng.fornecedor.nme_endereco;
+		itemPost.num_logradouro 		= ng.fornecedor.num_logradouro;
+		itemPost.nme_bairro 			= ng.fornecedor.nme_bairro;
+		itemPost.cod_estado 			= ng.fornecedor.cod_estado;
+		itemPost.cod_cidade 			= ng.fornecedor.cod_cidade;
 
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
@@ -81,9 +90,9 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 					var errors = data;
 
 					$.each(errors, function(i, item) {
-						$("#"+i).addClass("has-error");
+						$("#"+i).closest(".form-group").addClass("has-error");
 
-						var formControl = $($("#"+i).find(".form-control")[0])
+						var formControl = $($("#"+i).closest(".form-group").find(".form-control")[0])
 							.attr("data-toggle", "tooltip")
 							.attr("data-placement", "bottom")
 							.attr("title", item)
@@ -125,6 +134,37 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 					ng.configuracao = false ;
 				}
 			});
+	}
+
+	ng.chosen_estado  = [{id:'',nome:'--- Selecione ---'}] ;
+    ng.loadEstados = function () {
+		aj.get(baseUrlApi()+"estados")
+		.success(function(data, status, headers, config) {
+			 ng.chosen_estado = ng.chosen_estado.concat(data);
+
+			 setTimeout(function(){
+			 	$("select").trigger("chosen:updated")
+			 }, 500);
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+	ng.loadEstados();
+
+	ng.chosen_cidade = [{id: "" ,nome:"Selecione um estado"}];
+	ng.loadCidadesByEstado = function () {
+		ng.chosen_cidade = [];
+		aj.get(baseUrlApi()+"cidades_by_id_estado/"+ng.fornecedor.cod_estado)
+		.success(function(data, status, headers, config) {
+			ng.chosen_cidade = data;
+			setTimeout(function(){
+			 	$("select").trigger("chosen:updated")
+			 }, 500);
+		})
+		.error(function(data, status, headers, config) {
+
+		});
 	}
 
 	function defaulErrorHandler(data, status, headers, config) {
