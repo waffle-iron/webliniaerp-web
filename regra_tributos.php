@@ -583,7 +583,7 @@
 							</div>
 							<div class="col-sm-2">
 								<div class="form-group" id="flg_incluir_ipi_base_icms">
-									<label for="" class="control-label">Base ICMS</label>
+									<label for="" class="control-label">Incluir IPI Base ICMS</label>
 									<div class="form-group">
 										<label class="label-radio inline">
 											<input ng-model="regra_tributos.configuracao_icms.flg_incluir_ipi_base_icms" value="0" type="radio" class="inline-radio">
@@ -611,7 +611,7 @@
 							</div>
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_icms" class="form-group">
-									<label class="control-label">alíquota ICMS</label>
+									<label class="control-label">Alíquota ICMS</label>
 									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms">
 								</div>
 							</div>
@@ -631,7 +631,7 @@
 							</div>
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_icms_proprio_st" class="form-group">
-									<label class="control-label">alíquota ICMS Proprio ST</label>
+									<label class="control-label">Alíquota ICMS Proprio ST</label>
 									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_proprio_st">
 								</div>
 							</div>
@@ -699,7 +699,7 @@
 							
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_icms_st" class="form-group">
-									<label class="control-label">alíquota ICMS ST</label>
+									<label class="control-label">Alíquota ICMS ST</label>
 									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_st">
 								</div>
 							</div>

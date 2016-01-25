@@ -63,9 +63,40 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			});
 	}
 
+	ng.loadTransportadoras = function() {
+		ng.lista_traportadoras = [{id:'',nome_fornecedor:''}];
+		aj.get(baseUrlApi()+"fornecedores?id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				ng.lista_traportadoras  = ng.lista_traportadoras.concat(data.fornecedores);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				ng.lista_traportadoras = [] ;
+			});
+	}
+
+	ng.lista_modalidade_frete = [] ;
+	ng.loadControleNfe = function(ctr,key) {
+		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
+			.success(function(data, status, headers, config) {
+				ng[key] = [{ num_item : '', nme_item:'' }];
+				ng[key] = ng[key].concat(data) ;
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				ng[key] = [] ;	
+		});
+	}
+
 
 	if($.isNumeric(params.id_venda) &&  $.isNumeric(params.cod_operacao) ){
 		ng.calcularNfe();
+		ng.loadTransportadoras();
+		ng.loadControleNfe('modalidade_frete','lista_modalidade_frete');
 	}else
 		$dialogs.notify('Desculpe!','<strong>Não foi possível calcular a NF, os paramentros estão incorretos.</strong>');
 					

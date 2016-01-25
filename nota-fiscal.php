@@ -248,14 +248,14 @@
 									<div class="col-sm-2 col-sm-offset-2">
 										<div class="form-group">
 											<label class="control-label">Série</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input ng-model="NF.dados_emissao.serie_documento_fiscal" type="text" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Número</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input ng-model="NF.dados_emissao.num_documento_fiscal" type="text" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -264,7 +264,7 @@
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Natureza da Operação</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.dados_emissao.dsc_operacao" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
@@ -288,7 +288,7 @@
 										</div>
 									</div>
 
-									<div class="col-sm-2">
+									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Hora de Saída</label>
 											<input type="time" class="form-control input-sm" style="width: 50%;">
@@ -361,25 +361,25 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">CEP</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.emitente.CEP"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Endereço</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.emitente.nme_logradouro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-1">
 										<div class="form-group">
 											<label class="control-label">Número</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.num_logradouro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Bairro</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.nme_bairro_logradouro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -388,13 +388,13 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Estado</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.estado.nome" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Cidade</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.emitente.cidade.nome" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -472,25 +472,25 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">CEP</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.CEP"   class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Endereço</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.nme_logradouro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-1">
 										<div class="form-group">
 											<label class="control-label">Número</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.num_logradouro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Bairro</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.nme_bairro_logradouro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -499,13 +499,13 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Estado</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.estado.nome" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Cidade</label>
-											<input type="text" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.cidade.nome" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -519,9 +519,9 @@
 										<div class="form-group">
 											<label class="control-label">Transportadora</label> 
 											<select chosen
-											    option="lista_operacao"
+											    option="lista_traportadoras"
 											    ng-model="configuracoes.id_operacao_padrao_venda"
-											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											    ng-options="transportadora.id as transportadora.nome_fornecedor for transportadora in lista_traportadoras">
 											</select>
 										</div>
 									</div>
@@ -546,9 +546,9 @@
 										<div class="form-group">
 											<label class="control-label">Modalidade de Frete</label> 
 											<select chosen
-											    option="lista_operacao"
+											    option="lista_modalidade_frete"
 											    ng-model="configuracoes.id_operacao_padrao_venda"
-											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											    ng-options="mod_frete.num_item as mod_frete.nme_item for mod_frete in lista_modalidade_frete">
 											</select>
 										</div>
 									</div>
@@ -625,7 +625,7 @@
 											<tr ng-repeat="item in NF.itens">
 												<td class="text-middle text-center">{{ item.prod.cEAN }}</td>
 												<td class="text-middle">{{ item.prod.xProd }}</td>
-												<td class="text-middle text-center">{{ item.prod.cNCM }}</td>
+												<td class="text-middle text-center">{{ item.prod.NCM }}</td>
 												<td class="text-middle text-center">{{ null }}</td>
 												<td class="text-middle text-center">{{ item.prod.CFOP }}</td>
 												<td class="text-middle text-center">{{ item.prod.uCom }}</td>
