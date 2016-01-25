@@ -20,6 +20,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Chosen -->
+	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -56,7 +59,9 @@
 
 		#list_produtos .modal-content {min-height: 640px;;}
 
-
+		.panel.panel-default {
+			overflow: visible !important;
+		}
 	</style>
   </head>
 
@@ -201,27 +206,100 @@
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Fornecedor</div>
 
 					<div class="panel-body">
-						<form class="form-horizontal" role="form">
-							<div id="nome_fornecedor" class="form-group">
-								<label for="descricao" class="col-sm-1 control-label">Descrição</label>
-								<div class="col-sm-11">
-									<input type="text" class="form-control" id="descricao" ng-model="fornecedor.nome_fornecedor" ng-enter="salvar()">
+						<form role="form">
+							<div class="row">
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label">CNPJ</label>
+										<input id="num_cnpj" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.num_cnpj">
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label">I.E.</label>
+										<input id="num_inscricao_estadual" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.num_inscricao_estadual">
+									</div>
 								</div>
 							</div>
 
-							<div class="form-group">
-								<div class="col-sm-12">
-									<div class="pull-right">
-										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
-											<i class="fa fa-times-circle"></i> Cancelar
-										</button>
-										<button ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
-										</button>
+							<div class="row">
+								<div class="col-sm-5">
+									<div class="form-group">
+										<label class="control-label">Razão Social</label>
+										<input id="nome_fornecedor" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.nome_fornecedor">
+									</div>
+								</div>
+
+								<div class="col-sm-5">
+									<div class="form-group">
+										<label class="control-label">Nome Fantasia</label>
+										<input id="nme_fantasia" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.nme_fantasia">
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label">CEP</label>
+										<input id="num_cep" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.num_cep">
+									</div>
+								</div>
+								<div class="col-sm-5">
+									<div class="form-group">
+										<label class="control-label">Endereço</label>
+										<input id="nme_endereco" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.nme_endereco">
+									</div>
+								</div>
+								<div class="col-sm-1">
+									<div class="form-group">
+										<label class="control-label">Número</label>
+										<input id="num_logradouro" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.num_logradouro">
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label class="control-label">Bairro</label>
+										<input id="nme_bairro" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.nme_bairro">
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label">Estado</label>
+										<select id="cod_estado" chosen ng-change="loadCidadesByEstado()"
+										    option="chosen_estado"
+										    ng-model="fornecedor.cod_estado"
+										    ng-options="estado.id as estado.nome for estado in chosen_estado">
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label class="control-label">Cidade</label>
+										<select id="cod_cidade" chosen
+										    option="chosen_cidade"
+										    ng-model="fornecedor.cod_cidade"
+										    ng-options="a.id as a.nome for a in chosen_cidade">
+										</select>
 									</div>
 								</div>
 							</div>
 						</form>
+					</div>
+
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+								<i class="fa fa-times-circle"></i> Cancelar
+							</button>
+							<button ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
+								<i class="fa fa-save"></i> Salvar
+							</button>
+						</div>
 					</div>
 				</div><!-- /panel -->
 
@@ -309,6 +387,9 @@
 	<!-- Endless -->
 	<script src="js/endless/endless.js"></script>
 
+	<!-- Chosen -->
+	<script src='js/chosen.jquery.min.js'></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -321,6 +402,10 @@
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
+    <script src="js/angular-chosen.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['angular.chosen'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
