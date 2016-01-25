@@ -191,8 +191,10 @@
 		<div id="main-container">
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
-					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-tags"></i> Operação </li>
+					<li><i class="fa fa-home"></i><a href="dashboard.php">Home</a></li>
+					<li><i class="fa fa-building-o"></i> Empreendimento</li>
+					<li><i class="fa fa-cog"></i> <a href="empreendimento_config.php">Configurações</a></li>
+					<li class="active"><i class="fa fa-tags"></i> Operação </li>
 				</ul>
 			</div><!-- breadcrumb -->
 

@@ -256,3 +256,8 @@ div[data-tree-model] li .selected {
 .main-header {
 	padding-bottom: 0px !important;
 }
+
+.shortcut-link .text {
+	display: block !important;
+	margin-left: 0 !important;
+}

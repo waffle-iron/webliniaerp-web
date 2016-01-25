@@ -177,9 +177,9 @@
 		<div id="main-container">
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
-					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li ><i class="fa fa-building-o"></i> Empreendimento</li>
-					  <li class="active"><i class="fa fa-cog"></i> Configurações</li>
+					<li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
+					<li><i class="fa fa-building-o"></i> Empreendimento</li>
+					<li class="active"><i class="fa fa-cog"></i> Configurações</li>
 				</ul>
 			</div><!-- breadcrumb -->
 

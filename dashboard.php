@@ -190,6 +190,11 @@
 						<i class="fa fa-signal"></i></span>
 					<span class="text">Vendas</span>
 				</a>
+				<a href="lancamentos.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-money"></i></span>
+					<span class="text">Lanç. Financeiros</span>
+				</a>
 				<a href="produtos.php" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-archive"></i></span>
