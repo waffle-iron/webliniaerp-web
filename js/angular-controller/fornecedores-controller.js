@@ -37,23 +37,24 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 	}
 
 	ng.reset = function() {
+		
 		ng.fornecedor = {};
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
 	}
-
-	ng.load = function() {
-		var url = "fornecedores?id_empreendimento="+ng.userLogged.id_empreendimento;
-
+	ng.fornecedores
+	ng.load = function(offset,limit) {
+		offset = offset == null ? 0  : offset ;
+		limit = limit   == null ? 10 : limit ;  
+		ng.fornecedores = [] ;
+		var url = "fornecedores/"+offset+"/"+limit+"?id_empreendimento="+ng.userLogged.id_empreendimento;
 		aj.get(baseUrlApi()+url)
 			.success(function(data, status, headers, config) {
-				ng.fornecedores = data.fornecedores;
+				ng.fornecedores = data;
 			})
 			.error(function(data, status, headers, config) {
-				console.log(data);
-				if(status == 404)
-					ng.fornecedores = [];
+				ng.fornecedores = [];
 			});
 	}
 
@@ -105,6 +106,7 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 
 	ng.editar = function(item) {
 		ng.fornecedor = angular.copy(item);
+		ng.loadCidadesByEstado();
 		ng.showBoxNovo(true);
 	}
 

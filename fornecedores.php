@@ -316,11 +316,14 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-if="fornecedores.length == 0">
-									<td width="80"> Não a fornecedores cadastrados </td>
+								<tr ng-if="fornecedores.fornecedores.length == 0">
+									<td width="80" colspan="3" class="text-center"> Nenhum fornecedores encontrado </td>
 								</tr>
-								<tr ng-repeat="item in fornecedores" title="{{ configuracao.id_fornecedor_movimentacao_caixa == item.id && 'Este fornecedor não pode ser editado nem deletado, ele faz parte das configurações internas do sistema' || '' }} ">
-									<td width="80">{{ item.id }}</td>
+								<tr ng-if="fornecedores.fornecedores == null" class="text-center">
+									<td width="80" colspan="3"><i class='fa fa-refresh fa-spin'></i> Carregando... </td>
+								</tr>
+								<tr ng-repeat="item in fornecedores.fornecedores" title="{{ configuracao.id_fornecedor_movimentacao_caixa == item.id && 'Este fornecedor não pode ser editado nem deletado, ele faz parte das configurações internas do sistema' || '' }} ">
+									<td width="80" >{{ item.id }}</td>
 									<td>{{ item.nome_fornecedor }}</td>
 									<td align="center">
 										<button ng-disabled="configuracao.id_fornecedor_movimentacao_caixa == item.id"  type="button" ng-click="editar(item)" tooltip="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
@@ -333,6 +336,15 @@
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<ul class="pagination pagination-sm m-top-none" ng-show="fornecedores.paginacao.length > 1">
+								<li ng-repeat="item in fornecedores.paginacao" ng-class="{'active': item.current}">
+									<a href="" h ng-click="load(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>

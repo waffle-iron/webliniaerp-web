@@ -7,6 +7,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	ng.userLogged 	= UserService.getUserLogado();
     ng.editing 		= false;
     ng.NF 			= {} ;
+    ng.id_transportadora;
     var params      = getUrlVars();
 
     ng.showBoxNovo = function(onlyShow){
@@ -90,6 +91,27 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			.error(function(data, status, headers, config) {
 				ng[key] = [] ;	
 		});
+	}
+
+	ng.selTransportadora = function(){
+		var item ;
+		$.each(ng.lista_traportadoras,function(i,v){
+			if(Number(ng.id_transportadora) == Number(v.id)){
+				item = v ;
+				return
+			}
+		});
+
+		ng.NF.transportadora = {
+			xFant : item.nme_fantasia,
+			CNPJ : item.num_cnpj,
+			CEP : item.num_cep,
+			nme_logradouro : item.nme_endereco,
+			num_logradouro : item.num_logradouro,
+			nme_bairro_logradouro : item.nme_bairro,
+			estado : item.estado,
+			cidade : item.cidade
+		}
 	}
 
 
