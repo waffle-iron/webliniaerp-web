@@ -220,7 +220,8 @@
 
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
-							<li class="active"><a href="#emitente" data-toggle="tab"><i class="fa fa-building-o"></i> Dados do Emitente</a></li>
+							<li class="active"><a href="#geral" data-toggle="tab"><i class="fa fa-gear"></i> Dados de Emissão</a></li>
+							<li><a href="#emitente" data-toggle="tab"><i class="fa fa-building-o"></i> Dados do Emitente</a></li>
 							<li><a href="#destinatario" data-toggle="tab"><i class="fa fa-user"></i> Dados do Destinatário</a></li>
 							<li><a href="#transportadora" data-toggle="tab"><i class="fa fa-truck"></i> Dados da Transportadora</a></li>
 							<li><a href="#produtos" data-toggle="tab"><i class="fa fa-list"></i> Produtos</a></li>
@@ -229,7 +230,83 @@
 					</div>
 					<div class="panel-body">
 						<div class="tab-content">
-							<div class="tab-pane fade in active" id="emitente">
+							<div class="tab-pane fade in active" id="geral">
+								<div class="alert" style="display:none"></div>
+
+								<div class="row">
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Tipo de Saída</label> 
+											<select chosen
+											    option="lista_operacao"
+											    ng-model="configuracoes.id_operacao_padrao_venda"
+											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											</select>
+										</div>
+									</div>
+
+									<div class="col-sm-2 col-sm-offset-2">
+										<div class="form-group">
+											<label class="control-label">Série</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Número</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label class="control-label">Natureza da Operação</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Data de Emissão</label>
+											<div class="input-group">
+												<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Data de Saída</label>
+											<div class="input-group">
+												<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
+												<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Hora de Saída</label>
+											<input type="time" class="form-control input-sm" style="width: 50%;">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-9">
+										<div class="form-group">
+											<label class="control-label">Observações</label>
+											<textarea class="form-control" rows="5"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="tab-pane fade in" id="emitente">
 								<div class="alert" style="display:none"></div>
 
 								<div class="row">
@@ -279,10 +356,65 @@
 										</div>
 									</div>
 								</div>
+
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">CEP</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label class="control-label">Endereço</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-1">
+										<div class="form-group">
+											<label class="control-label">Número</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Bairro</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Estado</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Cidade</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+								</div>
 							</div>
 
 							<div class="tab-pane fade in" id="destinatario">
 								<div class="alert" style="display:none"></div>
+
+								<div class="row">
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Tipo de Atendimento</label> 
+											<select chosen
+											    option="lista_operacao"
+											    ng-model="configuracoes.id_operacao_padrao_venda"
+											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											</select>
+										</div>
+									</div>
+								</div>
 
 								<div class="row">
 									<div class="col-sm-2">
@@ -335,10 +467,65 @@
 										</div>
 									</div>
 								</div>
+
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">CEP</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label class="control-label">Endereço</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-1">
+										<div class="form-group">
+											<label class="control-label">Número</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Bairro</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Estado</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Cidade</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+								</div>
 							</div>
 
 							<div class="tab-pane fade in" id="transportadora">
 								<div class="alert" style="display:none"></div>
+
+								<div class="row">
+									<div class="col-sm-10">
+										<div class="form-group">
+											<label class="control-label">Transportadora</label> 
+											<select chosen
+											    option="lista_operacao"
+											    ng-model="configuracoes.id_operacao_padrao_venda"
+											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											</select>
+										</div>
+									</div>
+								</div>
 
 								<div class="row">
 									<div class="col-sm-2">
@@ -363,6 +550,48 @@
 											    ng-model="configuracoes.id_operacao_padrao_venda"
 											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
 											</select>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">CEP</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label class="control-label">Endereço</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-1">
+										<div class="form-group">
+											<label class="control-label">Número</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Bairro</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Estado</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Cidade</label>
+											<input type="text" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>

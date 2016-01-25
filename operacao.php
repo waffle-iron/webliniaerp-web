@@ -220,7 +220,10 @@
 							</div>
 						</div>
 						<div  class="row">
-							<div class="col-sm-3">
+					</div>
+
+					<div class="row">
+							<div class="col-sm-12">
 								<div class="form-group" id="num_cfop_produto">
 									<label class="control-label">N° CFOP Produto</label> 
 									<select chosen
@@ -235,7 +238,10 @@
 									<input maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_produto">
 								</div>-->
 							</div>
-							<div class="col-sm-3">
+						</div>
+
+						<div class="row">
+							<div class="col-sm-12">
 								<div class="form-group" id="num_cfop_produto_st">
 									<label class="control-label">N° CFOP Produto ST</label> 
 									<select chosen
@@ -250,7 +256,10 @@
 									<input  maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_produto_st">
 								</div>-->
 							</div>
-							<div class="col-sm-3">
+						</div>
+
+						<div class="row">
+							<div class="col-sm-12">
 								<div class="form-group" id="num_cfop_mercadoria">
 									<label class="control-label">N° CFOP Mercadoria</label> 
 									<select chosen
@@ -265,7 +274,10 @@
 									<input  maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_mercadoria">
 								</div>-->
 							</div>
-							<div class="col-sm-3">
+						</div>
+
+						<div class="row">
+							<div class="col-sm-12">
 								<div class="form-group" id="num_cfop_mercadoria_st">
 									<label class="control-label">N° CFOP Mercadoria ST</label> 
 									<select chosen
@@ -281,6 +293,7 @@
 								</div>-->
 							</div>
 						</div>
+
 						<div  class="row">
 							<div class="col-sm-4">
 								<div class="form-group" id="cod_operacao_estorno">
@@ -305,6 +318,7 @@
 								</div>
 							</div>
 						</div>
+						
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="pull-right">
