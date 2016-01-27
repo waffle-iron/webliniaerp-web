@@ -1723,10 +1723,10 @@
 						    	<a ng-show="!emitirNfe" ng-click="cancelar()" class="btn btn-md  btn-default">
 						    		<i class="fa fa-reply"></i> Voltar ao PDV
 						    	</a>
-						    	<button ng-show="emitirNfe"  type="button" data-loading-text=" Aguarde..." 
+						    	<a ng-show="emitirNfe" ng-disabled="configuracoes.id_operacao_padrao_venda == undefined || configuracoes.id_operacao_padrao_venda == "" href="nota-fiscal.php?id_venda={{ id_venda }}&&cod_operacao={{configuracoes.id_operacao_padrao_venda}}"  type="button" data-loading-text=" Aguarde..." 
 						    		class="btn btn-md  btn-info" ng-click="">
 						    		<i class="fa fa-print"></i> Confirmar Emissão NF-e
-						    	</button>
+						    	</a>
 						    	<a ng-show="emitirNfe" ng-click="emitirNfe = false" class="btn btn-md  btn-default">
 						    		<i class="fa fa-reply"></i> Voltar
 						    	</a>

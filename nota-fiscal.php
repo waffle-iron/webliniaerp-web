@@ -237,7 +237,7 @@
 								<div class="alert" style="display:none"></div>
 
 								<div class="row">
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Tipo de Documento</label> 
 											<select chosen
@@ -247,18 +247,49 @@
 											</select>
 										</div>
 									</div>
-
 									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Local de Destino</label> 
+											<select chosen
+											    option="lista_local_destino"
+											    ng-model="NF.dados_emissao.local_destino"
+											    ng-options="item.num_item as item.nme_item for item in lista_local_destino">
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Finalidade Emissão</label> 
+											<select chosen
+											    option="lista_finalidade_emissao"
+											    ng-model="NF.dados_emissao.finalidade_emissao"
+											    ng-options="item.num_item as item.nme_item for item in lista_finalidade_emissao">
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Consumidor Final</label> 
+											<select chosen
+											    option="lista_consumidor_final"
+											    ng-model="NF.dados_emissao.consumidor_final"
+											    ng-options="item.num_item as item.nme_item for item in lista_consumidor_final">
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Forma Pagamento</label> 
 											<select chosen
 											    option="lista_forma_pagamento"
+											    allow-single-deselect="true"
 											    ng-model="NF.dados_emissao.forma_pagamento"
-											    ng-options="firma.num_item as firma.nme_item for firma in lista_forma_pagamento">
+											    ng-options="item.num_item as item.nme_item for item in lista_forma_pagamento">
 											</select>
 										</div>
 									</div>
-
+								</div>
+								<div class="row">
 									<div class="col-sm-2 col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Série</label>
@@ -273,7 +304,6 @@
 										</div>
 									</div>
 								</div>
-
 								<div class="row">
 									<div class="col-sm-5">
 										<div class="form-group">

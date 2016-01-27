@@ -6,7 +6,16 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
     ng.editing 		= false;
-    ng.NF 			= {} ;
+    var nfTO        = {
+    	dados_emissao : {
+    			tipo_documento : '',
+				local_destino : '',
+				finalidade_emissao : '',
+				consumidor_final : '',
+				forma_pagamento :''
+			}
+    } ;
+    ng.NF 			= angular.copy(nfTO) ;
     ng.id_transportadora;
     var params      = getUrlVars();
 
@@ -47,8 +56,19 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			id_venda          : params.id_venda,
 			cod_operacao      : params.cod_operacao
 		 } ;
+		var copy_dados = {dados_emissao:{}};
+		copy_dados.dados_emissao.tipo_documento = ng.NF.dados_emissao.tipo_documento;
+		copy_dados.dados_emissao.local_destino = ng.NF.dados_emissao.local_destino ;
+		copy_dados.dados_emissao.finalidade_emissao = ng.NF.dados_emissao.finalidade_emissao ;
+		copy_dados.dados_emissao.consumidor_final = ng.NF.dados_emissao.consumidor_final;
+		copy_dados.dados_emissao.forma_pagamento = ng.NF.dados_emissao.forma_pagamento;
 		aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers, config) {
+				data.dados_emissao.tipo_documento = copy_dados.dados_emissao.tipo_documento ;
+				data.dados_emissao.local_destino = copy_dados.dados_emissao.local_destino ;
+				data.dados_emissao.finalidade_emissao = copy_dados.dados_emissao.finalidade_emissao ;
+				data.dados_emissao.consumidor_final = copy_dados.dados_emissao.consumidor_final ;
+				data.dados_emissao.forma_pagamento = copy_dados.dados_emissao.forma_pagamento ;
 				ng.NF = data;
 				ng.NF.transportadora = {id:null} ;
 				if(event != null){
@@ -82,9 +102,10 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	ng.loadControleNfe = function(ctr,key) {
 		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
 			.success(function(data, status, headers, config) {
-				ng[key] = [{ num_item : '', nme_item:'' }];
-				ng[key] = ng[key].concat(data) ;
+				//ng[key] = [{ num_item : "", nme_item:""}];
+				ng[key] = data ;
 				setTimeout(function(){
+					//console.log(ng[key]);
 					$("select").trigger("chosen:updated");
 				},300);
 			})
@@ -166,6 +187,10 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		ng.loadControleNfe('tipo_documento','lista_tipo_documento');
 		ng.loadControleNfe('forma_pagamento','lista_forma_pagamento');
 		ng.loadControleNfe('presenca_comprador','lista_presenca_comprador');
+
+		ng.loadControleNfe('local_destino','lista_local_destino');
+		ng.loadControleNfe('finalidade_emissao','lista_finalidade_emissao');
+		ng.loadControleNfe('consumidor_final','lista_consumidor_final');
 	}else
 		$dialogs.notify('Desculpe!','<strong>Não foi possível calcular a NF, os paramentros estão incorretos.</strong>');
 					
