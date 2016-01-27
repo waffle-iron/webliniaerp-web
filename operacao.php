@@ -232,7 +232,7 @@
 								    option="lista_cfop"
 								    allow-single-deselect="true"
 								    ng-model="operacao.num_cfop_produto"
-								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+								    ng-options="cfop.num_item as cfop.dsc_completa for cfop in lista_cfop">
 									</select>
 								</div>
 								<!--<div id="num_cfop_produto" class="form-group">
@@ -250,7 +250,7 @@
 								    option="lista_cfop"
 								    allow-single-deselect="true"
 								    ng-model="operacao.num_cfop_produto_st"
-								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+								    ng-options="cfop.num_item as cfop.dsc_completa for cfop in lista_cfop">
 									</select>
 								</div>
 								<!--<div id="num_cfop_produto_st" class="form-group">
@@ -268,7 +268,7 @@
 								    option="lista_cfop"
 								    allow-single-deselect="true"
 								    ng-model="operacao.num_cfop_mercadoria"
-								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+								    ng-options="cfop.num_item as cfop.dsc_completa for cfop in lista_cfop">
 									</select>
 								</div>
 								<!--<div id="num_cfop_mercadoria" class="form-group">
@@ -286,7 +286,7 @@
 								    option="lista_cfop"
 								    allow-single-deselect="true"
 								    ng-model="operacao.num_cfop_mercadoria_st"
-								    ng-options="cfop.cod_controle_item_nfe as cfop.dsc_completa for cfop in lista_cfop">
+								    ng-options="cfop.num_item as cfop.dsc_completa for cfop in lista_cfop">
 									</select>
 								</div>
 								<!--<div id="num_cfop_mercadoria_st" class="form-group">
