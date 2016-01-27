@@ -225,6 +225,12 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 		});
 	}
 
+	ng.chosen_cst_ipi       = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.loadControleNfe('cst_ipi','chosen_cst_ipi');
+
+    ng.chosen_pis_cofins    = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.loadControleNfe('cst_pis_cofins','chosen_pis_cofins');
+
     ng.chosen_tipo_empresa  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
     ng.loadControleNfe('tipo_empresa','chosen_tipo_empresa');
 

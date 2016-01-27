@@ -462,7 +462,7 @@
 													<tbody>
 														<tr ng-repeat="item in lista_serie_documento_fiscal" ng-if="item.flg_excluido != 1">
 															<td class="text-middle">{{item.serie_documento_fiscal}}</td>
-															<td class="text-center text-middle">{{item.num_modelo_documento_fiscal}}</td>
+															<td class="text-middle">{{item.num_modelo_documento_fiscal}} - {{item.dsc_modelo_documento_fiscal}}</td>
 															<td class="text-middle">{{item.num_ultimo_documento_fiscal}}</td>
 															<td class="text-center text-middle">
 																<button ng-disabled="index_edit_serie_documento_fiscal == $index" ng-click="editSerieDocumentoFiscal($index,item)" type="button" class="btn btn-xs btn-warning"><i class="fa fa-edit"></i></button>

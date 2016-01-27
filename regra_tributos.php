@@ -543,7 +543,7 @@
 									<select chosen ng-change="ClearChosenSelect('cod_cstcsosn')"
 								    option="chosen_cstcsosn"
 								    ng-model="regra_tributos.configuracao_icms.cod_cstcsosn"
-								    ng-options="cstcsosn.cod_cstcsosn as cstcsosn.dsc_cst for cstcsosn in chosen_cstcsosn">
+								    ng-options="cstcsosn.cod_cstcsosn as cstcsosn.dsc_geral for cstcsosn in chosen_cstcsosn">
 									</select>
 								</div>
 							</div>
@@ -787,14 +787,18 @@
 						<legend>IPI</legend>
 						<div class="row">
 								<div class="col-sm-2">
-										<div id="cst_ipi" class="form-group">
-											<label class="control-label">CST IPI</label>
-											<input type="text" class="form-control input-sm" ng-model="regra_tributos.configuracao_ipi.cst_ipi">
+										<div class="form-group" id="cod_base_tributaria">
+											<label class="ccontrol-label">CST IPI</label> 
+											<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
+										    option="chosen_cst_ipi"
+										    ng-model="regra_tributos.configuracao_ipi.cst_ipi"
+										    ng-options="cst_ipi.num_item as cst_ipi.nme_item for cst_ipi in chosen_cst_ipi">
+											</select>
 										</div>
 									</div>
 								<div class="col-sm-2">
 									<div id="vlr_aliquota" class="form-group">
-										<label class="control-label">CST IPI</label>
+										<label class="control-label">vlr Aliquota</label>
 										<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_ipi.vlr_aliquota">
 									</div>
 								</div>
@@ -824,10 +828,18 @@
 						<legend>PIS COFINS</legend>
 						<div class="row" >
 							<div class="col-sm-2">
-									<div id="cst_pis_cofins" class="form-group">
+									<div class="form-group" id="cod_base_tributaria">
+										<label class="ccontrol-label">CST PIS COFINS</label> 
+										<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
+										   option="chosen_pis_cofins"
+										   ng-model="regra_tributos.configuracao_pis_cofins.cst_pis_cofins"
+										   ng-options="cst_ipi.num_item as cst_ipi.nme_item for cst_ipi in chosen_pis_cofins">
+										</select>
+									</div>
+									<!--<div id="cst_pis_cofins" class="form-group">
 										<label class="control-label">CST PIS COFINS</label>
 										<input type="text" class="form-control input-sm" ng-model="regra_tributos.configuracao_pis_cofins.cst_pis_cofins">
-									</div>
+									</div>-->
 								</div>
 							<div class="col-sm-2">
 									<div id="vlr_aliquota_pis" class="form-group">

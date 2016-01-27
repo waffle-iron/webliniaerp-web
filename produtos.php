@@ -713,6 +713,14 @@
 									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-sm-2">
+									<div class="form-group" id="dsc_unidade_medida">
+										<label class="control-label">Uni Comercial</label>
+										<input ng-model="produto.dsc_unidade_medida" type="text"  class="form-control input-sm">
+									</div>
+								</div>
+							</div>
 
 							<div class="row">
 								<div class="col-sm-12">

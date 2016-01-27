@@ -273,7 +273,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 
 	ng.loadSerieDocumentoFiscal = function() {
 		ng.lista_serie_documento_fiscal = null ;
-		aj.get(baseUrlApi()+"serie_documento_fiscal/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+		aj.get(baseUrlApi()+"serie_documento_fiscal/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&tsdf->flg_excluido=0")
 			.success(function(data, status, headers, config) {
 				ng.lista_serie_documento_fiscal = data;
 				$("select").trigger("chosen:updated");
@@ -312,6 +312,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			btn.button('reset');
 			return ;
 		}
+
+
+		$.each(ng.chosen_modelo_nota_fiscal,function(i,v){
+			
+			if(v.num_item == item.num_modelo_documento_fiscal){
+				item.dsc_modelo_documento_fiscal =  v.nme_item +' - '+ v.dsc_item ;
+				return ;
+			}
+		});
 
 		if(ng.edit_serie_documento_fiscal){
 			ng.lista_serie_documento_fiscal[ng.index_edit_serie_documento_fiscal] = item ;

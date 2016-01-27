@@ -50,7 +50,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers, config) {
 				ng.NF = data;
-				
+				ng.NF.transportadora = {id:null} ;
 				if(event != null){
 					btn.button('reset');
 					$('.tab-bar li a').eq(0).trigger('click');
@@ -96,22 +96,66 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	ng.selTransportadora = function(){
 		var item ;
 		$.each(ng.lista_traportadoras,function(i,v){
-			if(Number(ng.id_transportadora) == Number(v.id)){
+			if(Number(ng.NF.transportadora.id) == Number(v.id)){
 				item = v ;
-				return
+				return ;
 			}
 		});
 
-		ng.NF.transportadora = {
-			xFant : item.nme_fantasia,
-			CNPJ : item.num_cnpj,
-			CEP : item.num_cep,
-			nme_logradouro : item.nme_endereco,
-			num_logradouro : item.num_logradouro,
-			nme_bairro_logradouro : item.nme_bairro,
-			estado : item.estado,
-			cidade : item.cidade
+		ng.NF.transportadora.xFant 					=  item.nme_fantasia;
+		ng.NF.transportadora.CNPJ 					=  item.num_cnpj;
+		ng.NF.transportadora.IE   					=  item.num_inscricao_estadual;
+		ng.NF.transportadora.CEP 					=  item.num_cep;
+		ng.NF.transportadora.nme_logradouro 		=  item.nme_endereco;
+		ng.NF.transportadora.num_logradouro 		=  item.num_logradouro;
+		ng.NF.transportadora.nme_bairro_logradouro 	=  item.nme_bairro;
+		ng.NF.transportadora.estado 				=  ((typeof item.estado == 'object')  ? item.estado : null );
+		ng.NF.transportadora.cidade 				=  ((typeof item.cidade == 'object')  ? item.cidade : null );
+	}
+
+	ng.sendNfe = function(){
+		var btn = $(event.target) ;
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		btn.button('loading');
+
+		var data_emissao 		= moment($('#inputDtaEmissao').val(),'DD/MM/YYYY H:m:s');
+		var data_entrada_saida  = moment($('#inputDtaSaida').val() ,'DD/MM/YYYY H:m:s');
+		
+		var msg = "" ;
+		var error = 0 ;	
+		if(!data_emissao.isValid()){
+			msg += "Informe a data de emissão<br/>";
+			error ++ ;
 		}
+		if(!data_entrada_saida.isValid()){
+			msg += "Informe a data de saida<br/>";
+			error ++;
+		}
+
+		if(error > 0){
+			btn.button('reset');
+			$dialogs.error('<strong>'+msg+'</strong>');	
+			return ;
+		}
+
+		ng.NF.dados_emissao.data_emissao  		= data_emissao.format();
+		ng.NF.dados_emissao.data_entrada_saida  = data_entrada_saida.format();
+		aj.post(baseUrlApi()+"nfe/send",ng.NF)
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+			})
+			.error(function(data, status, headers, config) {
+				var msg = "" ;
+				if( typeof data != 'undefined'){
+					$.each(data.erros,function(i,v){
+						msg += v.mensagem+"<br/>";
+					});
+				}
+				$dialogs.error('<strong>'+msg+'</strong>');
+				$('#notifyModal h4').addClass('text-warning')
+				btn.button('reset');		
+		});
 	}
 
 
@@ -119,6 +163,9 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		ng.calcularNfe();
 		ng.loadTransportadoras();
 		ng.loadControleNfe('modalidade_frete','lista_modalidade_frete');
+		ng.loadControleNfe('tipo_documento','lista_tipo_documento');
+		ng.loadControleNfe('forma_pagamento','lista_forma_pagamento');
+		ng.loadControleNfe('presenca_comprador','lista_presenca_comprador');
 	}else
 		$dialogs.notify('Desculpe!','<strong>Não foi possível calcular a NF, os paramentros estão incorretos.</strong>');
 					

@@ -20,6 +20,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Datepicker -->
+	<link href="css/datepicker.css" rel="stylesheet"/>
+
 	<!-- Chosen -->
 	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
 
@@ -236,16 +239,27 @@
 								<div class="row">
 									<div class="col-sm-3">
 										<div class="form-group">
-											<label class="control-label">Tipo de Saída</label> 
+											<label class="control-label">Tipo de Documento</label> 
 											<select chosen
-											    option="lista_operacao"
-											    ng-model="configuracoes.id_operacao_padrao_venda"
-											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											    option="lista_tipo_documento"
+											    ng-model="NF.dados_emissao.tipo_documento"
+											    ng-options="documento.num_item as documento.nme_item for documento in lista_tipo_documento">
 											</select>
 										</div>
 									</div>
 
-									<div class="col-sm-2 col-sm-offset-2">
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Forma Pagamento</label> 
+											<select chosen
+											    option="lista_forma_pagamento"
+											    ng-model="NF.dados_emissao.forma_pagamento"
+											    ng-options="firma.num_item as firma.nme_item for firma in lista_forma_pagamento">
+											</select>
+										</div>
+									</div>
+
+									<div class="col-sm-2 col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Série</label>
 											<input ng-model="NF.dados_emissao.serie_documento_fiscal" type="text" class="form-control input-sm" readonly="readonly">
@@ -272,8 +286,8 @@
 										<div class="form-group">
 											<label class="control-label">Data de Emissão</label>
 											<div class="input-group">
-												<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
+												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
 											</div>
 										</div>
 									</div>
@@ -282,8 +296,8 @@
 										<div class="form-group">
 											<label class="control-label">Data de Saída</label>
 											<div class="input-group">
-												<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
-												<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												<input id="inputDtaSaida" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
+												<span id="btnDtaSaida" class="input-group-addon" ><i class="fa fa-calendar"></i></span>
 											</div>
 										</div>
 									</div>
@@ -408,9 +422,9 @@
 										<div class="form-group">
 											<label class="control-label">Tipo de Atendimento</label> 
 											<select chosen
-											    option="lista_operacao"
-											    ng-model="configuracoes.id_operacao_padrao_venda"
-											    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											    option="lista_presenca_comprador"
+											    ng-model="NF.dados_emissao.presenca_comprador"
+											    ng-options="item.num_item as item.nme_item for item in lista_presenca_comprador">
 											</select>
 										</div>
 									</div>
@@ -520,7 +534,7 @@
 											<label class="control-label">Transportadora</label> 
 											<select chosen ng-change="selTransportadora()"
 											    option="lista_traportadoras"
-											    ng-model="id_transportadora"
+											    ng-model="NF.transportadora.id"
 											    ng-options="transportadora.id as transportadora.nome_fornecedor for transportadora in lista_traportadoras">
 											</select>
 										</div>
@@ -547,7 +561,7 @@
 											<label class="control-label">Modalidade de Frete</label> 
 											<select chosen
 											    option="lista_modalidade_frete"
-											    ng-model="configuracoes.id_operacao_padrao_venda"
+											    ng-model="NF.transportadora.modalidade_frete"
 											    ng-options="mod_frete.num_item as mod_frete.nme_item for mod_frete in lista_modalidade_frete">
 											</select>
 										</div>
@@ -764,7 +778,7 @@
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
 							<button type="button" ng-click="calcularNfe($event)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
-							<button type="button" class="btn btn-sm btn-success"><i class="fa fa-send"></i> Transmitir NF-e</button>
+							<button type="button" class="btn btn-sm btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Enviando..." ng-click="sendNfe($event)"><i class="fa fa-send"></i> Transmitir NF-e</button>
 							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-file-text-o"></i> Emitir DANFE (PDF)</button>
 							<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-times-circle"></i> Cancelar NF-e</button>
 						</div>
@@ -782,6 +796,25 @@
 				    	<div class="row">
 				    		<div class="col-sm-12">
 				    			<i class='fa fa-refresh fa-spin'></i> Aguarde! Calculando Nota
+							</div>
+				    	</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Processando-->
+		<div class="modal fade" id="modal-error" style="display:none">
+  			<div class="modal-dialog error modal-sm">
+    			<div class="modal-content">
+      				<div class="modal-header"></div>
+				    <div class="modal-body">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+				    			<i class='fa fa-refresh fa-spin'></i> 
 							</div>
 				    	</div>
 				    </div>
@@ -835,6 +868,9 @@
     <!-- Slimscroll -->
 	<script src='js/jquery.slimscroll.min.js'></script>
 
+	<!-- Datepicker -->
+	<script src='js/bootstrap-datepicker.min.js'></script>
+
 	<!-- Cookie -->
 	<script src='js/jquery.cookie.min.js'></script>
 
@@ -847,6 +883,9 @@
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
@@ -858,6 +897,11 @@
     <script src="js/auto-complete/ng-sanitize.js"></script>
     <script src="js/angular-chosen.js"></script>
     <script type="text/javascript">
+    	$('.datepicker').datepicker();
+    	$("#btnDtaEmissao").on("click", function(){ $("#inputDtaEmissao").trigger("focus"); });
+		$("#btnDtaSaida").on("click", function(){ $("#inputDtaSaida").trigger("focus"); });
+
+		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
     	var addParamModule = ['angular.chosen'] ;
     </script>
     <script src="js/app.js"></script>
