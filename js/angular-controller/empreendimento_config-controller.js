@@ -46,6 +46,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		aj.get(baseUrlApi()+"empreendimento/"+id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.empreendimento = data;
+				ng.loadCidadesByEstado();
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
@@ -388,6 +389,30 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		
 	}
 
+	ng.loadEstados = function () {
+		ng.estados = [];
+
+		aj.get(baseUrlApi()+"estados")
+		.success(function(data, status, headers, config) {
+			ng.estados = data;
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
+	ng.cidades = [{id: "" ,nome:"Selecione um estado"}];
+	ng.loadCidadesByEstado = function () {
+		ng.cidades = [];
+		aj.get(baseUrlApi()+"cidades_by_id_estado/"+ng.empreendimento.cod_estado)
+		.success(function(data, status, headers, config) {
+			ng.cidades = data;
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
 
 	ng.loadControleNfe('modelo_nota_fiscal','chosen_modelo_nota_fiscal');
 	function defaulErrorHandler(data, status, headers, config) {
@@ -399,6 +424,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadConfig();
 	ng.loadOperacaoCombo();
 	ng.loadSerieDocumentoFiscal();
+	ng.loadEstados();
 
 	
 });

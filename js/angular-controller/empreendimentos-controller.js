@@ -283,6 +283,8 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 		});
 	}
 
+	
+
 	ng.load();
 	ng.loadZoneamento();
 	ng.loadControleNfe('regime_tributario','regimeTributario');

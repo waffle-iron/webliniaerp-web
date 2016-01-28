@@ -208,7 +208,7 @@
 				<div class="panel panel-default" id="box-novo">
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
-							<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Básico</a></li>
+							<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Dados Empreendimento</a></li>
 							<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
 							<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
 							<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> Fiscal</a></li>
@@ -241,7 +241,77 @@
 											</div>
 										</div>
 									</div>
+									<div class="row">
+										<div class="col-sm-3">
+											<div id="cnpj" class="form-group">
+												<label class="control-label">CNPJ </label> 
+												<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="empreendimento.num_cnpj">
+											</div>
+										</div>
+										<div class="col-sm-3">
+											<div id="num_inscricao_estadual" class="form-group">
+												<label class="control-label">I.E. </label>
+												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual">
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div id="nme_razao_social" class="form-group">
+												<label class="control-label">Razão Social  </label>
+												<input class="form-control" ng-model="empreendimento.nme_razao_social">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-3">
+											<div id="nme_fantasia" class="form-group">
+												<label class="control-label">Nome Fantasia  </label>
+												<input class="form-control" ng-model="empreendimento.nme_fantasia">
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div id="cep" class="form-group">
+												<label class="control-label">CEP  </label>
+												<input type="text" class="form-control" ui-mask="99999-999" ng-model="empreendimento.num_cep">
+											</div>
+										</div>
 
+										<div class="col-sm-6">
+											<div id="endereco" class="form-group">
+												<label class="control-label">Endereço  </label>
+												<input type="text" class="form-control" ng-model="empreendimento.nme_logradouro">
+											</div>
+										</div>
+
+										<div class="col-sm-1">
+											<div id="numero" class="form-group">
+												<label class="control-label">N°. </label>
+												<input id="num_logradouro" type="text" class="form-control" ng-model="empreendimento.num_logradouro" ng-blur="consultaLatLog()">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-2">
+											<div id="bairro" class="form-group">
+												<label class="control-label">Bairro  </label>
+												<input type="text" class="form-control" ng-model="empreendimento.nme_bairro_logradouro">
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div id="id_estado" class="form-group">
+												<label class="control-label">Estado  </label>
+												<select id="id_select_estado" class="form-control" ng-change="loadCidadesByEstado()"  ng-model="empreendimento.cod_estado" ng-options="item.id as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div id="id_cidade" class="form-group">
+												<label class="control-label">Cidade   <span ng-if="cidades.length == 0" style="margin-left: 195px;color:#428bca"><i class='fa fa-refresh fa-spin'></i> Carregando ...</span></label>
+												<select class="form-control"  ng-model="empreendimento.cod_cidade" ng-options="a.id as a.nome for a in cidades"></select>
+											</div>
+										</div>
+									
+										
+									</div>
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
@@ -255,7 +325,7 @@
 							</div>
 
 							<div class="tab-pane fade" id="loja">
-								<form class="formEmprendimento" role="form" enctype="multipart/form-data">
+								<form  role="form" enctype="multipart/form-data">
 									<div class="alert alert-basico-loja" style="display:none"></div>	
 
 									<div class="row">
@@ -406,7 +476,7 @@
 								</div>
 
 								<div class="row">
-									<form class="formEmprendimento" role="form">
+									<form  role="form">
 										<div class="col-sm-2">
 											<div class="form-group" id="serie_documento_fiscal">
 												<label class="control-label">Série</label>
