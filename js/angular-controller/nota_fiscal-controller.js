@@ -18,6 +18,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
     ng.NF 			= angular.copy(nfTO) ;
     ng.id_transportadora;
     var params      = getUrlVars();
+    ng.disableSendNf = false ;
 
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
@@ -64,6 +65,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		copy_dados.dados_emissao.forma_pagamento = ng.NF.dados_emissao.forma_pagamento;
 		aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers, config) {
+				ng.disableSendNf = false ;
 				data.dados_emissao.tipo_documento = copy_dados.dados_emissao.tipo_documento ;
 				data.dados_emissao.local_destino = copy_dados.dados_emissao.local_destino ;
 				data.dados_emissao.finalidade_emissao = copy_dados.dados_emissao.finalidade_emissao ;
@@ -79,8 +81,16 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				}
 			})
 			.error(function(data, status, headers, config) {
-				$dialogs.notify('Desculpe!','<strong>Ocorreu um erro ao calcular a NF.</strong>');
+				ng.disableSendNf = true ;
 				$('#modal-calculando').modal('hide');
+				if(status == 406){
+					var msg = data.mensagem+"<br/>"; 
+					$dialogs.error('<strong>'+msg+'</strong>');
+					$('#notifyModal h4').addClass('text-warning')
+					btn.button('reset');		
+				}else{
+					$dialogs.notify('Desculpe!','<strong>Ocorreu um erro ao calcular a NF.</strong>');
+				}
 			});
 	}
 
