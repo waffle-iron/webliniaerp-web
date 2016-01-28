@@ -841,12 +841,14 @@
 		<div class="modal fade" id="modal-operacao" style="display:none">
   			<div class="modal-dialog error modal-md">
     			<div class="modal-content">
-      				<div class="modal-header"></div>
+      				<div class="modal-header">
+      					<h4>Selecione a Operação</h4>
+      				</div>
 				    <div class="modal-body">
 				    	<div class="row">
 							<div class="col-sm-12">
 								<div class="form-group" id="regimeTributario">
-									<label class="ccontrol-label">Selecione a operação</label> 
+									<label class="ccontrol-label sr-only"></label> 
 									<select chosen
 								    option="lista_operacao"
 								    ng-model="configuracoes.id_operacao_padrao_venda"
