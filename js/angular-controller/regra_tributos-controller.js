@@ -481,6 +481,11 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 			msg = 'Regra alterada com sucesso!'
 		}
 
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+
 		itemPost = angular.copy(ng.regra_tributos);
 
 		aj.post(baseUrlApi()+url, itemPost)
@@ -960,6 +965,13 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 		ng.regra_tributos.filtro_tributos.dta_inicio_vigencia = formatDateBR(ng.regra_tributos.filtro_tributos.dta_inicio_vigencia);
 		ng.regra_tributos.filtro_tributos.dta_fim_vigencia    = formatDateBR(ng.regra_tributos.filtro_tributos.dta_fim_vigencia);
 		ng.regra_tributos.filtro_tributos.ncm_view = item.cod_ncm+" - "+item.dsc_ncm ;
+
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+
+
 		$('html,body').animate({scrollTop: 0},'slow');
 		ng.showBoxNovo(true);
 		
