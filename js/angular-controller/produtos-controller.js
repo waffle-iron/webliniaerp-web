@@ -1244,7 +1244,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.loadCores();
 	ng.loadProdutos(0,10);
 	ng.getCamposExtras();
-	ng.loadControleNfe('forma_pagamento','chosen_forma_aquisicao');
+	ng.loadControleNfe('forma_aquisicao','chosen_forma_aquisicao');
 	ng.loadControleNfe('origem_mercadoria','chosen_origem_mercadoria');
 	ng.loadControleNfe('tipo_tributacao_ipi','chosen_tipo_tributacao_ipi');
 	ng.loadEspecialazacaoNcm();
