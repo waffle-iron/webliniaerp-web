@@ -1165,7 +1165,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/regra_tributos-controller.js"></script>
+	<script src="js/angular-controller/regra_tributos-controller.js?version=<?php  echo date("dmY-His", filemtime("js/angular-controller/regra_tributos-controller.js")) ?>"></script>
 	<script type="text/javascript"></script>>
 	<?php include("google_analytics.php"); ?>
   </body>

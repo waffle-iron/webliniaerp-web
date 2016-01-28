@@ -265,7 +265,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
    	ng.loadControleNfe('tipo_tributacao_ipi','chosen_tributacao_ipi');
 
    	ng.chosen_tributacao_pis_cofins  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-   	ng.loadControleNfe('tipo_tributacao_pis_cofins','chosen_tributacao_pis_cofins');
+   	ng.loadControleNfe('regime_tributario_pis_cofins','chosen_tributacao_pis_cofins');
 
    	
 
