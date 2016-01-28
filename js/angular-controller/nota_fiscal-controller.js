@@ -94,7 +94,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 					var msg = data.mensagem+"<br/>"; 
 					$dialogs.error('<strong>'+msg+'</strong>');
 					$('#notifyModal h4').addClass('text-warning');
-					if(event != null){
+					if(event != null)
 						btn.button('reset');		
 				}else{
 					$dialogs.notify('Desculpe!','<strong>Ocorreu um erro ao calcular a NF.</strong>');
