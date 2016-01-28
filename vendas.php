@@ -281,7 +281,7 @@
 												<th class="text-center">Cliente</th>
 												<th class="text-center" width="80">status</th>
 												<th class="text-center" width="100">Total</th>
-												<th class="text-center" width="160">Ações</th>
+												<th class="text-center" width="190">Ações</th>
 											</tr>
 										</thead>
 									<tbody>
@@ -320,10 +320,10 @@
 												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1"  title="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-danger">
 													<i class="fa fa-trash-o"></i>
 												</button>
-												<a disabled="disabled" ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
+												<a ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
 													<i class="fa fa-desktop"></i>
 												</a>
-												<a disabled="disabled" href="pdv.php?id_venda={{ item.id }}" title="Emitir NF-e" data-toggle="tooltip" class="btn btn-xs btn-success">
+												<a  href="nota-fiscal.php?id_venda={{ item.id }}" title="Emitir NF-e" data-toggle="tooltip" class="btn btn-xs btn-success">
 													<i class="fa fa-file"></i>
 												</a>
 											</td>
