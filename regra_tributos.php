@@ -734,7 +734,7 @@
 							<div class="col-sm-2">
 								<div class="form-group" id="cod_convenio_st">
 									<label class="ccontrol-label">Convenio ST</label> 
-									<select chosen ng-change="ClearChosenSelect('cod_convenio_st')"
+									<select chosen 
 								    option="chosen_convenio_st"
 								    ng-model="regra_tributos.configuracao_icms.cod_convenio_st"
 								    ng-options="convenio_st.cod_controle_item_nfe as convenio_st.nme_item for convenio_st in chosen_convenio_st">
