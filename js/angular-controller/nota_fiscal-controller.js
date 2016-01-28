@@ -1,10 +1,12 @@
-app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
 
 	var ng = $scope
 		aj = $http;
 
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
+	ng.configuracoes = ConfigService.getConfig(ng.userLogged.id_empreendimento);
+	console.log(ng.configuracoes);
     ng.editing 		= false;
     var nfTO        = {
     	dados_emissao : {
@@ -44,7 +46,11 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			$(alertClass).fadeOut('slow');
 		},5000);
 	}
-	ng.calcularNfe = function(event) {
+
+	ng.modalCalcularNfe = function(event,id_venda,id_operacao_padrao_venda) {
+		ng.calcularNfe(event,id_venda,id_operacao_padrao_venda);	
+	}
+	ng.calcularNfe = function(event,id_venda,cod_operacao) {
 		if(event != null){
 			var btn = $(event.target) ;
 			if(!(btn.is(':button')))
@@ -54,8 +60,8 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			$('#modal-calculando').modal({ backdrop: 'static',keyboard: false});
 		var post = { 
 			id_empreendimento : ng.userLogged.id_empreendimento,
-			id_venda          : params.id_venda,
-			cod_operacao      : params.cod_operacao
+			id_venda          : id_venda,
+			cod_operacao      : cod_operacao
 		 } ;
 		var copy_dados = {dados_emissao:{}};
 		copy_dados.dados_emissao.tipo_documento = ng.NF.dados_emissao.tipo_documento;
@@ -74,6 +80,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				ng.NF = data;
 				ng.NF.transportadora = {id:null} ;
 				if(event != null){
+					$('#modal-operacao').modal('hide');
 					btn.button('reset');
 					$('.tab-bar li a').eq(0).trigger('click');
 				}else{
@@ -107,6 +114,8 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				ng.lista_traportadoras = [] ;
 			});
 	}
+
+
 
 	ng.lista_modalidade_frete = [] ;
 	ng.loadControleNfe = function(ctr,key) {
@@ -189,10 +198,32 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		});
 	}
 
+	ng.loadOperacaoCombo = function() {
+		ng.lista_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
+		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+			.success(function(data, status, headers, config) {
+				ng.lista_operacao = ng.lista_operacao.concat(data.operacao);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+					
+			});
+	}
 
-	if($.isNumeric(params.id_venda) &&  $.isNumeric(params.cod_operacao) ){
-		ng.calcularNfe();
+
+	if( ($.isNumeric(params.id_venda) &&  $.isNumeric(params.cod_operacao)) || ($.isNumeric(params.id_venda))){
+		ng.id_venda = params.id_venda ;
+		if( ($.isNumeric(params.id_venda) &&  $.isNumeric(params.cod_operacao) )){
+			ng.cod_operacao = params.cod_operacao ;
+			ng.calcularNfe(null,params.id_venda,params.cod_operacao);
+		}else{
+			$('#modal-operacao').modal({ backdrop: 'static',keyboard: false});
+		}
 		ng.loadTransportadoras();
+		ng.loadOperacaoCombo();
+		ng.loadControleNfe('modalidade_frete','lista_modalidade_frete');
 		ng.loadControleNfe('modalidade_frete','lista_modalidade_frete');
 		ng.loadControleNfe('tipo_documento','lista_tipo_documento');
 		ng.loadControleNfe('forma_pagamento','lista_forma_pagamento');
@@ -201,7 +232,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		ng.loadControleNfe('local_destino','lista_local_destino');
 		ng.loadControleNfe('finalidade_emissao','lista_finalidade_emissao');
 		ng.loadControleNfe('consumidor_final','lista_consumidor_final');
-	}else
+	}else 
 		$dialogs.notify('Desculpe!','<strong>Não foi possível calcular a NF, os paramentros estão incorretos.</strong>');
 					
 	//ng.loadAllEmpreendimentos();

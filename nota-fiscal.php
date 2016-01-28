@@ -836,18 +836,32 @@
 		</div>
 		<!-- /.modal -->
 
-		<!-- /Modal Processando-->
-		<div class="modal fade" id="modal-error" style="display:none">
-  			<div class="modal-dialog error modal-sm">
+
+		<!-- /Modal Selecionar operação-->
+		<div class="modal fade" id="modal-operacao" style="display:none">
+  			<div class="modal-dialog error modal-md">
     			<div class="modal-content">
       				<div class="modal-header"></div>
 				    <div class="modal-body">
 				    	<div class="row">
-				    		<div class="col-sm-12">
-				    			<i class='fa fa-refresh fa-spin'></i> 
+							<div class="col-sm-12">
+								<div class="form-group" id="regimeTributario">
+									<label class="ccontrol-label">Selecione a operação</label> 
+									<select chosen
+								    option="lista_operacao"
+								    ng-model="configuracoes.id_operacao_padrao_venda"
+								    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+									</select>
+								</div>
 							</div>
-				    	</div>
+						</div>
 				    </div>
+				    <div class="panel-footer clearfix">
+						<div class="pull-right">
+							<button type="button" ng-disabled="configuracoes.id_operacao_padrao_venda == '' || configuracoes.id_operacao_padrao_venda == undefined" 
+						     ng-click="modalCalcularNfe($event,id_venda,configuracoes.id_operacao_padrao_venda)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, calculando" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Calcular</button>
+						</div>
+					</div>
 			  	</div>
 			  	<!-- /.modal-content -->
 			</div>

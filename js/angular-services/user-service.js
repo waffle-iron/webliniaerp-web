@@ -26,3 +26,22 @@ app.service('UserService', function($http) {
 	}
 
 });
+
+app.service('ConfigService', function($http) {
+	this.getConfig = function(id_empreendimento) {
+		var configuracoes ;
+		 $.ajax({
+		 	url: baseUrlApi()+"configuracoes/"+id_empreendimento,
+		 	async: false,
+		 	success: function(config) {
+		 		configuracoes = config ;
+		 	},
+		 	error: function(error) {
+		 		console.log(error);
+		 	}
+		 });
+		return configuracoes ;
+	}
+});
+
+
