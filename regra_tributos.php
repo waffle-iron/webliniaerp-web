@@ -231,7 +231,7 @@
 					</div>
 					<div ng-if="editing_filtro">
 					<fieldset>
-						<legend>Padrão</legend>
+						<legend>Filtro</legend>
 						<div class="row">
 						    <div class="col-sm-2">
 								<div class="form-group" id="cod_operacao">
@@ -335,6 +335,11 @@
 									<label for="" class="control-label">IPI Emitente</label>
 									<div class="form-group">
 										<label class="label-radio inline">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_emitente" value="" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>vazio</span>
+										</label>
+										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_emitente" value="0" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>Não</span>
@@ -352,6 +357,12 @@
 								<div class="form-group" id="flg_cont_icms_emitente">
 									<label for="" class="control-label">Cont. ICMS Emitente</label>
 									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_emitente" value="" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Vazio</span>
+										</label>
+
 										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_emitente" value="0" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
@@ -415,6 +426,12 @@
 									<label for="" class="control-label">IPI Destinatário</label>
 									<div class="form-group">
 										<label class="label-radio inline">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_destinatario" value="" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Vazio</span>
+										</label>
+
+										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_destinatario" value="0" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>Não</span>
@@ -432,6 +449,11 @@
 								<div class="form-group" id="flg_cont_icms_destinatario">
 									<label for="" class="control-label">Cont. ICMS Destinatário</label>
 									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_destinatario" value="" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
 										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_destinatario" value="0" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
@@ -537,17 +559,17 @@
 					<fieldset>
 						<legend>ICMS</legend>
 						<div class="row" >
-							<div class="col-sm-2">
+							<div class="col-sm-4">
 								<div class="form-group" id="cod_cstcsosn">
 									<label class="ccontrol-label">CSTCSOSN</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_cstcsosn')"
 								    option="chosen_cstcsosn"
 								    ng-model="regra_tributos.configuracao_icms.cod_cstcsosn"
-								    ng-options="cstcsosn.cod_cstcsosn as cstcsosn.dsc_geral for cstcsosn in chosen_cstcsosn">
+								    ng-options="cstcsosn.cod_cstcsosn as ('cst: '+cstcsosn.dsc_cst+' - cson: '+cstcsosn.dsc_cson+' - '+cstcsosn.dsc_geral) for cstcsosn in chosen_cstcsosn">
 									</select>
 								</div>
 							</div>
-							<div class="col-sm-2">
+							<!--<div class="col-sm-2">
 								<div class="form-group" id="flg_incluir_frete_base_ipi">
 									<label for="" class="control-label">Frete Base IPI</label>
 									<div class="form-group">
@@ -564,7 +586,7 @@
 										</label>
 									</div>
 								</div>
-							</div>
+							</div> -->
 							<div class="col-sm-2">
 								<div class="form-group" id="flg_incluir_frete_base_icms">
 									<label for="" class="control-label">Frete Base ICMS</label>
@@ -792,7 +814,7 @@
 											<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 										    option="chosen_cst_ipi"
 										    ng-model="regra_tributos.configuracao_ipi.cst_ipi"
-										    ng-options="cst_ipi.num_item as cst_ipi.nme_item for cst_ipi in chosen_cst_ipi">
+										    ng-options="cst_ipi.num_item as ( cst_ipi.ipi.num_item+' - '+cst_ipi.nme_item )  for cst_ipi in chosen_cst_ipi">
 											</select>
 										</div>
 									</div>
@@ -833,7 +855,7 @@
 										<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 										   option="chosen_pis_cofins"
 										   ng-model="regra_tributos.configuracao_pis_cofins.cst_pis_cofins"
-										   ng-options="cst_ipi.num_item as cst_ipi.nme_item for cst_ipi in chosen_pis_cofins">
+										   ng-options="cst_ipi.num_item as (cst_ipi.num_item+' - '+cst_ipi.nme_item) for cst_ipi in chosen_pis_cofins">
 										</select>
 									</div>
 									<!--<div id="cst_pis_cofins" class="form-group">

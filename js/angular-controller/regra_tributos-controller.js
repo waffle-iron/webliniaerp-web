@@ -202,7 +202,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 	}
 	ng.loadEspecialazacaoNcm();
 
-	ng.chosen_cstcsosn  = [{cod_cstcsosn:'',dsc_cst:'--- Selecione ---'}] ;
+	ng.chosen_cstcsosn  = [] ;
     ng.loadCstcsosn = function() {
 		aj.get(baseUrlApi()+"cstcsosn/get")
 			.success(function(data, status, headers, config) {
