@@ -195,13 +195,13 @@
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
 					 <li><i class="fa fa-signal"></i> <a href="vendas.php">Vendas</a></li>
-					 <li class="active"><i class="fa fa-file"></i> Consulta/Visualização de Nota Fiscal</li>
+					 <li class="active"><i class="fa fa-file-text-o"></i> Consulta/Visualização de Nota Fiscal</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-file"></i> Consulta/Visualização de Nota Fiscal</h3>
+					<h3 class="no-margin"><i class="fa fa-file-text-o"></i> Consulta/Visualização de Nota Fiscal</h3>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 

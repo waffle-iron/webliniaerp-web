@@ -323,8 +323,8 @@
 												<a ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
 													<i class="fa fa-desktop"></i>
 												</a>
-												<a  href="nota-fiscal.php?id_venda={{ item.id }}" title="Emitir NF-e" data-toggle="tooltip" class="btn btn-xs btn-success">
-													<i class="fa fa-file"></i>
+												<a  href="nota-fiscal.php?id_venda={{ item.id }}" title="Emitir NF-e" data-toggle="tooltip" class="btn btn-xs btn-info">
+													<i class="fa fa-file-text-o"></i>
 												</a>
 											</td>
 										</tr>
