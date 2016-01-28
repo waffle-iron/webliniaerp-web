@@ -296,32 +296,35 @@
 											<td class="text-right">R$ {{ item.vlr_total_venda | numberFormat : '2' : ',' : '.'}}</td>
 											<td class="text-center">
 
-												<a href="separar_venda.php?id_venda={{ item.id }}" ng-if="item.id_status_venda == 1" type="button" tooltip="Separar venda no estoque" data-toggle="tooltip" class="btn btn-xs btn-info">
+												<a href="separar_venda.php?id_venda={{ item.id }}" ng-if="item.id_status_venda == 1" type="button" title="Separar venda no estoque" data-toggle="tooltip" class="btn btn-xs btn-info">
 													<i class="fa fa-th"></i>
 												</a>
 
-												<button ng-click="changeStatus(3,item.id)" ng-if="item.id_status_venda == 2" type="button" tooltip="Enviar mercadoria" data-toggle="tooltip" class="btn btn-xs btn-info">
+												<button ng-click="changeStatus(3,item.id)" ng-if="item.id_status_venda == 2" type="button" title="Enviar mercadoria" data-toggle="tooltip" class="btn btn-xs btn-info">
 													<i class="fa fa-plane"></i>
 												</button>
 
-												<button ng-click="changeStatus(4,item.id)" ng-if="item.id_status_venda == 3" type="button" tooltip="Mecadoria entregue" data-toggle="tooltip" class="btn btn-xs btn-info">
+												<button ng-click="changeStatus(4,item.id)" ng-if="item.id_status_venda == 3" type="button" title="Mecadoria entregue" data-toggle="tooltip" class="btn btn-xs btn-info">
 													<i class="fa fa-map-marker"></i>
 												</button>
 
-												<button type="button" ng-click="loadDetalhesVenda(item)" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-primary">
+												<button type="button" ng-click="loadDetalhesVenda(item)" title="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-primary">
 													<i class="fa fa-tasks"></i>
 												</button>
 
 
-												<button type="button" ng-click="loadEditVenda(item)" ng-disabled="item.venda_confirmada == 1" tooltip="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
+												<button type="button" ng-click="loadEditVenda(item)" ng-disabled="item.venda_confirmada == 1" title="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
 													<i class="fa fa-edit"></i>
 												</button>
 
-												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-danger">
+												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1"  title="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-danger">
 													<i class="fa fa-trash-o"></i>
 												</button>
-												<a disabled="disabled" ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-success">
+												<a disabled="disabled" ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
 													<i class="fa fa-desktop"></i>
+												</a>
+												<a disabled="disabled" href="pdv.php?id_venda={{ item.id }}" title="Emitir NF-e" data-toggle="tooltip" class="btn btn-xs btn-success">
+													<i class="fa fa-file"></i>
 												</a>
 											</td>
 										</tr>
