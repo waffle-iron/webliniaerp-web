@@ -52,8 +52,9 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		},5000);
 	}
 
-	ng.modalCalcularNfe = function(event,id_venda,id_operacao_padrao_venda) {
-		ng.calcularNfe(event,id_venda,id_operacao_padrao_venda);	
+	ng.modalCalcularNfe = function(event,id_venda,cod_operacao) {
+		ng.cod_operacao = cod_operacao ;
+		ng.calcularNfe(event,id_venda,cod_operacao);	
 	}
 	ng.calcularNfe = function(event,id_venda,cod_operacao) {
 		if(event != null){
@@ -206,7 +207,8 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 						msg += v.mensagem+"<br/>";
 					});
 				}
-				$dialogs.error('<strong>'+msg+'</strong>');
+			
+				$dialogs.error('<strong>'+msg+'</strong>'+'<br><br><pre style="overflow:auto;height: 300px;" >'+data.json+'</pre>');
 				$('#notifyModal h4').addClass('text-warning')
 				btn.button('reset');		
 		});
