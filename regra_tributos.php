@@ -335,7 +335,7 @@
 									<label for="" class="control-label">IPI Emitente</label>
 									<div class="form-group">
 										<label class="label-radio inline">
-											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_emitente" value="null" type="radio" class="inline-radio">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_emitente" value="" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>vazio</span>
 										</label>
@@ -358,7 +358,7 @@
 									<label for="" class="control-label">Cont. ICMS Emitente</label>
 									<div class="form-group">
 										<label class="label-radio inline">
-											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_emitente" value="null" type="radio" class="inline-radio">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_emitente" value="" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>Vazio</span>
 										</label>
@@ -426,7 +426,7 @@
 									<label for="" class="control-label">IPI Destinatário</label>
 									<div class="form-group">
 										<label class="label-radio inline">
-											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_destinatario" value="null" type="radio" class="inline-radio">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_destinatario" value="" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>Vazio</span>
 										</label>
@@ -450,7 +450,7 @@
 									<label for="" class="control-label">Cont. ICMS Destinatário</label>
 									<div class="form-group">
 										<label class="label-radio inline">
-											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_destinatario" value="null" type="radio" class="inline-radio">
+											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_destinatario" value="" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>Vazio</span>
 										</label>

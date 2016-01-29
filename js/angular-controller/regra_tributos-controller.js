@@ -481,11 +481,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 			msg = 'Regra alterada com sucesso!'
 		}
 
-		ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
-		ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
-		ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
-		ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
-
+		
 		itemPost = angular.copy(ng.regra_tributos);
 
 		aj.post(baseUrlApi()+url, itemPost)
@@ -547,6 +543,13 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 		var configuracao_ipi  		 = {} ;
 		var configuracao_pis_cofins  = {} ;
 		var msg = "Filtro salva com sucesso!";
+
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente = ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario == 'null' ? null : ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario ; 
+
+
 		filtro_tributos = angular.copy(ng.regra_tributos.filtro_tributos);
 		configuracao_icms = angular.copy(ng.regra_tributos.configuracao_icms);
 		configuracao_ipi = angular.copy(ng.regra_tributos.configuracao_ipi);
@@ -557,6 +560,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 		}
 		filtro_tributos.dta_inicio_vigencia = empty(filtro_tributos.dta_inicio_vigencia)  ? null : formatDate(uiDateFormat(filtro_tributos.dta_inicio_vigencia,'99/99/999')) ;
 		filtro_tributos.dta_fim_vigencia    = empty(filtro_tributos.dta_fim_vigencia) 	? null : formatDate(uiDateFormat(filtro_tributos.dta_fim_vigencia,'99/99/999')) ;
+
 		var itemPost = {
 			filtro_tributos    		: filtro_tributos,
 			configuracao_icms  		: configuracao_icms,
@@ -966,10 +970,10 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 		ng.regra_tributos.filtro_tributos.dta_fim_vigencia    = formatDateBR(ng.regra_tributos.filtro_tributos.dta_fim_vigencia);
 		ng.regra_tributos.filtro_tributos.ncm_view = item.cod_ncm+" - "+item.dsc_ncm ;
 
-		ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
-		ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
-		ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
-		ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente = empty(ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente) ? 'null' : ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente = ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente == null ? 'null' :ng.regra_tributos.filtro_tributos.flg_cont_ipi_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente = ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente == null ? 'null' :ng.regra_tributos.filtro_tributos.flg_cont_icms_emitente ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario == null ? 'null' :ng.regra_tributos.filtro_tributos.flg_cont_ipi_destinatario ; 
+		ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario = ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario == null ? 'null' :ng.regra_tributos.filtro_tributos.flg_cont_icms_destinatario ; 
 
 
 		$('html,body').animate({scrollTop: 0},'slow');
