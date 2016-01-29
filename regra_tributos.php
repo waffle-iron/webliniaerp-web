@@ -814,7 +814,7 @@
 											<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 										    option="chosen_cst_ipi"
 										    ng-model="regra_tributos.configuracao_ipi.cst_ipi"
-										    ng-options="cst_ipi.num_item as ( cst_ipi.ipi.num_item+' - '+cst_ipi.nme_item )  for cst_ipi in chosen_cst_ipi">
+										    ng-options="cst_ipi.num_item as ( cst_ipi.num_item+' - '+cst_ipi.nme_item )  for cst_ipi in chosen_cst_ipi">
 											</select>
 										</div>
 									</div>
