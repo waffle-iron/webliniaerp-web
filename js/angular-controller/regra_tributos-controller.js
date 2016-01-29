@@ -93,7 +93,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
   
   
     ng.chosen_convenio_st  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
-    data = 	[{num_item: '1', nme_item:'Convenio ST 1 '},{num_item: '2', nme_item:'Convenio ST 2 '}];
+    data = 	[];
     ng.chosen_convenio_st = ng.chosen_convenio_st.concat(data);
 
    
