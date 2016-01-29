@@ -92,14 +92,14 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 
   
   
-    ng.chosen_convenio_st  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_convenio_st  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     data = 	[];
     ng.chosen_convenio_st = ng.chosen_convenio_st.concat(data);
 
    
 
 
-    ng.chosen_estado  = [{id:'',nome:'--- Selecione ---'}] ;
+    ng.chosen_estado  = [{id:null,nome:''}] ;
     ng.loadEstados = function () {
 		aj.get(baseUrlApi()+"estados")
 		.success(function(data, status, headers, config) {
@@ -111,7 +111,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 	}
 	ng.loadEstados();
 
-	ng.chosen_zoneamento  = [{cod_zoneamento:'',dsc_zoneamento:'--- Selecione ---'}] ;
+	ng.chosen_zoneamento  = [{cod_zoneamento:null,dsc_zoneamento:''}] ;
 	ng.loadZoneamento = function() {
 		aj.get(baseUrlApi()+"zoneamento/get?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
@@ -151,7 +151,7 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 	}
    ng.loadSituacao();
 
-	ng.chosen_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
+	ng.chosen_operacao  = [{cod_operacao:null,dsc_operacao:''}] ;
 	ng.loadOperacao = function() {
 		aj.get(baseUrlApi()+"operacao/get?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
@@ -177,10 +177,11 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 	}
 	ng.loadRegimeDestinatario();
   	
-  	ng.chosen_regime_especial_emitente  = [{cod_regime_especial:'',dsc_regime_especial:'--- Selecione ---'}] ;
     ng.loadRegimeEmitente = function() {
+    	ng.chosen_regime_especial_emitente  = [] ;
 		aj.get(baseUrlApi()+"regime_especial/get?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
+				ng.chosen_regime_especial_emitente  = [{cod_regime_especial:null,dsc_regime_especial:''}] ;
 				 ng.chosen_regime_especial_emitente = ng.chosen_regime_especial_emitente.concat(data.regimes);
 			})
 			.error(function(data, status, headers, config) {
@@ -190,10 +191,11 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 	}
     ng.loadRegimeEmitente();
 
-    ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:'',dsc_especializacao_ncm:'--- Selecione ---'}] ;
     ng.loadEspecialazacaoNcm = function() {
+    	ng.chosen_especializacao_ncm =[{cod_especializacao_ncm:null,dsc_especializacao_ncm:''}] ;
 		aj.get(baseUrlApi()+"especializacao_ncm/get?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
+				ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:null,dsc_especializacao_ncm:''}] ;
 				ng.chosen_especializacao_ncm = ng.chosen_especializacao_ncm.concat(data.especializacao_ncm) ;
 			})
 			.error(function(data, status, headers, config) {
@@ -225,46 +227,46 @@ app.controller('RegraTributosController', function($scope, $http, $window, $dial
 		});
 	}
 
-	ng.chosen_cst_ipi       = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+	ng.chosen_cst_ipi       = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('cst_ipi','chosen_cst_ipi');
 
-    ng.chosen_pis_cofins    = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_pis_cofins    = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('cst_pis_cofins','chosen_pis_cofins');
 
-    ng.chosen_tipo_empresa  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_tipo_empresa  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('tipo_empresa','chosen_tipo_empresa');
 
-    ng.chosen_regime_tributario_emitente  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_regime_tributario_emitente  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('regime_tributario','chosen_regime_tributario_emitente');
 
-    ng.chosen_regime_tributario_destinatario  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_regime_tributario_destinatario  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('regime_tributario','chosen_regime_tributario_destinatario');
 
-    ng.chosen_origem_mercadoria  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_origem_mercadoria  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('origem_mercadoria','chosen_origem_mercadoria');
 
-    ng.chosen_forma_aquisicao  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_forma_aquisicao  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
    	ng.loadControleNfe('forma_aquisicao','chosen_forma_aquisicao');
 
-   	ng.chosen_cod_destinacao  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+   	ng.chosen_cod_destinacao  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
    	ng.loadControleNfe('destinacao','chosen_cod_destinacao');
 
-   	ng.chosen_crt_emitente  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+   	ng.chosen_crt_emitente  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('crt_emitente','chosen_crt_emitente');
 
-    ng.chosen_base_icms  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_base_icms  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
     ng.loadControleNfe('modalidade_base_icms','chosen_base_icms');
 
-    ng.chosen_base_icms_st  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+    ng.chosen_base_icms_st  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
    	ng.loadControleNfe('modalidade_base_icms_st','chosen_base_icms_st');
 
-   	ng.chosen_motivo_des_icms  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+   	ng.chosen_motivo_des_icms  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
    	ng.loadControleNfe('motivo_des_icms','chosen_motivo_des_icms');
 
-   	ng.chosen_tributacao_ipi  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+   	ng.chosen_tributacao_ipi  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
    	ng.loadControleNfe('tipo_tributacao_ipi','chosen_tributacao_ipi');
 
-   	ng.chosen_tributacao_pis_cofins  = [{num_item:'',nme_item:'--- Selecione ---'}] ;
+   	ng.chosen_tributacao_pis_cofins  = [{cod_controle_item_nfe:null,num_item:null,nme_item:'',dsc_completa:''}] ;
    	ng.loadControleNfe('regime_tributario_pis_cofins','chosen_tributacao_pis_cofins');
 
    	

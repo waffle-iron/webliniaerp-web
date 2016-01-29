@@ -238,6 +238,7 @@
 									<label class="ccontrol-label">Operação</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_operacao')"
 								    option="chosen_operacao"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_operacao"
 								    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in chosen_operacao">
 									</select>
@@ -248,6 +249,7 @@
 									<label class="ccontrol-label">Estado de Origem</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_estado_origem')"
 									    option="chosen_estado"
+									    allow-single-deselect="true"
 									    ng-model="regra_tributos.filtro_tributos.cod_estado_origem"
 									    ng-options="estado.id as estado.nome for estado in chosen_estado">
 									</select>
@@ -258,6 +260,7 @@
 									<label class="ccontrol-label">Estado Destino</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_estado_destino')"
 								    option="chosen_estado"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_estado_destino"
 								    ng-options="estado.id as estado.nome for estado in chosen_estado">
 									</select>
@@ -283,6 +286,7 @@
 									<label class="ccontrol-label">Zoneamento Emitente</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_zoneamento_emitente')"
 								    option="chosen_zoneamento"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_zoneamento_emitente"
 								    ng-options="zoneamento.cod_zoneamento as zoneamento.dsc_zoneamento for zoneamento in chosen_zoneamento">
 									</select>
@@ -293,6 +297,7 @@
 									<label class="ccontrol-label">Regime Especial Emitente</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_especial_emitente')"
 								    option="chosen_regime_especial_emitente"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_regime_especial_emitente"
 								    ng-options="regime_especial_emitente.cod_regime_especial as regime_especial_emitente.dsc_regime_especial for regime_especial_emitente in chosen_regime_especial_emitente">
 									</select>
@@ -303,6 +308,7 @@
 									<label class="ccontrol-label">Tipo Empresa Emitente</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa_emitente')"
 								    option="chosen_tipo_empresa"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_tipo_empresa_emitente"
 								    ng-options="tipo_empresa.cod_controle_item_nfe as tipo_empresa.nme_item for tipo_empresa in chosen_tipo_empresa">
 									</select>
@@ -313,6 +319,7 @@
 									<label class="ccontrol-label">Regime Tributário Emitente</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario_emitente')"
 								    option="chosen_regime_tributario_emitente"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_regime_tributario_emitente"
 								    ng-options="regime_tributario_emitente.cod_controle_item_nfe as regime_tributario_emitente.nme_item for regime_tributario_emitente in chosen_regime_tributario_emitente">
 									</select>
@@ -325,6 +332,7 @@
 									<label class="ccontrol-label">CRT Emitente</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_crt_emitente')"
 								    option="chosen_crt_emitente"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_crt_emitente"
 								    ng-options="crt_emitente.cod_controle_item_nfe as crt_emitente.nme_item for crt_emitente in chosen_crt_emitente">
 									</select>
@@ -384,6 +392,7 @@
 									<label class="ccontrol-label">Zoneamento Destinatário</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_zoneamento_destinatario')"
 								    option="chosen_zoneamento"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_zoneamento_destinatario"
 								    ng-options="zoneamento.cod_zoneamento as zoneamento.dsc_zoneamento for zoneamento in chosen_zoneamento">
 									</select>
@@ -394,6 +403,7 @@
 									<label class="ccontrol-label">Regime Especial Destinatário</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_especial_destinatario')"
 								    option="chosen_regime_especial_destinatario"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_regime_especial_destinatario"
 								    ng-options="regime_especial_destinatario.cod_regime_especial as regime_especial_destinatario.dsc_regime_especial for regime_especial_destinatario in chosen_regime_especial_destinatario">
 									</select>
@@ -404,6 +414,7 @@
 									<label class="ccontrol-label">Tipo Empresa Destinatário</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa_destinatario')"
 								    option="chosen_tipo_empresa"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_tipo_empresa_destinatario"
 								    ng-options="tipo_empresa.cod_controle_item_nfe as tipo_empresa.nme_item for tipo_empresa in chosen_tipo_empresa">
 									</select>
@@ -414,6 +425,7 @@
 									<label class="ccontrol-label">Regime Tributário Destinatário</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario_destinatario')"
 								    option="chosen_regime_tributario_destinatario"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_regime_tributario_destinatario"
 								    ng-options="regime_tributario_destinatario.cod_controle_item_nfe as regime_tributario_destinatario.nme_item for regime_tributario_destinatario in chosen_regime_tributario_destinatario">
 									</select>
@@ -475,6 +487,7 @@
 									<label class="ccontrol-label">Destinação</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_destinacao')"
 								    option="chosen_cod_destinacao"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_destinacao"
 								    ng-options="destinacao.cod_controle_item_nfe as destinacao.nme_item for destinacao in chosen_cod_destinacao">
 									</select>
@@ -485,6 +498,7 @@
 									<label class="ccontrol-label">Origem Mercadoria</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_origem_mercadoria')"
 								    option="chosen_origem_mercadoria"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_origem_mercadoria"
 								    ng-options="origem_mercadoria.cod_controle_item_nfe as origem_mercadoria.nme_item for origem_mercadoria in chosen_origem_mercadoria">
 									</select>
@@ -495,6 +509,7 @@
 									<label class="ccontrol-label">Situacao</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_situacao')"
 								    option="chosen_situacao"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_situacao"
 								    ng-options="situacao.cod_situacao_especial as situacao.dsc_situacao_especial for situacao in chosen_situacao">
 									</select>
@@ -505,6 +520,7 @@
 									<label class="ccontrol-label">Forma Aquisição</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_forma_aquisicao')"
 								    option="chosen_forma_aquisicao"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_forma_aquisicao"
 								    ng-options="forma_aquisicao.cod_controle_item_nfe as forma_aquisicao.nme_item for forma_aquisicao in chosen_forma_aquisicao">
 									</select>
@@ -541,6 +557,7 @@
 									<label class="ccontrol-label">Especialização NCM</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_especializacao_ncm')"
 								    option="chosen_especializacao_ncm"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.filtro_tributos.cod_especializacao_ncm"
 								    ng-options="especializacao_ncm.cod_especializacao_ncm as especializacao_ncm.dsc_especializacao_ncm for especializacao_ncm in chosen_especializacao_ncm">
 									</select>
@@ -564,6 +581,7 @@
 									<label class="ccontrol-label">CSTCSOSN</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_cstcsosn')"
 								    option="chosen_cstcsosn"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_icms.cod_cstcsosn"
 								    ng-options="cstcsosn.cod_cstcsosn as ('cst: '+cstcsosn.dsc_cst+' - cson: '+cstcsosn.dsc_cson+' - '+cstcsosn.dsc_geral) for cstcsosn in chosen_cstcsosn">
 									</select>
@@ -628,6 +646,7 @@
 									<label class="ccontrol-label">Modalidade Base ICMS</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms')"
 								    option="chosen_base_icms"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms"
 								    ng-options="base_icms.cod_controle_item_nfe as base_icms.nme_item for base_icms in chosen_base_icms">
 									</select>
@@ -714,6 +733,7 @@
 									<label class="ccontrol-label">Modalidade Base ICMS ST</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms_st')"
 								    option="chosen_base_icms_st"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms_st"
 								    ng-options="base_icms_st.cod_controle_item_nfe as base_icms_st.nme_item for base_icms_st in chosen_base_icms_st">
 									</select>
@@ -740,6 +760,7 @@
 									<label class="ccontrol-label">Motivo Des. ICMS</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_motivo_des_icms')"
 								    option="chosen_motivo_des_icms"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_icms.cod_motivo_des_icms"
 								    ng-options="motivo_des_icms.cod_controle_item_nfe as motivo_des_icms.nme_item for motivo_des_icms in chosen_motivo_des_icms">
 									</select>
@@ -758,6 +779,7 @@
 									<label class="ccontrol-label">Convenio ST</label> 
 									<select chosen 
 								    option="chosen_convenio_st"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_icms.cod_convenio_st"
 								    ng-options="convenio_st.cod_controle_item_nfe as convenio_st.nme_item for convenio_st in chosen_convenio_st">
 									</select>
@@ -768,6 +790,7 @@
 									<label class="ccontrol-label">Base Tributaria</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 								    option="chosen_base_tributaria"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_icms.cod_base_tributaria"
 								    ng-options="base_tributaria.cod_base_tributaria as base_tributaria.dsc_base_tributaria for base_tributaria in chosen_base_tributaria">
 									</select>
@@ -813,8 +836,9 @@
 											<label class="ccontrol-label">CST IPI</label> 
 											<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 										    option="chosen_cst_ipi"
+										    allow-single-deselect="true"
 										    ng-model="regra_tributos.configuracao_ipi.cst_ipi"
-										    ng-options="cst_ipi.num_item as ( cst_ipi.num_item+' - '+cst_ipi.nme_item )  for cst_ipi in chosen_cst_ipi">
+										    ng-options="cst_ipi.num_item as ( cst_ipi.dsc_completa )  for cst_ipi in chosen_cst_ipi">
 											</select>
 										</div>
 									</div>
@@ -829,6 +853,7 @@
 										<label class="ccontrol-label">Base Tributaria</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 									    option="chosen_base_tributaria"
+									    allow-single-deselect="true"
 									    ng-model="regra_tributos.configuracao_ipi.cod_base_tributaria"
 									    ng-options="base_tributaria.cod_base_tributaria as base_tributaria.dsc_base_tributaria for base_tributaria in chosen_base_tributaria">
 										</select>
@@ -839,6 +864,7 @@
 										<label class="ccontrol-label">Tipo Tributação IPI</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_ipi')"
 									    option="chosen_tributacao_ipi"
+									    allow-single-deselect="true"
 									    ng-model="regra_tributos.configuracao_ipi.cod_tipo_tributacao_ipi"
 									    ng-options="tributacao_ipi.cod_controle_item_nfe as tributacao_ipi.nme_item for tributacao_ipi in chosen_tributacao_ipi">
 										</select>
@@ -854,8 +880,9 @@
 										<label class="ccontrol-label">CST PIS COFINS</label> 
 										<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 										   option="chosen_pis_cofins"
+										   allow-single-deselect="true"
 										   ng-model="regra_tributos.configuracao_pis_cofins.cst_pis_cofins"
-										   ng-options="cst_ipi.num_item as (cst_ipi.num_item+' - '+cst_ipi.nme_item) for cst_ipi in chosen_pis_cofins">
+										   ng-options="cst_ipi.num_item as (cst_ipi.dsc_completa) for cst_ipi in chosen_pis_cofins">
 										</select>
 									</div>
 									<!--<div id="cst_pis_cofins" class="form-group">
@@ -892,6 +919,7 @@
 									<label class="ccontrol-label">Base Tributaria</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
 								    option="chosen_base_tributaria"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_pis_cofins.cod_base_tributaria"
 								    ng-options="base_tributarua.cod_base_tributaria as base_tributarua.dsc_base_tributaria for base_tributarua in chosen_base_tributaria">
 									</select>
@@ -904,6 +932,7 @@
 									<label class="ccontrol-label">Tipo Tributação PIS COFINS</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_pis_cofins')"
 								    option="chosen_tributacao_pis_cofins"
+								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_pis_cofins.cod_tipo_tributacao_pis_cofins"
 								    ng-options="tributacao_pis_cofins.cod_controle_item_nfe as tributacao_pis_cofins.nme_item for tributacao_pis_cofins in chosen_tributacao_pis_cofins">
 									</select>

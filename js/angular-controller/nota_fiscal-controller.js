@@ -14,8 +14,13 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				local_destino : '',
 				finalidade_emissao : '',
 				consumidor_final : '',
-				forma_pagamento :''
-			}
+				forma_pagamento :'',
+				presenca_comprador:''
+			},
+		transportadora : {
+			modalidade_frete : '' 
+		}
+
     } ;
     ng.NF 			= angular.copy(nfTO) ;
     ng.id_transportadora;
@@ -63,12 +68,17 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			id_venda          : id_venda,
 			cod_operacao      : cod_operacao
 		 } ;
-		var copy_dados = {dados_emissao:{}};
+		var copy_dados = angular.copy(nfTO);
 		copy_dados.dados_emissao.tipo_documento = ng.NF.dados_emissao.tipo_documento;
 		copy_dados.dados_emissao.local_destino = ng.NF.dados_emissao.local_destino ;
 		copy_dados.dados_emissao.finalidade_emissao = ng.NF.dados_emissao.finalidade_emissao ;
 		copy_dados.dados_emissao.consumidor_final = ng.NF.dados_emissao.consumidor_final;
 		copy_dados.dados_emissao.forma_pagamento = ng.NF.dados_emissao.forma_pagamento;
+		copy_dados.dados_emissao.presenca_comprador = ng.NF.dados_emissao.presenca_comprador;
+		copy_dados.transportadora.modalidade_frete = ng.NF.transportadora.modalidade_frete;
+
+		
+
 		aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers, config) {
 				ng.disableSendNf = false ;
@@ -77,8 +87,11 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				data.dados_emissao.finalidade_emissao = copy_dados.dados_emissao.finalidade_emissao ;
 				data.dados_emissao.consumidor_final = copy_dados.dados_emissao.consumidor_final ;
 				data.dados_emissao.forma_pagamento = copy_dados.dados_emissao.forma_pagamento ;
+				data.dados_emissao.presenca_comprador = copy_dados.dados_emissao.presenca_comprador ;
+				if(data.transportadora == undefined) data.transportadora = {id:null,modalidade_frete:null} ;
+				data.transportadora.modalidade_frete = copy_dados.transportadora.modalidade_frete ;
+
 				ng.NF = data;
-				ng.NF.transportadora = {id:null} ;
 				if(event != null){
 					$('#modal-operacao').modal('hide');
 					btn.button('reset');

@@ -413,11 +413,28 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		});
 	}
 
+	ng.loadZoneamento = function() {
+		aj.get(baseUrlApi()+"zoneamento/get?cod_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				ng.zoneamentos = ng.zoneamentos.concat(data.zoneamentos);
+				setTimeout(function(){$("select").trigger("chosen:updated");},300);
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.zoneamentos = [];
+			});
+	}
+
 
 	ng.loadControleNfe('modelo_nota_fiscal','chosen_modelo_nota_fiscal');
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
+
+	ng.regimeTributario = [{num_item:null,nme_item:null}] ;
+	ng.regimePisCofins = [{num_item:null,nme_item:null}] ;
+	ng.tipoEmpresa = [{num_item:null,nme_item:null}] ;
+	ng.zoneamentos = [{num_item:null,nme_item:null}] ;
 
 	ng.loadEmpreendimento(ng.userLogged.id_empreendimento);
 	ng.existsCookie();
@@ -425,6 +442,10 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadOperacaoCombo();
 	ng.loadSerieDocumentoFiscal();
 	ng.loadEstados();
+	ng.loadZoneamento();
+	ng.loadControleNfe('regime_tributario','regimeTributario');
+	ng.loadControleNfe('regime_tributario_pis_cofins','regimePisCofins');
+	ng.loadControleNfe('tipo_empresa','tipoEmpresa');
 
 	
 });
