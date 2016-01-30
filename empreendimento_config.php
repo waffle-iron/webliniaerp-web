@@ -595,6 +595,26 @@
 								</div>
 
 								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label for="" class="control-label">Emit NF-e no pdv ?</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_emitir_nfe_pdv" value="1" name="flg_emitir_nfe_pdv"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_emitir_nfe_pdv" value="0" name="flg_emitir_nfe_pdv"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">
 											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">
