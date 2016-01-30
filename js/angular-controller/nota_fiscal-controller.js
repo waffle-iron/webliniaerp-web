@@ -239,6 +239,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		}else{
 			$('#modal-operacao').modal({ backdrop: 'static',keyboard: false});
 		}
+		
 		ng.loadTransportadoras();
 		ng.loadOperacaoCombo();
 		ng.loadControleNfe('modalidade_frete','lista_modalidade_frete');

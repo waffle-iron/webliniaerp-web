@@ -791,14 +791,14 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Total NF</label>
-											<input type="text" thousands-formatter ng-model="NF.emitente.vNF" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vNF" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">V. Aprox. Tributos</label>
-											<input type="text" thousands-formatter ng-model="NF.emitente.vTotTrib" class="form-control input-sm" readonly="readonly">
+											<input type="text" thousands-formatter ng-model="NF.ICMSTot.vTotTrib" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
