@@ -389,7 +389,7 @@
 						    			<label class="control-label">Forma de Pagamento</label>
 										<select ng-model="pagamento.id_forma_pagamento" ng-change="selectChange()" class="form-control input-sm">
 											<option ng-if="pagamento.id_forma_pagamento != null" value=""></option>
-											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.nome }}</option>
+											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.descricao_forma_pagamento }}</option>
 										</select>
 									</div>
 									<div class="col-sm-6" id="pagamento_valor" ng-if="pagamento.id_forma_pagamento == 7" >
