@@ -254,23 +254,31 @@
 												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual">
 											</div>
 										</div>
+										<div class="col-sm-3">
+											<div id="num_inscricao_estadual_st" class="form-group">
+												<label class="control-label">I.E ST </label>
+												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual_st">
+											</div>
+										</div>
+									</div>
+									<div class="row">
 										<div class="col-lg-6">
 											<div id="nme_razao_social" class="form-group">
 												<label class="control-label">Razão Social  </label>
 												<input class="form-control" ng-model="empreendimento.nme_razao_social">
 											</div>
 										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-3">
+										<div class="col-sm-4">
 											<div id="nme_fantasia" class="form-group">
-												<label class="control-label">Nome Fantasia  </label>
+												<label class="control-label">Nome Fantasia</label>
 												<input class="form-control" ng-model="empreendimento.nme_fantasia">
 											</div>
 										</div>
+									</div>
+									<div class="row">
 										<div class="col-sm-2">
 											<div id="cep" class="form-group">
-												<label class="control-label">CEP  </label>
+												<label class="control-label">CEP </label>
 												<input type="text" class="form-control" ui-mask="99999-999" ng-model="empreendimento.num_cep">
 											</div>
 										</div>
@@ -288,14 +296,15 @@
 												<input id="num_logradouro" type="text" class="form-control" ng-model="empreendimento.num_logradouro" ng-blur="consultaLatLog()">
 											</div>
 										</div>
-									</div>
-									<div class="row">
+
 										<div class="col-sm-2">
 											<div id="bairro" class="form-group">
 												<label class="control-label">Bairro  </label>
 												<input type="text" class="form-control" ng-model="empreendimento.nme_bairro_logradouro">
 											</div>
 										</div>
+									</div>
+									<div class="row">
 										<div class="col-sm-2">
 											<div id="id_estado" class="form-group">
 												<label class="control-label">Estado  </label>
@@ -305,7 +314,7 @@
 
 										<div class="col-sm-4">
 											<div id="id_cidade" class="form-group">
-												<label class="control-label">Cidade   <span ng-if="cidades.length == 0" style="margin-left: 195px;color:#428bca"><i class='fa fa-refresh fa-spin'></i> Carregando ...</span></label>
+												<label class="control-label">Cidade   <span ng-if="cidades.length == 0" style="color:#428bca"><i class='fa fa-refresh fa-spin'></i></span></label>
 												<select class="form-control"  ng-model="empreendimento.cod_cidade" ng-options="a.id as a.nome for a in cidades"></select>
 											</div>
 										</div>
@@ -369,11 +378,11 @@
 								</div>
 								<div class="col-sm-2">
 									<div class="form-group" id="vlr_custo">
-										<label class="control-label">Percentual Credito Simples</label>
+										<label class="control-label">% Credito Simples</label>
 										<input  ng-model="empreendimento.num_percentual_credito_simples" thousands-formatter class="form-control input-sm">
 									</div>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-2">
 									<div class="form-group">
 										<label for="" class="control-label">Contribuinte ICMS</label>
 										<div class="form-group">
@@ -391,7 +400,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-2">
 									<div class="form-group">
 										<label for="" class="control-label">Contribuinte IPI</label>
 										<div class="form-group">
@@ -407,14 +416,6 @@
 												<span>Sim</span>
 											</label>
 										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-3">
-									<div id="num_inscricao_estadual_st" class="form-group">
-										<label class="control-label">I.E ST </label>
-										<input class="form-control" ng-model="empreendimento.num_inscricao_estadual_st">
 									</div>
 								</div>
 							</div>
