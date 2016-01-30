@@ -210,6 +210,13 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 							id_empreendimento	:ng.userLogged.id_empreendimento
 						}
 			chaves.push(item2);
+		}if(ng.configuracoes.flg_emitir_nfe_pdv != undefined){
+			var item3 = {
+							nome 				:'flg_emitir_nfe_pdv',
+							valor 				:ng.configuracoes.flg_emitir_nfe_pdv , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item3);
 		}
 		btn.button('loading');
 		var pth_local_sucess = false ;
