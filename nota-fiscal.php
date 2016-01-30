@@ -218,7 +218,7 @@
 
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h3 class="panel-title">Nota Fiscal Eletrônica Nº 482364234</h3>
+						<h3 class="panel-title">NF-e Nº {{ NF.dados_emissao.num_documento_fiscal }}</h3>
 					</div>
 
 					<div class="panel-tab clearfix">
@@ -226,7 +226,7 @@
 							<li class="active"><a href="#geral" data-toggle="tab"><i class="fa fa-gear"></i> Dados de Emissão</a></li>
 							<li><a href="#emitente" data-toggle="tab"><i class="fa fa-building-o"></i> Dados do Emitente</a></li>
 							<li><a href="#destinatario" data-toggle="tab"><i class="fa fa-user"></i> Dados do Destinatário</a></li>
-							<li><a href="#transportadora" data-toggle="tab"><i class="fa fa-truck"></i> Dados da Transportadora</a></li>
+							<li ng-show="(NF.transportadora.modalidade_frete != '' && NF.transportadora.modalidade_frete != '9')"><a href="#transportadora" data-toggle="tab"><i class="fa fa-truck"></i> Dados da Transportadora</a></li>
 							<li><a href="#produtos" data-toggle="tab"><i class="fa fa-list"></i> Produtos</a></li>
 							<li><a href="#resumo" data-toggle="tab"><i class="fa fa-bars"></i> Resumo da NF-e</a></li>
 						</ul>
@@ -237,17 +237,6 @@
 								<div class="alert" style="display:none"></div>
 
 								<div class="row">
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">Tipo de Documento</label> 
-											<select chosen
-											    option="lista_tipo_documento"
-											    allow-single-deselect="true"
-											    ng-model="NF.dados_emissao.tipo_documento"
-											    ng-options="documento.num_item as documento.nme_item for documento in lista_tipo_documento">
-											</select>
-										</div>
-									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Local de Destino</label> 
@@ -268,7 +257,7 @@
 											</select>
 										</div>
 									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Consumidor Final</label> 
 											<select chosen
@@ -291,28 +280,31 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-sm-2 col-sm-2">
+									<div class="col-sm-3">
 										<div class="form-group">
-											<label class="control-label">Série</label>
-											<input ng-model="NF.dados_emissao.serie_documento_fiscal" type="text" class="form-control input-sm" readonly="readonly">
+											<label class="control-label">Tipo de Documento</label> 
+											<select chosen
+											    option="lista_tipo_documento"
+											    allow-single-deselect="true"
+											    ng-model="NF.dados_emissao.tipo_documento"
+											    ng-options="documento.num_item as documento.nme_item for documento in lista_tipo_documento">
+											</select>
 										</div>
 									</div>
 
-									<div class="col-sm-2">
+									<div class="col-sm-3">
 										<div class="form-group">
-											<label class="control-label">Número</label>
-											<input ng-model="NF.dados_emissao.num_documento_fiscal" type="text" class="form-control input-sm" readonly="readonly">
+											<label class="control-label">Modalidade de Frete</label> 
+											<select chosen
+											    option="lista_modalidade_frete"
+											    ng-model="NF.transportadora.modalidade_frete"
+											    ng-options="mod_frete.num_item as mod_frete.nme_item for mod_frete in lista_modalidade_frete">
+											</select>
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-sm-5">
-										<div class="form-group">
-											<label class="control-label">Natureza da Operação</label>
-											<input type="text" ng-model="NF.dados_emissao.dsc_operacao" class="form-control input-sm" readonly="readonly">
-										</div>
-									</div>
 
+								<div class="row">
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Data de Emissão</label>
@@ -342,7 +334,30 @@
 								</div>
 
 								<div class="row">
-									<div class="col-sm-9">
+									<div class="col-sm-2 col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Série</label>
+											<input ng-model="NF.dados_emissao.serie_documento_fiscal" type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Número</label>
+											<input ng-model="NF.dados_emissao.num_documento_fiscal" type="text" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+
+									<div class="col-sm-8">
+										<div class="form-group">
+											<label class="control-label">Natureza da Operação</label>
+											<input type="text" ng-model="NF.dados_emissao.dsc_operacao" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-12">
 										<div class="form-group">
 											<label class="control-label">Observações</label>
 											<textarea class="form-control" rows="5"></textarea>
@@ -447,20 +462,6 @@
 
 							<div class="tab-pane fade in" id="destinatario">
 								<div class="alert" style="display:none"></div>
-
-								<div class="row">
-									<div class="col-sm-3">
-										<div class="form-group">
-											<label class="control-label">Tipo de Atendimento</label> 
-											<select chosen
-											    option="lista_presenca_comprador"
-											    ng-model="NF.dados_emissao.presenca_comprador"
-											    ng-options="item.num_item as item.nme_item for item in lista_presenca_comprador">
-											</select>
-										</div>
-									</div>
-								</div>
-
 								<div class="row">
 									<div class="col-sm-2">
 										<div class="form-group" ng-if="NF.destinatario.tipo_cadastro == 'pj'">
@@ -586,17 +587,6 @@
 											<input type="text" value="{{ NF.transportadora.xFant }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
-
-									<div class="col-sm-3">
-										<div class="form-group">
-											<label class="control-label">Modalidade de Frete</label> 
-											<select chosen
-											    option="lista_modalidade_frete"
-											    ng-model="NF.transportadora.modalidade_frete"
-											    ng-options="mod_frete.num_item as mod_frete.nme_item for mod_frete in lista_modalidade_frete">
-											</select>
-										</div>
-									</div>
 								</div>
 
 								<div class="row">
@@ -647,23 +637,28 @@
 									<table class="table table-bordered table-condensed table-striped table-hover">
 										<thead>
 											<tr>
-												<th class="text-middle text-center" rowspan="2">Cód. EAN</th>
+												<th class="text-middle text-center" rowspan="2">EAN</th>
 												<th class="text-middle" rowspan="2">Descrição</th>
-												<th class="text-middle text-center" rowspan="2">Cód. NCM</th>
-												<th class="text-middle text-center" rowspan="2">CST</th> <!-- Existe um CST para cada modalidade(IPI,PIS,COFINS) de imposto e tb um geral. Qual Mostrar ?  -->
+												<th class="text-middle text-center" rowspan="2">NCM</th>
+												<th class="text-middle text-center" rowspan="2">CST/CSOSN</th> <!-- Existe um CST para cada modalidade(IPI,PIS,COFINS) de imposto e tb um geral. Qual Mostrar ?  -->
 												<th class="text-middle text-center" rowspan="2">CFOP</th>
-												<th class="text-middle text-center" rowspan="2">Un. Medida</th> 
+												<th class="text-middle text-center" rowspan="2">Un.</th> 
 												<th class="text-middle text-center" rowspan="2">Qtd.</th> 
-												<th class="text-middle" rowspan="2">Valor Unit.</th>
-												<th class="text-middle" rowspan="2">Valor Total</th>
-												<th class="text-middle" rowspan="2">B.Calc. ICMS</th> 
-												<th class="text-middle" rowspan="2">Valor ICMS</th>
-												<th class="text-middle" rowspan="2">Valor IPI</th>
-												<th class="text-middle text-center" colspan="2">Aliquotas</th>
+												<th class="text-middle text-center" rowspan="2">Valor Unit.</th>
+												<th class="text-middle text-center" rowspan="2">Valor Total</th>
+												<th class="text-middle text-center" rowspan="2">B.Calc. ICMS</th> 
+												<th class="text-middle text-center" colspan="4">Valores</th>
+												<th class="text-middle text-center" colspan="4">Aliquotas</th>
 											</tr>
 											<tr>
+												<th class="text-middle text-center">ICMS</th>
+												<th class="text-middle text-center">IPI</th>
+												<th class="text-middle text-center">PIS</th>
+												<th class="text-middle text-center">COFINS</th>
 												<th class="text-middle text-center">ICMS</th> <!-- Não identifiquei este campo -->
 												<th class="text-middle text-center">IPI</th> <!-- Não identifiquei este campo -->
+												<th class="text-middle text-center">PIS</th> <!-- Não identifiquei este campo -->
+												<th class="text-middle text-center">COFINS</th> <!-- Não identifiquei este campo -->
 											</tr>
 										</thead>
 										<tbody>
@@ -680,8 +675,12 @@
 												<td class="text-middle text-right">R$ {{ item.imposto.ICMS.vBC | numberFormat:2:',':'.' }}</td>
 												<td class="text-middle text-right">R$ {{ item.imposto.ICMS.vICMS | numberFormat:2:',':'.' }}</td>
 												<td class="text-middle text-right">R$ {{ item.imposto.IPI.vIPI | numberFormat:2:',':'.' }}</td>
-												<td class="text-middle text-center">0%</td>
-												<td class="text-middle text-center">0%</td>
+												<td class="text-middle text-right">R$ {{ item.imposto.PIS.vPIS | numberFormat:2:',':'.' }}</td>
+												<td class="text-middle text-right">R$ {{ item.imposto.COFINS.vCOFINS | numberFormat:2:',':'.' }}</td>
+												<td class="text-middle text-center">{{ item.imposto.ICMS.pICMS | numberFormat:2:',':'.' }}%</td>
+												<td class="text-middle text-center">{{ item.imposto.IPI.pIPI | numberFormat:2:',':'.' }}%</td>
+												<td class="text-middle text-center">{{ item.imposto.PIS.pPIS | numberFormat:2:',':'.' }}%</td>
+												<td class="text-middle text-center">{{ item.imposto.COFINS.pCOFINS | numberFormat:2:',':'.' }}%</td>
 											</tr>
 										</tbody>
 									</table>
