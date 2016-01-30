@@ -196,6 +196,11 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		aj.post(baseUrlApi()+"nfe/send",ng.NF)
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
+				if(status == 202){
+					$dialogs.notify('Sucesso','<strong>Nota transmitida com suceso.</strong>');
+					$dialogs.notify('Sucesso','<strong>Nota transmitida com suceso.</strong>'+
+					'<br><br><pre style="overflow:auto;height: 300px;" >'+data.json+'</pre>');
+				}
 			})
 			.error(function(data, status, headers, config) {
 				var msg = "" ;
