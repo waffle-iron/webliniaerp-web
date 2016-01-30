@@ -1784,7 +1784,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			}, 500);
 		}
 	}
-
+	ng.configuracoes = {} ;
 	ng.loadConfig = function(){
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)

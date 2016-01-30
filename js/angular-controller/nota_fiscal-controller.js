@@ -77,9 +77,6 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		copy_dados.dados_emissao.forma_pagamento = ng.NF.dados_emissao.forma_pagamento;
 		copy_dados.dados_emissao.presenca_comprador = ng.NF.dados_emissao.presenca_comprador;
 		copy_dados.transportadora.modalidade_frete = ng.NF.transportadora.modalidade_frete;
-
-		
-
 		aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers, config) {
 				ng.disableSendNf = false ;
