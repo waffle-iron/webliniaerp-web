@@ -1716,7 +1716,7 @@
 						    		class="btn btn-md  btn-success" ng-click="printDiv('modal-print')">
 						    		<i class="fa fa-print"></i> Imprimir (via Papel A4)
 						    	</button>
-						    	<button ng-show="!emitirNfe" ng-click="emitirNfe = true" type="button" data-loading-text=" Aguarde..." 
+						    	<button ng-show="!emitirNfe" ng-click="emitirNfe = true && configuracoes.flg_emitir_nfe_pdv == 1" type="button" data-loading-text=" Aguarde..." 
 						    		class="btn btn-md  btn-info" ng-click="">
 						    		<i class="fa fa-print"></i> Emitir NF-e
 						    	</button>
