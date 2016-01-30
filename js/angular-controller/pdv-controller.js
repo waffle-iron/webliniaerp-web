@@ -1680,6 +1680,15 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			});
 	}
 
+	ng.loadFormasPagamento = function() {
+		ng.formas_pagamento = [];
+
+		aj.get(baseUrlApi()+"formas_pagamento")
+			.success(function(data, status, headers, config) {
+				ng.formas_pagamento = data;
+			});
+	}
+
 	ng.modalFechar = function(){
 
 		aj.get(baseUrlApi()+"caixa/lancamentos/formas_pagamento/"+ng.caixa_aberto.id)
@@ -2387,6 +2396,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadBancos();
 	ng.loadPerfil();
 	ng.loadContas();
+	ng.loadFormasPagamento();
 
 	ng.resizeScreen(); // by default, set fullscreen
 	//ng.abrirVenda('pdv'); // by default, set 'Modo Loja' mode
