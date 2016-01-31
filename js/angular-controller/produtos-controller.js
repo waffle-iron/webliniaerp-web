@@ -35,10 +35,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
     ng.depositos = [] ;
     ng.empreendimentosAssociados = [{ id_empreendimento : ng.userLogged.id_empreendimento, nome_empreendimento : ng.userLogged.nome_empreendimento }];
 
-    ng.chosen_forma_aquisicao     = [{cod_controle_item_nfe:''}] ;
-    ng.chosen_origem_mercadoria   = [{cod_controle_item_nfe:''}] ;
-    ng.chosen_tipo_tributacao_ipi = [{cod_controle_item_nfe:''}] ;
-    ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:''}] ;
+    ng.chosen_forma_aquisicao     = [{cod_controle_item_nfe:null,dsc_especializacao_ncm:'Selecione'}] ;
+    ng.chosen_origem_mercadoria   = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
+    ng.chosen_tipo_tributacao_ipi = [{cod_controle_item_nfe:'',nme_item:'Selecione'}] ;
+    ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:null,dsc_especializacao_ncm:'Selecione'}] ;
 
     ng.showBoxNovo = function(onlyShow){
     	if(onlyShow) {
@@ -1212,7 +1212,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.chosen_regra_tributos = [] ;
 		aj.get(baseUrlApi()+"regra_tributos/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
-				ng.chosen_regra_tributos = [{cod_regra_tributos:''}] ;
+				ng.chosen_regra_tributos = [{cod_regra_tributos:null,dsc_regra_tributos:'Selecione'}] ;
 				ng.chosen_regra_tributos = ng.chosen_regra_tributos.concat(data.regras) ;
 				setTimeout(function(){
 					$("select").trigger("chosen:updated");
