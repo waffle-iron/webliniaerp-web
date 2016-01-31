@@ -203,6 +203,7 @@
 					<br>
 					<a href="pdv.php" class="btn btn-info"><i class="fa fa-desktop"></i> Frente de Caixa (PDV)</a>
 					<a href="devolucao.php" class="btn btn-primary"><i class="fa fa-clipboard"></i> Devolução de Produtos</a>
+					<a href="notas-fiscais.php" class="btn btn-primary"><i class="fa fa-barcode"></i> Notas Fiscais</a>
 					<a href="lista_pedidos_personalizados.php" class="btn btn-primary" ng-if="userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6 "><i class="fa fa-tag"></i> Pedidos Personalizados</a>
 				</div>
 			</div>

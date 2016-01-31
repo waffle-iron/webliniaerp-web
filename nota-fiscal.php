@@ -195,13 +195,14 @@
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
 					 <li><i class="fa fa-signal"></i> <a href="vendas.php">Vendas</a></li>
-					 <li class="active"><i class="fa fa-file-text-o"></i> Consulta/Visualização de Nota Fiscal</li>
+					 <li><i class="fa fa-barcode"></i> <a href="notas-fiscais.php">Notas Fiscais</a></li>
+					 <li class="active"><i class="fa fa-file-text-o"></i> Visualização de Nota Fiscal</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-file-text-o"></i> Consulta/Visualização de Nota Fiscal</h3>
+					<h3 class="no-margin"><i class="fa fa-file-text-o"></i> Visualização de Nota Fiscal</h3>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -809,7 +810,7 @@
 						<div class="pull-right">
 							<button type="button" ng-click="calcularNfe($event,id_venda,cod_operacao)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
 							<button type="button"  class="btn btn-sm btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Enviando..." ng-click="sendNfe($event)"><i class="fa fa-send"></i> Transmitir NF-e</button>
-							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-file-text-o"></i> Emitir DANFE (PDF)</button>
+							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i> Emitir DANFE (PDF)</button>
 							<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-times-circle"></i> Cancelar NF-e</button>
 						</div>
 					</div>
