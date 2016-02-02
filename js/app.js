@@ -293,6 +293,17 @@ app.directive('ngEnter', function () {
     };
 });
 
+app.directive('bsTooltip', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            $timeout(function () {
+                	  element.find("[data-toggle=tooltip]").tooltip();
+            });
+        }
+    }
+});
+
 app.controller('AlertasController', function($scope, $http, $window, UserService) {
 	var ng = $scope,
 		aj = $http;

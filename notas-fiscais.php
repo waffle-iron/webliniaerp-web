@@ -210,14 +210,14 @@
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
 							<li class="active"><a href="#emitidas" data-toggle="tab"><i class="fa fa-send"></i> Emitidas</a></li>
-							<li><a href="#canceladas" data-toggle="tab"><i class="fa fa-times-circle"></i> Canceladas</a></li>
-							<li><a href="#inutilizadas" data-toggle="tab"><i class="fa fa-ban"></i> Inútilizads</a></li>
+							<!--<li><a href="#canceladas" data-toggle="tab"><i class="fa fa-times-circle"></i> Canceladas</a></li>
+							<li><a href="#inutilizadas" data-toggle="tab"><i class="fa fa-ban"></i> Inútilizads</a></li>-->
 						</ul>
 					</div>
 					<div class="panel-body">
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="emitidas">
-								<div class="row">
+								<!--<div class="row">
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">De</label>
@@ -273,7 +273,7 @@
 											<button type="button" class="btn btn-sm btn-primary" ng-click="load(0,20)"><i class="fa fa-filter"></i> Filtrar</button>
 										</div>
 									</div>
-								</div>
+								</div>-->
 
 								<div class="row">
 									<div class="col-lg-12">
@@ -290,7 +290,7 @@
 													<th class="text-middle text-center">Status</th>
 												</thead>
 												<tbody>
-													<tr>
+													<tr bs-tooltip ng-repeat="nota in notas">
 														<td class="text-middle">
 															<div class="btn-group">
 																<button type="button" class="btn btn-sm btn-default dropdown-toggle" 
@@ -298,92 +298,37 @@
 																	Ações <span class="caret"></span>
 																</button>
 																<ul class="dropdown-menu">
-																	<li><a href="nota-fiscal.php"><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (PDF)</a></li>
-																	<li role="separator" class="divider"></li>
-																	<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>
-																	<li><a href="#"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
+																	<li ng-show="(nota.status == 'autorizado')" ng-click="showDANFEModal(nota, 'PDF')">
+																		<a href=""><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (PDF)</a>
+																	</li>
+																	<li ng-show="(nota.status == 'autorizado')">
+																		<a href="{{ nota.caminho_xml_nota_fiscal }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar DANFE (XML)</a>
+																	</li>
+																	<li role="separator" class="divider" ng-show="(nota.status == 'autorizado')"></li>
+																	<!--<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>-->
+																	<li><a href="nota-fiscal.php?id_venda={{ nota.cod_venda }}"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
 																</ul>
 															</div>
 														</td>
-														<td class="text-center text-middle">13443</td>
-														<td class="text-center text-middle">1</td>
-														<td class="text-middle">VENDA PARA CONSUMIDOR FINAL</td>
-														<td class="text-middle">FILIPE MENDONÇA COELHO</td>
-														<td class="text-center text-middle">05/04/1991 09:42</td>
-														<td class="text-center text-middle">05/04/1991 10:30</td>
-														<td class="text-middle">
-															<span class="label label-success">Autorizado o Uso da NF-e</span>
-														</td>
-													</tr>
-													<tr>
-														<td class="text-middle">
-															<div class="btn-group">
-																<button type="button" class="btn btn-sm btn-default dropdown-toggle" 
-																	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																	Ações <span class="caret"></span>
-																</button>
-																<ul class="dropdown-menu">
-																	<li><a href="#"><i class="fa fa-send"></i> Retransmitir NF-E</a></li>
-																	<li role="separator" class="divider"></li>
-																	<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>
-																	<li><a href="#"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
-																</ul>
-															</div>
-														</td>
-														<td class="text-center text-middle">13443</td>
-														<td class="text-center text-middle">1</td>
-														<td class="text-middle">VENDA PARA CONSUMIDOR FINAL</td>
-														<td class="text-middle">FILIPE MENDONÇA COELHO</td>
-														<td class="text-center text-middle">05/04/1991 09:42</td>
-														<td class="text-center text-middle">05/04/1991 10:30</td>
-														<td class="text-middle">
-															<span class="label label-danger" data-toggle="tooltip" title="Rejeição: CNPJ inválido!">Erro de Autorização</span>
-														</td>
-													</tr>
-													<tr>
-														<td class="text-middle">
-															<div class="btn-group">
-																<button type="button" class="btn btn-sm btn-default dropdown-toggle" 
-																	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																	Ações <span class="caret"></span>
-																</button>
-																<ul class="dropdown-menu">
-																	<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>
-																	<li><a href="#"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
-																</ul>
-															</div>
-														</td>
-														<td class="text-center text-middle">13443</td>
-														<td class="text-center text-middle">1</td>
-														<td class="text-middle">VENDA PARA CONSUMIDOR FINAL</td>
-														<td class="text-middle">FILIPE MENDONÇA COELHO</td>
-														<td class="text-center text-middle">05/04/1991 09:42</td>
-														<td class="text-center text-middle">05/04/1991 10:30</td>
-														<td class="text-middle">
-															<span class="label label-warning">Processando Autorização</span>
-														</td>
-													</tr>
-													<tr>
-														<td class="text-middle">
-															<div class="btn-group">
-																<button type="button" class="btn btn-sm btn-default dropdown-toggle" 
-																	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																	Ações <span class="caret"></span>
-																</button>
-																<ul class="dropdown-menu">
-																	<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>
-																	<li><a href="#"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
-																</ul>
-															</div>
-														</td>
-														<td class="text-center text-middle">13443</td>
-														<td class="text-center text-middle">1</td>
-														<td class="text-middle">VENDA PARA CONSUMIDOR FINAL</td>
-														<td class="text-middle">FILIPE MENDONÇA COELHO</td>
-														<td class="text-center text-middle">05/04/1991 09:42</td>
-														<td class="text-center text-middle">05/04/1991 10:30</td>
-														<td class="text-middle">
-															<span class="label label-warning">Lote Processado</span>
+														<td class="text-center text-middle">{{ nota.numero }}</td>
+														<td class="text-center text-middle">{{ nota.serie }}</td>
+														<td class="text-middle">{{ nota.natureza_operacao }}</td>
+														<td class="text-middle">{{ nota.nome_destinatario }}</td>
+														<td class="text-center text-middle">{{ nota.data_emissao | date : 'dd/MM/yyyy' }}</td>
+														<td class="text-center text-middle">{{ nota.data_entrada_saida | date : 'dd/MM/yyyy' }}</td>
+														<td class="text-middle text-center">
+															<span class="label label-success" ng-show="(nota.status == 'autorizado')" 
+																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
+																NF-e Autorizada
+															</span>
+															<span class="label label-warning" ng-show="(nota.status == 'processando_autorizacao')" 
+																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
+																Processando Autorização
+															</span>
+															<span class="label label-danger" ng-show="(nota.status == 'erro_autorizacao')" 
+																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
+																Erro na Autorização
+															</span>
 														</td>
 													</tr>
 												</tbody>
@@ -533,6 +478,9 @@
 
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Easy Modal -->
+    <script src="js/eModal.js"></script>
 
 	<!-- Modernizr -->
 	<script src='js/modernizr.min.js'></script>
