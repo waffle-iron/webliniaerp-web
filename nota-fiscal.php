@@ -217,6 +217,14 @@
 					</p>
 				</div>
 
+				<div class="alert alert-sistema alert-info" ng-if="processando_autorizacao || autorizado">
+					<p>
+						<strong><i class="fa fa-info-circle"></i> Atenção!</strong>
+						<br/>
+						{{ processando_autorizacao && 'Venda já com nota em processamento' || 'Venda com nota já autorizada' }}
+					</p>
+				</div>
+
 				<div class="panel panel-primary">
 					<div class="panel-heading">
 						<h3 class="panel-title">NF-e Nº {{ NF.dados_emissao.num_documento_fiscal }}</h3>
@@ -236,12 +244,23 @@
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="geral">
 								<div class="alert" style="display:none"></div>
-
+								<div class="row" ng-if="!(processando_autorizacao || autorizado)">
+									<div class="col-sm-6">
+										<div class="form-group" id="regimeTributario">
+											<label class="control-label">Operação</label> 
+											<select chosen
+										    option="lista_operacao"
+										    ng-model="NF.dados_emissao.cod_operacao"
+										    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+											</select>
+										</div>
+									</div>
+								</div>
 								<div class="row">
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Local de Destino</label> 
-											<select chosen
+											<select ng-disabled="processando_autorizacao || autorizado" chosen
 											    option="lista_local_destino"
 											    ng-model="NF.dados_emissao.local_destino"
 											    ng-options="item.num_item as item.nme_item for item in lista_local_destino">
@@ -251,7 +270,7 @@
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Finalidade Emissão</label> 
-											<select chosen
+											<select ng-disabled="processando_autorizacao || autorizado" chosen
 											    option="lista_finalidade_emissao"
 											    ng-model="NF.dados_emissao.finalidade_emissao"
 											    ng-options="item.num_item as item.nme_item for item in lista_finalidade_emissao">
@@ -261,7 +280,7 @@
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Consumidor Final</label> 
-											<select chosen
+											<select ng-disabled="processando_autorizacao || autorizado" chosen
 											    option="lista_consumidor_final"
 											    ng-model="NF.dados_emissao.consumidor_final"
 											    ng-options="item.num_item as item.nme_item for item in lista_consumidor_final">
@@ -271,7 +290,7 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Forma Pagamento</label> 
-											<select chosen
+											<select ng-disabled="processando_autorizacao || autorizado" chosen
 											    option="lista_forma_pagamento"
 											    allow-single-deselect="true"
 											    ng-model="NF.dados_emissao.forma_pagamento"
@@ -284,7 +303,7 @@
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Tipo de Documento</label> 
-											<select chosen
+											<select ng-disabled="processando_autorizacao || autorizado" chosen
 											    option="lista_tipo_documento"
 											    allow-single-deselect="true"
 											    ng-model="NF.dados_emissao.tipo_documento"
@@ -292,11 +311,20 @@
 											</select>
 										</div>
 									</div>
-
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label class="control-label">Presença Comprador</label> 
+											<select ng-disabled="processando_autorizacao || autorizado" chosen
+											    option="lista_presenca_comprador"
+											    ng-model="NF.dados_emissao.presenca_comprador"
+											    ng-options="item.num_item as item.nme_item for item in lista_presenca_comprador">
+											</select>
+										</div>
+									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Modalidade de Frete</label> 
-											<select chosen
+											<select ng-disabled="processando_autorizacao || autorizado" chosen
 											    option="lista_modalidade_frete"
 											    ng-model="NF.transportadora.modalidade_frete"
 											    ng-options="mod_frete.num_item as mod_frete.nme_item for mod_frete in lista_modalidade_frete">
@@ -310,8 +338,8 @@
 										<div class="form-group">
 											<label class="control-label">Data de Emissão</label>
 											<div class="input-group">
-												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
-												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+												<input ng-disabled="processando_autorizacao || autorizado" id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
+												<ng-disabled="processando_autorizacao || autorizado"   id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
 											</div>
 										</div>
 									</div>
@@ -320,8 +348,8 @@
 										<div class="form-group">
 											<label class="control-label">Data de Saída</label>
 											<div class="input-group">
-												<input id="inputDtaSaida" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
-												<span id="btnDtaSaida" class="input-group-addon" ><i class="fa fa-calendar"></i></span>
+												<input ng-disabled="processando_autorizacao || autorizado" id="inputDtaSaida" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control">
+												<span ng-disabled="processando_autorizacao || autorizado" id="btnDtaSaida" class="input-group-addon" ><i class="fa fa-calendar"></i></span>
 											</div>
 										</div>
 									</div>
@@ -329,7 +357,7 @@
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Hora de Saída</label>
-											<input type="time" class="form-control input-sm" style="width: 50%;">
+											<input ng-disabled="processando_autorizacao || autorizado" type="time" class="form-control input-sm" style="width: 50%;">
 										</div>
 									</div>
 								</div>
@@ -807,7 +835,7 @@
 						</div>
 					</div>
 					<div class="panel-footer clearfix">
-						<div class="pull-right">
+						<div class="pull-right" ng-if="!(processando_autorizacao || autorizado)">
 							<button type="button" ng-click="calcularNfe($event,id_venda,cod_operacao)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
 							<button type="button"  class="btn btn-sm btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Enviando..." ng-click="sendNfe($event)"><i class="fa fa-send"></i> Transmitir NF-e</button>
 							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i> Emitir DANFE (PDF)</button>

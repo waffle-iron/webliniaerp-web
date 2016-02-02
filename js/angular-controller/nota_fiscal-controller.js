@@ -1,12 +1,15 @@
-app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
+app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs, UserService,ConfigService,NFService){
 
 	var ng = $scope
 		aj = $http;
-
-	ng.baseUrl 		= baseUrl();
-	ng.userLogged 	= UserService.getUserLogado();
+	var params       = getUrlVars();
+	ng.baseUrl 		 = baseUrl();
+	ng.userLogged 	 = UserService.getUserLogado();
 	ng.configuracoes = ConfigService.getConfig(ng.userLogged.id_empreendimento);
-	console.log(ng.configuracoes);
+	
+	if($.isNumeric(params.id_venda))
+		ng.nota  = NFService.getNota(ng.userLogged.id_empreendimento,params.id_venda);
+    
     ng.editing 		= false;
     var nfTO        = {
     	dados_emissao : {
@@ -22,9 +25,11 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		}
 
     } ;
-    ng.NF 			= angular.copy(nfTO) ;
+    ng.NF 			= ng.nota == false ? angular.copy(nfTO) : ng.nota  ;
+    ng.NF.dados_emissao.cod_operacao = ng.configuracoes.id_operacao_padrao_venda ;
+    ng.processando_autorizacao =  (ng.NF.dados_emissao.status  == 'processando_autorizacao');
+    ng.autorizado              =  (ng.NF.dados_emissao.status  == 'autorizado');
     ng.id_transportadora;
-    var params      = getUrlVars();
     ng.disableSendNf = false ;
 
     ng.showBoxNovo = function(onlyShow){
@@ -52,10 +57,6 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		},5000);
 	}
 
-	ng.modalCalcularNfe = function(event,id_venda,cod_operacao) {
-		ng.cod_operacao = cod_operacao ;
-		ng.calcularNfe(event,id_venda,cod_operacao);	
-	}
 	ng.calcularNfe = function(event,id_venda,cod_operacao) {
 		if(event != null){
 			var btn = $(event.target) ;
@@ -133,8 +134,8 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	ng.loadControleNfe = function(ctr,key) {
 		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
 			.success(function(data, status, headers, config) {
-				//ng[key] = [{ num_item : "", nme_item:""}];
-				ng[key] = data ;
+				ng[key] = [{ num_item : null, nme_item:"Selecione"}];
+				ng[key] = ng[key].concat(data) ;
 				setTimeout(function(){
 					//console.log(ng[key]);
 					$("select").trigger("chosen:updated");
@@ -231,13 +232,11 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	}
 
 
-	if( ($.isNumeric(params.id_venda) &&  $.isNumeric(params.cod_operacao)) || ($.isNumeric(params.id_venda))){
-		ng.id_venda = params.id_venda ;
+	if(($.isNumeric(params.id_venda))){
+		ng.NF.dados_emissao.cod_venda = params.id_venda ;
 		if( ($.isNumeric(params.id_venda) &&  $.isNumeric(params.cod_operacao) )){
-			ng.cod_operacao = params.cod_operacao ;
+			ng.NF.dados_emissao.cod_operacao = params.cod_operacao ;
 			ng.calcularNfe(null,params.id_venda,params.cod_operacao);
-		}else{
-			$('#modal-operacao').modal({ backdrop: 'static',keyboard: false});
 		}
 		
 		ng.loadTransportadoras();
