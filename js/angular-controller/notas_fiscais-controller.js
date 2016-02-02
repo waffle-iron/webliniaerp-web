@@ -1,4 +1,4 @@
-app.controller('NotasFiscaisController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
+app.controller('NotasFiscaisController', function($scope, $http, $window, $dialogs, UserService,ConfigService,$timeout){
 
 	var ng = $scope
 		aj = $http;
@@ -21,6 +21,31 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 			.error(function(data, status, headers, config) {
 				ng.notas = null;
 			});
+	}
+
+	ng.atualzarStatus = function(cod_nota_fiscal,index,event){
+		var element = $(event.target);
+		event.stopPropagation();
+		if(!element.is('a'))
+			element = $(event.target).parent();
+		element.button('loading');
+
+		aj.get(baseUrlApi()+"nota_fiscal/"+cod_nota_fiscal+"/atualizar/status")
+			.success(function(data, status, headers, config) {
+				element.html('<i class="fa fa-check-circle-o"></i> Atualizado');
+				ng.notas[index] = data ;
+				$timeout(function(){
+					element.html('<i class="fa fa-refresh"></i> Atualizar Status');
+				}, 2000);	
+			})
+			.error(function(data, status, headers, config) {
+				element.html('<i class="fa fa-times-circle"></i> Erro ao atualizar');
+				nota = data;
+				$timeout(function(){
+					element.html('<i class="fa fa-refresh"></i> Atualizar Status');
+				}, 2000);	
+		});
+
 	}
 
 	ng.showDANFEModal = function(nota){
