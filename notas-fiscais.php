@@ -310,7 +310,10 @@
 																	<li ng-show="(nota.status == 'autorizado')">
 																		<a href="{{ nota.caminho_xml_nota_fiscal }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar DANFE (XML)</a>
 																	</li>
-																	<li role="separator" class="divider" ng-show="(nota.status == 'autorizado')"></li>
+																	<li ng-show="(nota.status == 'processando_autorizacao')">
+																		<a href="" target="_blank"><i class="fa fa-refresh"></i> Atualizar Status</a>
+																	</li>
+																	<li role="separator" class="divider" ng-show="(nota.status == 'autorizado' || nota.status == 'processando_autorizacao')"></li>
 																	<!--<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>-->
 																	<li><a href="nota-fiscal.php?id_venda={{ nota.cod_venda }}"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
 																</ul>
