@@ -10,6 +10,7 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 	ng.paginacao 		= {};
 	
 	ng.loadNotas = function(offset,limit) {
+		ng.notas = [];
 		var query_string = "?cod_empreendimento="+ ng.userLogged.id_empreendimento;
 
 		aj.get(baseUrlApi()+"notas/"+ offset +"/"+ limit + query_string)
@@ -18,7 +19,7 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 				ng.paginacao.notas 	= data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
-				console.log(data);
+				ng.notas = null;
 			});
 	}
 
