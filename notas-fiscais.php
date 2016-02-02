@@ -290,6 +290,12 @@
 													<th class="text-middle text-center">Status</th>
 												</thead>
 												<tbody>
+													<tr ng-show="(!notas)">
+														<td colspan="8" class="text-center text-middle">Nenhuma NF-e encontrada!</td>
+													</tr>
+													<tr ng-show="(notas.length == 0)">
+														<td colspan="8" class="text-center text-middle"><i class="fa fa-refresh fa-spin"></i> Aguarde, carregando...</td>
+													</tr>
 													<tr bs-tooltip ng-repeat="nota in notas">
 														<td class="text-middle">
 															<div class="btn-group">
