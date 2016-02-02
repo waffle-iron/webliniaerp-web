@@ -450,19 +450,6 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 	ng.sucessoSeparacao();
 });
 
-
-
-app.directive('bsTooltip', function ($timeout) {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attr) {
-            $timeout(function () {
-                	  element.find("[data-toggle=tooltip]").tooltip();
-            });
-        }
-    }
-});
-
 app.directive('bsPopover', function () {
         return function (scope, element, attrs) {
             element.find("a[rel=popover]").popover({
