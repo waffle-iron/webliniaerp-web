@@ -836,7 +836,7 @@
 					</div>
 					<div class="panel-footer clearfix">
 						<div class="pull-right" ng-if="!(processando_autorizacao || autorizado)">
-							<button type="button" ng-click="calcularNfe($event,id_venda,cod_operacao)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
+							<button type="button" ng-click="calcularNfe($event,NF.dados_emissao.cod_venda,NF.dados_emissao.cod_operacao)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
 							<button type="button"  class="btn btn-sm btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Enviando..." ng-click="sendNfe($event)"><i class="fa fa-send"></i> Transmitir NF-e</button>
 							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i> Emitir DANFE (PDF)</button>
 							<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-times-circle"></i> Cancelar NF-e</button>
