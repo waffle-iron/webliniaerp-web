@@ -35,9 +35,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
     ng.depositos = [] ;
     ng.empreendimentosAssociados = [{ id_empreendimento : ng.userLogged.id_empreendimento, nome_empreendimento : ng.userLogged.nome_empreendimento }];
 
-    ng.chosen_forma_aquisicao     = [{cod_controle_item_nfe:null,dsc_especializacao_ncm:'Selecione'}] ;
+    ng.chosen_forma_aquisicao     = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
     ng.chosen_origem_mercadoria   = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
-    ng.chosen_tipo_tributacao_ipi = [{cod_controle_item_nfe:'',nme_item:'Selecione'}] ;
+    ng.chosen_tipo_tributacao_ipi = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
     ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:null,dsc_especializacao_ncm:'Selecione'}] ;
 
     ng.showBoxNovo = function(onlyShow){

@@ -26,7 +26,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 
     } ;
     ng.NF 			= ng.nota == false ? angular.copy(nfTO) : ng.nota  ;
-    ng.NF.dados_emissao.cod_operacao = ng.configuracoes.id_operacao_padrao_venda ;
+    ng.NF.dados_emissao.cod_operacao = null ;
     ng.processando_autorizacao =  (ng.NF.dados_emissao.status  == 'processando_autorizacao');
     ng.autorizado              =  (ng.NF.dados_emissao.status  == 'autorizado');
     ng.id_transportadora;
@@ -57,7 +57,18 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		},5000);
 	}
 
+	ng.nfeCalculada = false ;
 	ng.calcularNfe = function(event,id_venda,cod_operacao) {
+		var formControl = $('#cod_operacao')
+		formControl.removeClass("has-error");
+		formControl.tooltip('destroy');
+		if(empty(cod_operacao)){
+			formControl.addClass("has-error");
+			formControl.attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", 'Selecione a operação').attr("data-original-title", 'Selecione a operação');
+			formControl.tooltip('show');
+			$('html,body').animate({scrollTop: 0},'slow');
+			return ;
+		}
 		if(event != null){
 			var btn = $(event.target) ;
 			if(!(btn.is(':button')))
@@ -77,9 +88,14 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		copy_dados.dados_emissao.consumidor_final = ng.NF.dados_emissao.consumidor_final;
 		copy_dados.dados_emissao.forma_pagamento = ng.NF.dados_emissao.forma_pagamento;
 		copy_dados.dados_emissao.presenca_comprador = ng.NF.dados_emissao.presenca_comprador;
+		copy_dados.dados_emissao.cod_nota_fiscal = ng.NF.dados_emissao.cod_nota_fiscal;
+		copy_dados.dados_emissao.cod_venda = ng.NF.dados_emissao.cod_venda;
+		copy_dados.dados_emissao.cod_operacao = ng.NF.dados_emissao.cod_operacao;
+
 		copy_dados.transportadora.modalidade_frete = ng.NF.transportadora.modalidade_frete;
 		aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers, config) {
+				ng.nfeCalculada = true;
 				ng.disableSendNf = false ;
 				data.dados_emissao.tipo_documento = copy_dados.dados_emissao.tipo_documento ;
 				data.dados_emissao.local_destino = copy_dados.dados_emissao.local_destino ;
@@ -87,6 +103,9 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				data.dados_emissao.consumidor_final = copy_dados.dados_emissao.consumidor_final ;
 				data.dados_emissao.forma_pagamento = copy_dados.dados_emissao.forma_pagamento ;
 				data.dados_emissao.presenca_comprador = copy_dados.dados_emissao.presenca_comprador ;
+				data.dados_emissao.cod_nota_fiscal = copy_dados.dados_emissao.cod_nota_fiscal ;
+				data.dados_emissao.cod_venda = copy_dados.dados_emissao.cod_venda ;
+				data.dados_emissao.cod_operacao = copy_dados.dados_emissao.cod_operacao ;
 				if(data.transportadora == undefined) data.transportadora = {id:null,modalidade_frete:null} ;
 				data.transportadora.modalidade_frete = copy_dados.transportadora.modalidade_frete ;
 
@@ -100,6 +119,9 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				}
 			})
 			.error(function(data, status, headers, config) {
+				if(event != null)
+					btn.button('reset');
+				ng.nfeCalculada = false;
 				ng.disableSendNf = true ;
 				$('#modal-calculando').modal('hide');
 				if(status == 406){
@@ -167,6 +189,16 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	}
 
 	ng.sendNfe = function(){
+		var btnCalcula = $("#calcularNfe") ;
+		btnCalcula.tooltip('destroy');
+		if(!ng.nfeCalculada){
+			btnCalcula.attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", 'Calcule a NF-e').attr("data-original-title", '');
+			btnCalcula.tooltip('show');
+			setTimeout(function(){
+				btnCalcula.tooltip('destroy');
+			},3000);
+			return ;
+		}
 		var btn = $(event.target) ;
 		if(!(btn.is(':button')))
 			btn = $(btn.parent('button'));
@@ -198,7 +230,6 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
 				if(status == 202){
-					$dialogs.notify('Sucesso','<strong>Nota transmitida com suceso.</strong>');
 					$dialogs.notify('Sucesso','<strong>Nota transmitida com suceso.</strong>'+
 					'<br><br><pre style="overflow:auto;height: 300px;" >'+data.json+'</pre>');
 				}
@@ -218,7 +249,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	}
 
 	ng.loadOperacaoCombo = function() {
-		ng.lista_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
+		ng.lista_operacao  = [{cod_operacao:null,dsc_operacao:'Selecione'}] ;
 		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
 				ng.lista_operacao = ng.lista_operacao.concat(data.operacao);
@@ -235,7 +266,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 	if(($.isNumeric(params.id_venda))){
 		ng.NF.dados_emissao.cod_venda = params.id_venda ;
 		if( ($.isNumeric(params.id_venda) &&  $.isNumeric(params.cod_operacao) )){
-			ng.NF.dados_emissao.cod_operacao = params.cod_operacao ;
+			ng.NF.dados_emissao.cod_operacao = Number(params.cod_operacao) ;
 			ng.calcularNfe(null,params.id_venda,params.cod_operacao);
 		}
 		

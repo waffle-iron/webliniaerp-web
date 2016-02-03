@@ -731,7 +731,7 @@
 											<select chosen
 											    option="lista_serie_documento_fiscal"
 											    ng-model="configuracoes.id_serie_padrao_nfce"
-											    ng-options="serie.id as serie.serie_documento_fiscal for serie in lista_serie_documento_fiscal">
+											    ng-options="serie.id as (serie.serie_documento_fiscal+' - '+serie.dsc_modelo_documento_fiscal) for serie in lista_serie_documento_fiscal">
 											</select>
 										</div>
 									</div>
@@ -742,7 +742,7 @@
 											<select chosen
 											    option="lista_serie_documento_fiscal"
 											    ng-model="configuracoes.id_serie_padrao_nfe"
-											    ng-options="serie.id as serie.serie_documento_fiscal for serie in lista_serie_documento_fiscal">
+											    ng-options="serie.id as (serie.serie_documento_fiscal+' - '+serie.dsc_modelo_documento_fiscal) for serie in lista_serie_documento_fiscal">
 											</select>
 										</div>
 									</div>
@@ -916,8 +916,8 @@
     </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
-    <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/empreendimento_config-controller.js"></script>
+    <script src="js/angular-services/user-service.js?version=<?php echo date("dmY-His", filemtime("js/angular-services/user-service.js")) ?>"></script>
+	<script src="js/angular-controller/empreendimento_config-controller.js?version=<?php echo date("dmY-His", filemtime("js/angular-controller/empreendimento_config-controller.js")) ?>"></script>
 	<script type="text/javascript">
 		//$(".chzn-select").chosen();
 		$('.foto-produto').change(function()	{

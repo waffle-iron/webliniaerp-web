@@ -304,17 +304,34 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		$.each(item,function(i,v){
 			if(empty(v) && (i == 'serie_documento_fiscal' ||  i == 'num_modelo_documento_fiscal' ||  i == 'num_ultimo_documento_fiscal')){
 				$("#produto-cliente-nme_cliente").addClass("has-error");
-				var formControl = $("#"+i);
-					formControl.addClass("has-error")
-					.attr("data-toggle", "tooltip")
-					.attr("data-placement", "bottom")
-					.attr("title", "Campo  obrigatório")
-					.attr("data-original-title", "Campo  obrigatório");
+					var formControl = $("#"+i);
+						formControl.addClass("has-error")
+						.attr("data-toggle", "tooltip")
+						.attr("data-placement", "bottom")
+						.attr("title", "Campo  obrigatório")
+						.attr("data-original-title", "Campo  obrigatório");
 				if(error == 0) formControl.tooltip('show');
 				else  formControl.tooltip() ;
 				error ++ ;
+			}else if(i == 'serie_documento_fiscal' && !(ng.edit_serie_documento_fiscal)){
+				$.each(ng.lista_serie_documento_fiscal,function(y,z){
+					if(v == z.serie_documento_fiscal){
+						var formControl = $("#"+i);
+						formControl.addClass("has-error")
+						.attr("data-toggle", "tooltip")
+						.attr("data-placement", "bottom")
+						.attr("title", "Número de série ja existe")
+						.attr("data-original-title", "Número de série ja existe");
+						if(error == 0) formControl.tooltip('show');
+						else  formControl.tooltip() ;
+						error ++ ;
+						return ;
+					}
+				});
+
 			}
 		});
+
 
 		if(error > 0){
 			btn.button('reset');
@@ -345,6 +362,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		ng.edit_serie_documento_fiscal = true ;
 		ng.index_edit_serie_documento_fiscal = index ;
 		ng.serie_documento_fiscal = angular.copy(item);
+		console.log(ng.serie_documento_fiscal);
 	}
 
 	var deleteSerieFiscal = [] ;

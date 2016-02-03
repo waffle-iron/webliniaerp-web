@@ -2385,6 +2385,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				
 		});
 	}
+
+	ng.set = function(key,vlr){
+		ng[key] = vlr ;
+	}
 	
 	ng.existsCookie();
 	ng.loadConfig();
