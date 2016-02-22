@@ -16,6 +16,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
     ng.serie_documento_fiscal = angular.copy(serieDocumentoFiscalTO) ;
     ng.lista_serie_documento_fiscal = []; 
     ng.edit_serie_documento_fiscal = false ;
+    ng.notEmails = [] ;
 
 	 ng.loadPlanoContas = function() {
 	 	ng.currentNode 	= null;
@@ -414,6 +415,34 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			})
 			.error(function(data, status, headers, config) {
 				alert('Erro Fatal')
+				btn.button('reset');
+			});
+		
+	}
+ 
+	ng.salvarConfigNotificacoes = function(event){
+		var btn = $(event.target);
+		var chaves = [];
+		if(!empty(ng.notEmails) || ng.notEmails.length > 0){
+			var emails = [] ;
+			$.each(ng.notEmails,function(i,v){
+				emails.push(v.text);
+			});
+			var x = JSON.stringify(emails);
+			 item = {nome:'emails_notificacoes',valor:x,id_empreendimento:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}else{
+			return ;
+		}
+
+		btn.button('loading');
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local} )
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-not');
+				ng.loadConfig();
+			})
+			.error(function(data, status, headers, config) {
 				btn.button('reset');
 			});
 		

@@ -803,7 +803,7 @@
 											<td>{{ item.nome_fabricante }}</td>
 											<td class="text-center">{{ item.peso }}</td> 
 											<td class="text-center">{{ item.sabor }}</td>
-											<td class="text-center"><a href="#"  ng-click="qtdDepostito($event)">{{ configuracao.id_produto_debito_anterior_cliente == item.id_produto && ' ' || item.qtd_item }}</a></td>
+											<td class="text-center"><a href="#"  ng-click="qtdDepostito(item,$event)">{{ configuracao.id_produto_debito_anterior_cliente == item.id_produto && ' ' || item.qtd_item }}</a></td>
 											<td class="text-right">R$ {{ item.vlr_venda_atacado | numberFormat: 2 : ',' : '.' }}</td>
 											<td class="text-right">R$ {{ item.vlr_venda_intermediario | numberFormat: 2 : ',' : '.' }}</td>
 											<td class="text-right">R$ {{ item.vlr_venda_varejo | numberFormat: 2 : ',' : '.' }}</td>

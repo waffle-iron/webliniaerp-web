@@ -14,7 +14,7 @@
     <meta name="author" content="">
 
     <!-- Bootstrap core CSS -->
-      <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
+     <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
 
 	<!-- Font Awesome -->
 	<link href="css/font-awesome-4.1.0.min.css" rel="stylesheet">
@@ -25,6 +25,10 @@
 	<!-- Chosen -->
 	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
 
+	<!-- Tags Input -->
+	<link href="css/ng-tags-input.min.css" rel="stylesheet"/>
+	<link href="css/ng-tags-input.bootstrap.min.css" rel="stylesheet"/>
+	
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -212,6 +216,7 @@
 							<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
 							<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
 							<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> Fiscal</a></li>
+							<li><a href="#notificacoes" data-toggle="tab"><i class="fa fa-bell"></i> Notificações</a></li>
 							<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
 						</ul>
 					</div>
@@ -775,6 +780,32 @@
 									</div>
 								</div>
 							</div>
+							<div class="tab-pane fade" id="notificacoes">
+								<form  role="form">
+								<div class="alert alert-config-not" style="display:none"></div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<label class="control-label">Emails para notificações</label>
+											<tags-input
+											 ng-model="notEmails"
+											 allowed-tags-pattern="^[a-zA-Z0-9][a-zA-Z0-9\._-]+@([a-zA-Z0-9\._-]+\.)[a-zA-Z-0-9]{2}"
+											  placeholder="Add email" >
+											</tags-input>
+										</div>
+									</div>
+								</div>
+								</form>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigNotificacoes($event)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div><!-- /panel -->
@@ -928,8 +959,10 @@
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
     <script src="js/angular-chosen.js"></script>
+    <script src="js/ng-tags-input.min.js"></script>
+    
     <script type="text/javascript">
-    	var addParamModule = ['angular.chosen'] ;
+    	var addParamModule = ['angular.chosen','ngTagsInput'] ;
     </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>

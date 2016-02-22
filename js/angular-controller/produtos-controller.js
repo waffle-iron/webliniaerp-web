@@ -862,8 +862,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	}
 
-	ng.qtdDepostito = function(event){
-		console.log(event.target);
+	ng.qtdDepostito = function(produto,event){
+		if(Number(produto.qtd_item) < 1)
+			return ;
 		 $(event.target).popover({
                     title: 'Depositos',
                     placement: 'top',
@@ -873,10 +874,29 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
                     trigger  :'focus',
                 }).popover('show');
 
-		 aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+query_string)
+		 aj.get(baseUrlApi()+"estoque/?prd->id="+produto.id_produto+"&emp->id_empreendimento="+ng.userLogged.id_empreendimento)
 		.success(function(data, status, headers, config) {
-			ng.depositos = data.depositos ;	
-			ng.paginacao.depositos = data.paginacao ;
+			var depositos = {} ;
+			$.each(data.produtos,function(i,v){
+				if(depositos[v.nome_deposito] == undefined)
+					depositos[v.nome_deposito] = {nome_deposito:v.nome_deposito,qtd:0};
+				depositos[v.nome_deposito].qtd += Number(v.qtd_item); 
+			});
+			
+			var tbl = '<table class="table table-bordered table-condensed table-striped table-hover">' ;
+			$.each(depositos,function(i,v){
+				tbl += '<tr>'+'<td>'+i+'</td>'+'<td class"text-center">'+v.qtd+'</td>'+'</tr>';
+			});
+			tbl += '</table>';
+			 $(event.target).popover('destroy').popover({
+                    title: 'Depositos',
+                    placement: 'top',
+                    content: tbl,
+                    html: true,
+                    container: 'body',
+                    trigger  :'focus',
+                }).popover('show');
+					
 		})
 		.error(function(data, status, headers, config) {
 		

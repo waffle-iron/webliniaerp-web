@@ -44,6 +44,7 @@
 	session_start();
 
 	$url = URL_API.'logar';
+
 	if($_SERVER['REQUEST_METHOD'] == "POST"){
 		$senha = isset($_POST['senha']) ? $_POST['senha'] : "" ;
 		$login = isset($_POST['login']) ? $_POST['login'] : "" ;
