@@ -20,6 +20,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Chosen -->
+	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -222,6 +225,36 @@
 									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-sm-2">
+									<div class="form-group" id="flg_imprimir_sat_cfe">
+										<label for="" class="control-label">Imprimir cupom fiscal?</label>
+										<div class="form-group">
+											<label class="label-radio inline">
+												<input ng-model="conta.flg_imprimir_sat_cfe" value="0" type="radio" class="inline-radio">
+												<span class="custom-radio"></span>
+												<span>Não</span>
+											</label>
+
+											<label class="label-radio inline">
+												<input ng-model="conta.flg_imprimir_sat_cfe" value="1" type="radio" class="inline-radio">
+												<span class="custom-radio"></span>
+												<span>Sim</span>
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-5" ng-show="conta.flg_imprimir_sat_cfe == 1" >
+									<div class="form-group" id="cod_operacao_padrao_sat_cfe">
+										<label class="control-label">Operação</label> 
+										<select chosen
+									    option="lista_operacao"
+									    ng-model="conta.cod_operacao_padrao_sat_cfe"
+									    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+										</select>
+									</div>
+								</div>
+							</div>
 						</form>
 					</div>
 
@@ -334,6 +367,9 @@
 	<!-- Endless -->
 	<script src="js/endless/endless.js"></script>
 
+	<!-- Chosen -->
+	<script src='js/chosen.jquery.min.js'></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -346,6 +382,10 @@
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
+    <script src="js/angular-chosen.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['angular.chosen'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>

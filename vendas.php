@@ -314,14 +314,14 @@
 												</button>
 
 
-												<button type="button" ng-click="loadEditVenda(item)" ng-disabled="item.venda_confirmada == 1" title="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
+												<!--<button type="button" ng-click="loadEditVenda(item)" ng-disabled="item.venda_confirmada == 1" title="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
 													<i class="fa fa-edit"></i>
-												</button>
+												</button>-->
 
 												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1"  title="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-danger">
 													<i class="fa fa-trash-o"></i>
 												</button>
-												<a ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
+												<a ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar/Editar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
 													<i class="fa fa-desktop"></i>
 												</a>
 												<a  href="nota-fiscal.php?id_venda={{ item.id }}" title="Emitir NF-e" data-toggle="tooltip" class="btn btn-xs btn-info">

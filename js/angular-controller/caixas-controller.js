@@ -126,7 +126,7 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 					$.each(errors, function(i, item) {
 						$("#"+i).addClass("has-error");
 
-						var formControl = $($("#"+i).find(".form-control")[0])
+						var formControl = $("#"+i)
 							.attr("data-toggle", "tooltip")
 							.attr("data-placement", "bottom")
 							.attr("title", item)
@@ -191,6 +191,20 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 			});
 	}
 
+	ng.loadOperacaoCombo = function() {
+		ng.lista_operacao  = [{cod_operacao:null,dsc_operacao:'Selecione'}] ;
+		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+			.success(function(data, status, headers, config) {
+				ng.lista_operacao = ng.lista_operacao.concat(data.operacao);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+					
+			});
+	}
+
 	ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
 		$(alertClass).fadeIn().addClass(classe).html(msg);
@@ -205,6 +219,7 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 	}
 
 	ng.loadContas(0,30);
+	ng.loadOperacaoCombo();
 	ng.loadBancos();
 	ng.loadtipos();
 	ng.loadDepositos();

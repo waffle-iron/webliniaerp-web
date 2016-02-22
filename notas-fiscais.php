@@ -344,6 +344,7 @@
 											</table>
 										</div>
 									</div>
+
 								</div>
 							</div>
 							<div class="tab-pane fade in" id="canceladas">
@@ -451,6 +452,15 @@
 							<div class="tab-pane fade in" id="inutilizadas">
 								
 							</div>
+						</div>
+					</div>
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.notas.length > 1">
+								<li ng-repeat="item in paginacao.notas" ng-class="{'active': item.current}">
+									<a href="" h ng-click="loadNotas(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>

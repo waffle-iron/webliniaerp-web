@@ -21,7 +21,7 @@ app.service('UserService', function($http) {
 		 		console.log(error);
 		 	}
 		 });
-
+		sessionStorage.user = angular.toJson(user);
 		return user;
 	}
 

@@ -1,5 +1,4 @@
-app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs, UserService,ConfigService,NFService){
-
+app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs,$interval, UserService,ConfigService,NFService){
 	var ng = $scope
 		aj = $http;
 	var params       = getUrlVars();
@@ -25,10 +24,17 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		}
 
     } ;
-    ng.NF 			= ng.nota == false ? angular.copy(nfTO) : ng.nota  ;
+    ng.NF = ng.nota == false ? angular.copy(nfTO) : ng.nota  ;
     ng.NF.dados_emissao.cod_operacao = null ;
     ng.processando_autorizacao =  (ng.NF.dados_emissao.status  == 'processando_autorizacao');
     ng.autorizado              =  (ng.NF.dados_emissao.status  == 'autorizado');
+    if(!empty(ng.NF.dados_emissao.data_emissao)) $('#inputDtaEmissao').val(moment(ng.NF.dados_emissao.data_emissao).format('DD/MM/YYYY')) ;
+    if(!empty(ng.NF.dados_emissao.data_entrada_saida)){ 
+    	$('#inputDtaSaida').val(moment(ng.NF.dados_emissao.data_entrada_saida).format('DD/MM/YYYY')) ;
+    	$('#InputhrsSaida').val(moment(ng.NF.dados_emissao.data_entrada_saida).format('HH:mm')) ;
+    }
+    ng.NF.id_empreendimento = ng.userLogged.id_empreendimento ;
+
     ng.id_transportadora;
     ng.disableSendNf = false ;
 
@@ -204,8 +210,17 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			btn = $(btn.parent('button'));
 		btn.button('loading');
 
-		var data_emissao 		= moment($('#inputDtaEmissao').val(),'DD/MM/YYYY H:m:s');
-		var data_entrada_saida  = moment($('#inputDtaSaida').val() ,'DD/MM/YYYY H:m:s');
+		
+		var hrs_entrada_saida  	= $('#InputhrsSaida').val() ;
+		var data_entrada_saida  = $('#inputDtaSaida').val() ;
+		data_entrada_saida  += empty(hrs_entrada_saida) ? "" : " "+hrs_entrada_saida+":00" ;
+		data_entrada_saida  = moment(data_entrada_saida ,'DD/MM/YYYY HH:mm:ss');
+
+		var data_emissao    = moment($('#inputDtaEmissao').val(),'DD/MM/YYYY HH:mm:ss');
+
+		//console.log(data_emissao.format());
+		//btn.button('reset');
+		//return ;
 		
 		var msg = "" ;
 		var error = 0 ;	
@@ -224,14 +239,18 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			return ;
 		}
 
-		ng.NF.dados_emissao.data_emissao  		= data_emissao.format();
-		ng.NF.dados_emissao.data_entrada_saida  = data_entrada_saida.format();
+		ng.NF.dados_emissao.data_emissao  		= data_emissao.format("YYYY/MM/DD HH:mm:ss");
+		ng.NF.dados_emissao.data_entrada_saida  = data_entrada_saida.format("YYYY/MM/DD HH:mm:ss");
+		ng.NF.id_empreendimento = ng.userLogged.id_empreendimento ;
 		aj.post(baseUrlApi()+"nfe/send",ng.NF)
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
 				if(status == 202){
-					$dialogs.notify('Sucesso','<strong>Nota transmitida com suceso.</strong>'+
-					'<br><br><pre style="overflow:auto;height: 300px;" >'+data.json+'</pre>');
+					ng.processando_autorizacao = true ;
+					/*$dialogs.notify('Sucesso','<strong>Nota transmitida com suceso.</strong>'+
+					'<br><br><pre style="overflow:auto;height: 300px;" >'+data.json+'</pre>');*/
+					$dialogs.notify('Sucesso','<strong>Nota transmitida com sucesso.</strong>');
+
 				}
 			})
 			.error(function(data, status, headers, config) {
@@ -262,6 +281,33 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			});
 	}
 
+	ng.setDadosEmissao = function(){
+		var cod_operacao = ng.NF.dados_emissao.cod_operacao ;
+		$.each(ng.lista_operacao,function(i,v){
+			if(Number(cod_operacao) == Number(v.cod_operacao)){
+				ng.NF.dados_emissao.local_destino = v.num_local_destino;
+				ng.NF.dados_emissao.finalidade_emissao = v.num_finalidade_emissao;
+				ng.NF.dados_emissao.consumidor_final = v.num_consumidor_final;
+				ng.NF.dados_emissao.tipo_documento = v.num_tipo_documento;
+				ng.NF.dados_emissao.presenca_comprador = v.num_presenca_comprador;
+			}
+		});
+	}
+
+	ng.showDANFEModal = function(nota){
+		eModal.setEModalOptions({
+			loadingHtml: '<div><div style="text-align: center;margin-top:5px;margin-bottom:3px"><span class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></span></div><div style="text-align: center;"><span class="h4">Carregando, aguarde...</span></div></div>'
+		});
+        eModal
+            .iframe({
+            	message: nota.caminho_danfe, 
+            	title: 'DANFE NF-e Nº '+ nota.num_documento_fiscal, 
+            	size: 'lg'
+            })
+            .then(function(){
+            	t8.success('iFrame loaded!!!!', title)
+        	});
+	}
 
 	if(($.isNumeric(params.id_venda))){
 		ng.NF.dados_emissao.cod_venda = params.id_venda ;
