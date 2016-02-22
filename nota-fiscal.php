@@ -248,7 +248,7 @@
 									<div class="col-sm-6">
 										<div class="form-group" id="cod_operacao">
 											<label class="control-label">Operação</label> 
-											<select chosen
+											<select chosen ng-change="setDadosEmissao()"
 										    option="lista_operacao"
 										    ng-model="NF.dados_emissao.cod_operacao"
 										    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
@@ -357,7 +357,7 @@
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Hora de Saída</label>
-											<input ng-disabled="processando_autorizacao || autorizado" type="time" class="form-control input-sm" style="width: 50%;">
+											<input ng-disabled="processando_autorizacao || autorizado" id="InputhrsSaida" type="time" class="form-control input-sm" style="width: 50%;">
 										</div>
 									</div>
 								</div>
@@ -389,7 +389,7 @@
 									<div class="col-sm-12">
 										<div class="form-group">
 											<label class="control-label">Observações</label>
-											<textarea class="form-control" rows="5"></textarea>
+											<textarea class="form-control" ng-disabled="processando_autorizacao || autorizado" rows="5"></textarea>
 										</div>
 									</div>
 								</div>
@@ -835,11 +835,12 @@
 						</div>
 					</div>
 					<div class="panel-footer clearfix">
-						<div class="pull-right" ng-if="!(processando_autorizacao || autorizado)">
-							<button type="button" id="calcularNfe"  ng-click="calcularNfe($event,NF.dados_emissao.cod_venda,NF.dados_emissao.cod_operacao)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
-							<button type="button"  class="btn btn-sm btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Enviando..." ng-click="sendNfe($event)"><i class="fa fa-send"></i> Transmitir NF-e</button>
-							<button type="button"  class="btn btn-sm btn-primary"><i class="fa fa-file-pdf-o"></i> Emitir DANFE (PDF)</button>
-							<button type="button"  class="btn btn-sm btn-danger"><i class="fa fa-times-circle"></i> Cancelar NF-e</button>
+						<div class="pull-right">
+							<button type="button" id="calcularNfe" ng-if="!(processando_autorizacao || autorizado)" ng-click="calcularNfe($event,NF.dados_emissao.cod_venda,NF.dados_emissao.cod_operacao)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Atualizando Informações e Recalculando Impostos" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i> Atualizar Informações e Recalcular Impostos</button>
+							<button type="button"  class="btn btn-sm btn-success" ng-if="!(processando_autorizacao || autorizado)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, Enviando..." ng-click="sendNfe($event)"><i class="fa fa-send"></i> Transmitir NF-e</button>
+							<button type="button"  class="btn btn-sm btn-primary" ng-click="showDANFEModal(NF.dados_emissao)" ng-if="autorizado"><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (PDF)</button>
+							<a class="btn btn-sm btn-primary" href="{{ NF.dados_emissao.caminho_xml_nota_fiscal }}" target="_blank" ng-if="autorizado"><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (XML)</a>
+							<button type="button"  class="btn btn-sm btn-danger"  ng-if="false"><i class="fa fa-times-circle"></i> Cancelar NF-e</button>
 						</div>
 					</div>
 				</div>
@@ -895,6 +896,9 @@
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- Easy Modal -->
+    <script src="js/eModal.js"></script>
+
 	<!-- Modernizr -->
 	<script src='js/modernizr.min.js'></script>
 
@@ -946,7 +950,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/nota_fiscal-controller.js"></script>
+	<script src="js/angular-controller/nota_fiscal-controller.js?version=<?php echo date("dmY-His", filemtime("js/angular-controller/nota_fiscal-controller.js")) ?>"></script>
 	<script type="text/javascript"></script>>
 	<?php include("google_analytics.php"); ?>
   </body>

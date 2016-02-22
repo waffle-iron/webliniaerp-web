@@ -74,9 +74,9 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 				}
 			});
 	}
-	ng.chosen_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
+	ng.chosen_operacao  = [{cod_operacao:null,dsc_operacao:'Selecione'}] ;
 	ng.loadOperacaoCombo = function(id_exceto) {
-		ng.chosen_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
+		ng.chosen_operacao  = [{cod_operacao:null,dsc_operacao:'Selecione'}] ;
 		var queryString = id_exceto == null ? "" : "&cod_operacao[exp]=!="+id_exceto;
 		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0"+queryString)
 			.success(function(data, status, headers, config) {
@@ -167,6 +167,7 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 	ng.loadControleNfe = function(ctr,key) {
 		aj.get(baseUrlApi()+"nfe/controles/null/"+ctr)
 			.success(function(data, status, headers, config) {
+				ng[key] = [{num_item:null,nme_item:'Selecione',dsc_completa:'Selecione'}];
 				ng[key] = ng[key].concat(data) ;
 				setTimeout(function(){
 					$("select").trigger("chosen:updated");
@@ -176,8 +177,14 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 				
 		});
 	}
-	ng.lista_cfop  = [{cod_controle_item_nfe:null}] ;
+	//ng.lista_cfop  = [{cod_controle_item_nfe:null}] ;
     ng.loadControleNfe('cfop','lista_cfop');
+    ng.loadControleNfe('tipo_documento','lista_tipo_documento');
+	ng.loadControleNfe('presenca_comprador','lista_presenca_comprador');
+	ng.loadControleNfe('local_destino','lista_local_destino');
+	ng.loadControleNfe('finalidade_emissao','lista_finalidade_emissao');
+	ng.loadControleNfe('consumidor_final','lista_consumidor_final');
+
 
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');

@@ -1,7 +1,8 @@
-app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService) {
+app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService) {
 	var ng = $scope,
 		aj = $http;
 	ng.userLogged 	 		= UserService.getUserLogado();
+	ng.config  		        = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.busca 		 		= {codigo: "", ok: false,estoqueDep:"",cliente_outo_complete:"",vendedor:''};
 	ng.msg 		     		= "";
 	ng.itensCarrinho 		= [];
@@ -18,9 +19,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.receber_pagamento    = false;
 	ng.pagamento_fulso      = false;
 	ng.cdb_busca            = { status:false, codigo:null } ;
-	ng.show_vlr_real        = false ;
+	ng.show_vlr_real          = false ;
 	ng.show_aditional_columns = false ;
-	ng.orcamento            = false ;
+	ng.orcamento              = false ;
 	ng.new_cliente          = {tipo_cadastro: 'pf', id_perfil: '6'} ;
 	ng.vendedor             = {};
 	ng.modal_senha_vendedor = {id_empreendimento:ng.userLogged.id_empreendimento, id_vendedor:null,nome_vendedor:null,senha_vendedor:null,show:false}
@@ -91,7 +92,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				.success(function(data, status, headers, config) {
 					var orcamento = data.orcamento;
 					ng.id_orcamento = orcamento.id ;
-					ng.cliente = data.cliente;
+					if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa))
+						ng.cliente = data.cliente;
 					$.each(orcamento.itens,function(i,v){
 						v.valor_desconto_real = Number(v.valor_desconto)/100;
 						v.flg_desconto        = Number(v.desconto_aplicado);
@@ -246,7 +248,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}
 		produto.valor_desconto = empty(produto.valor_desconto) ?  0 : produto.valor_desconto ; 
 
-		produto.qtd_total = isNaN(Number(produto.qtd_total)) ? 1 : Number(produto.qtd_total) ;
+		produto.qtd_total = !$.isNumeric(produto.qtd_total) || Number(produto.qtd_total) < 1 ? 1 : Number(produto.qtd_total) ;
 		produto.sub_total = produto.qtd_total * produto.vlr_unitario;
 
 		ng.vezes_valor			    = produto.qtd_total+' x R$ '+numberFormat(produto.vlr_unitario,2,',','.');
@@ -285,6 +287,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.salvarOrcamento = function(){
 		ng.orcamento = true ;
+		if(ng.finalizarOrcamento) ng.id_venda_ignore = params.id_orcamento ;
+		ng.finalizarOrcamento = false
 		ng.salvar() ;
 	}
 
@@ -395,12 +399,14 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		var produtos = angular.copy(ng.carrinho);
 		var venda    = {
+							id        			: empty(params.id_orcamento) ?  null : params.id_orcamento ,
 							id_usuario			: ng.vendedor.id_vendedor,
 							id_cliente 			: ng.cliente.id,
 							venda_confirmada 	: ng.orcamento ? 0 : 1,
 							id_empreendimento	: ng.userLogged.id_empreendimento,
 							id_deposito 		: ng.caixa.id_deposito,
-							id_status_venda 	: ng.orcamento ? 1 : 4
+							id_status_venda 	: ng.orcamento ? 1 : 4,
+							dta_venda           : (empty(params.id_orcamento) ? null : moment().format('YYYY-MM-DD HH:mm:ss') )
 						};
 
 		venda.id_cliente = (venda.id_cliente == "" || venda.id_cliente == undefined) ? ng.caixa.id_cliente_movimentacao_caixa : venda.id_cliente;
@@ -449,6 +455,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.produtos_enviar 		  = produtos_enviar ;
 		ng.pagamentos_enviar      = pagamentos;
 
+		console.log(produtos_enviar);
+//		btn.button('reset');
+//		return ;
+
+
 		if(ng.pagamento_fulso){
 			ng.id_venda = '';
 			$('#text_status_venda').text('Salvando Movimentações');
@@ -466,8 +477,15 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.salvar = function(){
-		$('#btn-fazer-orcamento').button('loading');
-		$('#btn-fazer-compra').button('loading');
+		if(!$.isNumeric(ng.cliente.id) && ng.modo_venda == 'est' && !ng.orcamento ){
+				$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque e necessário selecionar um cliente</strong>');
+				return
+		  }
+		if(ng.orcamento){
+			$('#btn-fazer-orcamento').button('loading');
+		}else{
+			$('#btn-fazer-compra').button('loading');
+		}
 		aj.get(baseUrlApi()+"caixa/aberto/"+ng.userLogged.id_empreendimento+"/"+ng.pth_local+"/"+ng.userLogged.id)
 			.success(function(data, status, headers, config) {
 				if(data.open_today){
@@ -495,17 +513,19 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		init = init == null ? 0 : init ;
 		var item_enviar = produtos_enviar[init];
 
+
 		aj.post(baseUrlApi()+"venda/verificaEstoque",{
 														id_empreendimento:ng.userLogged.id_empreendimento,
 											        	id_deposito:ng.caixa.id_deposito,
 											        	produtos:item_enviar,
-											        	venda_confirmada : ng.finalizarOrcamento,
-											        	id_vendedor      : Number(ng.vendedor.id_vendedor)
+											        	venda_confirmada : ng.venda_confirmada,
+											        	id_vendedor      : Number(ng.vendedor.id_vendedor),
+											        	id_venda_ignore  : (empty(ng.id_venda_ignore) ? null : ng.id_venda_ignore )
 	        										 }
 	        )
 			.success(function(data, status, headers, config) {
 				if (init+1 >= cont_itens){
-					console.log(ng.out_produtos);
+					//console.log(ng.out_produtos);
 					if(ng.out_produtos.length > 0 || ng.out_descontos.length > 0){
 						ng.modalProgressoVenda('hide');
 						if(ng.out_produtos.length > 0)
@@ -527,7 +547,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						ng.receber_pagamento = true ;
 					}else if(acao == 'efetivar_orcamento'){
 						$('#text_status_venda').text('Salvando Venda');
-						ng.efetivarOrcamento(ng.id_orcamento,ng.produtos_enviar,0);
+						ng.gravarVenda();
 					}
 				}else
 	           		ng.verificaEstoque(produtos_enviar,init+1,acao);
@@ -711,15 +731,45 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 															   id_cliente:ng.cliente.id,
 															   id_empreendimento:ng.userLogged.id_empreendimento
 															 }
-			)
-			.success(function(data, status, headers, config) {
+			).success(function(data, status, headers, config) {
 				var btn = $('#btn-fazer-compra');
-				btn.button('reset');
-				ng.loadControleNfe('cfop','lista_operacao');
-				ng.modalProgressoVenda('hide');
-				ng.vlr_saldo_devedor = data.vlr_saldo_devedor ;
-				ng.id_controle_pagamento = data.id_controle_pagamento ;
-				ng.showModalPrint();
+				
+				if(Number(ng.caixa_aberto.flg_imprimir_sat_cfe) == 1){
+					ng.showModalSatCfe();
+					var post = { 
+						id_empreendimento : ng.userLogged.id_empreendimento,
+						id_venda          : ng.id_venda,
+						cod_operacao      : ng.caixa_aberto.cod_operacao_padrao_sat_cfe
+					} ;
+
+					aj.post(baseUrlApi()+"nfe/calcular",post)
+					.success(function(data, status, headers, config) {
+						data.pdv = {
+							cod_pdv      : ng.caixa_aberto.id_caixa,
+							cod_operador : ng.caixa_aberto.id_operador,
+							nome_operador : ng.caixa_aberto.nome_operador
+						}
+						data.pagamentos = angular.copy(ng.recebidos) ;
+						var dadosWebSocket = {
+				 			from 		: ng.caixa_aberto.id_ws_web ,
+				 			to  		: ng.caixa_aberto.id_ws_dsk ,
+							type 		: 'satcfe_process',
+							message 	: JSON.stringify(data)
+			 			};
+			 			ng.newConnWebSocket(dadosWebSocket);
+					})
+					.error(function(data, status, headers, config) {
+						alert('Erro ao calcular dados do SAT')
+					});
+			 	}else{
+			 		var btn = $('#btn-fazer-compra');
+					btn.button('reset');
+					ng.loadControleNfe('cfop','lista_operacao');
+					ng.modalProgressoVenda('hide');
+					ng.vlr_saldo_devedor = data.vlr_saldo_devedor ;
+					ng.id_controle_pagamento = data.id_controle_pagamento ;
+					ng.showModalPrint();
+			 	}
 			})
 			.error(function(data, status, headers, config) {
 				alert('Erro fatal');
@@ -729,7 +779,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.aplicarDesconto = function(index,$event,checkebox,calc){
 		if(calc == true){
 			var prc_dsc =(ng.carrinho[index].valor_desconto_real * 100)/ng.carrinho[index].vlr_real;
-				ng.carrinho[index].valor_desconto = Math.round( prc_dsc * 100) /100 ;
+				ng.carrinho[index].valor_desconto = prc_dsc ;
 		}else if(checkebox != null){
 			ng.carrinho[index].valor_desconto_real = (ng.carrinho[index].vlr_real * (ng.carrinho[index].valor_desconto/100)) ;
 		}
@@ -793,7 +843,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadCliente= function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
-		ng.clientes = [];
+		ng.clientes = null;
 		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+"&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
 
 		if(ng.busca.clientes != ""){
@@ -802,16 +852,14 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		aj.get(baseUrlApi()+"usuarios/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
-				$.each(data.usuarios,function(i,item){
-					ng.clientes.push(item);
-				});
+				ng.clientes = data.usuarios;
 				ng.paginacao_clientes = [];
 				$.each(data.paginacao,function(i,item){
 					ng.paginacao_clientes.push(item);
 				});
 			})
 			.error(function(data, status, headers, config) {
-				ng.clientes = false ;
+				ng.clientes = [] ;
 			});
 	}
 	
@@ -851,7 +899,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
    	}
 
    	ng.loadProdutos = function(offset,limit) {
-   		console.log('passou aqui');
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
     	var id_deposito = ng.caixa.id_deposito ;
@@ -869,7 +916,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
     			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%' OR prd.id = "+ng.busca.produtos+""}})+")";
     	}
 
-		ng.produtos = [];
+		ng.produtos =  null;
 		aj.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
 				ng.produtos        = data.produtos ;
@@ -1224,6 +1271,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				if(!data.open_today){	
 					$dialogs.notify('Atenção!','<strong>Você está utilizando um caixa que foi aberto em uma data anterior a hoje, não será possível realizar nenhuma operação. Feche o caixa para que possa continuar.</strong>');
 				}
+				ng.newConnWebSocket();
 			})
 			.error(function(data, status, headers, config) {
 				if (status == 406) {
@@ -1245,6 +1293,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.receberPagamento = function(){
+		if(ng.finalizarOrcamento) ng.id_venda_ignore = params.id_orcamento ;
 		var produtos = angular.copy(ng.carrinho);
 		var venda    = {
 							id_usuario:ng.userLogged.id,
@@ -1781,10 +1830,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					txtBox.focus();
 			}, 500);
 		}else if (tipo == 'est'){
-			if(ng.cliente.id == undefined || ng.cliente.id == ""){
+			/*if(ng.cliente.id == undefined || ng.cliente.id == ""){
 				$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque e necessário selecionar um cliente</strong>');
 				return
-			}
+			}*/
 			ng.modo_venda = 'est';
 			ng.venda_aberta = true ;
 			setTimeout(function(){
@@ -1931,6 +1980,13 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		  keyboard: false
 		});
 		$('.modal-backdrop.in').css({opacity:1,'background-color':'#C7C7C7'});
+	}
+
+	ng.showModalSatCfe = function(){
+		$('#modal-sat-cfe').modal({
+		  backdrop: 'static',
+		  keyboard: false
+		});
 	}
 
 	ng.printTermic = function() {
@@ -2389,7 +2445,45 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.set = function(key,vlr){
 		ng[key] = vlr ;
 	}
+
+	// Funções de comunicação com o WebSocket
+	ng.newConnWebSocket = function(data){
+		ng.conn = new WebSocket('ws://localhost:3000');
+		console.log(ng.conn);
+		ng.conn.onopen = function(e) {
+			console.log('Conexão com WebSocket estabelecida!!!')
+			console.log(e);
+			if(typeof data == 'object')
+	    		ng.sendMessageWebSocket(data);
+		};
+
+		ng.conn.onmessage = function(e) {
+			var data = JSON.parse(e.data)
+			console.log(data);
+			switch(data.type){
+				case 'session_id':
+					ng.caixa_aberto.id_ws_web = data.to ;
+					console.log(ng.caixa_aberto);
+					break;
+				case 'satcfe_success':
+					window.location = "pdv.php";
+					break;
+				case 'satcfe_error':
+					alert('Ocorreu um erro ao imprimir o cupom!!!')
+					window.location = "pdv.php";
+					break;
+			}			
+		};
+	}
+	ng.sendMessageWebSocket = function(data){
+		ng.conn.send(JSON.stringify(data));
+	}
+	var dadosWebSocket = {
+
+	};
 	
+	// fim
+	//ng.sendMessageWebSocket(ng.caixa_aberto);
 	ng.existsCookie();
 	ng.loadConfig();
 	ng.calcTotalCompra();

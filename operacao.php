@@ -297,7 +297,7 @@
 						</div>
 
 						<div  class="row">
-							<div class="col-sm-4">
+							<div class="col-sm-6">
 								<div class="form-group" id="cod_operacao_estorno">
 									<label class="control-label">Operação Para Estorno</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
@@ -308,9 +308,9 @@
 									</select>
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm-6">
 								<div class="form-group" id="cod_operacao_devolucao">
-									<label class="control-label">Operação Para Devolucação</label> 
+									<label class="control-label">Operação Para Devolução</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
 								    option="chosen_operacao"
 								    allow-single-deselect="true"
@@ -320,7 +320,61 @@
 								</div>
 							</div>
 						</div>
-						
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group" id="num_local_destino">
+									<label class="control-label">Local de Destino</label> 
+									<select ng-disabled="processando_autorizacao || autorizado" chosen
+									    option="lista_local_destino"
+									    ng-model="operacao.num_local_destino"
+									    ng-options="item.num_item as item.nme_item for item in lista_local_destino">
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group" id="num_finalidade_emissao">
+									<label class="control-label">Finalidade Emissão</label> 
+									<select ng-disabled="processando_autorizacao || autorizado" chosen
+									    option="lista_finalidade_emissao"
+									    ng-model="operacao.num_finalidade_emissao"
+									    ng-options="item.num_item as item.nme_item for item in lista_finalidade_emissao">
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group" id="num_consumidor_final">
+									<label class="control-label">Consumidor Final</label> 
+									<select ng-disabled="processando_autorizacao || autorizado" chosen
+									    option="lista_consumidor_final"
+									    ng-model="operacao.num_consumidor_final"
+									    ng-options="item.num_item as item.nme_item for item in lista_consumidor_final">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group" id="num_tipo_documento">
+									<label class="control-label">Tipo de Documento</label> 
+									<select ng-disabled="processando_autorizacao || autorizado" chosen
+									    option="lista_tipo_documento"
+									    allow-single-deselect="true"
+									    ng-model="operacao.num_tipo_documento"
+									    ng-options="documento.num_item as documento.nme_item for documento in lista_tipo_documento">
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group" id="num_presenca_comprador">
+									<label class="control-label">Presença Comprador</label> 
+									<select ng-disabled="processando_autorizacao || autorizado" chosen
+									    option="lista_presenca_comprador"
+									    ng-model="operacao.num_presenca_comprador"
+									    ng-options="item.num_item as item.nme_item for item in lista_presenca_comprador">
+									</select>
+								</div>
+							</div>
+						</div>
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="pull-right">

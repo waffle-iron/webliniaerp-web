@@ -420,3 +420,19 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 	ng.loadProdutosVencer();
 	ng.loadProdutosEstoqueMinimo();
 });
+
+/*app.factory('httpRequestInterceptor',function () {
+  var user = angular.fromJson(sessionStorage.user);
+  console.log(user);
+  return {
+    request: function (config) {
+      //config.headers['Authorization'] = 'Basic d2VudHdvcnRobWFuOkNoYW5nZV9tZQ==';
+      config.headers['Empreendimento'] = user.id_empreendimento;
+      return config;
+    }
+  };
+});
+
+app.config(function ($httpProvider) {
+  $httpProvider.interceptors.push('httpRequestInterceptor');
+});*/

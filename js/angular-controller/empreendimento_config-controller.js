@@ -394,6 +394,11 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item);
 		}
 
+		if(ng.configuracoes.flg_ambiente_nfe != undefined){
+			var item = {nome :'flg_ambiente_nfe',valor:ng.configuracoes.flg_ambiente_nfe , id_empreendimento	:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}
+
 		btn.button('loading');
 		aj.post(baseUrlApi()+"serie_documento_fiscal",{series:ng.lista_serie_documento_fiscal})
 			.success(function(data, status, headers, config) {

@@ -628,6 +628,25 @@
 
 							<div class="tab-pane fade" id="fiscal">
 								<div class="alert alert-config-fiscal" style="display:none"></div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="form-group">
+											<label for="" class="control-label">Ambiente de Emissão da NF-e</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_ambiente_nfe" value="1" name="flg_ambiente_nfe"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Produção</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_ambiente_nfe" value="0" name="flg_ambiente_nfe"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Homologação</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
 
 								<div class="row">
 									<div class="col-sm-4">
@@ -723,7 +742,6 @@
 										</div>
 									</div>
 								</div>
-
 								<div class="row">
 									<div class="col-sm-4">
 										<div class="form-group">
@@ -747,7 +765,6 @@
 										</div>
 									</div>
 								</div>
-
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">

@@ -331,18 +331,24 @@
 							<i class="fa fa-user"></i> Vendedor - {{ vendedor.nome_vendedor }}
 						</div>
 						<div class="btn-group pull-right">
-							<a href="#" class="btn btn-xs btn-default" ng-click="selVendedor()">
+							<a href="#" class="btn btn-xs btn-default hidden-xs" ng-click="selVendedor()">
 								<i class="fa fa-retweet fa-lg"></i> Trocar Vendedor
 							</a>
-							<a href="#" class="btn btn-xs btn-default" ng-click="resizeScreen()">
+							<a href="#" class="btn btn-xs btn-default hidden-xs" ng-click="resizeScreen()">
 								<i class="fa fa-arrows-alt"></i> Tela Inteira
 							</a>
 							<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
 								<i class="fa fa-chevron-down"></i> Mais Opções
 							</button>
 							<ul class="dropdown-menu slidedown">
+								<!--
+								<li><a ng-if="modo_venda == 'est'" href="#" ng-click="abrirVenda('pdv')"><i class="fa fa-desktop"></i> Nova Venda (Modo Loja)</a></li>
+								<li><a ng-if="modo_venda == 'pdv'" href="#" ng-click="abrirVenda('est')"><i class="fa fa-desktop"></i> Nova Venda (Modo Depósito)</a></li>
+								-->
 								<li><a href="#" ng-click="modalTraferencia()"><i class="fa fa-external-link"></i> Transferência (deposito)</a></li>
-								<li ng-if="venda_aberta == false && finalizarOrcamento == false "><a href="#" ng-click="pagamentoFulso()"><i class="fa fa-money"></i> Pagamento</a></li>
+								<li ng-if="finalizarOrcamento == false"><a href="#" ng-click="pagamentoFulso()"><i class="fa fa-money"></i> Pagamento</a></li>
+								<li class="hidden-lg"><a href="#" ng-click="resizeScreen()"><i class="fa fa-arrows-alt"></i>Tela Inteira</a></li>
+								<li class="hidden-lg"><a href="#" ng-click="selVendedor()"><i class="fa fa-retweet fa-lg"></i>  Trocar Vendedor</a></li>
 								<li ><a href="#" ng-click="showCadastroRapido()"><i class="fa fa-users"></i> Novo Cliente</a></li>
 								<li><a href="#" ng-click="modalReforco()"><i class="fa fa-download"></i> Incluir Reforço</a></li>
 								<li><a href="#" ng-click="modalSangria()"><i class="fa fa-upload"></i> Efetuar Sangria</a></li>
@@ -683,9 +689,9 @@
 									<div class="form-group">
 										<label class="control-label"><h4>Cliente</h4></label>
 										<div class="input-group">
-											<input ng-click="selCliente(0,10)" ng-disabled="finalizarOrcamento"   type="text" class="form-control" ng-model="cliente.nome" readonly="readonly" style="cursor: pointer;" />
+											<input ng-click="selCliente(0,10)"    type="text" class="form-control" ng-model="cliente.nome" readonly="readonly" style="cursor: pointer;" />
 											<span class="input-group-btn">
-												<button ng-click="selCliente(0,10)" type="button" ng-disabled="finalizarOrcamento" class="btn btn-info"><i class="fa fa-users"></i></button>
+												<button ng-click="selCliente(0,10)" type="button"  class="btn btn-info"><i class="fa fa-users"></i></button>
 											</span>
 										</div>
 									</div>
@@ -751,10 +757,10 @@
 									<div class="row">
 										<div class="col-sm-10" id="col-sm-auto-complete-cliente">
 											<div class="form-group">
-												<label class="control-label"><h4>Cliente <span> <button ng-disabled="finalizarOrcamento" style="cursor:auto;height: 18px;padding-top: 0;
+												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
 " class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 												<div class="input-group">
-													<input id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)" ng-disabled="finalizarOrcamento" ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
+													<input id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
 													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
 														<table class="table table-striped itens-outo-complete">
 															<thead>
@@ -779,7 +785,7 @@
 														</table>
 													</div>
 													<span class="input-group-btn">
-														<button ng-click="selCliente(0,10)" ng-disabled="finalizarOrcamento" type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
+														<button ng-click="selCliente(0,10)"  type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
 													</span>
 												</div>
 											</div>
@@ -788,7 +794,7 @@
 											<div class="form-group">
 												<label class="control-label"><h4>Produto</h4></label>
 												<div class="input-group">
-													<input id="input_auto_complete_produto" ng-focus="outoCompleteProduto(busca.produto_outo_complete,$event)" ng-disabled="finalizarOrcamento" ng-keyUp="outoCompleteProduto(busca.produto_outo_complete)" type="text" class="form-control" ng-model="busca.produto_outo_complete"/>
+													<input id="input_auto_complete_produto" ng-focus="outoCompleteProduto(busca.produto_outo_complete,$event)"  ng-keyUp="outoCompleteProduto(busca.produto_outo_complete)" type="text" class="form-control" ng-model="busca.produto_outo_complete"/>
 													<div class="content-outo-complete-produto-pdv" ng-show="produtos_auto_complete.length > 0 && produtos_auto_complete_visible">
 														<table class="table table-striped itens-outo-complete">
 														<thead>
@@ -816,7 +822,7 @@
 														</table>
 													</div>
 													<span class="input-group-btn">
-														<button ng-click="findProductByBarCode()" ng-disabled="finalizarOrcamento" type="button" class="btn btn-primary"><i class="fa fa fa-archive"></i></button>
+														<button ng-click="findProductByBarCode()"  type="button" class="btn btn-primary"><i class="fa fa fa-archive"></i></button>
 													</span>
 												</div>
 											</div>
@@ -889,28 +895,28 @@
 															<td ng-show="show_aditional_columns">{{ item.peso }}</td>
 															<td ng-show="show_aditional_columns">{{ item.sabor }}</td>
 															<td class="text-center" width="20">
-																<input onKeyPress="return SomenteNumero(event);" ng-keyUp="calcSubTotal(item)" ng-disabled="finalizarOrcamento" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" />
+																<input onKeyPress="return SomenteNumero(event);" ng-keyUp="calcSubTotal(item)"  ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" />
 															</td>
 															<td class="text-center" ng-if="show_vlr_real" > R${{ item.vlr_custo_real | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-right">R$ {{ item.vlr_real | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-center" style="width: 30px;">
 																<label class="label-checkbox">
-																	<input ng-model="item.flg_desconto" ng-disabled="finalizarOrcamento" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0" ng-click="aplicarDesconto($index,$event)" />
+																	<input ng-model="item.flg_desconto"  type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0" ng-click="aplicarDesconto($index,$event)" />
 																	<span class="custom-checkbox"></span>
 																</label>
 															</td>
 															<td class="text-right" style="width:100px;">
 																<span style="display: block;float: left;" ng-if="item.flg_desconto == 1">%</span>
-																<input style="width:80%;float:right" ng-disabled="finalizarOrcamento" ng-keyUp="aplicarDesconto($index,$event,false,false)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto" type="text" class="form-control input-xs" />
+																<input style="width:80%;float:right"  ng-keyUp="aplicarDesconto($index,$event,false,false)" ng-if="item.flg_desconto == 1" thousands-formatter disabled="true"  ng-model="item.valor_desconto" type="text" class="form-control input-xs" />
 															</td>
 															<td class="text-right" style="width:100px;">
 																<span style="display: block;float: left;" ng-if="item.flg_desconto == 1">R$</span>
-																<input style="width:80%;float:right" ng-disabled="finalizarOrcamento" ng-keyUp="aplicarDesconto($index,$event,false,true)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto_real" type="text" class="form-control input-xs" id="teste_teste" />
+																<input style="width:80%;float:right"  ng-keyUp="aplicarDesconto($index,$event,false,true)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto_real" type="text" class="form-control input-xs" id="teste_teste" />
 															</td>
 															<td class="text-right">R$ {{ item.vlr_unitario    | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-right">R$ {{ item.sub_total    | numberFormat : 2 : ',' : '.' }}</td>
 															<td class="text-center" class="hidden-print">
-																<button type="button" class="btn btn-xs btn-danger" ng-disabled="finalizarOrcamento" ng-click="delItem($index)"><i class="fa fa-trash-o"></i></button>
+																<button type="button" class="btn btn-xs btn-danger"  ng-click="delItem($index)"><i class="fa fa-trash-o"></i></button>
 															</td>
 														</tr>
 													</tbody>
@@ -989,7 +995,7 @@
 							<button type="button" class="btn btn-lg btn-warning" ng-if="receber_pagamento" ng-click="cancelarPagamento()"><i class="fa fa-times-circle"></i> Cancelar Pagamento</button>
 							<button type="button" class="btn btn-lg btn-success" ng-if="receber_pagamento || modo_venda == 'est'" data-loading-text=" Aguarde..." id="btn-fazer-compra" ng-click="salvar()" ng-disabled=" (modo_venda == 'pdv' && (total_pg == 0 || total_pg < vlrTotalCompra)) || (modo_venda == 'est' && (carrinho.length <= 0))"><i class="fa fa-save"></i> Finalizar</button>
 							<button type="button" class="btn btn-lg btn-primary" ng-if="receber_pagamento == false" ng-disabled="carrinho.length == 0" ng-click="receberPagamento()"><i class="fa fa-money"></i> Receber</button>
-							<button type="button" class="btn btn-lg btn-success" ng-if="receber_pagamento == false && finalizarOrcamento == false" data-loading-text=" Aguarde..." id="btn-fazer-orcamento" ng-click="salvarOrcamento()" ng-disabled="carrinho.length <= 0"><i class="fa fa-save"></i> Orçamento</button>
+							<button type="button" class="btn btn-lg btn-success" ng-if="receber_pagamento == false" data-loading-text=" Aguarde..." id="btn-fazer-orcamento" ng-click="salvarOrcamento()" ng-disabled="carrinho.length <= 0"><i class="fa fa-save"></i> Orçamento</button>
 						</div>
 					</div>
 				</div>
@@ -1273,13 +1279,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<table class="table table-bordered table-condensed table-striped table-hover">
-									<tr ng-if="clientes != false && (clientes.length <= 0 || clientes == null)">
-										<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
-									</tr>
-									<tr ng-if="clientes == false">
-										<th colspan="4" class="text-center">Não a resultados para a busca</th>
-									</tr>
-									<thead ng-show="(clientes.length != 0)">
+									<thead>
 										<tr>
 											<th >Nome</th>
 											<th >Apelido</th>
@@ -1287,6 +1287,12 @@
 											<th colspan="2">selecionar</th>
 										</tr>
 									</thead>
+									<tr ng-if="clientes == null">
+										<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+									</tr>
+									<tr ng-if="clientes.length == 0">
+										<th colspan="4" class="text-center">Nenhum cliente encontrado</th>
+									</tr>
 									<tbody>
 										<tr ng-repeat="item in clientes">
 											<td>{{ item.nome }}</td>
@@ -1377,7 +1383,7 @@
 
 		<!-- /Modal Produtos-->
 		<div class="modal fade" id="list_produtos" style="display:none">
-  			<div class="modal-dialog modal-lg">
+  			<div class="modal-dialog modal-xl">
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -1420,8 +1426,11 @@
 										</tr>
 									</thead>
 									<tbody>
+										<tr ng-if="produtos == null">
+											<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+										</tr>
 										<tr ng-show="(produtos.length == 0)">
-											<td colspan="3">Não a resultados para a busca</td>
+											<td colspan="3">Nenhum Cliente encontrado</td>
 										</tr>
 										<tr ng-repeat="item in produtos">
 											<td>{{ item.id_produto }}</td>
@@ -1610,7 +1619,8 @@
 										</span>
 
 										<div class="pull-left m-left-sm">
-											<h3 class="m-bottom-xs m-top-xs" ng-if="pagamento_fulso != true">Comprovante de Venda</h3>
+											<h3 class="m-bottom-xs m-top-xs" ng-if="pagamento_fulso != true  && orcamento!=true">Comprovante de Venda</h3>
+											<h3 class="m-bottom-xs m-top-xs" ng-if="orcamento == true">Pedido de Venda</h3>
 											<h3 class="m-bottom-xs m-top-xs" ng-if="pagamento_fulso == true">Comprovante de Pagamento</h3>
 											<span class="text-muted">{{ userLogged.nome_empreendimento }}</span>
 										</div>
@@ -1738,245 +1748,272 @@
 				</div>
 				<!-- /.modal -->
 
-				<!-- /Modal Processando Venda-->
-				<div class="modal fade" id="modal_progresso_venda" style="display:none">
-		  			<div class="modal-dialog error modal-md">
-		    			<div class="modal-content">
-		      				<div class="modal-header">
-								<h4>Processando Venda</h4>
-		      				</div>
+			<!-- /Modal Processando Venda-->
+			<div class="modal fade" id="modal_progresso_venda" style="display:none">
+	  			<div class="modal-dialog error modal-md">
+	    			<div class="modal-content">
+	      				<div class="modal-header">
+							<h4>Processando Venda</h4>
+	      				</div>
 
-						    <div class="modal-body">
-						    	<div class="alert alert-reforco" style="display:none"></div>
+					    <div class="modal-body">
+					    	<div class="alert alert-reforco" style="display:none"></div>
 
-						    	<div class="row">
-						    		<div class="col-sm-6" id="valor_pagamento">
-						    		<p>
-						    			<strong id="text_status_venda">Verificando estoque</strong><img src="assets/imagens/progresso_venda.gif">
-						    		</p>
-									</div>
-						    	</div>
-						    </div>
-					  	</div>
-					  	<!-- /.modal-content -->
-					</div>
-					<!-- /.modal-dialog -->
+					    	<div class="row">
+					    		<div class="col-sm-6" id="valor_pagamento">
+					    		<p>
+					    			<strong id="text_status_venda">Verificando estoque</strong><img src="assets/imagens/progresso_venda.gif">
+					    		</p>
+								</div>
+					    	</div>
+					    </div>
+				  	</div>
+				  	<!-- /.modal-content -->
 				</div>
-				<!-- /.modal -->
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
 
-				<!-- /Modal Cadastro rapido de clientes-->
-				<div class="modal fade" id="modal_cadastro_rapido_cliente" style="display:none">
-		  			<div class="modal-dialog error modal-lg">
-		    			<div class="modal-content">
-		      				<div class="modal-header">
-								<h4>Cadastro Rápido de cliente</h4>
-		      				</div>
+			<!-- /Modal Cadastro rapido de clientes-->
+			<div class="modal fade" id="modal_cadastro_rapido_cliente" style="display:none">
+	  			<div class="modal-dialog error modal-lg">
+	    			<div class="modal-content">
+	      				<div class="modal-header">
+							<h4>Cadastro Rápido de cliente</h4>
+	      				</div>
 
-						    <div class="modal-body">
-						    	<div class="alert alert-cadastro-rapido" style="display:none"></div>
-									<div class="row">
-										<div class="col-sm-12">
+					    <div class="modal-body">
+					    	<div class="alert alert-cadastro-rapido" style="display:none"></div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<label for="" class="control-label">Tipo de Cadastro</label>
 											<div class="form-group">
-												<label for="" class="control-label">Tipo de Cadastro</label>
-												<div class="form-group">
-													<label class="label-radio inline">
-														<input ng-model="new_cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio">
-														<span class="custom-radio"></span>
-														<span>Pessoa Física</span>
-													</label>
+												<label class="label-radio inline">
+													<input ng-model="new_cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Pessoa Física</span>
+												</label>
 
-													<label class="label-radio inline">
-														<input ng-model="new_cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio">
-														<span class="custom-radio"></span>
-														<span>Pessoa Jurídica</span>
-													</label>
-												</div>
-												<div class="row">
-													<div class="col-sm-4">
-														<div id="nome" class="form-group">
-															<label for="nome" class="control-label">Nome <span style="color:red;font-weight: bold;">*</span></label>
-															<input type="text" class="form-control" id="nome" ng-model="new_cliente.nome">
-														</div>
-													</div>
-													<div class="col-sm-4">
-														<div id="email" class="form-group">
-															<label for="email" class="control-label">E-mail</label>
-															<input type="text" class="form-control" id="email" ng-model="new_cliente.email">
-														</div>
-													</div>
-													<div class="col-sm-4">
-														<div id="id_perfil" class="form-group">
-															<label class="control-label">Perfil  <span style="color:red;font-weight: bold;">*</span></label>
-															<select class="form-control" ng-model="new_cliente.id_perfil" ng-options="a.id as a.nome for a in perfis"></select>
-														</div>
-													</div>
-											    </div>
-											    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pj'">
-													<div class="col-lg-4">
-														<div id="razao_social" class="form-group">
-															<label class="control-label">Razão Social</label>
-															<input class="form-control" ng-model="new_cliente.razao_social">
-														</div>
-													</div>
-
-													<div class="col-sm-4">
-														<div id="nome_fantasia" class="form-group">
-															<label class="control-label">Nome Fantasia</label>
-															<input class="form-control" ng-model="new_cliente.nome_fantasia">
-														</div>
-													</div>
-
-													<div class="col-sm-2">
-														<div id="cnpj" class="form-group">
-															<label class="control-label">CNPJ  <span style="color:red;font-weight: bold;">*</span></label>
-															<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="new_cliente.cnpj">
-														</div>
-													</div>
-
-													<div class="col-sm-2">
-														<div id="inscricao_estadual" class="form-group">
-															<label class="control-label">I.E. </label>
-															<input class="form-control" ng-model="new_cliente.inscricao_estadual">
-														</div>
+												<label class="label-radio inline">
+													<input ng-model="new_cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Pessoa Jurídica</span>
+												</label>
+											</div>
+											<div class="row">
+												<div class="col-sm-4">
+													<div id="nome" class="form-group">
+														<label for="nome" class="control-label">Nome <span style="color:red;font-weight: bold;">*</span></label>
+														<input type="text" class="form-control" id="nome" ng-model="new_cliente.nome">
 													</div>
 												</div>
-											    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pf'">
-													<div class="col-sm-2">
-														<div id="rg" class="form-group">
-															<label class="control-label">RG</label>
-															<input class="form-control" ui-mask="99.999.999-9" ng-model="new_cliente.rg"/>
-														</div>
+												<div class="col-sm-4">
+													<div id="email" class="form-group">
+														<label for="email" class="control-label">E-mail</label>
+														<input type="text" class="form-control" id="email" ng-model="new_cliente.email">
 													</div>
+												</div>
+												<div class="col-sm-4">
+													<div id="id_perfil" class="form-group">
+														<label class="control-label">Perfil  <span style="color:red;font-weight: bold;">*</span></label>
+														<select class="form-control" ng-model="new_cliente.id_perfil" ng-options="a.id as a.nome for a in perfis"></select>
+													</div>
+												</div>
+										    </div>
+										    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pj'">
+												<div class="col-lg-4">
+													<div id="razao_social" class="form-group">
+														<label class="control-label">Razão Social</label>
+														<input class="form-control" ng-model="new_cliente.razao_social">
+													</div>
+												</div>
 
-													<div class="col-sm-2">
-														<div id="cpf" class="form-group">
-															<label class="control-label">CPF <span style="color:red;font-weight: bold;">*</span></label>
-															<input class="form-control" ui-mask="999.999.999-99" ng-model="new_cliente.cpf"/>
-														</div>
+												<div class="col-sm-4">
+													<div id="nome_fantasia" class="form-group">
+														<label class="control-label">Nome Fantasia</label>
+														<input class="form-control" ng-model="new_cliente.nome_fantasia">
+													</div>
+												</div>
+
+												<div class="col-sm-2">
+													<div id="cnpj" class="form-group">
+														<label class="control-label">CNPJ  <span style="color:red;font-weight: bold;">*</span></label>
+														<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="new_cliente.cnpj">
+													</div>
+												</div>
+
+												<div class="col-sm-2">
+													<div id="inscricao_estadual" class="form-group">
+														<label class="control-label">I.E. </label>
+														<input class="form-control" ng-model="new_cliente.inscricao_estadual">
+													</div>
+												</div>
+											</div>
+										    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pf'">
+												<div class="col-sm-2">
+													<div id="rg" class="form-group">
+														<label class="control-label">RG</label>
+														<input class="form-control" ui-mask="99.999.999-9" ng-model="new_cliente.rg"/>
+													</div>
+												</div>
+
+												<div class="col-sm-2">
+													<div id="cpf" class="form-group">
+														<label class="control-label">CPF <span style="color:red;font-weight: bold;">*</span></label>
+														<input class="form-control" ui-mask="999.999.999-99" ng-model="new_cliente.cpf"/>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-						    </div>
-						      <div class="modal-footer">
-						      		<button type="button" class="btn btn-danger btn-sm" ng-click="cancelarModal('modal_cadastro_rapido_cliente')">
-										<i class="fa fa-times-circle"></i> Cancelar
-									</button>
-									<button data-loading-text=" Aguarde..." id="btn-salvar-cliente" type="submit" class="btn btn-success btn-sm" ng-click="salvarCliente()">
-										<i class="fa fa-save"></i> Salvar Cliente
-									</button>
-						    </div>
-					  	</div>
-					  	<!-- /.modal-content -->
-					</div>
-					<!-- /.modal-dialog -->
+								</div>
+					    </div>
+					      <div class="modal-footer">
+					      		<button type="button" class="btn btn-danger btn-sm" ng-click="cancelarModal('modal_cadastro_rapido_cliente')">
+									<i class="fa fa-times-circle"></i> Cancelar
+								</button>
+								<button data-loading-text=" Aguarde..." id="btn-salvar-cliente" type="submit" class="btn btn-success btn-sm" ng-click="salvarCliente()">
+									<i class="fa fa-save"></i> Salvar Cliente
+								</button>
+					    </div>
+				  	</div>
+				  	<!-- /.modal-content -->
 				</div>
-				<!-- /.modal -->
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
 
-				<!-- /Modal Vendedor -->
-				<div class="modal fade" id="list-vendedor" style="display:none">
-		  			<div class="modal-dialog">
-		    			<div class="modal-content" ng-if="modal_senha_vendedor.show == false">
-		      				<div class="modal-header">
-		        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4>Vendedores</span></h4>
-		      				</div>
-						    <div class="modal-body">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="input-group">
-								            <input ng-model="busca.vendedor"  ng-enter="loadVendedor(0,10)" type="text" class="form-control input-sm">
-								            <div class="input-group-btn">
-								            	<button ng-click="loadVendedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-								            		<i class="fa fa-search"></i> Buscar
-								            	</button>
-								            </div> <!-- /input-group-btn -->
-								        </div> <!-- /input-group -->
+			<!-- /Modal Vendedor -->
+			<div class="modal fade" id="list-vendedor" style="display:none">
+	  			<div class="modal-dialog">
+	    			<div class="modal-content" ng-if="modal_senha_vendedor.show == false">
+	      				<div class="modal-header">
+	        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4>Vendedores</span></h4>
+	      				</div>
+					    <div class="modal-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="input-group">
+							            <input ng-model="busca.vendedor"  ng-enter="loadVendedor(0,10)" type="text" class="form-control input-sm">
+							            <div class="input-group-btn">
+							            	<button ng-click="loadVendedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+							            		<i class="fa fa-search"></i> Buscar
+							            	</button>
+							            </div> <!-- /input-group-btn -->
+							        </div> <!-- /input-group -->
+								</div><!-- /.col -->
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-sm-12">
+									<table class="table table-bordered table-condensed table-striped table-hover">
+										<tr ng-if="clientes != false && (clientes.length <= 0 || clientes == null)">
+											<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+										</tr>
+										<tr ng-if="clientes == false">
+											<th class="text-center" colspan="9" colspan="9" style="text-align:center">Não a resultados para a busca</th>
+										</tr>
+										<thead ng-show="(clientes.length != 0)">
+											<tr>
+												<th >Nome</th>
+												<th >Apelido</th>
+												<th >Perfil</th>
+												<th colspan="2">selecionar</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="item in clientes">
+												<td>{{ item.nome }}</td>
+												<td>{{ item.apelido }}</td>
+												<td>{{ item.nome_perfil }}</td>
+												<td width="50" align="center">
+													<button type="button" class="btn btn-xs btn-success" ng-click="modalSenhaVendedor(item)">
+														<i class="fa fa-check-square-o"></i> Selecionar
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div class="row">
+					    		<div class="col-sm-12">
+					    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_clientes.length > 1">
+										<li ng-repeat="item in paginacao_clientes" ng-class="{'active': item.current}">
+											<a href="" h ng-click="loadVendedor(item.offset,item.limit)">{{ item.index }}</a>
+										</li>
+									</ul>
+					    		</div>
+					    	</div>
+					    </div>
+				  	</div><!-- /.modal-content -->
+				  	<div class="modal-content" ng-if="modal_senha_vendedor.show">
+				  		<div class="modal-header">
+	        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4>Selecionar Vendedor</span></h4>
+	      				</div>
+	      				<div class="modal-body" ng-if="modal_senha_vendedor.show == true">
+	      					<div class="row">
+	      						<div class="col-sm-12">
+	      							<div class="alert alert-vendedor" style="display:none">
+	      								
+	      							</div>
+	      						</div>
+	      					</div>
+	      					<form class="form-horizontal">
+								<div class="form-group">
+									<label for="inputEmail1" class="col-lg-2 control-label">Vendedor</label>
+									<div class="col-lg-10">
+										<label class="label-checkbox">{{ modal_senha_vendedor.nome_vendedor }}</label>
 									</div><!-- /.col -->
-								</div>
-								<br />
-								<div class="row">
-									<div class="col-sm-12">
-										<table class="table table-bordered table-condensed table-striped table-hover">
-											<tr ng-if="clientes != false && (clientes.length <= 0 || clientes == null)">
-												<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
-											</tr>
-											<tr ng-if="clientes == false">
-												<th class="text-center" colspan="9" colspan="9" style="text-align:center">Não a resultados para a busca</th>
-											</tr>
-											<thead ng-show="(clientes.length != 0)">
-												<tr>
-													<th >Nome</th>
-													<th >Apelido</th>
-													<th >Perfil</th>
-													<th colspan="2">selecionar</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="item in clientes">
-													<td>{{ item.nome }}</td>
-													<td>{{ item.apelido }}</td>
-													<td>{{ item.nome_perfil }}</td>
-													<td width="50" align="center">
-														<button type="button" class="btn btn-xs btn-success" ng-click="modalSenhaVendedor(item)">
-															<i class="fa fa-check-square-o"></i> Selecionar
-														</button>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
+								</div><!-- /form-group -->
+								<div class="form-group" id="senha_vendedor">
+									<label for="inputPassword1" class="col-lg-2 control-label">Senha</label>
+									<div class="col-lg-6">
+										<input type="password" ng-model="modal_senha_vendedor.senha_vendedor" class="form-control input-sm">
+									</div><!-- /.col -->
+								</div><!-- /form-group -->
+								<div class="form-group">
+									<div class="col-lg-offset-2 col-lg-10">
+										<button ng-click="mudarVendedor()" class="btn btn-success btn-sm">Selecionar</button>
+									</div><!-- /.col -->
+								</div><!-- /form-group -->
+							</form>
+	      				</div>
+				  	</div>
+				</div><!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
 
-								<div class="row">
-						    		<div class="col-sm-12">
-						    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_clientes.length > 1">
-											<li ng-repeat="item in paginacao_clientes" ng-class="{'active': item.current}">
-												<a href="" h ng-click="loadVendedor(item.offset,item.limit)">{{ item.index }}</a>
-											</li>
-										</ul>
-						    		</div>
-						    	</div>
-						    </div>
-					  	</div><!-- /.modal-content -->
-					  	<div class="modal-content" ng-if="modal_senha_vendedor.show">
-					  		<div class="modal-header">
-		        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4>Selecionar Vendedor</span></h4>
-		      				</div>
-		      				<div class="modal-body" ng-if="modal_senha_vendedor.show == true">
-		      					<div class="row">
-		      						<div class="col-sm-12">
-		      							<div class="alert alert-vendedor" style="display:none">
-		      								
-		      							</div>
-		      						</div>
-		      					</div>
-		      					<form class="form-horizontal">
-									<div class="form-group">
-										<label for="inputEmail1" class="col-lg-2 control-label">Vendedor</label>
-										<div class="col-lg-10">
-											<label class="label-checkbox">{{ modal_senha_vendedor.nome_vendedor }}</label>
-										</div><!-- /.col -->
-									</div><!-- /form-group -->
-									<div class="form-group" id="senha_vendedor">
-										<label for="inputPassword1" class="col-lg-2 control-label">Senha</label>
-										<div class="col-lg-6">
-											<input type="password" ng-model="modal_senha_vendedor.senha_vendedor" class="form-control input-sm">
-										</div><!-- /.col -->
-									</div><!-- /form-group -->
-									<div class="form-group">
-										<div class="col-lg-offset-2 col-lg-10">
-											<button ng-click="mudarVendedor()" class="btn btn-success btn-sm">Selecionar</button>
-										</div><!-- /.col -->
-									</div><!-- /form-group -->
-								</form>
-		      				</div>
-					  	</div>
-					</div><!-- /.modal-dialog -->
+			<!-- /Modal Processando Venda-->
+			<div class="modal fade" id="modal-sat-cfe" style="display:none">
+	  			<div class="modal-dialog error modal-md">
+	    			<div class="modal-content">
+	      				<div class="modal-header">
+							<h4>Aguarde</h4>
+	      				</div>
+
+					    <div class="modal-body">
+					    	<div class="alert alert-reforco" style="display:none"></div>
+
+					    	<div class="row">
+					    		<div class="col-sm-6" id="valor_pagamento">
+					    		<p>
+					    			<strong id="text_status_sat_cfe">Imprimindo cumpom fiscal</strong><img src="assets/imagens/progresso_venda.gif">
+					    		</p>
+								</div>
+					    	</div>
+					    </div>
+				  	</div>
+				  	<!-- /.modal-content -->
 				</div>
-				<!-- /.modal -->
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+
 
 		<!-- Footer
 		================================================== -->
@@ -2045,6 +2082,9 @@
 
 	<!-- UnderscoreJS -->
 	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
+
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
 
 
 	<!-- ScrennFull  -->
