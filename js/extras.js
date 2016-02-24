@@ -124,14 +124,14 @@ function baseUrl(){
 		pasta = "/webliniaerp-web";
 	}
 	//var pasta = window.location.pathname.substring(0,pos);
-	return "http://localhost:8080/webliniaerp-web/";
+	return "http://localhost/webliniaerp-web/";
 }
 
 function baseUrlApi(){
     if(location.hostname.indexOf("192.168.") != -1)
         return "http://"+ location.hostname +"/webliniaerp-api/";
 	else if(location.hostname == 'localhost')
-		return "http://localhost:8080/webliniaerp-api/";
+		return "http://localhost/webliniaerp-api/";
 	else {
 		var a = document.URL;
 		a = a.split(".br");

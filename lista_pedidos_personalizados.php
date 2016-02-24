@@ -212,7 +212,7 @@
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-tag"></i> Pedidos Personalizados</h3>
 					<br/>
-					<a href="pedido-personalizado.php" class="btn btn-primary" ng-if="userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6 "><i class="fa fa-tag"></i> Novo Pedido</a>
+					<a href="pedido-personalizado.php" class="btn btn-primary" ng-if="userLogged.id_empreendimento == 52 || userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6 "><i class="fa fa-tag"></i> Novo Pedido</a>
 				</div>
 			</div>
 			<!-- /main-header -->

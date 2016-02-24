@@ -316,7 +316,7 @@
 					<div class="col-lg-3 col-sm-6 col-md-6">
 						<div class="panel-stat3 bg-primary fadeInDown animation-delay6" style="min-height: 125px;">
 							<h2 class="m-top-none">R$ <span id="clientsSalesCount">{{ total.vlr_pagamento_fornecedor | numberFormat:2:',':'.' }}</span></h2>
-							<h5>Total Pago aos fornecedores</h5>
+							<h5>Total Pago aos Fornecedores</h5>
 							(no período)
 							<div class="stat-icon">
 								<i class="fa fa-truck fa-3x"></i>

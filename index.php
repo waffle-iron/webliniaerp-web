@@ -31,7 +31,10 @@
 	<?php include("google_analytics.php"); ?>
 
 	<style>
-		.datepicker{z-index:1151 !important;}
+		.datepicker{
+			z-index:1151 !important;
+		}
+		
 		@media (min-width: 768px) {
 			.navbar-nav>li>a {
 				padding-top: 25px;
@@ -45,6 +48,12 @@
 
 		.navbar-brand img {
 			max-height: 80px;
+		}
+
+		@media(max-width: 768px) {
+			.navbar-brand img {
+				max-height: 30px;
+			}
 		}
 
 		.nav>li>a.login {
@@ -109,7 +118,7 @@
 									Agora é fácil ter controle financeiro e administrativo <br>
 									da sua micro e pequena empresa. E o melhor, de onde você quiser.
 								</p>
-								<a href="#" class="btn btn-info btn-lg fadeInLeftLarge  m-bottom-lg m-right-xs" data-toggle="modal" data-target="#myModal">Teste por 15 dias <i class="fa fa-arrow-right"></i></a>
+								<a href="#" class="btn btn-info btn-lg fadeInLeftLarge m-bottom-lg m-right-xs hidden-xs" data-toggle="modal" data-target="#myModal">Teste por 15 dias <i class="fa fa-arrow-right"></i></a>
 							</div>
 							<div class="col-xs-6">
 								
@@ -127,7 +136,7 @@
 									infraestrutura, licenças e ainda aumenta sua produtividade <br>
 									controlando a gestão de toda sua empresa.
 								</p>
-								<a href="#" class="btn btn-info btn-lg fadeInRightLarge " data-toggle="modal" data-target="#myModal">Teste por 15 dias <i class="fa fa-arrow-right"></i></a>
+								<a href="#" class="btn btn-info btn-lg fadeInRightLarge hidden-xs" data-toggle="modal" data-target="#myModal">Teste por 15 dias <i class="fa fa-arrow-right"></i></a>
 							</div>
 							<div class="col-xs-5 text-right">
 								
@@ -143,7 +152,7 @@
 								Com o WebliniaERP seus dados ficam armazenados na nuvem e você pode acessá-los quando e de onde quiser. <br>
 								Tudo isso com total segurança e garantia de disponibilidade.
 							</p>
-							<a href="#" class="btn btn-info btn-lg fadeInRightLarge animation-delay2" data-toggle="modal" data-target="#myModal">Teste por 15 dias <i class="fa fa-arrow-right"></i></a>
+							<a href="#" class="btn btn-info btn-lg fadeInRightLarge animation-delay2 hidden-xs" data-toggle="modal" data-target="#myModal">Teste por 15 dias <i class="fa fa-arrow-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -276,14 +285,12 @@
 								
 								<!-- Carousel Slides / Quotes -->
 								<div class="carousel-inner">
-								
 									<!-- Quote 1 -->
 									<div class="item active">
 										<blockquote>
 											<div class="row">
 												<div class="col-sm-2 text-center">
 													<img class="img-circle" src="https://scontent-mia1-1.xx.fbcdn.net/hphotos-xap1/v/t1.0-9/11742869_479718348857521_5158908504574540113_n.jpg?oh=180af3dee1ede84eeba890f1859173a2&oe=56EB30D3" style="width: 100px;height:100px;">
-													<!--<img class="img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/kolage/128.jpg" style="width: 100px;height:100px;">-->
 												</div>
 												<div class="col-sm-10">
 													<p>O WebliniaERP me ajuda a organizar minha empresa de forma fácil e ágil! O Suporte é rápido e me dá a segurança de que minha empresa está bem amparada! Uso e recomendo!</p>

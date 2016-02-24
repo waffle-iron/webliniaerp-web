@@ -131,8 +131,14 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 											id_empreendimento : ng.userLogged.id_empreendimento
 										}
 				});
+				data.emails_notificacoes = !empty(data.emails_notificacoes) ? JSON.parse(data.emails_notificacoes) : [] ;
+				var emails = [] ;
+				$.each(data.emails_notificacoes,function(i,v){
+					emails.push({text:v});
+				});
+				data.emails_notificacoes = emails ;
 				ng.configuracoes = data;
-				//console.log(ng.keysConfig);
+				ng.notEmails = emails;
 				if(data.id_plano_caixa == undefined){
 					$('#id_plano_caixa').addClass('has-error');
 					error++ ;
@@ -429,7 +435,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				emails.push(v.text);
 			});
 			var x = JSON.stringify(emails);
-			 item = {nome:'emails_notificacoes',valor:x,id_empreendimento:ng.userLogged.id_empreendimento}
+			item = {nome:'emails_notificacoes',valor:x,id_empreendimento:ng.userLogged.id_empreendimento}
 			chaves.push(item);
 		}else{
 			return ;

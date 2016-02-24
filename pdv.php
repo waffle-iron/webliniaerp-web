@@ -907,7 +907,7 @@
 															</td>
 															<td class="text-right" style="width:100px;">
 																<span style="display: block;float: left;" ng-if="item.flg_desconto == 1">%</span>
-																<input style="width:80%;float:right"  ng-keyUp="aplicarDesconto($index,$event,false,false)" ng-if="item.flg_desconto == 1" thousands-formatter disabled="true"  ng-model="item.valor_desconto" type="text" class="form-control input-xs" />
+																<input style="width:80%;float:right"  ng-keyUp="aplicarDesconto($index,$event,false,false)" ng-if="item.flg_desconto == 1" thousands-formatter ng-model="item.valor_desconto" type="text" class="form-control input-xs" />
 															</td>
 															<td class="text-right" style="width:100px;">
 																<span style="display: block;float: left;" ng-if="item.flg_desconto == 1">R$</span>

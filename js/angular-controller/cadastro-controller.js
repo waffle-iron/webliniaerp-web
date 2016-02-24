@@ -1,5 +1,4 @@
-app.controller('CadastroController', function($scope, $http, $window, $dialogs, UserService){
-
+app.controller('CadastroController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
 	var ng = $scope
 		aj = $http;
 
@@ -180,7 +179,18 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 	ng.salvar = function() {
 		ng.cliente.empreendimentos 		= [{id:ng.id_empreendimento}];
 		ng.cliente.id_empreendimento 	= ng.id_empreendimento ;
+		if(empty(ng.configuracoes)){
+			ng.configuracoes = ConfigService.getConfig(ng.id_empreendimento);
 
+			var emails_notificacoes = !empty(ng.configuracoes.emails_notificacoes) ? JSON.parse(ng.configuracoes.emails_notificacoes) : false ;
+			$.each(emails_notificacoes,function(i,v){
+				emails_notificacoes[i] = {
+					nome : '',
+					email: v
+				};
+			});
+		}
+		console.log(emails_notificacoes);
 		var btn = $('#btn-salvar');
    		btn.button('loading');
 		ng.removeError();
@@ -207,6 +217,8 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 
 		 aj.post(baseUrlApi()+url, cliente)
 		 	.success(function(data, status, headers, config) {
+		 		var form_data = data ;
+
 		 		ng.mensagens('alert-success','<strong>'+msg+'</strong>');
 		 		$('form').hide();
    				btn.button('reset');
