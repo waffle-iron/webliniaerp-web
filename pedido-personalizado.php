@@ -224,7 +224,7 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li><i class="fa fa-signal"></i> <a href="dashboard.php">Vendas</a></li>
+					 <li><i class="fa fa-signal"></i> <a href="vendas.php">Vendas</a></li>
 					 <li><i class="fa fa-tag"></i> <a href="lista_pedidos_personalizados.php">Pedidos Personalizados</a></li>
 					 <li class="active"><i class="fa fa-plus-circle"></i> Novo Pedido</li>
 				</ul>
