@@ -211,7 +211,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-3" ng-if="ng.userLogged.id_empreendimento == 51 || ng.userLogged.id_empreendimento == 6">
+								<div class="col-sm-3" ng-if="userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6">
 									<div class="form-group">
 										<label for="" class="control-label">Sub Tipo do produto</label>
 										<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
