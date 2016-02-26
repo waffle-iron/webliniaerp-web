@@ -194,7 +194,7 @@
 					<div class="panel-body">
 						<form id="formProdutos" role="form" enctype="multipart/form-data">
 						    <div class="row">
-								<div class="col-sm-2">
+								<div class="col-sm-3">
 									<div class="form-group">
 										<label for="" class="control-label">Tipo do produto</label>
 										<div class="form-group">
@@ -362,7 +362,7 @@
 											<table class="table table-bordered table-condensed table-striped table-hover">
 												<thead>
 													<tr>
-														<td colspan="7"><i class="fa fa fa-th fa-lg"></i> Insumos</td>
+														<td colspan="8"><i class="fa fa fa-th fa-lg"></i> Insumos</td>
 														<td width="60" align="center">
 															<button class="btn btn-xs btn-primary" ng-click="showInsumos()"><i class="fa fa-plus-circle"></i></button>
 														</td>
@@ -370,12 +370,13 @@
 												</thead>
 												<tbody>
 													<tr ng-show="(insumos.length == 0)">
-														<td colspan="8" align="center">Nenhum insumo selecionado</td>
+														<td colspan="9" align="center">Nenhum insumo selecionado</td>
 													</tr>
 													<tr ng-show="(insumos.length > 0)">
 														<td>#</td>
 														<td class="text-center">Produto</td>
 														<td class="text-center">Fabricante</td>
+														<td class="text-center">Categoria</td>
 														<td class="text-center">Tamanho</td>
 														<td class="text-center">Sabor/Cor</td>
 														<td class="text-center">Custo</td>
@@ -386,6 +387,7 @@
 														<td>{{ item.id }}</td>
 														<td>{{ item.nome }}</td>
 														<td>{{ item.nome_fabricante }}</td>
+														<td>{{ item.descricao_categoria }}</td>
 														<td>{{ item.peso }}</td>
 														<td>{{ item.sabor }}</td>
 														<td class="text-right">R$ {{ item.vlr_custo_real | numberFormat:2:',':'.' }}</td>
@@ -776,6 +778,7 @@
 											<th>Código</th>
 											<th class="text-center">Descrição</th>
 											<th class="text-center">Fabricante</th>
+											<th class="text-center">Categoria</th>
 											<th class="text-center" width="80">Tamanho</th>
 											<th class="text-center" width="100">Sabor/Cor</th>
 											<th class="text-center" width="60">Estoque</th>
@@ -801,6 +804,7 @@
 											<td class="text-center">{{ item.codigo_barra }}</td>
 											<td>{{ item.nome }}</td>
 											<td>{{ item.nome_fabricante }}</td>
+											<td>{{ item.descricao_categoria }}</td>
 											<td class="text-center">{{ item.peso }}</td> 
 											<td class="text-center">{{ item.sabor }}</td>
 											<td class="text-center"><a href="#"  ng-click="qtdDepostito(item,$event)">{{ configuracao.id_produto_debito_anterior_cliente == item.id_produto && ' ' || item.qtd_item }}</a></td>

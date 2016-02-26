@@ -390,17 +390,11 @@
 									</div>
 								</div>
 								<div class="form-group" ng-show="!(gradeInfantil.length > 0 || gradeAdulto.length > 0)">
-									<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4"></div>
-									<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
-										<table class="table table-bordered table-hover table-striped table-condensed">
-											<tr>
-												<td>
-													<b>Selecione a Cor da Base e Tiras Para a Grade Ser Contruida</b>
-												</td>
-											</tr>
-										</table>
+									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+										<span class="alert alert-warning">
+											Informe os campos acima para configurar o pedido
+										</span>
 									</div>
-									<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4"></div>
 								</div>
 
 								<div class="form-group" ng-show="(gradeInfantil.length > 0 || gradeAdulto.length > 0)">
