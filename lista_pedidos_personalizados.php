@@ -311,10 +311,10 @@
 												<a  href="pedido-personalizado.php?id_pedido={{ item.id }}" data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button"  ng-if="item.pedido_finalizado == 0"  tooltip="Editar pedido" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Editar pedido">
 													<i class="fa fa-edit"></i>
 												</a>
-												<button ng-click="imprimirRomaneio(item)"  ng-if="item.pedido_finalizado == 0" type="button" tooltip="Imprimir Via Fábrica" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Fábrica">
+												<button ng-click="imprimirRomaneio(item)"   type="button" tooltip="Imprimir Via Fábrica" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Fábrica">
 													<i class="fa fa-print"></i>
 												</button>
-												<button ng-click="imprimirRomaneioCliente(item)"  ng-if="item.pedido_finalizado == 0" type="button" tooltip="Imprimir Via Cliente" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Cliente">
+												<button ng-click="imprimirRomaneioCliente(item)"  type="button" tooltip="Imprimir Via Cliente" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Cliente">
 													<i class="fa fa-print"></i>
 												</button>
 
@@ -330,7 +330,7 @@
 													<i class="fa fa-check"></i>
 												</button>
 
-												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="changeStatus(item,4,'Tem certeza que deseja eviar o pedido para transporte?',$event)" ng-show="item.id_status_pedido == 3"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Enviar p/ Transporte">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button" ng-click="changeStatus(item,4,'Tem certeza que deseja enviar o pedido para transporte?',$event)" ng-show="item.id_status_pedido == 3"  tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Enviar p/ Transporte">
 													<i class="fa fa-truck"></i>
 												</button>
 

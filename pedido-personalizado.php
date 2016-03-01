@@ -535,11 +535,19 @@
 									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"></label>
 									<div class="col-xs-12 col-sm-9 col-md-8 col-lg-10">
 										<div class="alert alert-item-pedido" style="display:none">
-											Teste
+											
 										</div>
 									</div>
 								</div>
-
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Desconto(R$)</label>
+									<div class="col-xs-12 col-sm-9 col-md-8 col-lg-2">
+										<input ng-model="pedido.desconto" type="text" thousands-formatter class="form-control input-sm">
+									</div>
+									<div class="col-xs-12 col-sm-9 col-md-8 col-lg-2">
+										<button type="button" ng-click="calcularDesconto()" class="btn btn-sm btn-info"></i>Aplicar</button>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Discriminação</label>
 									<div class="col-xs-12 col-sm-9 col-md-8 col-lg-10">

@@ -178,6 +178,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		$('[data-popover-visible="1"]').popover('hide').attr('data-popover-visible','0');
 		var btn = $("#inserir-pedido") ;
 		ng.montarchinelos();
+		ng.calcularDesconto();
 	}
 
 	ng.montarchinelos = function(pedido_edit){
@@ -583,7 +584,8 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 				vlr_custo 				: x.vlr_custo,
 				perc_margem_aplicada    : x.perc_margem_aplicada,
 				desconto_aplicado       : (x.valor_desconto > 0 ? 1 : 0),
-				flg_brinde              : Number(x.flg_brinde)
+				flg_brinde              : Number(x.flg_brinde),
+				valor_desconto          : (empty(x.valor_desconto) ? 0 : x.valor_desconto),
 			});
 			var base = ng.getbase(x.insumos);
 			var aux  = [] ;
@@ -597,7 +599,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					perc_margem_aplicada: z.perc_venda_atacado,
 					qtd: ( !( empty(z.tipo) || z.tipo == 'acessorio' ) ? Number(x.qtd) : (Number(x.qtd) * Number(z.qtd)) ),
 					tipo_produto: ( empty(z.tipo) ? 'acessorio' : z.tipo ),
-					valor_desconto: 0,
+					valor_desconto: z.valor_desconto,
 					valor_real_item: z.vlr_venda_atacado,
 					vlr_custo: z.vlr_custo_real,
 					config_grad : x.indexGrad.replace("brinde-",""),
@@ -753,14 +755,14 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		return x ;
 	}
 
-	ng.totalPedido = function(){
+	ng.totalPedido = function(real){
 		var total = 0;
 		$.each(ng.carrinhoPedido,function(i,x){
 			if(Number(x.flg_brinde) != 1)
 			total += x.qtd * x.valor_real_item ;
 		});
 		ng.vlrTotalCompra = Math.round(total * 100) / 100;
-		return numberFormat(total,2,',','.');
+		return real == null ? numberFormat(total,2,',','.') : total ;
 	}
 
 
@@ -872,6 +874,49 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 	ng.boletos					= [{id_banco:null,num_conta_corrente:null,num_cheque:null,status_pagamento:0}];
 
 	ng.telaPagamento = function () {
+		var error = 0 ;
+    	$('.has-error').tooltip('destroy');
+    	$('.has-error').removeClass('has-error');
+
+		dtaVenda	= $("#dtaVenda").val();
+		dtaEntrega 	= $("#dtaEntrega").val();
+
+		if(empty(ng.cliente.acao_cliente)){
+			$dialogs.notify('Atenção!','<strong>Informe um Cliente Para o Pedido.</strong>');
+			return ;
+		}
+
+		if(ng.length(ng.carrinhoPedido) == 0){
+			$dialogs.notify('Atenção!','<strong>Nunhum Produto Foi Montado.</strong>');
+			return ;
+		}
+
+		if(empty(dtaVenda)){
+			error ++ ;
+			$("#label-dta-venda").addClass("has-error");
+			 $("#form-dta-venda").addClass("has-error");
+				var formControl = $("#form-dta-venda")
+					.attr("data-toggle", "tooltip")
+					.attr("data-placement", "bottom")
+					.attr("title", 'Campo obrigatório')
+					.attr("data-original-title", 'Campo obrigatório');
+				formControl.tooltip('show');
+		}
+
+		if(empty(dtaEntrega)){
+			error ++ ;
+			$("#label-dta-entrega").addClass("has-error");
+			$("#form-dta-entrega").addClass("has-error");
+				var formControl = $("#form-dta-entrega")
+					.attr("data-toggle", "tooltip")
+					.attr("data-placement", "bottom")
+					.attr("title", 'Campo obrigatório')
+					.attr("data-original-title", 'Campo obrigatório');
+				formControl.tooltip('show');
+		}
+
+		if(error > 0)
+			return ;
 			ng.tela = 'receber_pagamento';
 			//ng.receber_pagamento = true ;
 			$('html,body').animate({scrollTop: 0},100);
@@ -1728,10 +1773,28 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 	ng.btnInsertCliente = function(){
 		ng.cliente = {acao_cliente:'insert',indicacao:0} ;
 	}
+
+	ng.calcularDesconto = function(){
+			ng.pedido.desconto = $.isNumeric(ng.pedido.desconto) && Number(ng.pedido.desconto) > 0 ? ng.pedido.desconto : 0 ;
+			var total = 0;
+			$.each(ng.carrinhoPedido,function(i,v){
+				ng.carrinhoPedido[i].vlr_init = empty(v.vlr_init) ? Number(v.valor_real_item) : Number(v.vlr_init) ;
+				total += v.qtd * ng.carrinhoPedido[i].vlr_init ;
+			});
+			var prc_dsc = (ng.pedido.desconto * 100) / total ;
+			console.log(prc_dsc) ;
+			$.each(ng.carrinhoPedido,function(i,v){
+				ng.carrinhoPedido[i].vlr_init = empty(v.vlr_init) ? Number(v.valor_real_item) : Number(v.vlr_init) ;
+				ng.carrinhoPedido[i].desconto_aplicado = ng.pedido.desconto > 0 ? 1 : 0 ;
+				ng.carrinhoPedido[i].valor_desconto = prc_dsc/100 ;
+				ng.carrinhoPedido[i].valor_real_item =  numberFormat(ng.carrinhoPedido[i].vlr_init - (ng.carrinhoPedido[i].vlr_init * ng.carrinhoPedido[i].valor_desconto),2,'.',',') ;
+			});		
+	}
 				
 
 	if( !(params.id_pedido == undefined) )
 		ng.loadPedidoEdit(params.id_pedido);
+
 	ng.loadCoresBase();
 	ng.loadCoresTira();
 	ng.loadConfig();
