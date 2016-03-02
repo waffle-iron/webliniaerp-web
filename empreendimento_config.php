@@ -634,7 +634,7 @@
 							<div class="tab-pane fade" id="fiscal">
 								<div class="alert alert-config-fiscal" style="display:none"></div>
 								<div class="row">
-									<div class="col-sm-6">
+									<div class="col-sm-3">
 										<div class="form-group">
 											<label for="" class="control-label">Ambiente de Emissão da NF-e</label>
 											<div class="form-group">
@@ -651,8 +651,19 @@
 											</div>
 										</div>
 									</div>
+									<div class="col-sm-4">
+										<div class="form-group" id="serie_documento_fiscal">
+											<label class="control-label">Token Produção</label>
+											<input type="text" ng-model="configuracoes.token_focus_producao" class="form-control input-sm">
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group" id="serie_documento_fiscal">
+											<label class="control-label">Token Homologação</label>
+											<input type="text" ng-model="configuracoes.token_focus_homologacao" class="form-control input-sm">
+										</div>
+									</div>
 								</div>
-
 								<div class="row">
 									<div class="col-sm-4">
 										<div class="form-group" id="regimeTributario">

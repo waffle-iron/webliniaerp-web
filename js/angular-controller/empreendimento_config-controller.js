@@ -406,7 +406,20 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item);
 		}
 
+		if(ng.configuracoes.token_focus_producao != undefined){
+			var item = {nome :'token_focus_producao',valor:ng.configuracoes.token_focus_producao , id_empreendimento	:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}
+
+		if(ng.configuracoes.token_focus_homologacao != undefined){
+			var item = {nome :'token_focus_homologacao',valor:ng.configuracoes.token_focus_homologacao , id_empreendimento	:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}
+
 		btn.button('loading');
+		if(empty(ng.lista_serie_documento_fiscal)){
+			ng.lista_serie_documento_fiscal = [] ;
+		}
 		aj.post(baseUrlApi()+"serie_documento_fiscal",{series:ng.lista_serie_documento_fiscal})
 			.success(function(data, status, headers, config) {
 				aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local} )
