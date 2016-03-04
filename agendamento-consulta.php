@@ -199,46 +199,305 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li><i class="fa fa-calendar"></i> <a href="vendas.php">Agenda</a></li>
-					 <li class="active"><i class="fa fa-calendar-plus-o"></i> Agendamento de Consulta</li>
+					 <li class="active"><i class="fa fa-list"></i> Controle de Atendimento</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-calendar-plus-o"></i> Agendamento de Consulta</h3>
+					<h3 class="no-margin"><i class="fa fa-list"></i> Controle de Atendimento</h3>
+					<br/>
+					<button class="btn btn-info" ng-click="openModal()"><i class="fa fa-plus-circle"></i> Novo Atendimento</button>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-plus-circle"></i> Novo Atendimento</h3>
+					</div>
+					<div class="panel-body">
+						<fieldset>
+							<legend class="clearfix">
+								<span class="">Dados do Cliente</span>
+								<div class="pull-right">
+									<button type="button" class="btn btn-xs btn-default" ng-click="selCliente()"><i class="fa fa-users"></i> Selecionar Cliente Existente</button>
+									<button type="button" class="btn btn-xs btn-primary" ng-click="btnInsertCliente()"><i class="fa fa-plus-circle"></i> Cadastrar Novo Cliente</button>
+								</div>
+							</legend>
+
+							<form class="form form-horizontal" role="form">
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Nome:</label> 
+									<div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="nome">
+										<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">E-mail:</label> 
+									<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="email">
+										<input type="text" class="form-control input-sm" ng-model="cliente.email">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
+									<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="tel_fixo">
+										<input ui-mask="(99) 99999999" ng-model="cliente.tel_fixo" type="text" class="form-control input-sm">
+									</div>
+
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Celular):</label> 
+									<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="celular">
+										<input ui-mask="(99) 99999999?9" ng-model="cliente.celular" type="text" class="form-control input-sm">
+									</div>
+								</div>
+							</form>
+						</fieldset>
+					</div>
+
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<button class="btn btn-success"><i class="fa fa-indent"></i> Incluir na fila de atendimento</button>
+							<button class="btn btn-danger"><i class="fa fa-times-circle"></i> Cancelar</button>
+						</div>
+					</div>
+				</div>
+
+
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<div class="row">
-							<div class="col-lg-3">
-								<div class="row">
-									<div class="col-lg-12">
-										<div id='calendar-fev'></div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-12">
-										<div id='calendar-mar'></div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-12">
-										<div id='calendar-abr'></div>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-9">
-								<div id='calendar'></div>
-							</div>
-						</div>
+						<table class="table table-bordered table-hover table-striped table-condensed">
+							<thead>
+								<th>Ficha</th>
+								<th>Paciente</th>
+								<th>Status</th>
+								<th>Valor</th>
+								<th>Principal</th>
+								<th>Ações</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>B1234</td>
+									<td>ALICE DE JESUS SANTOS</td>
+									<td>Orçamento</td>
+									<td>R$ 2.423,52</td>
+									<td>Dr. Gustavo Ribeiro</td>
+									<td>
+										<button class="btn btn-xs btn-success" data-toggle="tooltip" title="Iniciar Atendimento">
+											<i class="fa fa-play"></i>
+										</button>
+										<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Finalizar Atendimento">
+											<i class="fa fa-stop"></i>
+										</button>
+										<button class="btn btn-xs btn-primary" data-toggle="tooltip" title="Abrir Fichar do Paciente">
+											<i class="fa fa-user"></i>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal Processando Venda-->
+		<div class="modal fade" id="modalFichaPaciente" style="display:none">
+  			<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Ficha do Paciente</h4>
+      				</div>
+				    <div class="modal-body bg-trans-dark">
+				    	<div class="panel-tab clearfix">
+							<ul class="tab-bar">
+								<li class="active"><a href="#dados" data-toggle="tab"><i class="fa fa-user"></i> Dados Cadastrais</a></li>
+								<li><a href="#procedimentos" data-toggle="tab"><i class="fa fa-list-alt"></i> Procedimentos</a></li>
+							</ul>
+						</div>
+
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="dados">
+								<form class="form form-horizontal" role="form">
+									<div class="form-group">
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Nome:</label> 
+										<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" id="nome">
+											<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">E-mail:</label> 
+										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5" id="email">
+											<input type="text" class="form-control input-sm" ng-model="cliente.email">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
+										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="tel_fixo">
+											<input ui-mask="(99) 99999999" ng-model="cliente.tel_fixo" type="text" class="form-control input-sm">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Celular):</label> 
+										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="celular">
+											<input ui-mask="(99) 99999999?9" ng-model="cliente.celular" type="text" class="form-control input-sm">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">CEP:</label> 
+										<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" id="nome">
+											<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Endereço:</label> 
+										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5" id="nome">
+											<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">No:</label> 
+										<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" id="nome">
+											<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Bairro:</label> 
+										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="nome">
+											<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Estado:</label> 
+										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="nome">
+											<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Cidade:</label> 
+										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="nome">
+											<input type="text" class="form-control input-sm" ng-model="cliente.nome">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label sr-only"></label> 
+										<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="nome">
+											<button class="btn btn-success pull-right"><i class="fa fa-save"></i> Salvar Informações</button>
+										</div>
+						    		</div>
+								</form>
+							</div>
+
+							<div class="tab-pane fade" id="procedimentos">
+								<form class="form" role="form">
+									<div class="row">
+										<div class="col-lg-3">
+											<div class="form-group">
+												<label class="control-label">Procedimento</label>
+												<div class="controls">
+													<div class="input-group">
+														<input type="text" class="form-control input-sm">
+														<span class="input-group-btn">
+															<button class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-lg-3">
+											<div class="form-group">
+												<label class="control-label">Dente/Região</label>
+												<div class="controls">
+													<div class="input-group">
+														<input type="text" class="form-control input-sm">
+														<span class="input-group-btn">
+															<button class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-lg-3">
+											<div class="form-group">
+												<label class="control-label">Face</label>
+												<div class="controls">
+													<div class="input-group">
+														<input type="text" class="form-control input-sm">
+														<span class="input-group-btn">
+															<button class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-lg-2">
+											<div class="form-group">
+												<label class="control-label">Valor</label>
+												<div class="controls">
+													<input class="form-control"/>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-lg-1">
+											<div class="form-group">
+												<label class="control-label"><br/></label>
+												<div class="controls">
+													<button class="btn btn-sm btn-primary" data-toggle="tooltip" title="Incluir procedimento"><i class="fa fa-plus-square"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</form>
+
+								<table class="table table-bordered table-hover table-striped table-condensed">
+									<thead>
+										<th>Procedimento</th>
+										<th>Dente/Região</th>
+										<th>Face</th>
+										<th>Status</th>
+										<th>Agendamento</th>
+										<th>Valor</th>
+										<th>Ações</th>
+									</thead>
+									<tbody>
+										<tr>
+											<td>EIXO LATIDUNINAL</td>
+											<td>Dente 1</td>
+											<td>Todo o Dente</td>
+											<td><i class="fa fa-circle text-danger"></i> Pendente</td>
+											<td>25/04/2016</td>
+											<td class="text-right"><i class="fa fa-circle text-danger"></i> R$ 2.424,42</td>
+											<td>
+												<button class="btn btn-xs btn-primary" data-toggle="tooltip" title="Efetuar pagamento">
+													<i class="fa fa-money"></i>
+												</button>
+												<button class="btn btn-xs btn-primary" data-toggle="tooltip" title="Agendar realização">
+													<i class="fa fa-calendar"></i>
+												</button>
+												<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Cancelar agendamento">
+													<i class="fa fa-times-circle"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<th class="text-right" colspan="5">Total</th>
+										<th class="text-right">R$ 13.423,93</th>
+										<th></th>
+									</tfoot>
+								</table>
+							</div>
+						</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->
