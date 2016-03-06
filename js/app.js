@@ -1,4 +1,4 @@
-var paramModule = ['ui.mask','ui.bootstrap','dialogs','filters','angularTreeview','net.enzey.autocomplete'] ;
+var paramModule = ['ui.mask','ui.bootstrap','dialogs','filters','angularTreeview','net.enzey.autocomplete', 'isteven-multi-select'] ;
 if(!(typeof addParamModule == "undefined") && addParamModule.length > 0)
 	paramModule = paramModule.concat(addParamModule);
 var app = angular.module('HageERP', paramModule , function($httpProvider) {
