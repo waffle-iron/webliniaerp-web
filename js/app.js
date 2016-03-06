@@ -94,6 +94,11 @@ angular.module('filters', [])
 		  	var segundos = d.getSeconds() < 10 ? '0'+d.getSeconds() : d.getSeconds() ;
 
 		  	return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+hora+':'+minutos+':'+segundos;
+		  }else if(tipo=="time"){
+		  	var hora = d.getHours() < 10 ? '0'+d.getHours() : d.getHours() ;
+		  	var minutos = d.getMinutes() < 10 ? '0'+d.getMinutes() : d.getMinutes() ;
+		  	var segundos = d.getSeconds() < 10 ? '0'+d.getSeconds() : d.getSeconds() ;
+		  	return hora+':'+minutos+':'+segundos;
 		  }
 	      else
 	      	return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();

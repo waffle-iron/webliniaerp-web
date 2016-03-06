@@ -194,12 +194,12 @@
 						<div class="panel panel-default" id="box-novo">
 								<div class="panel-tab clearfix">
 									<ul class="tab-bar">
-										<li class="active"><a href="#informacoes_basicas" data-toggle="tab"><i class="fa  fa-star-o"></i>  Informações Básicas</a></li>
-										<li><a href="#estoque" data-toggle="tab"><i class="fa fa-cloud"></i> Estoque</a></li>
-										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-desktop"></i> Informações Complementares</a></li>
-										<li><a href="#Empreendimentos" data-toggle="tab"><i class="fa fa-barcode"></i> Empreendimentos</a></li>
-										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-bell"></i> Fornecedores</a></li>
-										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>
+										<li class="active"><a href="#informacoes_basicas" data-toggle="tab"><i class="fa fa-archive"></i>  Informações Básicas</a></li>
+										<li><a href="#estoque" data-toggle="tab"><i class="fa fa-list-ol"></i> Estoque</a></li>
+										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
+										<li><a href="#Empreendimentos" data-toggle="tab"><i class="fa fa-building-o"></i> Empreendimentos</a></li>
+										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
+										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
 									</ul>
 								</div>
 								<form id="formProdutos" role="form" enctype="multipart/form-data">
@@ -403,7 +403,7 @@
 														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 															<i class="fa fa-times-circle"></i> Cancelar
 														</button>
-														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-informacoes-basicas')"type="submit" id="btn-salvar-informacoes-basicas" class="btn btn-success btn-sm">
 															<i class="fa fa-save"></i> Salvar
 														</button>
 													</div>
@@ -472,7 +472,7 @@
 														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 															<i class="fa fa-times-circle"></i> Cancelar
 														</button>
-														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-estoque')"type="submit" id="btn-salvar-estoque" class="btn btn-success btn-sm">
 															<i class="fa fa-save"></i> Salvar
 														</button>
 													</div>
@@ -564,7 +564,7 @@
 														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 															<i class="fa fa-times-circle"></i> Cancelar
 														</button>
-														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-informacoes-complemetares')"type="submit" id="btn-salvar-informacoes-complemetares" class="btn btn-success btn-sm">
 															<i class="fa fa-save"></i> Salvar
 														</button>
 													</div>
@@ -607,7 +607,7 @@
 														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 															<i class="fa fa-times-circle"></i> Cancelar
 														</button>
-														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-empreendimentos')"type="submit" id="btn-salvar-empreendimentos" class="btn btn-success btn-sm">
 															<i class="fa fa-save"></i> Salvar
 														</button>
 													</div>
@@ -648,7 +648,7 @@
 														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 															<i class="fa fa-times-circle"></i> Cancelar
 														</button>
-														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-fornecedores')"type="submit" id="btn-salvar-fornecedores" class="btn btn-success btn-sm">
 															<i class="fa fa-save"></i> Salvar
 														</button>
 													</div>
@@ -750,7 +750,7 @@
 														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 															<i class="fa fa-times-circle"></i> Cancelar
 														</button>
-														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar()"type="submit" id="btn-salvar" class="btn btn-success btn-sm">
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-fiscal')"type="submit" id="btn-salvar-fiscal" class="btn btn-success btn-sm">
 															<i class="fa fa-save"></i> Salvar
 														</button>
 													</div>

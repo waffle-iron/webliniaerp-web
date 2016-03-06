@@ -285,8 +285,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			});
 	}
 
-	ng.salvar = function() {
-		var btn = $('#btn-salvar');
+	ng.salvar = function(id_btn) {
+		var btn = $('#'+id_btn);
    		btn.button('loading');
 		var url = ng.editing ? 'produto/update' : 'produto';
 
