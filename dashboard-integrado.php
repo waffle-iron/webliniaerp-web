@@ -612,7 +612,9 @@
     <script src="js/auto-complete/ng-sanitize.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/isteven-multi-select.js"></script>
-
+    <script type="text/javascript">
+    	var addParamModule = ['isteven-multi-select'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/dashboard-integrado-controller.js?<?php echo filemtime('js/angular-controller/dashboard-integrado-controller.js')?>"></script>
