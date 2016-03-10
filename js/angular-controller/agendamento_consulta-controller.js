@@ -41,12 +41,12 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 		},5000);
 	}
 
-	ng.selProfissionais = function(){
+	ng.selProfissionais = function(paciente){
+		ng.paciente_atendimento = paciente ;
 		var offset = 0  ;
     	var limit  =  10 ;;
-
-			ng.loadProfissionais(offset,limit);
-			$("#list_profissionais").modal("show");
+		ng.loadProfissionais(offset,limit);
+		$("#list_profissionais").modal("show");
 	}
 
 	ng.id_profissional_atendimento = null ;
@@ -277,42 +277,46 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 	}
 
 	ng.id_paciente_atendimento = null ;
-	ng.iniciarAtendimento = function(paciente){
+	ng.FinalizarAtendimento = function(paciente){
 		ng.id_profissional_atendimento = null ;
 		ng.selProfissionais();
-		ng.id_paciente_atendimento = paciente.id;
+		ng.paciente_atendimento = paciente;
 	}
 
-	ng.setInitAtendimento = function(){
-		var post = {	
-			dta_inicio_atendimento:moment().format('YYYY-MM-DD HH:mm:ss'),
-			id_profissional_atendimento : ng.id_profissional_atendimento,
-			id_status:2,
-			where:'id = '+ng.id_paciente_atendimento
-		};
-		aj.post(baseUrlApi()+"clinica/atendimento/update",post)
-			.success(function(data, status, headers, config) {
-				ng.getListaAtendimento();
-				$('#list_profissionais').modal('hide');
-			})
-			.error(function(data, status, headers, config) {
-				
-		});
-	}
-	ng.atendimento_selecionado = {} ;
-	ng.setFimAtendimento = function(paciente,event){
+	ng.setInitAtendimento = function(paciente,$event){
 		var btn =  $(event.target) ;
 		if(!(btn.is(':button')))
 			btn = $(btn.parent('button'));
 		btn.button('loading');
-		ng.atendimento_selecionado = paciente ;
+		var post = {	
+			dta_inicio_atendimento:moment().format('YYYY-MM-DD HH:mm:ss'),
+			//id_profissional_atendimento : ng.id_profissional_atendimento,
+			id_status:2,
+			where:'id = '+paciente.id
+		};
+		aj.post(baseUrlApi()+"clinica/atendimento/update",post)
+			.success(function(data, status, headers, config) {
+				ng.getListaAtendimento();
+				btn.button('loading');
+				//$('#list_profissionais').modal('hide');
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('loading');
+		});
+	}
+	ng.atendimento_selecionado = {} ;
+	ng.setFimAtendimento = function(){
+		var btn =  $("#btn-fim-atendimento") ;
+		btn.button('loading');
+		ng.atendimento_selecionado = ng.paciente_atendimento ;
 		ng.getItensVenda();
 		var post = {	
 			dta_fim_atendimento:moment().format('YYYY-MM-DD HH:mm:ss'),
 			id_status:4,
-			where:'id = '+paciente.id,
-			id_item_venda : paciente.id_item_venda,
-			id_status_procedimento : 3
+			where:'id = '+ng.paciente_atendimento.id,
+			id_item_venda : ng.paciente_atendimento.id_item_venda,
+			id_status_procedimento : 3,
+			id_profissional_atendimento : ng.id_profissional_atendimento
 		};
 		aj.post(baseUrlApi()+"clinica/atendimento/update",post)
 			.success(function(data, status, headers, config) {
@@ -1424,6 +1428,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
     var msg = "Pagamento lançado com sucesso" ;
 
     var post = {
+    	id_atendimento : ng.atendimento_selecionado.id,
     	id_venda : ng.atendimento_selecionado.id_venda,
         id_cliente : ng.atendimento_selecionado.id_paciente,
         id_empreendimento : ng.userLogged.id_empreendimento,
@@ -1441,6 +1446,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 			$('[href="#procedimentos"]').parent().addClass('active');
 			ng.getItensVenda();
 			ng.initVarPag();
+			ng.getListaAtendimento();
         })
         .error(function(data, status, headers, config) {
             $btn.button('reset');
