@@ -219,13 +219,13 @@
 
 				<div class="panel panel-default">
 					<div class="panel-body clearfix">
-						<div class="col-lg-9">
+						<div class="col-lg-7">
 							<form role="form" class="form form-horizontal">
 								<div class="form-group no-margin">
-									<label class="control-label col-lg-2">Data Apuração:</label>
-									<div class="col-lg-3">
+									<label class="control-label col-lg-3">Data Apuração:</label>
+									<div class="col-lg-4">
 										<div class="input-group">
-											<input class="form-control input-sm"/>
+											<input class="form-control input-sm" value="<?php echo date("d/m/Y"); ?>" />
 											<span class="input-group-btn">
 												<button class="btn btn-default btn-sm" type="button">
 													<i class="fa fa-calendar"></i>
@@ -240,8 +240,12 @@
 								</div>
 							</form>
 						</div>
-						<div class="col-lg-3 clearfix">
-							<button type="button" class="btn btn-sm btn-success pull-right"><i class="fa fa-print"></i> Imprimir</button>
+						<div class="col-lg-5 clearfix">
+							<div class="pull-right">
+								<button type="button" class="btn btn-sm btn-info"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</button>
+								<button type="button" class="btn btn-sm btn-info"><i class="fa fa-file-pdf-o"></i> Exportar p/ PDF</button>
+								<button type="button" class="btn btn-sm btn-success"><i class="fa fa-print"></i> Imprimir</button>
+							</div>
 						</div>
 					</div>
 				</div>

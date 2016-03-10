@@ -1,4 +1,11 @@
 <li>
+	<a href="relatorio-diario-clinica.php">
+		<span class="submenu-label">
+			<i class="fa fa-file-text-o"></i> Rel. Diário Atendimento
+		</span>
+	</a>
+</li>
+<li>
 	<a href="rel_analitico_estoque.php">
 		<span class="submenu-label">
 			<i class="fa fa-file-text-o"></i> Estoque Analítico
