@@ -299,10 +299,10 @@
 
 									<td>{{ paciente.nome_profissional }}</td>
 									<td>
-										<button class="btn btn-xs btn-success" ng-disabled="paciente.dta_inicio_atendimento != null" ng-click="iniciarAtendimento(paciente)" data-toggle="tooltip" title="Iniciar Atendimento">
+										<button class="btn btn-xs btn-success"  ng-click="iniciarAtendimento(paciente)" data-toggle="tooltip" title="Iniciar Atendimento">
 											<i class="fa fa-play"></i>
 										</button>
-										<button class="btn btn-xs btn-danger" ng-disabled="paciente.dta_fim_atendimento != null" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="setFimAtendimento(paciente,$event)" data-toggle="tooltip" title="Finalizar Atendimento">
+										<button class="btn btn-xs btn-danger"  data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="setFimAtendimento(paciente,$event)" data-toggle="tooltip" title="Finalizar Atendimento">
 											<i class="fa fa-stop"></i>
 										</button>
 										<button class="btn btn-xs btn-primary" ng-click="abrirFichaPaciente(paciente)" data-toggle="tooltip" title="Abrir Fichar do Paciente">
@@ -415,9 +415,9 @@
 												<label class="control-label">Procedimento</label>
 												<div class="controls">
 													<div class="input-group">
-														<input type="text" ng-model="procedimento.dsc_procedimento" ng-blur="buscaProcedimentoByCod()" ng-focus="procedimento.dsc_procedimento=''" ng-click="salvarProcedimento()" class="form-control input-sm">
+														<input type="text" ng-model="procedimento.dsc_procedimento" ng-blur="buscaProcedimentoByCod()" ng-focus="procedimento.dsc_procedimento=''" ng-enter="salvarProcedimento()" class="form-control input-sm">
 														<span class="input-group-btn">
-															<button class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+															<button class="btn btn-default btn-sm" ng-click="selProcedimento()" type="button"><i class="fa fa-search"></i></button>
 														</span>
 													</div>
 												</div>
@@ -429,9 +429,9 @@
 												<label class="control-label">Dente/Região</label>
 												<div class="controls">
 													<div class="input-group">
-														<input ng-model="procedimento.nme_dente" ng-blur="buscaDenteByCod()" ng-focus="procedimento.nme_dente=''" ng-click="salvarProcedimento()" type="text" class="form-control input-sm">
+														<input ng-model="procedimento.nme_dente" ng-blur="buscaDenteByCod()" ng-focus="procedimento.nme_dente=''" ng-enter="salvarProcedimento()" type="text" class="form-control input-sm">
 														<span class="input-group-btn">
-															<button  class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+															<button ng-click="selOdontograma()"  class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
 														</span>
 													</div>
 												</div>
@@ -443,9 +443,9 @@
 												<label class="control-label">Face</label>
 												<div class="controls">
 													<div class="input-group">
-														<input type="text" ng-model="procedimento.dsc_face" ng-blur="buscaFaceDenteByCod()" ng-focus="procedimento.dsc_face=''" ng-click="salvarProcedimento()" class="form-control input-sm">
+														<input type="text" ng-model="procedimento.dsc_face" ng-blur="buscaFaceDenteByCod()" ng-focus="procedimento.dsc_face=''" ng-enter="salvarProcedimento()" class="form-control input-sm">
 														<span class="input-group-btn">
-															<button class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+															<button class="btn btn-default btn-sm" ng-click="selFaceDente()" ng- type="button"><i class="fa fa-search"></i></button>
 														</span>
 													</div>
 												</div>
@@ -456,7 +456,7 @@
 											<div class="form-group" id="valor">
 												<label class="control-label">Valor</label>
 												<div class="controls">
-													<input thousands-formatter ng-model="procedimento.valor" ng-click="salvarProcedimento()" class="form-control"/>
+													<input thousands-formatter ng-model="procedimento.valor" ng-enter="salvarProcedimento()" class="form-control"/>
 												</div>
 											</div>
 										</div>
@@ -1052,6 +1052,74 @@
 		                        <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_odontogramas.length > 1">
 		                            <li ng-repeat="item in paginacao_odontogramas" ng-class="{'active': item.current}">
 		                                <a href="" h ng-click="loadOdontogramas(item.offset,item.limit)">{{ item.index }}</a>
+		                            </li>
+		                        </ul>
+		                    </div>
+		                </div>
+		            </div>
+		        </div><!-- /.modal-content -->
+		    </div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		 <!-- /Modal odontograma-->
+		<div class="modal fade" id="list_face_dente" style="display:none">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		                <h4>Faces</span></h4>
+		            </div>
+		            <div class="modal-body">
+		                <div class="row">
+		                    <div class="col-md-12">
+		                        <div class="input-group">
+		                            <input ng-model="busca.faces"  ng-enter="loadFaceDente(0,10)" type="text" class="form-control input-sm">
+		                            <div class="input-group-btn">
+		                                <button ng-click="loadFaceDente(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+		                                    <i class="fa fa-search"></i> Buscar
+		                                </button>
+		                            </div> <!-- /input-group-btn -->
+		                        </div> <!-- /input-group -->
+		                    </div><!-- /.col -->
+		                </div>
+		                <br />
+		                <div class="row">
+		                    <div class="col-sm-12">
+		                        <table class="table table-bordered table-condensed table-striped table-hover">
+		                            <tr ng-show="faces != false && (faces.length <= 0 || faces == null)">
+		                                <th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+		                            </tr>
+		                            <tr ng-show="faces == false">
+		                                <th colspan="4" class="text-center">Não a resultados para a busca</th>
+		                            </tr>
+		                            <thead ng-show="(faces.length != 0)">
+		                                <tr>
+		                                    <th >Cod.</th>
+		                                    <th >Descrição</th>
+		                                    <th colspan="2">selecionar</th>
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+		                                <tr ng-repeat="item in faces">
+		                                    <td>{{ item.cod_face }}</td>
+		                                    <td>{{ item.dsc_face }}</td>
+		                                    <td width="50" align="center">
+		                                        <button type="button" class="btn btn-xs btn-success" ng-click="addFaceDente(item)">
+		                                            <i class="fa fa-check-square-o"></i> Selecionar
+		                                        </button>
+		                                    </td>
+		                                </tr>
+		                            </tbody>
+		                        </table>
+		                    </div>
+		                </div>
+
+		                <div class="row">
+		                    <div class="col-sm-12">
+		                        <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_faces.length > 1">
+		                            <li ng-repeat="item in paginacao_faces" ng-class="{'active': item.current}">
+		                                <a href="" h ng-click="loadFaceDente(item.offset,item.limit)">{{ item.index }}</a>
 		                            </li>
 		                        </ul>
 		                    </div>
