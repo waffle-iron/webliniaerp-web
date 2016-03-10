@@ -376,4 +376,3 @@ Date.prototype.addMeses = function(meses){
 Date.prototype.addAnos = function(anos){
     this.setYear(this.getFullYear() + anos)
 };
-

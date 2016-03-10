@@ -70,7 +70,7 @@
 	<div id="overlay" class="transparent"></div>
 
 	<div id="wrapper" class="preload">
-		<div id="top-nav" class="fixed skin-6">
+		<div id="top-nav" class="fixed skin-1">
 			<a href="#" class="brand">
 				<span>WebliniaERP</span>
 				<span class="text-toggle"> Admin</span>
@@ -106,7 +106,7 @@
 			</ul>
 		</div><!-- /top-nav-->
 
-		<aside class="fixed skin-6">
+		<aside class="fixed skin-1">
 			<div class="sidebar-inner scrollable-sidebar">
 				<div class="size-toggle">
 					<a class="btn btn-sm" id="sizeToggle">

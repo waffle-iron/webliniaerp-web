@@ -183,27 +183,6 @@ $(function	()	{
 		targetElm.toggleClass('collapse');
 	});
 
-	//Number Animation
-	var currentVisitor = $('#currentVisitor').text();
-
-	$({numberValue: 0}).animate({numberValue: currentVisitor}, {
-		duration: 2500,
-		easing: 'linear',
-		step: function() {
-			$('#currentVisitor').text(Math.ceil(this.numberValue));
-		}
-	});
-
-	var currentBalance = $('#currentBalance').text();
-
-	$({numberValue: 0}).animate({numberValue: currentBalance}, {
-		duration: 2500,
-		easing: 'linear',
-		step: function() {
-			$('#currentBalance').text(Math.ceil(this.numberValue));
-		}
-	});
-
 	//Refresh Widget
 	$('.refresh-widget').click(function() {
 		var _overlayDiv = $(this).parent().parent().parent().parent().find('.loading-overlay');
