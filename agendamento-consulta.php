@@ -273,28 +273,32 @@
 					<div class="panel-body">
 						<table class="table table-bordered table-hover table-striped table-condensed">
 							<thead>
-								<th>Chegada/Atendimento</th>
-								<th>Ficha</th>
+								<th class="text-center">Chegada</th>
+								<th class="text-center">Inicio Atend.</th>
+								<th class="text-center">Fim Atend.</th>
+								<th class="text-center">Ficha</th>
 								<th>Paciente</th>
 								<th>Status</th>
-								<th>Valor</th>
+								<th class="text-center">Valor</th>
 								<th>Principal</th>
-								<th>Ações</th>
+								<th width="140">Ações</th>
 							</thead>
 							 <tr ng-show="lista_atendimento == null">
                                 <th class="text-center" colspan="9" style="text-align:center"><i class='fa fa-refresh fa-spin'></i> Carregando ...</th>
                             </tr>
                             <tr ng-show="lista_atendimento.length == 0">
-                                <th colspan="9" class="text-center">Nunhum atendimento marcado até o momento</th>
+                                <th colspan="9" class="text-center">Nenhum atendimento encontrado.</th>
                             </tr>
 							<tbody>
 								<tr ng-repeat="paciente in lista_atendimento" bs-tooltip>
-									<td>{{ paciente.dta_entrada | dateFormat:'time' }}</td>
+									<td class="text-center">{{ paciente.dta_entrada | dateFormat:'time' }}</td>
+									<td class="text-center">{{ paciente.dta_inicio_atendimento | dateFormat:'time' }}</td>
+									<td class="text-center">{{ paciente.dta_fim_atendimento | dateFormat:'time' }}</td>
 									<td>{{ null }}</td>
 									<td>{{ paciente.nome_paciente }}</td>
 									<td>{{paciente.dsc_status}} {{ paciente.id_atendimento_origem == null &&  '(Orçamento)' || '(Procedimento)' }}</td>
 
-									<td ng-show="paciente.id_status > 2 && paciente.id_atendimento_origem == null">R$ {{ paciente.valor | numberFormat:2:',':'.' }}</td>
+									<td class="text-right" ng-show="paciente.id_status > 2 && paciente.id_atendimento_origem == null">R$ {{ paciente.valor | numberFormat:2:',':'.' }}</td>
 									<td ng-show="paciente.id_status <= 2 || paciente.id_atendimento_origem != null"></td>
 
 									<td>{{ paciente.nome_profissional }}</td>
@@ -307,6 +311,12 @@
 										</button>
 										<button class="btn btn-xs btn-primary" ng-click="abrirFichaPaciente(paciente)" data-toggle="tooltip" title="Abrir Fichar do Paciente">
 											<i class="fa fa-user"></i>
+										</button>
+										<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Emitir Recibo">
+											<i class="fa fa-file-text-o"></i>
+										</button>
+										<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Emitir NFS-e">
+											<i class="fa fa-barcode"></i>
 										</button>
 									</td>
 								</tr>

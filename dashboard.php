@@ -172,7 +172,7 @@
 			<div class="main-header clearfix">
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-dashboard"></i> Dashboard</h3>
-					<span>Bem vindo de volta Sr. {{ userLogged.nme_usuario }}</span>
+					<span>Bem Vindo de volta Sr(a). {{ userLogged.nme_usuario }}</span>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -185,6 +185,12 @@
 					<span class="text">PDV</span>
 				</a>
 				<?php } ?>
+				<a href="agendamento-consulta.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-list"></i>
+					</span>
+					<span class="text">Controle de Atendimento</span>
+				</a>
 				<a href="vendas.php" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-signal"></i></span>

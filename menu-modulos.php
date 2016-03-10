@@ -62,6 +62,13 @@
 	</a>
 </li>
 <li>
+	<a href="agendamento-consulta.php">
+		<span class="submenu-label">
+			<i class="fa fa-list"></i> Contr. Atendimento
+		</span>
+	</a>
+</li>
+<li>
 	<a href="clientes.php">
 		<span class="submenu-label">
 			<i class="fa fa-users"></i> Clientes/Usuários
