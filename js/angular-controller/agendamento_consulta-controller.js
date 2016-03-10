@@ -4,7 +4,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 		aj = $http;
 	$scope.userLogged = UserService.getUserLogado();
 	ng.configuracoes = ConfigService.getConfig(ng.userLogged.id_empreendimento);
-	ng.busca 		 = {clientes:"",profissionais:"",procedimentos:"",odontogramas:""};
+	ng.busca 		 = {clientes:"",profissionais:"",procedimentos:"",odontogramas:"",faces:""};
 	ng.cliente       = {acao_cliente:'insert'} ;
 	ng.paginacao     = {} ;
 	$scope.openModal = function(aba){
@@ -355,7 +355,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 	ng.procedimento = {} ;
 	ng.addProcedimento = function(item){
 		ng.procedimento.id_procedimento = item.id;
-		ng.procedimento.dsc_procedimento = item.dsc_procedimento;
+		ng.procedimento.dsc_procedimento = item.cod_procedimento+" - "+item.dsc_procedimento;
 		$("#list_procedimentos").modal("hide");
 		
 	}
@@ -397,7 +397,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 
     ng.addOdontograma = function(item){
         ng.procedimento.id_dente = item.id;
-        ng.procedimento.nme_dente = item.nme_dente;
+        ng.procedimento.nme_dente = item.cod_dente+" - "+item.nme_dente;
         $("#list_odontogramas").modal("hide");
         
     }
@@ -425,6 +425,47 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
             })
             .error(function(data, status, headers, config) {
                 ng.odontogramas = false ;
+            });
+    }
+
+    ng.selFaceDente = function(){
+        var offset = 0  ;
+        var limit  =  10 ;;
+
+            ng.loadFaceDente(offset,limit);
+            $("#list_face_dente").modal("show");
+    }
+
+    ng.addFaceDente = function(item){
+        ng.procedimento.dsc_face = item.cod_face+" - "+item.dsc_face;
+		ng.procedimento.id_regiao = item.id;
+        $("#list_face_dente").modal("hide");
+        
+    }
+
+    ng.faces = null ;
+    ng.loadFaceDente= function(offset,limit) {
+        offset = offset == null ? 0  : offset;
+        limit  = limit  == null ? 10 : limit;
+        ng.faces = [];
+        query_string = "";
+
+        if(ng.busca.faces != ""){
+            query_string += "?"+$.param({'dsc_face':{exp:"like'%"+ng.busca.faces+"%' OR cod_face=like'%"+ng.busca.faces+"%'"}});
+        }
+
+        aj.get(baseUrlApi()+"clinica/faces/"+offset+"/"+limit+"/"+query_string)
+            .success(function(data, status, headers, config) {
+                $.each(data.faces,function(i,item){
+                    ng.faces.push(item);
+                });
+                ng.paginacao_faces = [];
+                $.each(data.paginacao,function(i,item){
+                    ng.paginacao_faces.push(item);
+                });
+            })
+            .error(function(data, status, headers, config) {
+                ng.faces = false ;
             });
     }
 
