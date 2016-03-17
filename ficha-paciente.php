@@ -228,6 +228,26 @@
 			</div><!-- breadcrumb -->
 
 			<div class="padding-md">
+				<div class="clearfix">
+					<div class="pull-left">
+						<span class="img-demo">
+							<img src="assets/imagens/logos/{{ userLogged.nme_logo }}">
+						</span>
+
+						<div class="pull-left m-left-sm">
+							<h3 class="m-bottom-xs m-top-xs">Ficha do Paciente</h3>
+							<span class="text-muted">Detalhes dos tratamentos e pagamentos realizados</span>
+						</div>
+					</div>
+
+					<div class="pull-right text-right">
+						<h5><strong>#<?php echo rand(); ?></strong></h5>
+						<strong><?php echo date("d/m/Y H:i:s"); ?></strong>
+					</div>
+				</div>
+
+				<hr>
+
 				<div class="panel panel-default">
 					<div class="panel-body clearfix">
 						<div class="row">
