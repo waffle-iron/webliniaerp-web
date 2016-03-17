@@ -297,106 +297,106 @@
 					</div>
 				</div>
 				<div class="row" id="divImprimir">
-				<div class="col-sm-12">
-					<table class="table table-bordered table-condensed table-striped table-hover">
-						<thead>
-							<tr>
-								<th rowspan="2" style="line-height: 46px;">Dta. Lançamento</th>
-								<th rowspan="2" class="text-center" style="line-height: 46px;">Cliente</th>
-								<th rowspan="2" class="text-center" style="line-height: 46px;">Descrição</th>
-								<th rowspan="2" class="text-center" style="line-height: 46px;">Status</th>
-								<th rowspan="2" class="text-center" style="line-height: 46px;width: 100px;">Valor</th>
-								<th rowspan="" class="text-center" colspan="3" ng-if="userLogged.id_perfil == 1">Taxa Maquineta</th>
-							</tr>
-							<tr ng-if="userLogged.id_perfil == 1">
-								<th class="text-center" rowspan="1" style="width: 75px;">% Perc.</th>
-								<th class="text-center" rowspan="1" style="width: 75px;">R$ Desc.</th>
-								<th class="text-center" style="width: 100px;" rowspan="1">Valor c/ Desc.</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-if="movimentacoes.length == null">
-								<td class="text-center" colspan="7">
-									<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando movimentações...
-								</td>
-							</tr>
-							<tr ng-if="movimentacoes.length <= 0">
-								<td colspan="7">
-									Nenhum pagamento encontrado.
-								</td>
-							</tr>
-							<tr ng-repeat-start="item in movimentacoes">
-								<td>{{ item.dta_lacamento | dateFormat:'dateTime' }}</td>
-								<td>#{{ item.id_cliente | uppercase }} {{ item.nome_cliente | uppercase }}</td>
+					<div class="col-sm-12">
+						<table class="table table-bordered table-condensed table-striped table-hover">
+							<thead>
+								<tr>
+									<th rowspan="2" style="line-height: 46px;">Dta. Lançamento</th>
+									<th rowspan="2" class="text-center" style="line-height: 46px;">Cliente</th>
+									<th rowspan="2" class="text-center" style="line-height: 46px;">Descrição</th>
+									<th rowspan="2" class="text-center" style="line-height: 46px;">Status</th>
+									<th rowspan="2" class="text-center" style="line-height: 46px;width: 100px;">Valor</th>
+									<th rowspan="" class="text-center" colspan="3" ng-if="userLogged.id_perfil == 1">Taxa Maquineta</th>
+								</tr>
+								<tr ng-if="userLogged.id_perfil == 1">
+									<th class="text-center" rowspan="1" style="width: 75px;">% Perc.</th>
+									<th class="text-center" rowspan="1" style="width: 75px;">R$ Desc.</th>
+									<th class="text-center" style="width: 100px;" rowspan="1">Valor c/ Desc.</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-if="movimentacoes.length == null">
+									<td class="text-center" colspan="7">
+										<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando movimentações...
+									</td>
+								</tr>
+								<tr ng-if="movimentacoes.length <= 0">
+									<td colspan="7">
+										Nenhum pagamento encontrado.
+									</td>
+								</tr>
+								<tr ng-repeat-start="item in movimentacoes">
+									<td>{{ item.dta_lacamento | dateFormat:'dateTime' }}</td>
+									<td>#{{ item.id_cliente | uppercase }} {{ item.nome_cliente | uppercase }}</td>
 
 
-								<td ng-if="item.id_forma_pagamento == 6 && item.id_venda != null && busca.tipoData != 'lan' ">
-								 ven.:#{{ item.id_venda }} <b>( Pago em : C.C - {{ item.current_parcela }}/{{ item.total_parcelas }} para {{ item.data_pagamento | dateFormat:'date' }} )</b>
-								</td>
+									<td ng-if="item.id_forma_pagamento == 6 && item.id_venda != null && busca.tipoData != 'lan' ">
+									 ven.:#{{ item.id_venda }} <b>( Pago em : C.C - {{ item.current_parcela }}/{{ item.total_parcelas }} para {{ item.data_pagamento | dateFormat:'date' }} )</b>
+									</td>
 
-								<td ng-if="item.id_forma_pagamento == 6 && item.id_venda == null && busca.tipoData != 'lan' ">
-									<b>Pag. em : C.C - {{ item.current_parcela }}/{{ item.total_parcelas }} para {{ item.data_pagamento | dateFormat:'date' }}</b>
-								</td>
+									<td ng-if="item.id_forma_pagamento == 6 && item.id_venda == null && busca.tipoData != 'lan' ">
+										<b>Pag. em : C.C - {{ item.current_parcela }}/{{ item.total_parcelas }} para {{ item.data_pagamento | dateFormat:'date' }}</b>
+									</td>
 
-								<td ng-if="item.id_forma_pagamento == 6 && item.id_venda != null && busca.tipoData == 'lan' ">
-								 ven.:#{{ item.id_venda }} <b>( Pago em : C.C - {{ item.parcelas.length }} X R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }} )</b>
-								</td>
-								<td ng-if="item.id_forma_pagamento == 6 && item.id_venda == null && busca.tipoData == 'lan' ">
-									<b>Pag. em : C.C - {{ item.parcelas.length }} X R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }}</b>
-								</td>
+									<td ng-if="item.id_forma_pagamento == 6 && item.id_venda != null && busca.tipoData == 'lan' ">
+									 ven.:#{{ item.id_venda }} <b>( Pago em : C.C - {{ item.parcelas.length }} X R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }} )</b>
+									</td>
+									<td ng-if="item.id_forma_pagamento == 6 && item.id_venda == null && busca.tipoData == 'lan' ">
+										<b>Pag. em : C.C - {{ item.parcelas.length }} X R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }}</b>
+									</td>
 
-							
-								<td ng-if="item.id_forma_pagamento != 6 && item.id_venda != null ">
-									ven.:#{{ item.id_venda }} <b>( Pago em : {{ item.descricao_forma_pagamento }} para {{ item.data_pagamento | dateFormat:'date' }} )</b>
-								</td>
+								
+									<td ng-if="item.id_forma_pagamento != 6 && item.id_venda != null ">
+										ven.:#{{ item.id_venda }} <b>( Pago em : {{ item.descricao_forma_pagamento }} para {{ item.data_pagamento | dateFormat:'date' }} )</b>
+									</td>
 
-								<td ng-if="item.id_forma_pagamento != 6 &&  item.id_venda == null ">
-									<b>Pag. em : {{ item.descricao_forma_pagamento }} para {{ item.data_pagamento | dateFormat:'date' }}  </b>
-								</td>
-								<td class="text-center">
-									{{ item.status_pagamento == 1 && 'Pago'  || 'Pendente' }}
-								</td>
-								<td  ng-if="item.id_forma_pagamento == 6 && busca.tipoData == 'lan'"  ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" style="color: #118A2E;" class="text-right">
-									<strong>R$ {{ item.valor_pagamento * item.parcelas.length | numberFormat:2:',':'.' }}</strong>
-								</td>
-								<td ng-if="item.id_forma_pagamento == 6 && busca.tipoData != 'lan'" style="color:#118A2E;" class="text-right">
-									<strong>R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }}</strong>
-								</td>
-								<td ng-if="item.id_forma_pagamento != 6" style="color:#118A2E;" class="text-right">
-									<strong>R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }}</strong>
-								</td>
+									<td ng-if="item.id_forma_pagamento != 6 &&  item.id_venda == null ">
+										<b>Pag. em : {{ item.descricao_forma_pagamento }} para {{ item.data_pagamento | dateFormat:'date' }}  </b>
+									</td>
+									<td class="text-center">
+										{{ item.status_pagamento == 1 && 'Pago'  || 'Pendente' }}
+									</td>
+									<td  ng-if="item.id_forma_pagamento == 6 && busca.tipoData == 'lan'"  ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" style="color: #118A2E;" class="text-right">
+										<strong>R$ {{ item.valor_pagamento * item.parcelas.length | numberFormat:2:',':'.' }}</strong>
+									</td>
+									<td ng-if="item.id_forma_pagamento == 6 && busca.tipoData != 'lan'" style="color:#118A2E;" class="text-right">
+										<strong>R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }}</strong>
+									</td>
+									<td ng-if="item.id_forma_pagamento != 6" style="color:#118A2E;" class="text-right">
+										<strong>R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }}</strong>
+									</td>
 
-								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}"  class="text-right" ng-if="userLogged.id_perfil == 1" >
-									 {{ item.taxa_maquineta * 100 | numberFormat:2:',':'.' }}%
-								</td>
-								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="userLogged.id_perfil == 1">
-									 R$ {{ item.vlr_taxa_maquineta | numberFormat:2:',':'.' }}
-								</td>
-								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="userLogged.id_perfil == 1">
-									 R$ {{ item.valor_desconto_maquineta | numberFormat:2:',':'.' }}
-								</td>
-							</tr>
-							<tr ng-repeat-end ng-if="item.id_forma_pagamento == 6 && ccDetalhes" ng-repeat="parcela in item.parcelas">
-								<td class="text-right" colspan="4">{{ parcela.current_parcela+"/"+parcela.total_parcelas }} em {{ parcela.data_pagamento | dateFormat:'date' }}</td>
-							</tr>
-							<tr ng-if="movimentacoes.length > 0">
-								<td colspan="4" class="text-right"> Total</td>
-								<td style="color:#000;" class="text-right">
-									<strong>R$ {{ totais.total | numberFormat:2:',':'.'}}</strong>
-								</td>
-								<td ng-if="userLogged.id_perfil == 1">
+									<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}"  class="text-right" ng-if="userLogged.id_perfil == 1" >
+										 {{ item.taxa_maquineta * 100 | numberFormat:2:',':'.' }}%
+									</td>
+									<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="userLogged.id_perfil == 1">
+										 R$ {{ item.vlr_taxa_maquineta | numberFormat:2:',':'.' }}
+									</td>
+									<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="userLogged.id_perfil == 1">
+										 R$ {{ item.valor_desconto_maquineta | numberFormat:2:',':'.' }}
+									</td>
+								</tr>
+								<tr ng-repeat-end ng-if="item.id_forma_pagamento == 6 && ccDetalhes" ng-repeat="parcela in item.parcelas">
+									<td class="text-right" colspan="4">{{ parcela.current_parcela+"/"+parcela.total_parcelas }} em {{ parcela.data_pagamento | dateFormat:'date' }}</td>
+								</tr>
+								<tr ng-if="movimentacoes.length > 0">
+									<td colspan="4" class="text-right"> Total</td>
+									<td style="color:#000;" class="text-right">
+										<strong>R$ {{ totais.total | numberFormat:2:',':'.'}}</strong>
+									</td>
+									<td ng-if="userLogged.id_perfil == 1">
 
-								</td>
-								<td  style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
-									<strong>R$ {{ total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
-								</td>
-								<td colspan="3" style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
-									<strong>R$ {{ totais.total - total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+									</td>
+									<td  style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
+										<strong>R$ {{ total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
+									</td>
+									<td colspan="3" style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
+										<strong>R$ {{ totais.total - total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 
 			</div>
