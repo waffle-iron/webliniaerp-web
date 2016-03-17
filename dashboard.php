@@ -185,12 +185,6 @@
 					<span class="text">PDV</span>
 				</a>
 				<?php } ?>
-				<a href="agendamento-consulta.php" class="shortcut-link">
-					<span class="shortcut-icon">
-						<i class="fa fa-list"></i>
-					</span>
-					<span class="text">Controle de Atendimento</span>
-				</a>
 				<a href="vendas.php" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-signal"></i></span>
