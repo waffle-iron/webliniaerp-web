@@ -506,7 +506,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				formControl.tooltip();
 		}
 
-		if(empty(ng.procedimento.id_regiao)){
+		/*if(empty(ng.procedimento.id_regiao)){
 			error ++ ;
 			 $("#id_regiao").addClass("has-error");
 				var formControl = $("#id_regiao")
@@ -518,7 +518,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				formControl.tooltip('show');
 			else
 				formControl.tooltip();
-		}
+		}*/
 
 		if(empty(ng.procedimento.valor)){
 			error ++ ;
@@ -1186,12 +1186,6 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 		ng.recebidos.splice(index,1);
 		ng.totalPagamento();
 		ng.calculaTroco();
-	}
-
-
-
-	ng.cancelarModal = function(id){
-		$('#'+id).modal('hide');
 	}
 
 	ng.cancelarPagamento = function(){

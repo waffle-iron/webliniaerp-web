@@ -574,7 +574,7 @@
 			printWindow.document.write("<link href='css/endless.min.css' rel='stylesheet'>");
 			printWindow.document.write("<link href='css/endless-skin.css' rel='stylesheet'>");
 
-			printWindow.document.write("<style type='text/css' media='print'>@page { size: portrait; } th, td { font-size: 8pt; }</style><style type='text/css'>#printButton{ display:none }.custom-table th, .custom-table td { height: 28px !important; min-height: 28px !important; border: 1px solid #999 !important; white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; text-overflow: ellipsis; -moz-binding: url('xml/ellipsis.xml#ellipsis'); } .custom-table th.border-right, .custom-table td.border-right { border-right: 2px solid #999 !important; } .custom-table th.border-left, .custom-table td.border-left { border-left: 2px solid #999 !important; }</style>");
+			printWindow.document.write("<style type='text/css' media='print'>@page { size: landscape; } th, td { font-size: 8pt; }</style><style type='text/css'>#printButton{ display:none }.custom-table th, .custom-table td { height: 28px !important; min-height: 28px !important; border: 1px solid #999 !important; white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; text-overflow: ellipsis; -moz-binding: url('xml/ellipsis.xml#ellipsis'); } .custom-table th.border-right, .custom-table td.border-right { border-right: 2px solid #999 !important; } .custom-table th.border-left, .custom-table td.border-left { border-left: 2px solid #999 !important; }</style>");
 
 			printWindow.document.write(contentToPrint);
 			printWindow.window.print();

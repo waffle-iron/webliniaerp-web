@@ -262,8 +262,13 @@
 
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
-							<button class="btn btn-success" id="btn-incluir-fila"  data-loading-text="<i class='fa fa-refresh fa-spin'></i> Incluindo na fila de atendimento" ng-click="novoAtendimento()"><i class="fa fa-indent"></i> Incluir na fila de atendimento</button>
-							<button class="btn btn-danger" ng-click="cancelarCadastroCliente()"><i class="fa fa-times-circle"></i> Cancelar</button>
+							<button class="btn btn-sm btn-default" ng-click="cancelarCadastroCliente()">
+								<i class="fa fa-times-circle"></i> Cancelar
+							</button>
+							<button class="btn btn-sm btn-success" id="btn-incluir-fila" ng-click="novoAtendimento()"
+								data-loading-text="<i class='fa fa-refresh fa-spin'></i> Incluindo na fila de atendimento">
+								<i class="fa fa-indent"></i> Incluir na fila de atendimento
+							</button>
 						</div>
 					</div>
 				</div>
@@ -291,12 +296,12 @@
                             </tr>
 							<tbody>
 								<tr ng-repeat="paciente in lista_atendimento" bs-tooltip>
-									<td class="text-center">{{ paciente.dta_entrada | dateFormat:'time' }}</td>
-									<td class="text-center">{{ paciente.dta_inicio_atendimento | dateFormat:'time' }}</td>
-									<td class="text-center">{{ paciente.dta_fim_atendimento | dateFormat:'time' }}</td>
-									<td>{{ null }}</td>
-									<td>{{ paciente.nome_paciente }}</td>
-									<td>{{paciente.dsc_status}} 
+									<td class="text-center text-middle">{{ paciente.dta_entrada | dateFormat:'time' }}</td>
+									<td class="text-center text-middle">{{ paciente.dta_inicio_atendimento | dateFormat:'time' }}</td>
+									<td class="text-center text-middle">{{ paciente.dta_fim_atendimento | dateFormat:'time' }}</td>
+									<td class="text-middle">{{ null }}</td>
+									<td class="text-middle">{{ paciente.nome_paciente }}</td>
+									<td class="text-middle">{{paciente.dsc_status}} 
 										<span ng-if="paciente.id_atendimento_origem == null && paciente.flg_procedimento_agendado == 0"> (Orçamento)</span>
 										<span ng-if="paciente.id_atendimento_origem != null && paciente.flg_procedimento_agendado == 0"> (Procedimento)</span>
 										<span ng-if="paciente.flg_procedimento_agendado == 1"> (Pro. Agendado)</span>
@@ -305,8 +310,8 @@
 									<td class="text-right" ng-show="paciente.id_status > 2 && paciente.id_atendimento_origem == null">R$ {{ paciente.valor | numberFormat:2:',':'.' }}</td>
 									<td ng-show="paciente.id_status <= 2 || paciente.id_atendimento_origem != null"></td>
 
-									<td>{{ paciente.nome_profissional }}</td>
-									<td>
+									<td class="text-middle">{{ paciente.nome_profissional }}</td>
+									<td class="text-middle">
 										<button class="btn btn-xs btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  ng-click="setInitAtendimento(paciente,$event)" ng-disabled="paciente.dta_inicio_atendimento != null" data-toggle="tooltip" title="Iniciar Atendimento">
 											<i class="fa fa-play"></i>
 										</button>
@@ -316,11 +321,8 @@
 										<button class="btn btn-xs btn-primary" ng-click="abrirFichaPaciente(paciente)" data-toggle="tooltip" title="Abrir Fichar do Paciente">
 											<i class="fa fa-user"></i>
 										</button>
-										<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Emitir Recibo">
+										<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Imprimir Ficha do Paciente">
 											<i class="fa fa-file-text-o"></i>
-										</button>
-										<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Emitir NFS-e">
-											<i class="fa fa-barcode"></i>
 										</button>
 									</td>
 								</tr>
@@ -331,7 +333,7 @@
 			</div>
 		</div><!-- /main-container -->
 
-		<!-- /Modal Processando Venda-->
+		<!-- /Modal Ficha do Paciente -->
 		<div class="modal fade" id="modalFichaPaciente" style="display:none">
   			<div class="modal-dialog modal-xl">
     			<div class="modal-content">
@@ -342,14 +344,25 @@
 				    <div class="modal-body bg-trans-dark">
 				    	<div class="panel-tab clearfix">
 							<ul class="tab-bar">
-								<li class="active" ng-show="tab_pagamentos == false"><a href="#dados" data-toggle="tab"><i class="fa fa-user"></i> Dados Cadastrais</a></li>
-								<li ng-show="tab_pagamentos == false" ng-click="getItensVenda()"><a href="#procedimentos" data-toggle="tab"><i class="fa fa-list-alt"></i> Procedimentos</a></li>
-								<li ng-show="tab_pagamentos" ><a  href="#pagamentos" data-toggle="tab"><i class="fa fa-list-alt"></i> Pagamentos</a></li>
+								<li class="active" ng-show="tab_pagamentos == false" ng-init="showButtonSalvar = true;" ng-click="showButtonSalvar = true;">
+									<a href="#dados" data-toggle="tab">
+										<i class="fa fa-user"></i> Dados Cadastrais
+									</a>
+								</li>
+								<li ng-show="tab_pagamentos == false" ng-click="getItensVenda(); showButtonSalvar = false;">
+									<a href="#procedimentos" data-toggle="tab">
+										<i class="fa fa-list-alt"></i> Procedimentos
+									</a>
+								</li>
+								<li ng-show="tab_pagamentos" ng-click="showButtonSalvar = false;">
+									<a  href="#pagamentos" data-toggle="tab">
+										<i class="fa fa-list-alt"></i> Pagamentos
+									</a>
+								</li>
 							</ul>
 						</div>
 
 						<div class="tab-content">
-
 							<div class="tab-pane fade in active" id="dados">
 								<div class="alert alerta-dados-paciente" style="display:none">
 										
@@ -412,12 +425,6 @@
 											<select class="form-control" readonly="readonly" ng-model="dados_paciente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
 										</div>
 									</div>
-									<div class="form-group">
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label sr-only"></label> 
-										<div class="col-xs-12 col-sm-11 col-md-11 col-lg-11" id="nome">
-											<button class="btn btn-success pull-right" id="salvar-dados-paciente" ng-click="salvarDadosPaciente()"><i class="fa fa-save"></i> Salvar Informações</button>
-										</div>
-						    		</div>
 								</form>
 							</div>
 
@@ -488,13 +495,13 @@
 
 								<table class="table table-bordered table-hover table-striped table-condensed">
 									<thead>
-										<th>Procedimento</th>
-										<th>Dente/Região</th>
-										<th>Face</th>
-										<th>Status</th>
-										<th>Agendamento</th>
-										<th>Valor</th>
-										<th>Ações</th>
+										<th class="text-center">Procedimento</th>
+										<th class="text-center">Dente/Região</th>
+										<th class="text-center">Face</th>
+										<th class="text-center">Status</th>
+										<th class="text-center">Agendamento</th>
+										<th class="text-center">Valor</th>
+										<th class="text-center">Ações</th>
 									</thead>
 									<tbody>
 										<tr ng-repeat="item in itens_venda" bs-tooltip>
@@ -505,17 +512,23 @@
 												{{item.dsc_status_procedimento}}
 											</td>
 											<td style="width: 154px">
-												<input ng-disabled="item.id_status_procedimento == 3" ng-model="item.dta_inicio_procedimento" class="form-control input-xs" ui-mask="99/99/9999 99:99">
+												<input ng-model="item.dta_inicio_procedimento" class="form-control input-xs" ui-mask="99/99/9999 99:99"
+													ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)">
 											</td>
 											<td class="text-right"><i class="fa fa-circle" ng-class="{'text-danger':item.flg_item_pago == 0,'text-success':item.flg_item_pago == 1}"></i> R$ {{ item.valor_real_item | numberFormat:2:',':'.'}}</td>
-											<td>
+											<td class="text-center">
 												<button class="btn btn-xs btn-primary" ng-disabled="item.flg_item_pago == 1" ng-click="efetuarPagamento(item)" data-toggle="tooltip" title="Efetuar pagamento">
 													<i class="fa fa-money"></i>
 												</button>
-												<button class="btn btn-xs btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-disabled="item.id_status_procedimento == 3" ng-click="agendarProcedimento(item,$event)" data-toggle="tooltip" title="Agendar realização">
+												<button class="btn btn-xs btn-primary" 
+													data-loading-text="<i class='fa fa-refresh fa-spin'></i>" 
+													ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)"
+													ng-click="agendarProcedimento(item,$event)" 
+													data-toggle="tooltip" title="Agendar realização">
 													<i class="fa fa-calendar"></i>
 												</button>
-												<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Cancelar agendamento">
+												<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Cancelar agendamento"
+													ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)">
 													<i class="fa fa-times-circle"></i>
 												</button>
 											</td>
@@ -538,6 +551,7 @@
 									</tfoot>
 								</table>
 							</div>
+
 							<div class="tab-pane fade" id="pagamentos">
 								<div class="panel-body">
 								    <div class="alert alert-pagamento" style="display:none"></div>
@@ -865,6 +879,22 @@
 							</div>
 						</div>
 				    </div>
+
+			    	<div class="modal-footer clearfix no-margin">
+						<div class="pull-left">
+							<button class="btn btn-sm btn-info" id="salvar-dados-paciente" ng-click="salvarDadosPaciente()">
+								<i class="fa fa-file-text-o"></i> Imprimir Ficha do Paciente
+							</button>
+						</div>
+						<div class="pull-right">
+							<button class="btn btn-sm btn-default" id="salvar-dados-paciente" ng-click="cancelarModal('#modalFichaPaciente')" >
+								<i class="fa fa-times-circle"></i> Cancelar
+							</button>
+							<button class="btn btn-sm btn-success" id="salvar-dados-paciente" ng-show="(showButtonSalvar)" ng-click="salvarDadosPaciente()">
+								<i class="fa fa-save"></i> Salvar Informações
+							</button>
+						</div>
+				    </div>
 			  	</div>
 			  	<!-- /.modal-content -->
 			</div>
@@ -941,6 +971,7 @@
             </div><!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
+
         <!-- /Modal procedimentos-->
         <div class="modal fade" id="list_procedimentos" style="display:none">
             <div class="modal-dialog">
@@ -1008,6 +1039,7 @@
             </div><!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
+
         <!-- /Modal odontograma-->
 		<div class="modal fade" id="list_odontogramas" style="display:none">
 		    <div class="modal-dialog">
@@ -1076,7 +1108,7 @@
 		</div>
 		<!-- /.modal -->
 
-		 <!-- /Modal odontograma-->
+		 <!-- /Modal face dente-->
 		<div class="modal fade" id="list_face_dente" style="display:none">
 		    <div class="modal-dialog">
 		        <div class="modal-content">
@@ -1212,16 +1244,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-				    	<button type="button" ng-disabled="id_profissional_atendimento == null" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-fim-atendimento" ng-click="setFimAtendimento()">
-				    		<i class="fa fa-minus-circle"></i> Finalizar
-				    	</button>
+                    <div class="modal-footer clearfix">
+                    	<div class="pull-right">
+                    		<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn btn-sm btn-default" ng-click="cancelarModal('#list_profissionais')" id="btn-aplicar-sangria">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
 
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('#list_profissionais')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
+					    	<button type="button" ng-disabled="id_profissional_atendimento == null" data-loading-text=" Aguarde..." class="btn btn-sm btn-success"
+					    		id="btn-fim-atendimento" ng-click="setFimAtendimento()">
+					    		<i class="fa fa-stop"></i> Finalizar
+					    	</button>
+				    	</div>
 				    </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
