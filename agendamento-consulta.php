@@ -31,6 +31,10 @@
 	<link href="css/endless-skin.css" rel="stylesheet">
 	<link href="css/custom.css" rel="stylesheet">
 
+	<!-- Chosen -->
+	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
+
+
 	<!-- Agenda -->
     <link href='js/agenda/fullcalendar.css' rel='stylesheet' />
     <link href='js/agenda/fullcalendar.print.css' rel='stylesheet' media='print' />
@@ -218,9 +222,9 @@
 								<label class="control-label col-lg-2">Profissional:</label>
 								<div class="controls col-lg-6">
 									<div class="input-group">
-                						<input class="form-control input-sm"/>
+                						<input ng-model="busca.nome_profissional_atendimento"  class="form-control input-sm"/>
                 						<span class="input-group-btn">
-											<button class="btn btn-primary btn-sm" type="button">
+											<button ng-click="selProfissionaisBuscaAgenda()" class="btn btn-primary btn-sm" type="button">
 												<i class="fa fa-search"></i>
 											</button>
 											<button class="btn btn-default btn-sm" type="button" data-toggle="tooltip" title="Limpar">
@@ -230,7 +234,7 @@
                 					</div>
 								</div>
 								<div class="controls col-lg-3">
-									<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalNovoAgendamento">
+									<button class="btn btn-sm btn-info" data-toggle="modal" ng-click="modalNovoAgendamento()">
 										<i class="fa fa-calendar-plus-o"></i> Novo Agendamento
 									</button>
 								</div>
@@ -249,7 +253,7 @@
 			</div>
 		</div><!-- /main-container -->
 
-		<!-- /Modal Clientes-->
+		<!-- /Modal Novo agendamento-->
         <div class="modal fade" id="modalNovoAgendamento" style="display:none">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -259,15 +263,16 @@
                     </div>
                     <div class="modal-body">
                         <form class="form" role="form">
+                        	<div class="alert alert-novo-atendimento" style="display: none"></div>
                         	<div class="row">
                         		<div class="col-lg-6">
-                        			<div class="form-group">
+                        			<div class="form-group" id="id_paciente">
                         				<label class="control-label">Paciente</label>
                         				<div class="controls">
                         					<div class="input-group">
-                        						<input class="form-control input-sm"/>
+                        						<input  ng-model="atendimento.nome_paciente" class="form-control input-sm"/>
                         						<span class="input-group-btn">
-													<button class="btn btn-default btn-sm" type="button">
+													<button class="btn btn-default btn-sm" ng-click="selPaciente()" type="button">
 														<i class="fa fa-search"></i>
 													</button>
 												</span>
@@ -277,13 +282,13 @@
                         		</div>
                         	
                         		<div class="col-lg-6">
-                        			<div class="form-group">
+                        			<div class="form-group" id="id_profissional_atendimento">
                         				<label class="control-label">Profissional</label>
                         				<div class="controls">
                         					<div class="input-group">
-                        						<input class="form-control input-sm"/>
+                        						<input ng-model="atendimento.nome_profissional" class="form-control input-sm"/>
                         						<span class="input-group-btn">
-													<button class="btn btn-default btn-sm" type="button">
+													<button class="btn btn-default btn-sm" ng-click="selProfissionais()" n type="button">
 														<i class="fa fa-search"></i>
 													</button>
 												</span>
@@ -298,21 +303,25 @@
                         			<div class="form-group">
                         				<label class="control-label">Especialidade</label>
                         				<div class="controls">
-                        					<select class="form-control input-sm"></select>
+                        					<select chosen
+										    option="especialidades"
+										    ng-model="atendimento.id_especialidade"
+										    ng-options="campo.id as campo.dsc_especialidade for campo in especialidades">
+											</select>
                         				</div>
                         			</div>
                         		</div>
                     		</div>
 
                         	<div class="row">
-                        		<div class="col-lg-8">
+                        		<div class="col-lg-5">
                         			<div class="form-group">
                         				<label class="control-label">Procedimento</label>
                         				<div class="controls">
                         					<div class="input-group">
-                        						<input class="form-control input-sm"/>
+                        						<input ng-disabled="atendimento.id_especialidade == null" ng-model="atendimento.dsc_procedimento" class="form-control input-sm"/>
                         						<span class="input-group-btn">
-													<button class="btn btn-default btn-sm" type="button">
+													<button ng-disabled="atendimento.id_especialidade == null" ng-click="selProcedimento()" class="btn btn-default btn-sm" type="button">
 														<i class="fa fa-search"></i>
 													</button>
 												</span>
@@ -320,31 +329,316 @@
                         				</div>
                         			</div>
                         		</div>
-                        	
-                        		<div class="col-lg-4">
-                        			<div class="form-group">
-                        				<label class="control-label">Horário</label>
-                        				<div class="controls">
-                        					<div class="input-group">
-                        						<input class="form-control input-sm"/>
-                        						<span class="input-group-btn">
-													<button class="btn btn-default btn-sm" type="button">
-														<i class="fa fa-calendar"></i>
-													</button>
-												</span>
-                        					</div>
-                        				</div>
-                        			</div>
-                        		</div>
+                        		<div id="data-hora-atendimento">
+	                        		<div class="col-lg-4">
+	                        			<div class="form-group" id="dta_entrada">
+	                        				<label class="control-label">Horário</label>
+	                        				<div class="controls">
+	                        					<div class="input-group">
+	                        						<input id="data-atendimento" class="form-control input-sm"/>
+	                        						<span class="input-group-btn">
+														<button class="btn btn-default btn-sm" type="button">
+															<i class="fa fa-calendar"></i>
+														</button>
+													</span>
+	                        					</div>
+	                        				</div>
+	                        			</div>
+	                        		</div>
+	                        		<div class="col-lg-3">
+										<div class="form-group">
+											<label class="control-label">&nbsp</label>
+											<input id="hora-atendimento" type="time" class="form-control input-sm">
+										</div>
+									</div>
+									<div style="clear:both"> </div>
+								</div>
                         	</div>
                         </form>
                     </div>
 
                     <div class="modal-footer clearfix">
                     	<div class="pull-right">
-                    		<button class="btn btn-sm btn-default"><i class="fa fa-times-circle"></i> Cancelar</button>
-                    		<button class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Incluir</button>
+                    		<button class="btn btn-sm btn-default" ng-click="fecharModal('#modalNovoAgendamento')"><i class="fa fa-times-circle"></i> Cancelar</button>
+                    		<button class="btn btn-sm btn-success" id="incluir-atendimento" ng-click="incluirAtendimento()" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Incluindo ..."><i class="fa fa-plus-circle"></i> Incluir</button>
                     	</div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <!-- /Modal Clientes-->
+        <div class="modal fade" id="list_pacientes" style="display:none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Pacientes</span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input ng-model="busca.pacientes"  ng-enter="loadPacientes(0,10)" type="text" class="form-control input-sm">
+                                    <div class="input-group-btn">
+                                        <button ng-click="loadPacientes(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div> <!-- /input-group-btn -->
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <tr ng-show="pacientes == null">
+                                        <th class="text-center" colspan="9" style="text-align:center"><i class='fa fa-refresh fa-spin'></i> Carregando ...</th>
+                                    </tr>
+                                    <tr ng-show="pacientes.lenght">
+                                        <th colspan="4" class="text-center">Não a resultados para a busca</th>
+                                    </tr>
+                                    <thead ng-show="(pacientes.length != 0)">
+                                        <tr>
+                                            <th >Nome</th>
+                                            <th >Apelido</th>
+                                            <th >Perfil</th>
+                                            <th colspan="2">selecionar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in pacientes">
+                                            <td>{{ item.nome }}</td>
+                                            <td>{{ item.apelido }}</td>
+                                            <td>{{ item.nome_perfil }}</td>
+                                            <td width="50" align="center">
+                                                <button  type="button" class="btn btn-xs btn-success" ng-click="addPaciente(item)">
+                                                    <i class="fa fa-check-square-o"></i> Selecionar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_pacientes.length > 1">
+                                    <li ng-repeat="item in paginacao_pacientes" ng-class="{'active': item.current}">
+                                        <a href="" h ng-click="loadPacientes(item.offset,item.limit)">{{ item.index }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <!-- /Modal Profissinais-->
+        <div class="modal fade" id="list_profissioanais" style="display:none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Profissionais</span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input ng-model="busca.profissionais"  ng-enter="loadProfissionais(0,10)" type="text" class="form-control input-sm">
+                                    <div class="input-group-btn">
+                                        <button ng-click="loadProfissionais(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div> <!-- /input-group-btn -->
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <tr ng-show="profissionais != false && (profissionais.length <= 0 || profissionais == null)">
+                                        <th class="text-center" colspan="9" style="text-align:center"><i class='fa fa-refresh fa-spin'></i> Carregando ...</th>
+                                    </tr>
+                                    <tr ng-show="profissionais == false">
+                                        <th colspan="4" class="text-center">Não a resultados para a busca</th>
+                                    </tr>
+                                    <thead ng-show="(profissionais.length != 0)">
+                                        <tr>
+                                            <th >Nome</th>
+                                            <th >Apelido</th>
+                                            <th >Perfil</th>
+                                            <th colspan="2">selecionar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in profissionais">
+                                            <td>{{ item.nome }}</td>
+                                            <td>{{ item.apelido }}</td>
+                                            <td>{{ item.nome_perfil }}</td>
+                                            <td width="50" align="center">
+                                                <button  type="button" class="btn btn-xs btn-success" ng-click="addProfissional(item)">
+                                                    <i class="fa fa-check-square-o"></i> Selecionar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_profissionais.length > 1">
+                                    <li ng-repeat="item in paginacao_profissionais" ng-class="{'active': item.current}">
+                                        <a href="" h ng-click="loadProfissionais(item.offset,item.limit)">{{ item.index }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+         <!-- /Modal procedimentos-->
+        <div class="modal fade" id="list_procedimentos" style="display:none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Procedimentos</span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input ng-model="busca.procedimentos"  ng-enter="loadProcedimentos(0,10)" type="text" class="form-control input-sm">
+                                    <div class="input-group-btn">
+                                        <button ng-click="loadProcedimentos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div> <!-- /input-group-btn -->
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <tr ng-show="procedimentos != false && (procedimentos.length <= 0 || procedimentos == null)">
+                                        <th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+                                    </tr>
+                                    <tr ng-show="procedimentos == false">
+                                        <th colspan="4" class="text-center">Não a resultados para a busca</th>
+                                    </tr>
+                                    <thead ng-show="(procedimentos.length != 0)">
+                                        <tr>
+                                            <th >ID</th>
+                                            <th >Descrição</th>
+                                            <th ></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in procedimentos">
+                                            <td>{{ item.id }}</td>
+                                            <td>{{ item.dsc_procedimento }}</td>
+                                            <td width="50" align="center">
+                                                <button type="button" class="btn btn-xs btn-success" ng-click="addProcedimento(item)">
+                                                    <i class="fa fa-check-square-o"></i> Selecionar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_procedimentos.length > 1">
+                                    <li ng-repeat="item in paginacao_procedimentos" ng-class="{'active': item.current}">
+                                        <a href="" h ng-click="loadProcedimentos(item.offset,item.limit)">{{ item.index }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+         <!-- /Modal Profissinais-->
+        <div class="modal fade" id="list_profissioanais_busca_agenda" style="display:none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Profissionais</span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input ng-model="busca.profissionais"  ng-enter="loadProfissionais(0,10)" type="text" class="form-control input-sm">
+                                    <div class="input-group-btn">
+                                        <button ng-click="loadProfissionais(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div> <!-- /input-group-btn -->
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <tr ng-show="profissionais != false && (profissionais.length <= 0 || profissionais == null)">
+                                        <th class="text-center" colspan="9" style="text-align:center"><i class='fa fa-refresh fa-spin'></i> Carregando ...</th>
+                                    </tr>
+                                    <tr ng-show="profissionais == false">
+                                        <th colspan="4" class="text-center">Não a resultados para a busca</th>
+                                    </tr>
+                                    <thead ng-show="(profissionais.length != 0)">
+                                        <tr>
+                                            <th >Nome</th>
+                                            <th >Apelido</th>
+                                            <th >Perfil</th>
+                                            <th colspan="2">selecionar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in profissionais">
+                                            <td>{{ item.nome }}</td>
+                                            <td>{{ item.apelido }}</td>
+                                            <td>{{ item.nome_perfil }}</td>
+                                            <td width="50" align="center">
+                                                <button  type="button" class="btn btn-xs btn-success" ng-click="addProfissionalBuscaAgenda(item)">
+                                                    <i class="fa fa-check-square-o"></i> Selecionar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_profissionais.length > 1">
+                                    <li ng-repeat="item in paginacao_profissionais" ng-class="{'active': item.current}">
+                                        <a href="" h ng-click="loadProfissionais(item.offset,item.limit)">{{ item.index }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
@@ -431,10 +725,14 @@
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
     <script src="js/angular-chosen.js"></script>
+    <script src="js/angular-chosen.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['angular.chosen'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/agendamento_consulta-controller.js"></script>
+	<script src="js/angular-controller/agendamento_consulta2-controller.js"></script>
 	<script type="text/javascript">
 		$('.tab-bar li').click(function(event){
 	        if ($(this).hasClass('disabled')) {

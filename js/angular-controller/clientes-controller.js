@@ -169,7 +169,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.loadPerfil = function () {
 		ng.perfis = [];
 
-		aj.get(baseUrlApi()+"perfis")
+		aj.get(baseUrlApi()+"perfis?id_empreendimento="+ng.userLogged.id_empreendimento)
 		.success(function(data, status, headers, config) {
 			ng.perfis = data;
 		})
@@ -205,7 +205,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.loadClientes = function(offset, limit) {
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
-		ng.clientes = [] ;
+		ng.clientes = null ;
 		var query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+"&usu->id[exp]= NOT IN("+ng.configuracao.id_cliente_movimentacao_caixa+","+ng.configuracao.id_usuario_venda_vitrine+"))";
 
 		if(ng.busca.clientes != ""){

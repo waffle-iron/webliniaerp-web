@@ -217,25 +217,25 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.incluirCarrinho = function(produto){
 		produto = angular.copy(produto);
-		if(ng.cliente.nome_perfil == "atacado"){
+		if(ng.cliente.tp_perc_venda == "perc_venda_atacado"){
 
 			produto.vlr_unitario    	 = produto.vlr_venda_atacado;
 			produto.vlr_real        	 = produto.vlr_venda_atacado;
 			produto.perc_margem_aplicada = produto.margem_atacado;
 
-		}else if(ng.cliente.nome_perfil == "varejo"){
+		}else if(ng.cliente.tp_perc_venda == "perc_venda_varejo"){
 
 			produto.vlr_unitario		 = produto.vlr_venda_varejo;
 			produto.vlr_real       		 = produto.vlr_venda_varejo;
 			produto.perc_margem_aplicada = produto.margem_varejo;
 
-		}else if(ng.cliente.nome_perfil == "vendedor externo"){
+		}else if(ng.cliente.tp_perc_venda == "perc_venda_intermediario"){
 
 			produto.vlr_unitario		 = produto.vlr_venda_intermediario;
 			produto.vlr_real       		 = produto.vlr_venda_intermediario;
 			produto.perc_margem_aplicada = produto.margem_intermediario;
 
-		}else if(ng.cliente.nome_perfil == 'parceiro'){
+		}else if(ng.cliente.tp_perc_venda == 'vlr_custo'){
 
 			produto.vlr_unitario    	 = produto.vlr_custo_real;
 			produto.vlr_real       		 = produto.vlr_custo_real;

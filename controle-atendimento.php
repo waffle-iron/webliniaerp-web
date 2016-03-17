@@ -296,7 +296,11 @@
 									<td class="text-center">{{ paciente.dta_fim_atendimento | dateFormat:'time' }}</td>
 									<td>{{ null }}</td>
 									<td>{{ paciente.nome_paciente }}</td>
-									<td>{{paciente.dsc_status}} {{ paciente.id_atendimento_origem == null &&  '(Orçamento)' || '(Procedimento)' }}</td>
+									<td>{{paciente.dsc_status}} 
+										<span ng-if="paciente.id_atendimento_origem == null && paciente.flg_procedimento_agendado == 0"> (Orçamento)</span>
+										<span ng-if="paciente.id_atendimento_origem != null && paciente.flg_procedimento_agendado == 0"> (Procedimento)</span>
+										<span ng-if="paciente.flg_procedimento_agendado == 1"> (Pro. Agendado)</span>
+									</td>
 
 									<td class="text-right" ng-show="paciente.id_status > 2 && paciente.id_atendimento_origem == null">R$ {{ paciente.valor | numberFormat:2:',':'.' }}</td>
 									<td ng-show="paciente.id_status <= 2 || paciente.id_atendimento_origem != null"></td>
