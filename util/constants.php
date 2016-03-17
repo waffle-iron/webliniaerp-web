@@ -1,4 +1,5 @@
 <?php
+	define('PAGE', substr($_SERVER['SCRIPT_NAME'],strripos($_SERVER['SCRIPT_NAME'],'/')+1));
 	if($_SERVER['SERVER_NAME'] == 'localhost'){
 		define('URL_API','http://localhost/webliniaerp-api/');
 		define('URL_BASE','http://localhost/webliniaerp-web/');
