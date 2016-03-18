@@ -226,27 +226,24 @@
 								<span class="">Dados do Paciente</span>
 								<div class="pull-right">
 									<button type="button" class="btn btn-xs btn-default" ng-click="selCliente()"><i class="fa fa-users"></i> Selecionar Paciente Existente</button>
-									<button type="button" class="btn btn-xs btn-primary" ng-click="btnInsertCliente()"><i class="fa fa-plus-circle"></i> Cadastrar Novo Paciente</button>
 								</div>
 							</legend>
 
 							<form class="form form-horizontal" role="form">
 								<div class="form-group">
-									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Nome:</label> 
-									<div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="nome">
+									<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Nome:</label> 
+									<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="nome">
 										<input type="text" class="form-control input-sm" ng-model="cliente.nome">
 									</div>
-								</div>
 
-								<div class="form-group">
-									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">E-mail:</label> 
+									<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">E-mail:</label> 
 									<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="email">
 										<input type="text" class="form-control input-sm" ng-model="cliente.email">
 									</div>
 								</div>
 
 								<div class="form-group">
-									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
+									<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
 									<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="tel_fixo">
 										<input ui-mask="(99) 99999999" ng-model="cliente.tel_fixo" type="text" class="form-control input-sm">
 									</div>
@@ -255,10 +252,9 @@
 									<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="celular">
 										<input ui-mask="(99) 99999999?9" ng-model="cliente.celular" type="text" class="form-control input-sm">
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">N° Ficha:</label> 
-									<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="email">
+
+									<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">N° Ficha:</label> 
+									<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" id="email">
 										<input type="text" class="form-control input-sm" ng-model="cliente.num_ficha_paciente">
 									</div>
 								</div>
@@ -377,17 +373,17 @@
 								<form class="form form-horizontal" role="form">
 									<div class="form-group">
 										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Nome:</label> 
-										<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7" id="dados-paciente-nome">
+										<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="dados-paciente-nome">
 											<input type="text" class="form-control input-sm" ng-model="dados_paciente.nome">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">E-mail:</label> 
+										<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="dados-paciente-email">
+											<input type="text" class="form-control input-sm" ng-model="dados_paciente.email">
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">E-mail:</label> 
-										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-2" id="dados-paciente-email">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.email">
-										</div>
-
 										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
 										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="dados-paciente-tel_fixo">
 											<input ui-mask="(99) 99999999" ng-model="dados_paciente.tel_fixo" type="text" class="form-control input-sm">
