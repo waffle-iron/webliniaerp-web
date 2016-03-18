@@ -169,9 +169,17 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.loadPerfil = function () {
 		ng.perfis = [];
 
-		aj.get(baseUrlApi()+"perfis?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"perfis")
 		.success(function(data, status, headers, config) {
-			ng.perfis = data;
+			var perfis = [] ;
+			$.each(data,function(i,v){
+				if((v.id == 9 || v.id == 10 || v.id == 11) &&  (Number(ng.userLogged.id_empreendimento) == 75)){
+					perfis.push(v);
+				}else if((v.id != 9 && v.id != 10 && v.id != 11) && (Number(ng.userLogged.id_empreendimento) != 75)){
+					perfis.push(v);
+				}
+			});
+			ng.perfis = perfis;
 		})
 		.error(function(data, status, headers, config) {
 

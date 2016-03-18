@@ -95,13 +95,13 @@
 			header("HTTP/1.1 500");
 		}
 
-		$ch = curl_init();
+		/*$ch = curl_init();
 		$url = $url;
 		curl_setopt($ch, CURLOPT_URL,URL_API.'modulos/'.$saida['id_empreendimento'].'/'.$saida['id_perfil']);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$modulos  = curl_exec($ch);
 		$info 	 = curl_getinfo($ch);
-		curl_close ($ch);
+		curl_close ($ch);*/
 
 		if($info['http_code'] == 200) $saida['modulos'] = json_decode($modulos,true);
 		else $saida['modulos'] = array();

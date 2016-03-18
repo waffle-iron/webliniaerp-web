@@ -182,7 +182,7 @@ app.controller('FaixaDescontoPermitidoController', function($scope, $http, $wind
 		ng.paginacao_usuarios  = [];
 		ng.usuarios = [];
 
-		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+") AND (usu.id_perfil IN (1,4,5,8))";
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+"))";
 
 		if(ng.busca.usuarios != ""){
 			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.usuarios+"%' OR usu.apelido LIKE '%"+ng.busca.usuarios+"%')"}});

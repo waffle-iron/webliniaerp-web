@@ -227,7 +227,7 @@
 											<button ng-click="selProfissionaisBuscaAgenda()" class="btn btn-primary btn-sm" type="button">
 												<i class="fa fa-search"></i>
 											</button>
-											<button class="btn btn-default btn-sm" type="button" data-toggle="tooltip" title="Limpar">
+											<button class="btn btn-default btn-sm" ng-click="limparProfissionaisBuscaAgenda()" type="button" data-toggle="tooltip" title="Limpar">
 												<i class="fa fa-times-circle"></i>
 											</button>
 										</span>
@@ -319,7 +319,7 @@
                         				<label class="control-label">Procedimento</label>
                         				<div class="controls">
                         					<div class="input-group">
-                        						<input ng-disabled="atendimento.id_especialidade == null" ng-model="atendimento.dsc_procedimento" class="form-control input-sm"/>
+                        						<input ng-disabled="atendimento.id_especialidade == null" ng-blur="buscaProcedimentoByCod()" ng-model="atendimento.dsc_procedimento" class="form-control input-sm"/>
                         						<span class="input-group-btn">
 													<button ng-disabled="atendimento.id_especialidade == null" ng-click="selProcedimento()" class="btn btn-default btn-sm" type="button">
 														<i class="fa fa-search"></i>
@@ -335,9 +335,9 @@
 	                        				<label class="control-label">Horário</label>
 	                        				<div class="controls">
 	                        					<div class="input-group">
-	                        						<input id="data-atendimento" class="form-control input-sm"/>
+	                        						<input id="data-atendimento" ui-mask="99/99/9999" ng-model="atendimento.dta_entrada" class="form-control input-sm datepicker"/>
 	                        						<span class="input-group-btn">
-														<button class="btn btn-default btn-sm" type="button">
+														<button  id="btnDtaCalendar" class="btn btn-default btn-sm" type="button">
 															<i class="fa fa-calendar"></i>
 														</button>
 													</span>
@@ -540,14 +540,14 @@
                                     </tr>
                                     <thead ng-show="(procedimentos.length != 0)">
                                         <tr>
-                                            <th >ID</th>
+                                            <th >Cod.</th>
                                             <th >Descrição</th>
                                             <th ></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="item in procedimentos">
-                                            <td>{{ item.id }}</td>
+                                            <td>{{ item.cod_procedimento }}</td>
                                             <td>{{ item.dsc_procedimento }}</td>
                                             <td width="50" align="center">
                                                 <button type="button" class="btn btn-xs btn-success" ng-click="addProcedimento(item)">
@@ -732,13 +732,11 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/agendamento_consulta2-controller.js"></script>
+	<script src="js/angular-controller/agendamento_consulta-controller.js"></script>
 	<script type="text/javascript">
-		$('.tab-bar li').click(function(event){
-	        if ($(this).hasClass('disabled')) {
-	            return false;
-	        }
-    	});
+        $(".datepicker").datepicker();
+        $("#btnDtaCalendar").on("click", function(){$("#data-atendimento").trigger("focus");});
+        $('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
 	</script>
 	<?php include("google_analytics.php"); ?>
   </body>

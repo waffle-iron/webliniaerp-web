@@ -280,10 +280,10 @@
 							</thead>
 							<tbody>
 								<tr ng-show="procedimentos == null">
-                                        <th class="text-center" colspan="9" style="text-align:center"><i class='fa fa-refresh fa-spin'></i> Carregando ...</th>
+                                        <th class="text-center" colspan="7" style="text-align:center"><i class='fa fa-refresh fa-spin'></i> Carregando ...</th>
                                     </tr>
                                     <tr ng-show="procedimentos.length == 0">
-                                        <th colspan="4" class="text-center">Nenhum procedimento encontrado</th>
+                                        <th colspan="7" class="text-center">Nenhum procedimento encontrado</th>
                                     </tr>
 								<tr ng-repeat="item in procedimentos">
 									<td width="80" class="text-center">{{ item.id }}</td>

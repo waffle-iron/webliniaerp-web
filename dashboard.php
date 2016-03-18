@@ -177,15 +177,13 @@
 			</div><!-- /main-header -->
 
 			<div class="grey-container shortcut-wrapper">
-				<?php if($_SESSION['user']['id_perfil'] == 1 || $_SESSION['user']['id_perfil'] == 8){ ?>
-				<a href="pdv.php" class="shortcut-link">
+				<a href="pdv.php" class="shortcut-link" ng-if="userLogged.id_empreendimento !=75">
 					<span class="shortcut-icon">
 						<i class="fa fa-desktop"></i>
 					</span>
 					<span class="text">PDV</span>
 				</a>
-				<?php } ?>
-				<a href="agendamento-consulta.php" class="shortcut-link">
+				<a href="agendamento-consulta.php" ng-if="userLogged.id_empreendimento == 75" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-list"></i>
 					</span>

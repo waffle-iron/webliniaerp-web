@@ -151,6 +151,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 					email : ng.cliente.email ,
 					tel_fixo : ng.cliente.tel_fixo ,
 					celular : ng.cliente.celular ,
+					num_ficha_paciente : ( empty(ng.cliente.num_ficha_paciente) ? null : ng.cliente.num_ficha_paciente )
 				},
 				empreendimentos : [{id:ng.userLogged.id_empreendimento}],
 				where : 'id ='+ng.cliente.id
@@ -1590,7 +1591,8 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				numero : ng.dados_paciente.numero ,
 				bairro : ng.dados_paciente.bairro ,
 				id_estado : ng.dados_paciente.id_estado ,
-				id_cidade : ng.dados_paciente.id_cidade 
+				id_cidade : ng.dados_paciente.id_cidade,
+				num_ficha_paciente : ( empty(ng.dados_paciente.num_ficha_paciente) ? null : ng.dados_paciente.num_ficha_paciente )
 			},
 			empreendimentos : [{id:ng.userLogged.id_empreendimento}],
 			where : 'id ='+ng.dados_paciente.id

@@ -256,6 +256,12 @@
 										<input ui-mask="(99) 99999999?9" ng-model="cliente.celular" type="text" class="form-control input-sm">
 									</div>
 								</div>
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">N° Ficha:</label> 
+									<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="email">
+										<input type="text" class="form-control input-sm" ng-model="cliente.num_ficha_paciente">
+									</div>
+								</div>
 							</form>
 						</fieldset>
 					</div>
@@ -364,7 +370,7 @@
 
 									<div class="form-group">
 										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">E-mail:</label> 
-										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5" id="dados-paciente-email">
+										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-2" id="dados-paciente-email">
 											<input type="text" class="form-control input-sm" ng-model="dados_paciente.email">
 										</div>
 
@@ -376,6 +382,10 @@
 										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Celular):</label> 
 										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="dados-paciente-celular">
 											<input ui-mask="(99) 99999999?9" ng-model="dados_paciente.celular" type="text" class="form-control input-sm">
+										</div>
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">N° ficha:</label> 
+										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-2" id="dados-paciente-num_ficha_paciente">
+											<input type="text" class="form-control input-sm" ng-model="dados_paciente.num_ficha_paciente">
 										</div>
 									</div>
 
@@ -505,7 +515,7 @@
 												{{item.dsc_status_procedimento}}
 											</td>
 											<td style="width: 154px">
-												<input ng-disabled="item.id_status_procedimento == 3" ng-model="item.dta_inicio_procedimento" class="form-control input-xs" ui-mask="99/99/9999 99:99">
+												<input ng-disabled="item.flg_item_pago == 0" ng-model="item.dta_inicio_procedimento" class="form-control input-xs" ui-mask="99/99/9999 99:99">
 											</td>
 											<td class="text-right"><i class="fa fa-circle" ng-class="{'text-danger':item.flg_item_pago == 0,'text-success':item.flg_item_pago == 1}"></i> R$ {{ item.valor_real_item | numberFormat:2:',':'.'}}</td>
 											<td>
@@ -974,14 +984,14 @@
                                     </tr>
                                     <thead ng-show="(procedimentos.length != 0)">
                                         <tr>
-                                            <th >ID</th>
+                                            <th >Cod.</th>
                                             <th >Descrição</th>
                                             <th ></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="item in procedimentos">
-                                            <td>{{ item.id }}</td>
+                                            <td>{{ item.cod_procedimento }}</td>
                                             <td>{{ item.dsc_procedimento }}</td>
                                             <td width="50" align="center">
                                                 <button type="button" class="btn btn-xs btn-success" ng-click="addProcedimento(item)">

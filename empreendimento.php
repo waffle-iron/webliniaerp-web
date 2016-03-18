@@ -416,7 +416,7 @@
 											</div>
 										</div>
 							</div>					
-							<div class="form-group" ng-if="userLogged.id_perfil == 1">
+							<div class="form-group">
 								<div class="col-sm-12">
 									<div class="pull-right">
 										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">

@@ -192,7 +192,7 @@
 					<h3 class="no-margin"><i class="fa fa-users"></i> Clientes/Usuários</h3>
 					<br/>
 					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Cliente/Usuário</a>
-					<a href="desejos_clientes.php" class="btn btn-primary"><i class="fa fa-clipboard"></i> Desejos</a>
+					<a href="desejos_clientes.php" ng-if="userLogged.id_empreendimento != 75" class="btn btn-primary"><i class="fa fa-clipboard"></i> Desejos</a>
 					<a href="extrato.php" class="btn btn-success"><i class="fa fa-clipboard"></i> Extrato</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
@@ -476,7 +476,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-4" ng-show="cliente.id_perfil == 1 || cliente.id_perfil == 8">
+								<div class="col-sm-4">
 									<div id="id_finalidade" class="form-group">
 										<label class="control-label">Grupo de Comissionamento</label>
 										<select class="form-control" ng-model="cliente.id_grupo_comissionamento" ng-options="a.id as a.nme_grupo_comissao for a in grupo_comissionamento">

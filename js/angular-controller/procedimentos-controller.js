@@ -121,7 +121,7 @@ app.controller('ProcedimentosController', function($scope, $http, $window, $dial
 				ng.mensagens('alert-success',msg,'.alert-procedimeto');
 				ng.showBoxNovo();
 				$('html,body').animate({scrollTop: 0},'slow');
-				ng.loadProcedimentos();
+				ng.loadProcedimentos(0,10);
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
@@ -167,7 +167,7 @@ app.controller('ProcedimentosController', function($scope, $http, $window, $dial
 			.success(function(data, status, headers, config) {
 				ng.mensagens('alert-success','Procedimento excluido com sucesso','.alert-procedimeto');
 				$('html,body').animate({scrollTop: 0},'slow');
-				ng.loadProcedimentos();
+				ng.loadProcedimentos(0,10);
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('loading');

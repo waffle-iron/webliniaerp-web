@@ -208,7 +208,7 @@
 								</div>
 							</div>
 
-							<div class="empreendimentos form-group" ng-hide="userLogged.id_perfil != 1">
+							<div class="empreendimentos form-group">
 								<div class="col-sm-12">
 									<table class="table table-bordered table-condensed table-striped table-hover">
 										<thead>
