@@ -285,7 +285,7 @@
 								<th>Paciente</th>
 								<th>Status</th>
 								<th class="text-center">Valor</th>
-								<th>Principal</th>
+								<th>Profissional</th>
 								<th width="140">Ações</th>
 							</thead>
 							 <tr ng-show="lista_atendimento == null">
@@ -321,9 +321,10 @@
 										<button class="btn btn-xs btn-primary" ng-click="abrirFichaPaciente(paciente)" data-toggle="tooltip" title="Abrir Fichar do Paciente">
 											<i class="fa fa-user"></i>
 										</button>
-										<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Imprimir Ficha do Paciente">
+										<a class="btn btn-xs btn-info" href="ficha-paciente.php?id_paciente={{ paciente.id_paciente }}" 
+											data-toggle="tooltip" title="Imprimir Ficha do Paciente">
 											<i class="fa fa-file-text-o"></i>
-										</button>
+										</a>
 									</td>
 								</tr>
 							</tbody>
@@ -495,6 +496,7 @@
 
 								<table class="table table-bordered table-hover table-striped table-condensed">
 									<thead>
+										<th class="text-center">Data</th>
 										<th class="text-center">Procedimento</th>
 										<th class="text-center">Dente/Região</th>
 										<th class="text-center">Face</th>
@@ -505,6 +507,7 @@
 									</thead>
 									<tbody>
 										<tr ng-repeat="item in itens_venda" bs-tooltip>
+											<td class="text-center">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
 											<td>{{ item.dsc_procedimento }}</td>
 											<td>{{ item.nme_dente }}</td>
 											<td>{{ item.dsc_face }}</td>
@@ -534,18 +537,18 @@
 											</td>
 										</tr>
 										<tr ng-if="itens_venda.length == 0">
-											<td colspan="7" class="text-center" text-center>
+											<td colspan="8" class="text-center" text-center>
 												Nenhum procedimento encontrado
 											</td>
 										</tr>
 										<tr ng-if="itens_venda==null">
-											<td colspan="7" class="text-center">
+											<td colspan="8" class="text-center">
 												<i class='fa fa-refresh fa-spin'></i> Carregando ...
 											</td>
 										</tr>
 									</tbody>
 									<tfoot ng-if="itens_venda.length > 0">
-										<th class="text-right" colspan="5">Total</th>
+										<th class="text-right" colspan="6">Total</th>
 										<th class="text-right">R$ {{ totalItensVenda() | numberFormat:2:',':'.' }}</th>
 										<th></th>
 									</tfoot>
@@ -882,9 +885,9 @@
 
 			    	<div class="modal-footer clearfix no-margin">
 						<div class="pull-left">
-							<button class="btn btn-sm btn-info" id="salvar-dados-paciente" ng-click="salvarDadosPaciente()">
+							<a class="btn btn-sm btn-info" href="ficha-paciente.php?id_paciente={{ dados_paciente.id }}">
 								<i class="fa fa-file-text-o"></i> Imprimir Ficha do Paciente
-							</button>
+							</a>
 						</div>
 						<div class="pull-right">
 							<button class="btn btn-sm btn-default" id="salvar-dados-paciente" ng-click="cancelarModal('#modalFichaPaciente')" >
