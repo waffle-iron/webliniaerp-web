@@ -319,10 +319,10 @@
 						<!-- TBODY -->
 						<tbody>
 							<tr ng-repeat="item in procedimentosPaciente">
-								<td class="text-center text-middle">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
+								<td class="text-center text-middle"></td>
 								<td class="text-center text-middle">{{ item.cod_dente }}</td>
 								<td class="text-center text-middle">{{ item.cod_procedimento }}</td>
-								<td class="text-middle">{{ item.nome_profissional }}</td>
+								<td class="text-middle"></td>
 								<td class="text-right text-middle border-right">R$ {{ item.valor_real_item | numberFormat: 2 : ',' : '.' }}</td>
 								<td class="text-center text-middle border-left">{{ item.data_pagamento | dateFormat: 'date' }}</td>
 								<td class="text-center text-middle">{{ (item.flg_item_pago == 1) ? 'SIM' : 'NÃO' }}</td>
