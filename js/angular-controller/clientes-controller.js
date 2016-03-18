@@ -173,7 +173,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		.success(function(data, status, headers, config) {
 			var perfis = [] ;
 			$.each(data,function(i,v){
-				if((v.id == 9 || v.id == 10 || v.id == 11) &&  (Number(ng.userLogged.id_empreendimento) == 75)){
+				if((v.id == 1 || v.id == 9 || v.id == 10 || v.id == 11) &&  (Number(ng.userLogged.id_empreendimento) == 75)){
 					perfis.push(v);
 				}else if((v.id != 9 && v.id != 10 && v.id != 11) && (Number(ng.userLogged.id_empreendimento) != 75)){
 					perfis.push(v);
