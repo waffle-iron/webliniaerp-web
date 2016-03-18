@@ -177,13 +177,15 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-tags"></i> Baixa Estoque</li>
+					 <li><i class="fa fa-sitemap"></i> <a href="depositos.php">Depósitos</a></li>
+					 <li><i class="fa fa-list-ol"></i> <a href="estoque.php">Controle de Estoque</a></li>
+					 <li class="active"><i class="fa fa-caret-square-o-down"></i> Baixa Manual de Estoque</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-tags"></i> Baixa Estoque</h3>
+					<h3 class="no-margin"><i class="fa fa-caret-square-o-down"></i> Baixa Manual de Estoque</h3>
 					<br/>
 					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Baixa</a>
 				</div><!-- /page-title -->
@@ -296,7 +298,7 @@
 							<div class="row">
 								<div class="col-sm-12" class="pull-right">
 									<div class="pull-right">
-										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-default btn-sm">
 											<i class="fa fa-times-circle"></i> Cancelar
 										</button>
 										<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." id="salvar-baixa-estoque" ng-click="salvar()" type="submit" class="btn btn-success btn-sm">

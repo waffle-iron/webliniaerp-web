@@ -228,11 +228,31 @@
 			</div><!-- breadcrumb -->
 
 			<div class="padding-md">
+				<div class="clearfix">
+					<div class="pull-left">
+						<span class="img-demo">
+							<img src="assets/imagens/logos/{{ userLogged.nme_logo }}">
+						</span>
+
+						<div class="pull-left m-left-sm">
+							<h3 class="m-bottom-xs m-top-xs">Ficha do Paciente</h3>
+							<span class="text-muted">Detalhes dos tratamentos e pagamentos realizados</span>
+						</div>
+					</div>
+
+					<div class="pull-right text-right">
+						<h5><strong>#<?php echo rand(); ?></strong></h5>
+						<strong><?php echo date("d/m/Y H:i:s"); ?></strong>
+					</div>
+				</div>
+
+				<hr>
+
 				<div class="panel panel-default">
 					<div class="panel-body clearfix">
 						<div class="row">
 							<div class="col-lg-8">
-								<form class="form form-horizontal" role="form">
+								<form class="form form-horizontal hide" role="form">
 									<div class="form-group no-margin">
 										<label class="control-label col-lg-1 text-right">Paciente:</label>
 										<div class="controls col-lg-8">
@@ -247,7 +267,9 @@
 										</div>
 									</div>
 								</form>
+								<h4 class="m-bottom-xs">Paciente: {{ paciente.nome | uppercase }}</h4>
 							</div>
+
 							<div class="col-lg-4 clearfix">
 								<div class="pull-right">
 									<button type="button" id="printButton" class="btn btn-sm btn-success"><i class="fa fa-print"></i> Imprimir</button>
@@ -266,10 +288,10 @@
 									{{ userLogged.nome_empreendimento | uppercase }}
 								</th>
 								<th class="text-center border-left" colspan="5">
-									NOME DA ESPECIALIDADE AQUI
+									
 								</th>
 								<th class="text-center" colspan="3">
-									FICHA: No 96865DN
+									
 								</th>
 							</tr>
 							<tr>
@@ -296,128 +318,16 @@
 
 						<!-- TBODY -->
 						<tbody>
-							<tr>
-								<td class="text-center text-middle">05/04/1991</td>
-								<td class="text-center text-middle">10</td>
-								<td class="text-center text-middle">45</td>
-								<td class="text-middle">Dr. Gustavo Ribeiro da Silva</td>
-								<td class="text-right text-middle border-right">R$ 386,96</td>
-								<td class="text-center text-middle border-left">10/12/2015</td>
-								<td class="text-center text-middle">SIM</td>
-								<td class="text-center text-middle">Dinheiro</td>
-								<td class="text-right text-middle">R$ 386,96</td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-							<tr>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle border-right"></td>
-								<td class="text-middle border-left"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
+							<tr ng-repeat="item in procedimentosPaciente">
+								<td class="text-center text-middle">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
+								<td class="text-center text-middle">{{ item.cod_dente }}</td>
+								<td class="text-center text-middle">{{ item.cod_procedimento }}</td>
+								<td class="text-middle">{{ item.nome_profissional }}</td>
+								<td class="text-right text-middle border-right">R$ {{ item.valor_real_item | numberFormat: 2 : ',' : '.' }}</td>
+								<td class="text-center text-middle border-left">{{ item.data_pagamento | dateFormat: 'date' }}</td>
+								<td class="text-center text-middle">{{ (item.flg_item_pago == 1) ? 'SIM' : 'NÃO' }}</td>
+								<td class="text-center text-middle">{{ item.descricao_forma_pagamento }}</td>
+								<td class="text-right text-middle">R$ {{ (item.flg_item_pago == 1) ? item.valor_real_item : 0 | numberFormat: 2 : ',' : '.' }}</td>
 								<td class="text-middle"></td>
 								<td class="text-middle"></td>
 								<td class="text-middle"></td>
@@ -429,22 +339,22 @@
 						<tfoot>
 							<tr>
 								<th class="text-right" colspan="4">Total Procedimentos</th>
-								<th class="border-right">R$ 99.999,99</th>
+								<th class="text-right border-right">R$ {{ vlrTotalProcedimentos | numberFormat: 2 : ',' : '.' }}</th>
 								<th class="text-right border-left" colspan="3">Total Pago</th>
-								<th class="text-right">R$ 99.999,99</th>
+								<th class="text-right">R$ {{ vlrTotalPagamentos | numberFormat: 2 : ',' : '.' }}</th>
 								<th colspan="3"></th>
 							</tr>
 							<tr>
-								<th colspan="3">NOME: </th>
-								<th class="border-right" colspan="2">CPF: </th>
-								<th class="border-left" colspan="3">RG: </th>
-								<th colspan="4">DATA DE NASCIMENTO: </th>
+								<th colspan="3">NOME: <span class="pull-right">{{ paciente.nome | uppercase }}</span></th>
+								<th class="border-right" colspan="2">CPF: <span class="pull-right">{{ paciente.cpf }}</span></th>
+								<th class="border-left" colspan="3">RG: <span class="pull-right">{{ paciente.rg }}</span></th>
+								<th colspan="4">DATA DE NASCIMENTO: <span class="pull-right">{{ paciente.dta_nacimento}}</span></th>
 							</tr>
 							<tr>
-								<th colspan="3">ENDEREÇO: </th>
-								<th class="border-right" colspan="2">CEL.: </th>
-								<th class="border-left" colspan="3">TEL.: </th>
-								<th colspan="4">E-MAIL: </th>
+								<th colspan="3">ENDEREÇO: <span class="pull-right">{{ paciente.endereco | uppercase }}, {{ paciente.numero }}</span></th>
+								<th class="border-right" colspan="2">CEL.: <span class="pull-right">{{ paciente.celular | phoneFormat }}</span></th>
+								<th class="border-left" colspan="3">TEL.: <span class="pull-right">{{ paciente.tel_fixo | phoneFormat }}</span></th>
+								<th colspan="4">E-MAIL: <span class="pull-right">{{ paciente.email }}</span></th>
 							</tr>
 							<tr>
 								<th colspan="8"></th>
@@ -554,7 +464,7 @@
 			printWindow.document.write("<link href='css/endless.min.css' rel='stylesheet'>");
 			printWindow.document.write("<link href='css/endless-skin.css' rel='stylesheet'>");
 
-			printWindow.document.write("<style type='text/css' media='print'>@page { size: portrait; } th, td { font-size: 8pt; }</style><style type='text/css'>#printButton{ display:none }.custom-table th, .custom-table td { height: 28px !important; min-height: 28px !important; border: 1px solid #999 !important; white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; text-overflow: ellipsis; -moz-binding: url('xml/ellipsis.xml#ellipsis'); } .custom-table th.border-right, .custom-table td.border-right { border-right: 2px solid #999 !important; } .custom-table th.border-left, .custom-table td.border-left { border-left: 2px solid #999 !important; }</style>");
+			printWindow.document.write("<style type='text/css' media='print'>@page { size: landscape; } th, td { font-size: 8pt; }</style><style type='text/css'>#printButton{ display:none }.custom-table th, .custom-table td { height: 28px !important; min-height: 28px !important; border: 1px solid #999 !important; white-space: nowrap; overflow: hidden; -o-text-overflow: ellipsis; text-overflow: ellipsis; -moz-binding: url('xml/ellipsis.xml#ellipsis'); } .custom-table th.border-right, .custom-table td.border-right { border-right: 2px solid #999 !important; } .custom-table th.border-left, .custom-table td.border-left { border-left: 2px solid #999 !important; }</style>");
 
 			printWindow.document.write(contentToPrint);
 			printWindow.window.print();

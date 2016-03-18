@@ -202,60 +202,57 @@
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i>  Novo procedimento</div>
 
 					<div class="panel-body">
-							<div class="alert alert-success-baixa" style="display:none"></div>
-							<div class="row">
-								<div class="col-sm-2">
-									<div class="form-group" id="cod_procedimento">
-										<label class="control-label">Código</label>
-										<input  ng-model="procedimento.cod_procedimento" type="text"  class="form-control input-sm" />
-									</div>
-								</div>
-								<div class="col-sm-6">
-									<div class="form-group" id="dsc_procedimento">
-										<label class="control-label">Descrição</label>
-										<input  ng-model="procedimento.dsc_procedimento" type="text"  class="form-control input-sm" />
-									</div>
-								</div>
-								
-							</div>
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group" id="id_especialidade">
-										<label class="control-label">Especialidade</label> <i ng-click="modalNovaEspecilidade()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-										<select chosen 
-									    option="especialidades"
-									    ng-model="procedimento.id_especialidade"
-									    allow-single-deselect="true"
-									    ng-options="item.id as item.dsc_especialidade for item in especialidades">
-										</select>
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<div class="form-group" id="vlr_procedimento">
-										<label class="control-label">Valor</label>
-										<input thousands-formatter ng-model="procedimento.vlr_procedimento" type="text"  class="form-control input-sm" />
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<div class="form-group" id="tma_procedimento">
-										<label class="control-label">Tma</label>
-										<input onkeypress="return SomenteNumero(event);" ng-model="procedimento.tma_procedimento" type="text"  class="form-control input-sm" />
-									</div>
+						<div class="alert alert-success-baixa" style="display:none"></div>
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group" id="cod_procedimento">
+									<label class="control-label">Código</label>
+									<input  ng-model="procedimento.cod_procedimento" type="text"  class="form-control input-sm" />
 								</div>
 							</div>
-							<br/>
-							<div class="row">
-								<div class="col-sm-12" class="pull-right">
-									<div class="pull-right">
-										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
-											<i class="fa fa-times-circle"></i> Cancelar
-										</button>
-										<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." id="salvar-procedimento" ng-click="salvarProcedimento()" type="submit" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
-										</button>
-									</div>
+							<div class="col-sm-6">
+								<div class="form-group" id="dsc_procedimento">
+									<label class="control-label">Descrição</label>
+									<input  ng-model="procedimento.dsc_procedimento" type="text"  class="form-control input-sm" />
 								</div>
 							</div>
+							
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group" id="id_especialidade">
+									<label class="control-label">Especialidade</label> <i ng-click="modalNovaEspecilidade()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+									<select chosen 
+								    option="especialidades"
+								    ng-model="procedimento.id_especialidade"
+								    allow-single-deselect="true"
+								    ng-options="item.id as item.dsc_especialidade for item in especialidades">
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group" id="vlr_procedimento">
+									<label class="control-label">Valor</label>
+									<input thousands-formatter ng-model="procedimento.vlr_procedimento" type="text"  class="form-control input-sm" />
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group" id="tma_procedimento">
+									<label class="control-label">TMA</label>
+									<input onkeypress="return SomenteNumero(event);" ng-model="procedimento.tma_procedimento" type="text"  class="form-control input-sm" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+								<i class="fa fa-times-circle"></i> Cancelar
+							</button>
+							<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." id="salvar-procedimento" ng-click="salvarProcedimento()" type="submit" class="btn btn-success btn-sm">
+								<i class="fa fa-save"></i> Salvar
+							</button>
+						</div>
 					</div>
 				</div><!-- /panel -->
 
@@ -269,13 +266,13 @@
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
-									<th>#</th>
+									<th class="text-center">#</th>
 									<th class="text-center">Código</th>
 									<th class="text-center">Descrição</th>
 									<th class="text-center">Especialidade</th>
 									<th class="text-center">Valor</th>
-									<th class="text-center">Tma</th>
-									<th width="80" style="text-align: center;">Opções</th>
+									<th class="text-center">TMA</th>
+									<th class="text-center" width="80">Opções</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -344,22 +341,20 @@
 						    			</div>
 						    		</div>
 						    	</div>
-						    	<div class="row">
-						    		
-						    	</div>
 							</div>
 						</div>
 				    </div>
-				    <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-salvar-especialidade" ng-click="salvarEspecialidade()">
-				    		<i class="fa fa-save"></i> Salvar
-				    	</button>
-
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-nova-especialidade')">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+				    		<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn btn-sm btn-default" ng-click="cancelarModal('modal-nova-especialidade')">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
+					    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-sm btn-success"
+					    		id="btn-salvar-especialidade" ng-click="salvarEspecialidade()">
+					    		<i class="fa fa-save"></i> Salvar
+					    	</button>
+				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->

@@ -507,7 +507,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				formControl.tooltip();
 		}
 
-		if(empty(ng.procedimento.id_regiao)){
+		/*if(empty(ng.procedimento.id_regiao)){
 			error ++ ;
 			 $("#id_regiao").addClass("has-error");
 				var formControl = $("#id_regiao")
@@ -519,7 +519,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				formControl.tooltip('show');
 			else
 				formControl.tooltip();
-		}
+		}*/
 
 		if(empty(ng.procedimento.valor)){
 			error ++ ;
@@ -631,7 +631,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
     ng.itens_venda = [] ;
     ng.getItensVenda = function(){
     	ng.itens_venda = null ;
-   		aj.get(baseUrlApi()+"clinica/itensVenda/"+ng.atendimento_selecionado.id)
+   		aj.get(baseUrlApi()+"clinica/paciente/"+ ng.atendimento_selecionado.id_paciente +"/procedimentos")
 			.success(function(data, status, headers, config) {
 				ng.itens_venda = data ;
 			})
@@ -1187,12 +1187,6 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 		ng.recebidos.splice(index,1);
 		ng.totalPagamento();
 		ng.calculaTroco();
-	}
-
-
-
-	ng.cancelarModal = function(id){
-		$('#'+id).modal('hide');
 	}
 
 	ng.cancelarPagamento = function(){

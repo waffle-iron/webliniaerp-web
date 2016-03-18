@@ -196,6 +196,7 @@
 					<br/>
 					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Entrada</a>
 					<a href="inventario.php" class="btn btn-primary"><i class="fa fa-tags"></i> Inventário</a>
+					<a href="baixa_estoque.php" class="btn btn-primary"><i class="fa fa-caret-square-o-down"></i> Baixa Manual</a>
 					<a href="ordem_producao.php" class="btn btn-primary"><i class="fa fa-wrench"></i> Ordem de Produção</a>
 					<a href="zera-estoque.php" class="btn btn-danger"><i class="fa fa-trash-o"></i> Limpeza de Estoque</a>
 				</div><!-- /page-title -->

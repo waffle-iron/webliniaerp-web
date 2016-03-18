@@ -332,7 +332,7 @@
                         		<div id="data-hora-atendimento">
 	                        		<div class="col-lg-4">
 	                        			<div class="form-group" id="dta_entrada">
-	                        				<label class="control-label">Horário</label>
+	                        				<label class="control-label">Data</label>
 	                        				<div class="controls">
 	                        					<div class="input-group">
 	                        						<input id="data-atendimento" ui-mask="99/99/9999" ng-model="atendimento.dta_entrada" class="form-control input-sm datepicker"/>
@@ -347,7 +347,7 @@
 	                        		</div>
 	                        		<div class="col-lg-3">
 										<div class="form-group">
-											<label class="control-label">&nbsp</label>
+											<label class="control-label">Horário</label>
 											<input id="hora-atendimento" type="time" class="form-control input-sm">
 										</div>
 									</div>
