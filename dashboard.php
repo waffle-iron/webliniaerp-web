@@ -183,13 +183,19 @@
 					</span>
 					<span class="text">PDV</span>
 				</a>
-				<a href="agendamento-consulta.php" ng-if="userLogged.id_empreendimento == 75" class="shortcut-link">
+				<a href="controle-atendimento.php" ng-if="userLogged.id_empreendimento == 75" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-list"></i>
 					</span>
 					<span class="text">Controle de Atendimento</span>
 				</a>
-				<a href="vendas.php" class="shortcut-link">
+				<a href="agendamento-consulta.php" ng-if="userLogged.id_empreendimento == 75" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-calendar"></i>
+					</span>
+					<span class="text">Agenda de Atendimento</span>
+				</a>
+				<a href="vendas.php" ng-if="userLogged.id_empreendimento != 75" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-signal"></i></span>
 					<span class="text">Vendas</span>
