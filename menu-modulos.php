@@ -9,14 +9,14 @@
 	<li>
 		<a href="agendamento-consulta.php">
 			<span class="submenu-label">
-				<i class="fa fa-calendar"></i> Agenda
+				<i class="fa fa-calendar"></i> Agenda de Atendimento
 			</span>
 		</a>
 	</li>
 	<li>
 		<a href="controle-atendimento.php">
 			<span class="submenu-label">
-				<i class="fa fa-list"></i> Con. de Atendimento
+				<i class="fa fa-list"></i> Contr. de Atendimento
 			</span>
 		</a>
 	</li>
@@ -59,14 +59,6 @@
 		<a href="vendas.php">
 			<span class="submenu-label">
 				<i class="fa fa-signal"></i> Vendas
-			</span>
-		</a>
-	</li>
-
-	<li>
-		<a href="agendamento-consulta.php">
-			<span class="submenu-label">
-				<i class="fa fa-list"></i> Contr. Atendimento
 			</span>
 		</a>
 	</li>

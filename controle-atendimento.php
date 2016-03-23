@@ -231,13 +231,8 @@
 
 							<form class="form form-horizontal" role="form">
 								<div class="form-group">
-<<<<<<< HEAD
-								<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Nome:</label> 
-									<div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="nome">
-=======
 									<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Nome:</label> 
 									<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="nome">
->>>>>>> 320b066ab0b0cab3eac48e3835226d60fbc90c56
 										<input type="text" class="form-control input-sm" ng-model="cliente.nome">
 									</div>
 
