@@ -359,7 +359,7 @@
 								</li>
 								<li  ng-click="loadPagamentosPaciente();showButtonSalvar = false;">
 									<a  href="#pagamentos" data-toggle="tab">
-										<i class="fa fa-list-alt"></i> pagamentos
+										<i class="fa fa-list-alt"></i> Pagamentos
 									</a>
 								</li>
 								<li  ng-click="getItensVenda();showButtonSalvar = false;">

@@ -219,6 +219,9 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 		  keyboard: false
 		});
 		ng.loadEspecialidades();
+		$('#ui-paciente-atendimento').val('');
+		$('#ui-profissional-atendimento').val('');
+		$('#ui-auto-complete-procedimento').val('');
 	}
 
 	ng.loadEspecialidades = function() {
@@ -295,6 +298,10 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 				ng.atendimento = atendimento ;
 				$('#data-atendimento').val('');
 				$('#hora-atendimento').val('');
+				$('#ui-paciente-atendimento').val('');
+				$('#ui-profissional-atendimento').val('');
+				$('#ui-auto-complete-procedimento').val('');
+				$('#modalNovoAgendamento').modal('hide');
 				btn.button('reset');
 				$('#calendar').fullCalendar( 'destroy' )
 				loadCalendar(ng.userLogged.id_empreendimento,ng.busca.id_profissional_atendimento);
