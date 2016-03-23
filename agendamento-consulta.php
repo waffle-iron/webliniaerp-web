@@ -11,6 +11,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+     <!-- ui-auto-complete -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
     <!-- Bootstrap core CSS -->
       <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
 
@@ -222,7 +225,7 @@
 								<label class="control-label col-lg-2">Profissional:</label>
 								<div class="controls col-lg-6">
 									<div class="input-group">
-                						<input ng-model="busca.nome_profissional_atendimento"  class="form-control input-sm"/>
+                						<input id="ui-busca-profissional-atendimento"  class="form-control input-sm"/>
                 						<span class="input-group-btn">
 											<button ng-click="selProfissionaisBuscaAgenda()" class="btn btn-primary btn-sm" type="button">
 												<i class="fa fa-search"></i>
@@ -270,7 +273,7 @@
                         				<label class="control-label">Paciente</label>
                         				<div class="controls">
                         					<div class="input-group">
-                        						<input  ng-model="atendimento.nome_paciente" class="form-control input-sm"/>
+                        						<input  id="ui-paciente-atendimento" class="form-control input-sm"/>
                         						<span class="input-group-btn">
 													<button class="btn btn-default btn-sm" ng-click="selPaciente()" type="button">
 														<i class="fa fa-search"></i>
@@ -286,7 +289,7 @@
                         				<label class="control-label">Profissional</label>
                         				<div class="controls">
                         					<div class="input-group">
-                        						<input ng-model="atendimento.nome_profissional" class="form-control input-sm"/>
+                        						<input id="ui-profissional-atendimento" class="form-control input-sm"/>
                         						<span class="input-group-btn">
 													<button class="btn btn-default btn-sm" ng-click="selProfissionais()" n type="button">
 														<i class="fa fa-search"></i>
@@ -303,7 +306,7 @@
                         			<div class="form-group">
                         				<label class="control-label">Especialidade</label>
                         				<div class="controls">
-                        					<select chosen
+                        					<select id="select-especialidade" chosen
 										    option="especialidades"
 										    ng-model="atendimento.id_especialidade"
 										    ng-options="campo.id as campo.dsc_especialidade for campo in especialidades">
@@ -319,7 +322,7 @@
                         				<label class="control-label">Procedimento</label>
                         				<div class="controls">
                         					<div class="input-group">
-                        						<input ng-disabled="atendimento.id_especialidade == null" ng-blur="buscaProcedimentoByCod()" ng-model="atendimento.dsc_procedimento" class="form-control input-sm"/>
+                        						<input ng-disabled="atendimento.id_especialidade == null" id="ui-auto-complete-procedimento" class="form-control input-sm"/>
                         						<span class="input-group-btn">
 													<button ng-disabled="atendimento.id_especialidade == null" ng-click="selProcedimento()" class="btn btn-default btn-sm" type="button">
 														<i class="fa fa-search"></i>
@@ -714,6 +717,9 @@
 
 	<!-- Moment -->
 	<script src="js/moment/moment.min.js"></script>
+
+	<!-- UI auto-complete -->
+	<script src="js/jquery-ui-auto-complete.js"></script>
 
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>

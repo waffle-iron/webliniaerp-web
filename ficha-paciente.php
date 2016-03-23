@@ -306,7 +306,7 @@
 								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Profissional</th>
 								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Valor</th>
 								<th class="text-center text-middle border-left" style="width: 100px; max-width: 100px;">Data</th>
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Pagou</th>
+								<!--<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Pagou</th>-->
 								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">F.Pgto.</th>
 								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Valor</th>
 								<th class="text-center text-middle" style="width: 200px; max-width: 200px;">Recep.</th>
@@ -318,16 +318,20 @@
 
 						<!-- TBODY -->
 						<tbody>
-							<tr ng-repeat="item in procedimentosPaciente">
+							<tr ng-repeat="item in fichaPaciente">
 								<td class="text-center text-middle">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
 								<td class="text-center text-middle">{{ item.cod_dente }}</td>
 								<td class="text-center text-middle">{{ item.cod_procedimento }}</td>
 								<td class="text-middle">{{ item.nome_profissional }}</td>
-								<td class="text-right text-middle border-right">R$ {{ item.valor_real_item | numberFormat: 2 : ',' : '.' }}</td>
-								<td class="text-center text-middle border-left">{{ item.data_pagamento | dateFormat: 'date' }}</td>
-								<td class="text-center text-middle">{{ (item.flg_item_pago == 1) ? 'SIM' : 'NÃO' }}</td>
-								<td class="text-center text-middle">{{ item.descricao_forma_pagamento }}</td>
-								<td class="text-right text-middle">R$ {{ (item.flg_item_pago == 1) ? item.valor_real_item : 0 | numberFormat: 2 : ',' : '.' }}</td>
+								<td class="text-right text-middle border-right">{{ item.valor_real_item == null &&  ' ' || "R$"+( item.valor_real_item | numberFormat: 2 : ',' : '.' ) }}</td>
+								<td class="text-center text-middle border-left">{{ item.dta_entrada | dateFormat: 'date' }}</td>
+								<!--<td class="text-center text-middle">{{ (item.flg_item_pago == 1) ? 'SIM' : 'NÃO' }}</td>-->
+								<td class="text-center text-middle">
+									{{ 
+										 item.id_forma_pagamento == 6 &&  (item.descricao_forma_pagamento+' em '+ item.num_parcelas+'x') || item.descricao_forma_pagamento 
+									}}
+								</td>
+								<td class="text-right text-middle"> {{ item.valor_pagamento == null && ' ' || "R$"+( item.valor_pagamento | numberFormat: 2 : ',' : '.' ) }}</td>
 								<td class="text-middle"></td>
 								<td class="text-middle"></td>
 								<td class="text-middle"></td>
@@ -340,7 +344,7 @@
 							<tr>
 								<th class="text-right" colspan="4">Total Procedimentos</th>
 								<th class="text-right border-right">R$ {{ vlrTotalProcedimentos | numberFormat: 2 : ',' : '.' }}</th>
-								<th class="text-right border-left" colspan="3">Total Pago</th>
+								<th class="text-right border-left" colspan="2">Total Pago</th>
 								<th class="text-right">R$ {{ vlrTotalPagamentos | numberFormat: 2 : ',' : '.' }}</th>
 								<th colspan="3"></th>
 							</tr>

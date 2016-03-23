@@ -1,4 +1,3 @@
-'use strict';
 /*
  Attaches input mask onto input element
  */
@@ -7,11 +6,13 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
     '9': /\d/,
     'A': /[a-zA-Z]/,
     '*': /[a-zA-Z0-9]/
-  }
+  },
+  'clearOnBlur': true
 }).directive('uiMask', [
   'uiMaskConfig',
   '$parse',
   function (maskConfig, $parse) {
+    'use strict';
     return {
       priority: 100,
       require: 'ngModel',
@@ -69,8 +70,8 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
             // to be out-of-sync with what the controller's $viewValue is set to.
             controller.$viewValue = value.length ? maskValue(value) : '';
             controller.$setValidity('mask', isValid);
-            if (value === '' && controller.$error.required !== undefined) {
-              controller.$setValidity('required', false);
+            if (value === '' && iAttrs.required) {
+              controller.$setValidity('required', !controller.$error.required);
             }
             return isValid ? value : undefined;
           }
@@ -82,7 +83,7 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
               linkOptions = function (original, current) {
                 for (var i in original) {
                   if (Object.prototype.hasOwnProperty.call(original, i)) {
-                    if (!current[i]) {
+                    if (current[i] === undefined) {
                       current[i] = angular.copy(original[i]);
                     } else {
                       angular.extend(current[i], original[i]);
@@ -129,7 +130,7 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
             return false;
           }
           function initializeElement() {
-            value = oldValueUnmasked = unmaskValue(controller.$modelValue || '');
+            value = oldValueUnmasked = unmaskValue(controller.$viewValue || '');
             valueMasked = oldValue = maskValue(value);
             isValid = validateValue(value);
             var viewValue = isValid && value.length ? valueMasked : '';
@@ -222,11 +223,11 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
             maskPlaceholder = '';
             if (typeof mask === 'string') {
               minRequiredLength = 0;
-              var isOptional = false, splitMask = mask.split('');
+              var isOptional = false, numberOfOptionalCharacters = 0, splitMask = mask.split('');
               angular.forEach(splitMask, function (chr, i) {
                 if (linkOptions.maskDefinitions[chr]) {
                   maskCaretMap.push(characterCount);
-                  maskPlaceholder += getPlaceholderChar(i);
+                  maskPlaceholder += getPlaceholderChar(i - numberOfOptionalCharacters);
                   maskPatterns.push(linkOptions.maskDefinitions[chr]);
                   characterCount++;
                   if (!isOptional) {
@@ -234,6 +235,7 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
                   }
                 } else if (chr === '?') {
                   isOptional = true;
+                  numberOfOptionalCharacters++;
                 } else {
                   maskPlaceholder += chr;
                   characterCount++;
@@ -246,14 +248,16 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
             maskProcessed = maskCaretMap.length > 1 ? true : false;
           }
           function blurHandler() {
-            oldCaretPosition = 0;
-            oldSelectionLength = 0;
-            if (!isValid || value.length === 0) {
-              valueMasked = '';
-              iElement.val('');
-              scope.$apply(function () {
-                controller.$setViewValue('');
-              });
+            if (linkOptions.clearOnBlur) {
+              oldCaretPosition = 0;
+              oldSelectionLength = 0;
+              if (!isValid || value.length === 0) {
+                valueMasked = '';
+                iElement.val('');
+                scope.$apply(function () {
+                  controller.$setViewValue('');
+                });
+              }
             }
           }
           function mouseDownUpHandler(e) {
@@ -354,11 +358,13 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
             if (input.selectionStart !== undefined) {
               return input.selectionStart;
             } else if (document.selection) {
-              // Curse you IE
-              input.focus();
-              var selection = document.selection.createRange();
-              selection.moveStart('character', input.value ? -input.value.length : 0);
-              return selection.text.length;
+              if (iElement.is(':focus')) {
+                // Curse you IE
+                input.focus();
+                var selection = document.selection.createRange();
+                selection.moveStart('character', input.value ? -input.value.length : 0);
+                return selection.text.length;
+              }
             }
             return 0;
           }
@@ -369,8 +375,10 @@ angular.module('ui.mask', []).value('uiMaskConfig', {
               return;  // Input's hidden
             }
             if (input.setSelectionRange) {
-              input.focus();
-              input.setSelectionRange(pos, pos);
+              if (iElement.is(':focus')) {
+                input.focus();
+                input.setSelectionRange(pos, pos);
+              }
             } else if (input.createTextRange) {
               // Curse you IE
               var range = input.createTextRange();

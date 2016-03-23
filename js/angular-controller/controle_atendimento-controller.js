@@ -361,6 +361,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	ng.addProcedimento = function(item){
 		ng.procedimento.id_procedimento = item.id;
 		ng.procedimento.dsc_procedimento = item.cod_procedimento+" - "+item.dsc_procedimento;
+		$('#ui-auto-complete-procedimento').val(item.cod_procedimento+" - "+item.dsc_procedimento)
 		$("#list_procedimentos").modal("hide");
 		
 	}
@@ -403,6 +404,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
     ng.addOdontograma = function(item){
         ng.procedimento.id_dente = item.id;
         ng.procedimento.nme_dente = item.cod_dente+" - "+item.nme_dente;
+        $('#ui-auto-complete-odontograma').val(item.cod_dente+" - "+item.nme_dente);
         $("#list_odontogramas").modal("hide");
         
     }
@@ -444,6 +446,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
     ng.addFaceDente = function(item){
         ng.procedimento.dsc_face = item.cod_face+" - "+item.dsc_face;
 		ng.procedimento.id_regiao = item.id;
+		$('#ui-auto-complete-face').val(item.cod_face+" - "+item.dsc_face)
         $("#list_face_dente").modal("hide");
         
     }
@@ -478,6 +481,8 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
     	var error = 0 ;
     	$('.has-error').tooltip('destroy');
     	$('.has-error').removeClass('has-error');
+    	var btn = $('#incluir-procedimento');
+    	btn.button('loading');
 
 		if(empty(ng.procedimento.id_procedimento)){
 			error ++ ;
@@ -535,8 +540,10 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				formControl.tooltip();
 		}
 
-		if(error > 0)
+		if(error > 0){
+			btn.button('reset');
 			return ;
+		}
 
     	if(empty(ng.atendimento_selecionado.id_venda)){
     		ng.venda = {
@@ -573,6 +580,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			 	}
 			 	aj.post(baseUrlApi()+"clinica/gravarItensVenda",post)
 					.success(function(data, status, headers, config) {
+						btn.button('reset');
 						ng.getItensVenda();	
 						ng.procedimento.id_procedimento = null ;
 						ng.procedimento.id_dente = null ;
@@ -582,12 +590,17 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 						ng.procedimento.nme_dente = '';
 						ng.procedimento.dsc_face = '';
 						ng.procedimento.valor = '';
+						$('#ui-auto-complete-face').val('');
+						$('#ui-auto-complete-odontograma').val('');
+						$('#ui-auto-complete-procedimento').val('');
 					})
 					.error(function(data, status, headers, config) {
+						btn.button('reset');
 						alert('Erro ao cadastrar venda');
 					});
 			})
 			.error(function(data, status, headers, config) {
+				btn.button('reset');
 				alert('Erro ao cadastrar venda');
 			});
     	}else{
@@ -613,6 +626,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			 	}
 			 	aj.post(baseUrlApi()+"clinica/gravarItensVenda",post)
 					.success(function(data, status, headers, config) {
+						btn.button('reset');
 						ng.getItensVenda();	
 						ng.procedimento.id_procedimento = null ;
 						ng.procedimento.id_dente = null ;
@@ -622,8 +636,12 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 						ng.procedimento.nme_dente = '';
 						ng.procedimento.dsc_face = '';
 						ng.procedimento.valor = '';
+						$('#ui-auto-complete-face').val('');
+						$('#ui-auto-complete-odontograma').val('');
+						$('#ui-auto-complete-procedimento').val('');
 					})
 					.error(function(data, status, headers, config) {
+						btn.button('reset');
 						alert('Erro ao cadastrar venda');
 					});
     	}
@@ -647,6 +665,28 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			vlr_total += x.valor_real_item;
 		});
 		//ng.vlrTotalCompra = numberFormat(vlr_total,2,'.','') ;
+		return vlr_total ;
+	}
+
+	ng.totalItensVendaAgendados = function(){
+		var vlr_total = 0 ;
+		$.each(ng.itens_venda,function(i,x){
+			if(Number(x.id_status_procedimento == 2) || Number(x.id_status_procedimento == 3))
+				vlr_total += x.valor_real_item;
+		});
+		//ng.vlrTotalCompra = numberFormat(vlr_total,2,'.','') ;
+		//console.log(vlr_total);
+		return vlr_total ;
+	}
+
+	ng.totalItensVendaNaoAgendados = function(){
+		var vlr_total = 0 ;
+		$.each(ng.itens_venda,function(i,x){
+			if(Number(x.id_status_procedimento == 1))
+				vlr_total += x.valor_real_item;
+		});
+		//ng.vlrTotalCompra = numberFormat(vlr_total,2,'.','') ;
+		//console.log(vlr_total);
 		return vlr_total ;
 	}
 
@@ -1323,7 +1363,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 		ng.venda_aberta 	 = true ;
 		ng.pagamento_fulso   = true ;
 	}
-	ng.modo_venda = 'pdv';
+	ng.modo_venda = 'est';
 	ng.salvarPagamento = function(){
 	var btn = $('#btn-pagamneto');
 	btn.button('loading');
@@ -1433,15 +1473,17 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 
     aj.post(baseUrlApi()+url,post)
         .success(function(data, status, headers, config) {
-        	ng.tab_pagamentos = false ;
+        	//ng.tab_pagamentos = false ;
         	btn.button('reset');
-            $('.tab-pane').removeClass('in').removeClass('active');
+            /*$('.tab-pane').removeClass('in').removeClass('active');
 			$('#procedimentos').addClass('in').addClass('active');
 			$('.tab-bar li').removeClass('active');
-			$('[href="#procedimentos"]').parent().addClass('active');
+			$('[href="#procedimentos"]').parent().addClass('active');*/
+			ng.mensagens('alert-success','<strong>Pagamento realizado com sucesso</strong>','.alert-pagamento');
 			ng.getItensVenda();
 			ng.initVarPag();
 			ng.getListaAtendimento();
+			ng.loadPagamentosPaciente();
         })
         .error(function(data, status, headers, config) {
             $btn.button('reset');
@@ -1477,11 +1519,24 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 		$('.tab-bar li').removeClass('active');
 		$('[href="#procedimentos"]').parent().addClass('active');
 	}
+	ng.pagamentosCliente = {} ;
+	ng.loadPagamentosPaciente = function(){
+		 aj.get(baseUrlApi()+"pagamentos/cliente/"+ng.atendimento_selecionado.id_paciente)
+            .success(function(data, status, headers, config) {
+				ng.pagamentosCliente.pagamentos = data.pagamentos ;
+				ng.pagamentosCliente.total = 0 ;
+				$.each(data.pagamentos,function(i,v){
+					ng.pagamentosCliente.total += v.valor_pagamento ;
+				});
+         })
 
+          console.log(ng.pagamentosCliente);
+	}
 	ng.abrirFichaPaciente = function(paciente){
 		if(empty(paciente.id_atendimento_origem)){
 			ng.atendimento_selecionado = paciente ;
 			ng.loadPaciente();
+			ng.loadPagamentosPaciente();
 			ng.openModal('dados');
 			ng.loadProcedimentos();
 		}else{
@@ -1662,6 +1717,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			.success(function(data, status, headers, config) {
 				ng.getListaAtendimento();
 				ng.getItensVenda();
+				ng.loadPagamentosPaciente();
 				btn.button('reset');
 			})
 			.error(function(data, status, headers, config) {
@@ -1714,6 +1770,177 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	ng.loadBancos();
 	ng.loadContas();
 	ng.loadEstados();
+
+    var procedimentos_auto_complete = [] ;
+    $( "#ui-auto-complete-procedimento" ).autocomplete({
+      source: function (request, response) {
+      	var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento+"&"+$.param({'dsc_procedimento':{exp:"like '%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR cod_procedimento='"+request.term.replace(/^\s+|\s+$/g,"")+"'"}});
+      	aj.get(baseUrlApi()+"clinica/procedimentos"+query_string)
+			.success(function(data, status, headers, config) {
+				procedimentos_auto_complete = []
+				$.each(data,function(i,v){
+					procedimentos_auto_complete.push({
+						label : v.dsc_procedimento,
+						valor : v.dsc_procedimento,
+						id    : v.id
+					})
+				});
+				response(procedimentos_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+      	//$(this).attr('data-id-procedimento',ui.item.id);
+      	$scope.$apply(function () {
+            ng.procedimento.id_procedimento = ui.item.id ;
+        });
+      }
+    }).keydown(function(e){
+    	 var tecla = (e.keyCode?e.keyCode:e.which);
+    	 if(tecla == 9 && procedimentos_auto_complete.length == 1){
+    	 	//$(this).attr('data-id-procedimento',procedimentos_auto_complete[0].id) ;
+    	 	$(this).val(procedimentos_auto_complete[0].label);
+    	 	$('#ui-auto-complete-odontograma').focus();
+    	 	$scope.$apply(function () {
+            	ng.procedimento.id_procedimento = procedimentos_auto_complete[0].id ;
+        	});
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#ui-auto-complete-odontograma').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	//$(this).attr('data-id-procedimento','') ;
+      	$scope.$apply(function () {
+            ng.procedimento.id_procedimento = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.procedimento.id_procedimento)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
+
+    var odontogramas_auto_complete = [] ;
+    $( "#ui-auto-complete-odontograma" ).autocomplete({
+      source: function (request, response) {
+      	 query_string = "?"+$.param({'nme_dente':{exp:"like'%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR cod_dente='"+request.term.replace(/^\s+|\s+$/g,"")+"'"}});
+         aj.get(baseUrlApi()+"clinica/odontogramas"+query_string)
+			.success(function(data, status, headers, config) {
+				odontogramas_auto_complete = []
+				$.each(data,function(i,v){
+					odontogramas_auto_complete.push({
+						label : v.cod_dente+' - '+v.nme_dente,
+						valor : v.cod_dente+' - '+v.nme_dente,
+						id    : v.id
+					})
+				});
+				response(odontogramas_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+      	//$(this).attr('data-id-procedimento',ui.item.id);
+      	$scope.$apply(function () {
+            ng.procedimento.id_dente = ui.item.id ;
+        });
+      }
+    }).keydown(function(e){
+    	 var tecla = (e.keyCode?e.keyCode:e.which);
+    	 if(tecla == 9 && odontogramas_auto_complete.length == 1){
+    	 	//$(this).attr('data-id-procedimento',odontogramas_auto_complete[0].id) ;
+    	 	$(this).val(odontogramas_auto_complete[0].label);
+    	 	$('#ui-auto-complete-face').focus();
+
+    	 	$scope.$apply(function () {
+            	ng.procedimento.id_dente = odontogramas_auto_complete[0].id ;
+        	});
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#ui-auto-complete-face').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	//$(this).attr('data-id-procedimento','') ;
+      	$scope.$apply(function () {
+            ng.procedimento.id_dente = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.procedimento.id_dente)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
+
+    var regiao_auto_complete = [] ;
+    $( "#ui-auto-complete-face" ).autocomplete({
+      source: function (request, response) {
+      	 query_string = "?"+$.param({'dsc_face':{exp:" like'%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR cod_face='"+request.term.replace(/^\s+|\s+$/g,"")+"'"}});
+         aj.get(baseUrlApi()+"clinica/faces"+query_string)
+			.success(function(data, status, headers, config) {
+				regiao_auto_complete = []
+				$.each(data,function(i,v){
+					regiao_auto_complete.push({
+						label : v.cod_face+' - '+v.dsc_face,
+						valor : v.cod_face+' - '+v.dsc_face,
+						id    : v.id
+					})
+				});
+				response(regiao_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+      	//$(this).attr('data-id-procedimento',ui.item.id);
+      	$scope.$apply(function () {
+            ng.procedimento.id_regiao = ui.item.id ;
+        });
+      }
+    }).keydown(function(e){
+    	 var tecla = (e.keyCode?e.keyCode:e.which);
+    	 if(tecla == 9 && regiao_auto_complete.length == 1){
+    	 	//$(this).attr('data-id-procedimento',regiao_auto_complete[0].id) ;
+    	 	$(this).val(regiao_auto_complete[0].label);
+    	 	$('#procedimento-valor').focus();
+
+    	 	$scope.$apply(function () {
+            	ng.procedimento.id_regiao = regiao_auto_complete[0].id ;
+        	});
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#procedimento-valor').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	//$(this).attr('data-id-procedimento','') ;
+      	$scope.$apply(function () {
+            ng.procedimento.id_regiao = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.procedimento.id_regiao)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
+
 });
 
 app.directive('bsTooltip', function ($timeout) {

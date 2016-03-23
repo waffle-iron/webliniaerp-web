@@ -59,7 +59,6 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 				}
 			},
 			eventAfterRender: function(event, element) {
-				console.log(event);
        			element.attr('data-placement','top').attr('title',event.title);
        			$(element).tooltip({ container: "body"});
    			},
@@ -110,6 +109,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 	ng.addPaciente = function(item){
 		ng.atendimento.nome_paciente = item.nome ;
 		ng.atendimento.id_paciente   = item.id ;
+		$('#ui-paciente-atendimento').val(item.nome);
 		$("#list_pacientes").modal('hide');
 		$("#modalNovoAgendamento").modal('show');
 	}
@@ -142,6 +142,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 	ng.addProfissional = function(item){
 		ng.atendimento.nome_profissional = item.nome ;
 		ng.atendimento.id_profissional_atendimento   = item.id ;
+		$('#ui-profissional-atendimento').val(item.nome);
 		$("#list_profissioanais").modal('hide');
 		$("#modalNovoAgendamento").modal('show');
 	}
@@ -152,12 +153,14 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 	ng.limparProfissionaisBuscaAgenda = function(){
 		ng.busca.id_profissional_atendimento = null ;
 		ng.busca.nome_profissional_atendimento = '';
+		$('ui-busca-profissional-atendimento').val('');
 		$('#calendar').fullCalendar( 'destroy' )
 		loadCalendar(ng.userLogged.id_empreendimento,ng.busca.id_profissional_atendimento);
 	}
 	ng.addProfissionalBuscaAgenda = function(item){
 		ng.busca.id_profissional_atendimento = item.id ;
 		ng.busca.nome_profissional_atendimento = item.nome ;
+		$('#ui-busca-profissional-atendimento').val(item.nome);
 		$("#list_profissioanais_busca_agenda").modal('hide');
 		$('#calendar').fullCalendar( 'destroy' );
 		loadCalendar(ng.userLogged.id_empreendimento,ng.busca.id_profissional_atendimento);
@@ -175,6 +178,7 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 	ng.addProcedimento = function(item){
 		ng.atendimento.id_procedimento = item.id;
 		ng.atendimento.dsc_procedimento = item.cod_procedimento+" - "+item.dsc_procedimento;
+		$("#ui-auto-complete-procedimento").val(item.cod_procedimento+" - "+item.dsc_procedimento);
 		ng.atendimento.procedimentos = [];
 		ng.atendimento.procedimentos.push(item);
 		$("#list_procedimentos").modal("hide");
@@ -315,6 +319,221 @@ app.controller('AgendamentoConsultaController', function($scope, $http, $window,
 				ng.atendimento.id_procedimento = null;
 		});	
 	}
+
+	var procedimentos_auto_complete = [] ;
+    $( "#ui-auto-complete-procedimento" ).autocomplete({
+      source: function (request, response) {
+      	var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento+"&id_especialidade="+ng.atendimento.id_especialidade+"&"+$.param({'dsc_procedimento':{exp:"like '%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR cod_procedimento='"+request.term.replace(/^\s+|\s+$/g,"")+"'"}});
+      	aj.get(baseUrlApi()+"clinica/procedimentos"+query_string)
+			.success(function(data, status, headers, config) {
+				procedimentos_auto_complete = []
+				$.each(data,function(i,v){
+					procedimentos_auto_complete.push({
+						label : v.dsc_procedimento,
+						valor : v.dsc_procedimento,
+						id    : v.id
+					})
+				});
+				response(procedimentos_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+      	$scope.$apply(function () {
+            ng.atendimento.id_procedimento = ui.item.id ;
+        });
+      }
+    }).keydown(function(e){
+    	 var tecla = (e.keyCode?e.keyCode:e.which);
+    	 if(tecla == 9 && procedimentos_auto_complete.length == 1){
+    	 	$(this).val(procedimentos_auto_complete[0].label);
+    	 	$('#data-atendimento').focus();
+    	 	$scope.$apply(function () {
+            	ng.atendimento.id_procedimento = procedimentos_auto_complete[0].id ;
+        	});
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#data-atendimento').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	$scope.$apply(function () {
+            ng.atendimento.id_procedimento = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.atendimento.id_procedimento)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
+
+    var profissionais_busca_auto_complete = [] ;
+    $( "#ui-busca-profissional-atendimento" ).autocomplete({
+      source: function (request, response) {
+      	var query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=9&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
+        query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR usu.apelido LIKE '%"+request.term.replace(/^\s+|\s+$/g,"")+"%')"}});
+        aj.get(baseUrlApi()+"usuarios"+query_string)
+			.success(function(data, status, headers, config) {
+				profissionais_busca_auto_complete = []
+				$.each(data.usuarios,function(i,v){
+					profissionais_busca_auto_complete.push({
+						label : v.nome,
+						valor : v.nome,
+						id    : v.id
+					})
+				});
+				response(profissionais_busca_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+        $scope.$apply(function () {
+              ng.busca.id_profissional_atendimento = ui.item.id ;
+        });
+        $('#calendar').fullCalendar( 'destroy' );
+        loadCalendar(ng.userLogged.id_empreendimento,ng.busca.id_profissional_atendimento);
+      }
+    }).keydown(function(e){
+    	var tecla = (e.keyCode?e.keyCode:e.which);
+    	if(tecla == 9 && profissionais_busca_auto_complete.length == 1){
+    	 	$(this).val(profissionais_busca_auto_complete[0].label);
+    	 	$scope.$apply(function () {
+            	ng.busca.id_profissional_atendimento = profissionais_busca_auto_complete[0].id ;
+        });
+    	$(this).autocomplete( "close" )
+        $('#calendar').fullCalendar( 'destroy' );
+        loadCalendar(ng.userLogged.id_empreendimento,ng.busca.id_profissional_atendimento);
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#data-atendimento').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	$scope.$apply(function () {
+            ng.atendimento.id_procedimento = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.atendimento.id_procedimento)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
+
+    var profissionais_auto_complete = [] ;
+    $( "#ui-profissional-atendimento" ).autocomplete({
+      source: function (request, response) {
+        var query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=9&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
+        query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR usu.apelido LIKE '%"+request.term.replace(/^\s+|\s+$/g,"")+"%')"}});
+        aj.get(baseUrlApi()+"usuarios"+query_string)
+      .success(function(data, status, headers, config) {
+        profissionais_auto_complete = []
+        $.each(data.usuarios,function(i,v){
+          profissionais_auto_complete.push({
+            label : v.nome,
+            valor : v.nome,
+            id    : v.id
+          })
+        });
+        response(profissionais_auto_complete);
+      })
+      .error(function(data, status, headers, config) {
+        response([]);
+    }); 
+      },
+      select:function(event, ui){
+        $scope.$apply(function () {
+              ng.atendimento.id_profissional_atendimento = ui.item.id ;
+        });
+        $('#calendar').fullCalendar( 'destroy' );
+        loadCalendar(ng.userLogged.id_empreendimento,ng.atendimento.id_profissional_atendimento);
+      }
+    }).keydown(function(e){
+       var tecla = (e.keyCode?e.keyCode:e.which);
+       if(tecla == 9 && profissionais_auto_complete.length == 1){
+	        $(this).val(profissionais_auto_complete[0].label);
+	        $scope.$apply(function () {
+	              ng.atendimento.id_profissional_atendimento = profissionais_auto_complete[0].id ;
+	        });
+     	}
+    }).focus(function(e){
+      $(this).val('');
+        $scope.$apply(function () {
+            ng.atendimento.id_profissional_atendimento = null ;
+        });
+    }).blur(function(e){
+      var self = this ;
+      setTimeout(function(){
+        if(!$.isNumeric(ng.atendimento.id_profissional_atendimento)){
+          $(self).val('');
+        }
+      },300);
+    });
+
+    var paciente_auto_complete = [] ;
+    $( "#ui-paciente-atendimento" ).autocomplete({
+      source: function (request, response) {
+      	var query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=10&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
+        query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR usu.apelido LIKE '%"+request.term.replace(/^\s+|\s+$/g,"")+"%')"}});
+        aj.get(baseUrlApi()+"usuarios"+query_string)
+			.success(function(data, status, headers, config) {
+				paciente_auto_complete = []
+				$.each(data.usuarios,function(i,v){
+					paciente_auto_complete.push({
+						label : v.nome,
+						valor : v.nome,
+						id    : v.id
+					})
+				});
+				response(paciente_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+        $scope.$apply(function () {
+              ng.atendimento.id_paciente = ui.item.id ;
+        });
+      }
+    }).keydown(function(e){
+    	var tecla = (e.keyCode?e.keyCode:e.which);
+    	if(tecla == 9 && paciente_auto_complete.length == 1){
+    	 	$(this).val(paciente_auto_complete[0].label);
+    	 	$scope.$apply(function () {
+            	ng.atendimento.id_paciente = paciente_auto_complete[0].id ;
+        });
+        $('#ui-profissional-atendimento').focus();
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#ui-profissional-atendimento').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	$scope.$apply(function () {
+            ng.atendimento.id_paciente = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.atendimento.id_paciente)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
 
 	loadCalendar(ng.userLogged.id_empreendimento,ng.busca.id_profissional_atendimento);
 

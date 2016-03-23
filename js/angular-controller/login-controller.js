@@ -101,6 +101,8 @@ app.controller('LoginController', function($scope, $http, $window){
 					window.location.href = item.nickname;
 				}else if(id_perfil_user == 8){
 					window.location.href = "pdv.php";
+				}else if(id_perfil_user == 11){
+					window.location.href = "controle-atendimento.php";
 				}
 			})
 			.error(function(data, status, headers, config) {

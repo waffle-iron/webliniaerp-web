@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <!-- Bootstrap core CSS -->
       <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
 
@@ -232,7 +232,7 @@
 
 							<form class="form form-horizontal" role="form">
 								<div class="form-group">
-									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Nome:</label> 
+								<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Nome:</label> 
 									<div class="col-xs-12 col-sm-7 col-md-7 col-lg-6" id="nome">
 										<input type="text" class="form-control input-sm" ng-model="cliente.nome">
 									</div>
@@ -351,19 +351,24 @@
 				    <div class="modal-body bg-trans-dark">
 				    	<div class="panel-tab clearfix">
 							<ul class="tab-bar">
-								<li class="active" ng-show="tab_pagamentos == false" ng-init="showButtonSalvar = true;" ng-click="showButtonSalvar = true;">
+								<li class="active"  ng-init="showButtonSalvar = true;" ng-click="showButtonSalvar = true;">
 									<a href="#dados" data-toggle="tab">
 										<i class="fa fa-user"></i> Dados Cadastrais
 									</a>
 								</li>
-								<li ng-show="tab_pagamentos == false" ng-click="getItensVenda(); showButtonSalvar = false;">
+								<li  ng-click="getItensVenda();loadPagamentosPaciente(); showButtonSalvar = false;">
 									<a href="#procedimentos" data-toggle="tab">
 										<i class="fa fa-list-alt"></i> Procedimentos
 									</a>
 								</li>
-								<li ng-show="tab_pagamentos" ng-click="showButtonSalvar = false;">
+								<li  ng-click="loadPagamentosPaciente();showButtonSalvar = false;">
 									<a  href="#pagamentos" data-toggle="tab">
-										<i class="fa fa-list-alt"></i> Pagamentos
+										<i class="fa fa-list-alt"></i> pagamentos
+									</a>
+								</li>
+								<li  ng-click="getItensVenda();showButtonSalvar = false;">
+									<a  href="#receber" data-toggle="tab">
+										<i class="fa fa-list-alt"></i> Receber
 									</a>
 								</li>
 							</ul>
@@ -447,7 +452,7 @@
 												<label class="control-label">Procedimento</label>
 												<div class="controls">
 													<div class="input-group">
-														<input type="text" ng-model="procedimento.dsc_procedimento" ng-blur="buscaProcedimentoByCod()" ng-focus="procedimento.dsc_procedimento=''" ng-enter="salvarProcedimento()" class="form-control input-sm">
+														<input type="text" id="ui-auto-complete-procedimento" class="form-control input-sm">
 														<span class="input-group-btn">
 															<button class="btn btn-default btn-sm" ng-click="selProcedimento()" type="button"><i class="fa fa-search"></i></button>
 														</span>
@@ -461,7 +466,7 @@
 												<label class="control-label">Dente/Região</label>
 												<div class="controls">
 													<div class="input-group">
-														<input ng-model="procedimento.nme_dente" ng-blur="buscaDenteByCod()" ng-focus="procedimento.nme_dente=''" ng-enter="salvarProcedimento()" type="text" class="form-control input-sm">
+														<input type="text" id="ui-auto-complete-odontograma" class="form-control input-sm"/>
 														<span class="input-group-btn">
 															<button ng-click="selOdontograma()"  class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
 														</span>
@@ -475,7 +480,7 @@
 												<label class="control-label">Face</label>
 												<div class="controls">
 													<div class="input-group">
-														<input type="text" ng-model="procedimento.dsc_face" ng-blur="buscaFaceDenteByCod()" ng-focus="procedimento.dsc_face=''" ng-enter="salvarProcedimento()" class="form-control input-sm">
+														<input type="text" id="ui-auto-complete-face" class="form-control input-sm"/>
 														<span class="input-group-btn">
 															<button class="btn btn-default btn-sm" ng-click="selFaceDente()" ng- type="button"><i class="fa fa-search"></i></button>
 														</span>
@@ -488,7 +493,7 @@
 											<div class="form-group" id="valor">
 												<label class="control-label">Valor</label>
 												<div class="controls">
-													<input thousands-formatter ng-model="procedimento.valor" ng-enter="salvarProcedimento()" class="form-control"/>
+													<input thousands-formatter id="procedimento-valor" ng-model="procedimento.valor"  class="form-control"/>
 												</div>
 											</div>
 										</div>
@@ -497,75 +502,76 @@
 											<div class="form-group">
 												<label class="control-label"><br/></label>
 												<div class="controls">
-													<button class="btn btn-sm btn-primary" ng-click="salvarProcedimento()" data-toggle="tooltip" title="Incluir procedimento"><i class="fa fa-plus-square"></i></button>
+													<button class="btn btn-sm btn-primary" ng-click="salvarProcedimento()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  data-toggle="tooltip" id="incluir-procedimento" title="Incluir procedimento"><i class="fa fa-plus-square"></i></button>
 												</div>
 											</div>
 										</div>
 									</div>
 								</form>
-
-								<table class="table table-bordered table-hover table-striped table-condensed">
-									<thead>
-										<th class="text-center">Data</th>
-										<th class="text-center">Procedimento</th>
-										<th class="text-center">Dente/Região</th>
-										<th class="text-center">Face</th>
-										<th class="text-center">Status</th>
-										<th class="text-center">Agendamento</th>
-										<th class="text-center">Valor</th>
-										<th class="text-center">Ações</th>
-									</thead>
-									<tbody>
-										<tr ng-repeat="item in itens_venda" bs-tooltip>
-											<td class="text-center">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
-											<td>{{ item.dsc_procedimento }}</td>
-											<td>{{ item.nme_dente }}</td>
-											<td>{{ item.dsc_face }}</td>
-											<td><i class="fa fa-circle" ng-class="{'text-danger':item.id_status_procedimento == 1,'text-warning':item.id_status_procedimento == 2,'text-success': item.id_status_procedimento == 3 }"></i> 
-												{{item.dsc_status_procedimento}}
-											</td>
-											<td style="width: 154px">
-												<input ng-model="item.dta_inicio_procedimento" class="form-control input-xs" ui-mask="99/99/9999 99:99"
-													ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)">
-											</td>
-											<td class="text-right"><i class="fa fa-circle" ng-class="{'text-danger':item.flg_item_pago == 0,'text-success':item.flg_item_pago == 1}"></i> R$ {{ item.valor_real_item | numberFormat:2:',':'.'}}</td>
-											<td class="text-center">
-												<button class="btn btn-xs btn-primary" ng-disabled="item.flg_item_pago == 1" ng-click="efetuarPagamento(item)" data-toggle="tooltip" title="Efetuar pagamento">
-													<i class="fa fa-money"></i>
-												</button>
-												<button class="btn btn-xs btn-primary" 
-													data-loading-text="<i class='fa fa-refresh fa-spin'></i>" 
-													ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)"
-													ng-click="agendarProcedimento(item,$event)" 
-													data-toggle="tooltip" title="Agendar realização">
-													<i class="fa fa-calendar"></i>
-												</button>
-												<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Cancelar agendamento"
-													ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)">
-													<i class="fa fa-times-circle"></i>
-												</button>
-											</td>
-										</tr>
-										<tr ng-if="itens_venda.length == 0">
-											<td colspan="8" class="text-center" text-center>
-												Nenhum procedimento encontrado
-											</td>
-										</tr>
-										<tr ng-if="itens_venda==null">
-											<td colspan="8" class="text-center">
-												<i class='fa fa-refresh fa-spin'></i> Carregando ...
-											</td>
-										</tr>
-									</tbody>
-									<tfoot ng-if="itens_venda.length > 0">
-										<th class="text-right" colspan="6">Total</th>
-										<th class="text-right">R$ {{ totalItensVenda() | numberFormat:2:',':'.' }}</th>
-										<th></th>
-									</tfoot>
-								</table>
+								<div style="max-height: 300px;overflow: auto;">
+									<table class="table table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th class="text-center">Data</th>
+											<th class="text-center">Procedimento</th>
+											<th class="text-center">Dente/Região</th>
+											<th class="text-center">Face</th>
+											<th class="text-center">Status</th>
+											<th class="text-center">Agendamento</th>
+											<th class="text-center">Valor</th>
+											<th class="text-center">Ações</th>
+										</thead>
+										<tbody>
+											<tr ng-repeat="item in itens_venda" bs-tooltip>
+												<td class="text-center">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
+												<td>{{ item.dsc_procedimento }}</td>
+												<td>{{ item.nme_dente }}</td>
+												<td>{{ item.dsc_face }}</td>
+												<td><i class="fa fa-circle" ng-class="{'text-danger':item.id_status_procedimento == 1,'text-warning':item.id_status_procedimento == 2,'text-success': item.id_status_procedimento == 3 }"></i> 
+													{{item.dsc_status_procedimento}}
+												</td>
+												<td style="width: 154px">
+													<input ng-model="item.dta_inicio_procedimento" class="form-control input-xs" ui-mask="99/99/9999 99:99"
+														ng-disabled="((pagamentosCliente.total-totalItensVendaAgendados()) < item.valor_real_item) || item.id_status_procedimento != 1 "/>
+												</td>
+												<td class="text-right"><!--<i class="fa fa-circle" ng-class="{'text-danger':item.flg_item_pago == 0,'text-success':item.flg_item_pago == 1}"></i> -->R$ {{ item.valor_real_item | numberFormat:2:',':'.'}}</td>
+												<td class="text-center">
+													<!--<button class="btn btn-xs btn-primary" ng-disabled="item.flg_item_pago == 1" ng-click="efetuarPagamento(item)" data-toggle="tooltip" title="Efetuar pagamento">
+														<i class="fa fa-money"></i>
+													</button>-->
+													<button class="btn btn-xs btn-primary" 
+														data-loading-text="<i class='fa fa-refresh fa-spin'></i>" 
+														ng-disabled="((pagamentosCliente.total-totalItensVendaAgendados()) < item.valor_real_item) || item.id_status_procedimento != 1 "
+														ng-click="agendarProcedimento(item,$event)" 
+														data-toggle="tooltip" title="Agendar realização">
+														<i class="fa fa-calendar"></i>
+													</button>
+													<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Cancelar agendamento"
+														ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)">
+														<i class="fa fa-times-circle"></i>
+													</button>
+												</td>
+											</tr>
+											<tr ng-if="itens_venda.length == 0">
+												<td colspan="8" class="text-center" text-center>
+													Nenhum procedimento encontrado
+												</td>
+											</tr>
+											<tr ng-if="itens_venda==null">
+												<td colspan="8" class="text-center">
+													<i class='fa fa-refresh fa-spin'></i> Carregando ...
+												</td>
+											</tr>
+										</tbody>
+										<tfoot ng-if="itens_venda.length > 0">
+											<th class="text-right" colspan="6">Total</th>
+											<th class="text-right">R$ {{ totalItensVenda() | numberFormat:2:',':'.' }}</th>
+											<th></th>
+										</tfoot>
+									</table>
+								</div>
 							</div>
 
-							<div class="tab-pane fade" id="pagamentos">
+							<div class="tab-pane fade" id="receber">
 								<div class="panel-body">
 								    <div class="alert alert-pagamento" style="display:none"></div>
 								    <div class="row">
@@ -847,9 +853,9 @@
 								                        Total Recebido <strong class="pull-right">R$ {{ total_pg | numberFormat:2:',':'.' }}</strong>
 								                    </td>
 								                </tr>
-								                <tr>
+								                <!--<tr>
 								                    <td colspan="2" ng-show="total_pg <= vlrTotalCompra">
-								                        Total a Receber <strong class="pull-right">R$ {{ vlrTotalCompra - total_pg | numberFormat:2:',':'.' }}</strong>
+								                        Total a Receber <strong class="pull-right">R$ {{ totalItensVendaNaoAgendados() - pagamentosCliente.total | numberFormat:2:',':'.' }}</strong>
 								                    </td>
 								                    <td colspan="2" ng-show="total_pg > vlrTotalCompra" >
 								                        Total a Receber <strong class="pull-right">R$ 0,00</strong>
@@ -876,7 +882,7 @@
 								                            </div>
 								                        </div>
 								                    </td>
-								                </tr>
+								                </tr>-->
 								            </tbody>
 								        </table>
 								    </div>
@@ -888,6 +894,42 @@
 											<button type="button" class="btn btn-success pull-right" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." id="btn-pagamneto" ng-click="salvarPagamento()" ng-disabled="total_pg < vlrTotalCompra"><i class="fa fa-save"></i> Finalizar</button>
 										</div>
 								    </div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="pagamentos">
+								<div style="max-height: 300px;overflow: auto;">
+									<table class="table table-bordered table-hover table-striped table-condensed">
+										<thead>
+											<th class="text-center">Dta lançamento</th>
+											<th class="text-center">Forma Pagamento</th>
+											<th class="text-center">Valor</th>
+										</thead>
+										<tbody>
+											<tr ng-repeat="item in pagamentosCliente.pagamentos" bs-tooltip>
+												<td class="text-center">{{ item.dta_entrada | dateFormat: 'dateTime' }}</td>
+
+												<td ng-show="item.id_forma_pagamento != 6">{{ item.descricao_forma_pagamento }}</td>
+												<td ng-show="item.id_forma_pagamento == 6">{{ item.descricao_forma_pagamento }} em {{ item.num_parcelas }}x de R$ {{ item.vlr_parcela |numberFormat:2:',':'.' }}</td>
+												
+												<td class="text-right">{{ item.valor_pagamento |numberFormat:2:',':'.' }}</td>
+												
+											</tr>
+											<tr ng-if="pagamentosCliente.pagamentos.length == 0">
+												<td colspan="8" class="text-center" text-center>
+													Nenhum procedimento encontrado
+												</td>
+											</tr>
+											<tr ng-if="pagamentosCliente.pagamentos==null">
+												<td colspan="8" class="text-center">
+													<i class='fa fa-refresh fa-spin'></i> Carregando ...
+												</td>
+											</tr>
+										</tbody>
+										<tfoot ng-if="pagamentosCliente.pagamentos.length > 0">
+											<th class="text-right" colspan="2">Total</th>
+											<th class="text-right">R$ {{ pagamentosCliente.total | numberFormat:2:',':'.' }}</th>
+										</tfoot>
+									</table>
 								</div>
 							</div>
 						</div>
@@ -1345,6 +1387,8 @@
 	<!-- Moment -->
 	<script src="js/moment/moment.min.js"></script>
 
+  	<script src="js/jquery-ui-auto-complete.js"></script>
+
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
@@ -1359,13 +1403,6 @@
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/controle_atendimento-controller.js"></script>
-	<script type="text/javascript">
-		$('.tab-bar li').click(function(event){
-	        if ($(this).hasClass('disabled')) {
-	            return false;
-	        }
-    	});
-	</script>
 	<?php include("google_analytics.php"); ?>
   </body>
 </html>
