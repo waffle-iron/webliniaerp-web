@@ -203,7 +203,7 @@
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
-				<div class="panel panel-default" id="box-novo" style="display:block">
+				<div class="panel panel-default" id="box-novo" style="display:none;">
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Entre com os dados da Nota-Fiscal</div>
 
 					<div class="panel-body">
