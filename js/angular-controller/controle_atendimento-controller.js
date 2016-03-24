@@ -1521,6 +1521,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	}
 	ng.pagamentosCliente = {} ;
 	ng.loadPagamentosPaciente = function(){
+		ng.pagamentosCliente.pagamentos = null ;
 		 aj.get(baseUrlApi()+"pagamentos/cliente/"+ng.atendimento_selecionado.id_paciente)
             .success(function(data, status, headers, config) {
 				ng.pagamentosCliente.pagamentos = data.pagamentos ;
@@ -1528,7 +1529,9 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				$.each(data.pagamentos,function(i,v){
 					ng.pagamentosCliente.total += v.valor_pagamento ;
 				});
-         })
+         }).error(function(data, status, headers, config) {
+   					ng.pagamentosCliente.pagamentos = [] ;
+            });
 
           console.log(ng.pagamentosCliente);
 	}

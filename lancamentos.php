@@ -751,6 +751,14 @@
 											</div>
 										</div>
 								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+										  <label for="comment">Observação:</label>
+										  <textarea class="form-control" rows="3" ng-model="pagamento.obs_pagamento" id="comment"></textarea>
+										</div>
+									</div>
+								</div>
 					    		<div class="row">
 					    			<div class="col-sm-12 text-center">
 					    				<label class="control-label">&nbsp</label>

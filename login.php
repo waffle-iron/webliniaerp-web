@@ -46,7 +46,7 @@
 				<?php if(isset($_SESSION['loja'])): ?>
 					<div class="pull-right">
 						<span style="font-size:11px;display:none">Não tem cadastro?</span>
-						<a class="btn btn-default btn-xs btn-success login-link" href="http://www.webliniaerp.com.br/hage_suplementos/<?php echo $_SESSION['loja']['nickname'] ?>/cadastro" style="margin-top:-2px;"><i class="fa fa-plus-circle"></i> Cadastre-se já</a>
+						<a class="btn btn-default btn-xs btn-success login-link" href="http://www.webliniaerp.com.br/<?php echo $_SESSION['loja']['nickname'] ?>/cadastro" style="margin-top:-2px;"><i class="fa fa-plus-circle"></i> Cadastre-se já</a>
 					</div>
 				<?php endif ?>
 				</div>

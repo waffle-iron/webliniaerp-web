@@ -269,107 +269,27 @@
 								</form>
 								<h4 class="m-bottom-xs">Paciente: {{ paciente.nome | uppercase }}</h4>
 							</div>
-
-							<div class="col-lg-4 clearfix">
-								<div class="pull-right">
-									<button type="button" id="printButton" class="btn btn-sm btn-success"><i class="fa fa-print"></i> Imprimir</button>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
-
-				<div id="printLayer" class="clearfix">
-					<table class="table table-condensed table-hover table-striped table-bordered custom-table">
-						<!-- THEAD -->
-						<thead>
-							<tr>
-								<th class="text-center border-right" colspan="5">
-									{{ userLogged.nome_empreendimento | uppercase }}
-								</th>
-								<th class="text-center border-left" colspan="5">
-									
-								</th>
-								<th class="text-center" colspan="3">
-									
-								</th>
-							</tr>
-							<tr>
-								<th class="text-center border-right" colspan="5">CONTROLE DE ATENDIMENTO</th>
-								<th class="text-center border-left" colspan="4">CONTROLE DE PAGAMENTO</th>
-								<th class="text-center" colspan="3">ASSINATURA</th>
-							</tr>
-							<tr>
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Data</th>
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Dente/Região</th>
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Cod. Proc.</th>
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Profissional</th>
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Valor</th>
-								<th class="text-center text-middle border-left" style="width: 100px; max-width: 100px;">Data</th>
-								<!--<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Pagou</th>-->
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">F.Pgto.</th>
-								<th class="text-center text-middle" style="width: 100px; max-width: 100px;">Valor</th>
-								<th class="text-center text-middle" style="width: 200px; max-width: 200px;">Recep.</th>
-								<th class="text-center text-middle" style="width: 200px; max-width: 200px;">Dentista</th>
-								<th class="text-center text-middle" style="width: 200px; max-width: 200px;">Paciente</th>
-							</tr>
-						</thead>
-						<!-- END - THEAD -->
-
-						<!-- TBODY -->
-						<tbody>
-							<tr ng-repeat="item in fichaPaciente">
-								<td class="text-center text-middle">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
-								<td class="text-center text-middle">{{ item.cod_dente }}</td>
-								<td class="text-center text-middle">{{ item.cod_procedimento }}</td>
-								<td class="text-middle">{{ item.nome_profissional }}</td>
-								<td class="text-right text-middle border-right">{{ item.valor_real_item == null &&  ' ' || "R$"+( item.valor_real_item | numberFormat: 2 : ',' : '.' ) }}</td>
-								<td class="text-center text-middle border-left">{{ item.dta_entrada | dateFormat: 'date' }}</td>
-								<!--<td class="text-center text-middle">{{ (item.flg_item_pago == 1) ? 'SIM' : 'NÃO' }}</td>-->
-								<td class="text-center text-middle">
-									{{ 
-										 item.id_forma_pagamento == 6 &&  (item.descricao_forma_pagamento+' em '+ item.num_parcelas+'x') || item.descricao_forma_pagamento 
-									}}
-								</td>
-								<td class="text-right text-middle"> {{ item.valor_pagamento == null && ' ' || "R$"+( item.valor_pagamento | numberFormat: 2 : ',' : '.' ) }}</td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-								<td class="text-middle"></td>
-							</tr>
-						</tbody>
-						<!-- END - TBODY -->
-
-						<!-- TFOOT -->
-						<tfoot>
-							<tr>
-								<th class="text-right" colspan="4">Total Procedimentos</th>
-								<th class="text-right border-right">R$ {{ vlrTotalProcedimentos | numberFormat: 2 : ',' : '.' }}</th>
-								<th class="text-right border-left" colspan="2">Total Pago</th>
-								<th class="text-right">R$ {{ vlrTotalPagamentos | numberFormat: 2 : ',' : '.' }}</th>
-								<th colspan="3"></th>
-							</tr>
-							<tr>
-								<th colspan="3">NOME: <span class="pull-right">{{ paciente.nome | uppercase }}</span></th>
-								<th class="border-right" colspan="2">CPF: <span class="pull-right">{{ paciente.cpf }}</span></th>
-								<th class="border-left" colspan="3">RG: <span class="pull-right">{{ paciente.rg }}</span></th>
-								<th colspan="4">DATA DE NASCIMENTO: <span class="pull-right">{{ paciente.dta_nacimento}}</span></th>
-							</tr>
-							<tr>
-								<th colspan="3">ENDEREÇO: <span class="pull-right">{{ paciente.endereco | uppercase }}, {{ paciente.numero }}</span></th>
-								<th class="border-right" colspan="2">CEL.: <span class="pull-right">{{ paciente.celular | phoneFormat }}</span></th>
-								<th class="border-left" colspan="3">TEL.: <span class="pull-right">{{ paciente.tel_fixo | phoneFormat }}</span></th>
-								<th colspan="4">E-MAIL: <span class="pull-right">{{ paciente.email }}</span></th>
-							</tr>
-							<tr>
-								<th colspan="8"></th>
-								<th colspan="4">ASSINATURA: __________________________________________________</th>
-							</tr>
-						</tfoot>
-						<!-- END - TFOOT -->
-					</table>
+				<div id="iframe-ficha-paciente" class="clearfix">
+					
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<div class="modal fade" style="display: none" id="loading-relatorio">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Aguarde</h4>
+				</div>
+				<div class="modal-body">
+					<p>Carregando dados do relatório...</p>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->
