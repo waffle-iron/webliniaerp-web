@@ -159,6 +159,10 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 		.success(function(data, status, headers, config) {
 			ng.depositos = data.depositos ;
 			ng.paginacao_depositos = data.paginacao ;
+			if(ng.depositos.length == 1){
+				ng.estoqueSaida.nome_deposito = ng.depositos[0].nme_deposito;
+				ng.estoqueSaida.id_deposito   = ng.depositos[0].id;
+			}
 			
 		})
 		.error(function(data, status, headers, config) {
@@ -169,7 +173,7 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 	ng.salvar = function(){
 		var btn = $('#salvar-baixa-estoque');
 		btn.button('loading');
-		if(!$.isNumeric(ng.estoqueSaida.id_profissional) ||  !$.isNumeric(ng.estoqueSaida.id_cliente) || !$.isNumeric(ng.estoqueSaida.id_deposito) || ng.estoqueSaida.produtos.length == 0){
+		if(!$.isNumeric(ng.estoqueSaida.id_profissional) || !$.isNumeric(ng.estoqueSaida.id_deposito) || ng.estoqueSaida.produtos.length == 0){
 			$dialogs.notify('Atenção!','Preencha todos os campos');
 			btn.button('reset');
 		}
@@ -181,7 +185,6 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 			id_empreendimento : ng.userLogged.id_empreendimento ,
 			id_deposito : ng.estoqueSaida.id_deposito,
 			id_profissional : ng.estoqueSaida.id_profissional,
-			id_cliente : ng.estoqueSaida.id_cliente,
 			id_usuario : ng.userLogged.id,
 			produtos: produtos 
 		}
@@ -195,4 +198,6 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 			ng.depositos = [] ;	
 		});
 	}
+
+	ng.loadDepositos();
 });

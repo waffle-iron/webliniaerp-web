@@ -868,6 +868,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 				value.id_maquineta 			= ng.pagamento.id_maquineta;
 				value.parcelas 				= 1 ;
 				value.data_pagamento		= formatDate($('.chequeData').eq(count).val());
+				value.obs_pagamento         = empty(ng.pagamento.obs_pagamento) ? null : ng.pagamento.obs_pagamento ;
 			//value.valor_pagamento		= valor_parcelas;
 				ng.pg_cheques.push(value);
 				count ++ ;
@@ -892,6 +893,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 				value.parcelas 				= 1 ;
 				value.data_pagamento		= formatDate($('.boletoData').eq(count).val());
 			//value.valor_pagamento		= valor_parcelas;
+				value.obs_pagamento         = empty(ng.pagamento.obs_pagamento) ? null : ng.pagamento.obs_pagamento ;
 				ng.pg_boletos.push(value);
 				count ++ ;
 			});
@@ -903,6 +905,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 			$.each(ng.recebidos,function(x,y){
 				if(Number(y.id_forma_pagamento) == 3){
 					ng.recebidos[x].valor = ng.recebidos[x].valor + ng.pagamento.valor ;
+					ng.recebidos[x].obs_pagamento         = empty(ng.pagamento.obs_pagamento) ? null : ng.pagamento.obs_pagamento ;
 					push = false ;
 				}
 			});
@@ -939,7 +942,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 						   };
 			}
 			item.data_pagamento = ng.pagamento.data_pagamento ;
-
+			item.obs_pagamento         = empty(ng.pagamento.obs_pagamento) ? null : ng.pagamento.obs_pagamento ;
 			$.each(ng.formas_pagamento,function(i,v){
 				if(v.id == ng.pagamento.id_forma_pagamento){
 					item.forma_pagamento = v.nome ;
@@ -1008,6 +1011,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 			v.id_empreendimento			= ng.userLogged.id_empreendimento;
 			v.id_maquineta				= v.id_maquineta ;
 			v.taxa_maquineta			= v.taxa_maquineta ;
+			v.obs_pagamento             = empty(v.obs_pagamento) ? null : v.obs_pagamento ;
 
 			if(Number(v.id_forma_pagamento) == 6){
 
@@ -1021,6 +1025,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 					var item 			 = angular.copy(v);
 					item.valor_pagamento = valor_parcelas ;
 					item.data_pagamento  = formatDate(next_date) ;
+					item.obs_pagamento   = v.obs_pagamento  ;
 
 					var arr_date 		 = next_date.split('/');
 					var objDate   		 = new Date(parseInt(arr_date[2]), parseInt(arr_date[1]) , 1);
@@ -1095,7 +1100,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 						}
 		}
 
-	
+		console.log(dados);
 		aj.post(baseUrlApi()+url, dados)
 			.success(function(data, status, headers, config) {
 				if(typeof data.msg_agenda == "object"){

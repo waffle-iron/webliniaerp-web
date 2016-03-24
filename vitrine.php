@@ -55,7 +55,7 @@
 		</header>
 
 		<div id="landing-content">
-			<div class="bg-white text-center content-padding">
+			<div class="bg-white text-center content-padding" style="display: none">
 				<div class="container">
 					<img src="<?php echo URL_BASE ?>img/topo_loja.jpg" alt="" class="fadeInDownLarge animated-element animation-delay1">
 				</div>

@@ -211,7 +211,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-4">
+								<!--<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label">Cliente</label>
 										<div class="input-group">
@@ -221,7 +221,7 @@
 											</span>
 										</div>
 									</div>
-								</div>
+								</div>-->
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label">Deposito</label>

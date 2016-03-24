@@ -97,7 +97,7 @@ app.controller('LoginController', function($scope, $http, $window){
 				if(id_perfil_user == 1){
 					window.location.href = "dashboard.php";
 				}
-				else if(id_perfil_user == 7 || id_perfil_user == 6){
+				else if(id_perfil_user == 7 || id_perfil_user == 6 || id_perfil_user == 5){
 					window.location.href = item.nickname;
 				}else if(id_perfil_user == 8){
 					window.location.href = "pdv.php";

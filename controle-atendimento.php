@@ -912,7 +912,7 @@
 											</tr>
 											<tr ng-if="pagamentosCliente.pagamentos.length == 0">
 												<td colspan="8" class="text-center" text-center>
-													Nenhum procedimento encontrado
+													Nenhum pagamento encontrado
 												</td>
 											</tr>
 											<tr ng-if="pagamentosCliente.pagamentos==null">
