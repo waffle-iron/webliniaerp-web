@@ -203,13 +203,50 @@
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
-				<div class="panel panel-default" id="box-novo" style="display:none">
+				<div class="panel panel-default" id="box-novo" style="display:block">
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Entre com os dados da Nota-Fiscal</div>
 
 					<div class="panel-body">
+						<form id="form-xml" class="form">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group" id="xml_nfe">
+										<label class="control-label" 
+											ng-show="editing == false || (nota.xml_nfe == '' || nota.xml_nfe == null)">
+											<i class="fa fa-file-code-o"></i> XML da NF-e
+										</label>
+										<a href="assets/arquivos_nfe/{{ nota.xml_nfe }}"  target="_blank">
+											<label style="cursor: pointer;" class="control-label" 
+												ng-hide="editing == false || (nota.xml_nfe == '' || nota.xml_nfe == null)">
+												<i class="fa fa-file-code-o"></i> XML da NF-e
+											</label>
+										</a>
+										<div class="upload-file">
+											<input id="arquivo-nota" name="arquivo-nota" class="foto-nota" type="file" data-file="nota.foto" accept="text/xml"/>
+											<label data-title="Selecione..." for="arquivo-nota" style="background-color: #eee;">
+												<span data-title="{{ nota.xml_nfe }}"></span>
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label"><br/></label>
+										<div class="controls">
+											<button id="loadXMLButton" type="button" class="btn btn-sm btn-info" 
+												ng-click="loadDataFromXML()" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Aguarde, carregando...">
+												<i class="fa fa-file-code-o"></i> Carregar a partir do XML da NF-e
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+						
 						<form role="form">
 							<div class="row">
-								<div class="col-sm-6">
+								<div class="col-sm-5">
 									<div class="form-group" id="nme_fornecedor">
 										<label class="control-label">Fornecedor</label>
 										<div class="input-group">
@@ -229,7 +266,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-4">
+								<div class="col-sm-5">
 									<div class="form-group" id="nme_deposito">
 										<label class="control-label">Depósito</label>
 										<div class="input-group">
@@ -296,7 +333,11 @@
 												<th style="width: 70px; text-align: center;">Imp. (%)</th>
 												<th style="width: 75px; text-align: center;">Desc. (%)</th>
 												<th style="width: 120px; text-align: center;">SubTotal</th>
-												<th style="width: 100px; text-align: center;">Ações</th>
+												<th style="width: 100px; text-align: center;">
+													<button ng-click="deleteItem()" type="button" class="btn btn-xs btn-danger">
+														<i class="fa fa-trash-o"></i> Remover Todos
+													</button>
+												</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -305,7 +346,7 @@
 													Nenhum pedido foi selecionado
 												</td>
 											</tr>
-											<tr ng-repeat="item in entradaEstoque | orderBy: 'nome_produto' : false">
+											<tr ng-repeat="item in entradaEstoque | orderBy: 'nome_produto' : false" ng-class="{'danger': (item.flg_localizado == false)}">
 												<td style="line-height: 1.5; vertical-align: middle;">{{ item.nome_produto }}</td>
 												<td>{{ item.nome_fabricante }}</td>
 												<td>{{ item.peso }}</td>
@@ -336,7 +377,7 @@
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="pull-right">
-										<button ng-click="showBoxNovo(); reset();" id="btn-limpa-form" type="submit" class="btn btn-danger btn-sm">
+										<button ng-click="showBoxNovo(); reset();" id="btn-limpa-form" type="submit" class="btn btn-default btn-sm">
 											<i class="fa fa-times-circle"></i> Cancelar
 										</button>
 										<button ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
@@ -808,6 +849,9 @@
 	<!-- Jquery -->
 	<script src="js/jquery-1.10.2.min.js"></script>
 
+	<!-- Jquery Form-->
+	<script src='js/jquery.form.js'></script>
+
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
@@ -838,6 +882,9 @@
 
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
+
+	<!-- UnderscoreJS -->
+	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>

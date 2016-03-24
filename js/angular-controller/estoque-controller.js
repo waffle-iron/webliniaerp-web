@@ -6,7 +6,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	ng.baseUrl 			   = baseUrl();
 	ng.userLogged 		   = UserService.getUserLogado();
 
-	ng.nota			       = {vlr_total_imposto : ""};
+	ng.nota			       = {vlr_total_imposto : '', xml_nfe: ''};
 
 	ng.entradaEstoque 	   = [];
 	ng.ultimasEntradas	   = [];
@@ -19,15 +19,108 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	ng.produto 				 = {};
 	ng.vlr_frete           = ""
 
+	$("#arquivo-nota").change(function() {
+		var filename = $(this).val().split('\\').pop();
+		$(this).parent().find('span').attr('data-title',filename);
+		$(this).parent().find('label').attr('data-title','Trocar XML');
+		$(this).parent().find('label').addClass('selected');
+	});
+
+	ng.loadDataFromXML = function() {
+		$('#form-xml').ajaxForm({
+		 	url: baseUrlApi()+"estoque/importar/nfe?id_empreendimento="+ng.userLogged.id_empreendimento,
+		 	type: 'POST',
+		 	beforeSend: function() {
+		 		$("#loadXMLButton").button('loading');
+		 		$("#xml_nfe").removeClass("has-error");
+		 		$("#xml_nfe").tooltip('destroy');
+		 	},
+		 	success:function(data){
+		 		$("#loadXMLButton").button('reset');
+
+		 		ng.nota.num_nota_fiscal = data.nNF;
+
+		 		if(data.fornecedor.flg_localizado) {
+					ng.nota.id_fornecedor           	= data.fornecedor.dados.id;
+					ng.nota.nme_fornecedor          	= data.fornecedor.dados.nome_fornecedor;
+					ng.nota.flg_fornecedor_localizado 	= data.fornecedor.flg_localizado;
+					ng.nota.id_pedido_fornecedor    	= "" ;
+				}
+
+				$.each(data.itensBD, function(i, itemNF){
+					if(ng.entradaEstoque.length > 0 && itemNF.flg_localizado) {
+						var newObj 				= _.findWhere(ng.entradaEstoque, {id_produto: itemNF.id_produto.toString()});
+						newObj.validades 		= [{ qtd: itemNF.qtd }];
+						newObj.flg_localizado 	= true;
+						newObj.qtd 				= itemNF.qtd;
+						newObj.custo 			= itemNF.custo;
+						newObj.imposto 			= itemNF.imposto;
+
+						ng.entradaEstoque[0] = newObj;
+					}
+					else{
+						ng.entradaEstoque.push({
+							id_pedido: 				(ng.entradaEstoque.length > 0) ? ng.entradaEstoque[0].id_pedido : 0,
+							id_produto: 			itemNF.id_produto,
+							margem_atacado: 		itemNF.margem_atacado,
+							margem_intermediario: 	itemNF.margem_intermediario,
+							margem_varejo: 			itemNF.margem_varejo,
+							nome_fabricante: 		itemNF.nome_fabricante,
+							nome_produto: 			itemNF.nome_produto,
+							peso: 					itemNF.peso,
+							qtd: 					itemNF.qtd,
+							validades: 				[{ qtd: itemNF.qtd }],
+							custo: 					itemNF.custo,
+							imposto: 				itemNF.imposto,
+							flg_localizado: 		itemNF.flg_localizado,
+						});
+					}
+				});
+
+				ng.atualizaValores();
+				ng.atualizaValorTotal();
+				ng.atualizaQtdValidadeItens();
+
+				setTimeout(function() {
+					$scope.$apply();
+				}, 500);
+		 	},
+		 	error: function(data, status, headers, config){
+		 		$("#loadXMLButton").button('reset');
+		 		
+		 		if(data.status == 406) {
+		 			$("#xml_nfe").addClass("has-error");
+
+					var formControl = $($("#xml_nfe"))
+						.attr("data-toggle", "tooltip")
+						.attr("data-placement", "bottom")
+						.attr("title", data.responseText)
+						.attr("data-original-title", data.responseText);
+					formControl.tooltip();
+		 		}
+		 		else {
+		 			defaulErrorHandler(data, status, headers, config);
+		 		}
+		 	}
+		}).submit();
+	}
+
 	ng.salvar = function(){
 		if(!ng.entradaEstoque.length > 0){
 			$dialogs.notify('Atenção!','Nenhum pedido foi adicionado para dar entrada');
-			return;
+			return false;
 		}
 
+		$.each(ng.entradaEstoque, function(i, item) {
+			if(!item.flg_localizado) {
+				$dialogs.notify('Atenção!','Alguns produtos não foram localizados!<br/>Não será possível realizar a entrada da NF.');
+				return false;
+			}
+		});
+
 		if(!ng.validarCusto()){
-			$dialogs.notify('Atenção!','O custo de nenhum produto pode ser fazio');
-			return;
+			$dialogs.notify('Atenção!','Alguns produtos estão sem valor de custo!<br/>Não será possível realizar a entrada da NF.');
+			return false;
 		}
 
 		var validar_validade = true ;
@@ -313,14 +406,14 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	}
 
 	ng.atualizaQtdValidadeItens = function() {
-		var qtdTotal = 0;
+		/*var qtdTotal = 0;
 
 		$.each(ng.produto.validades, function(i, item) {
 			qtdTotal += parseInt(item.qtd,10);
 		});
 
 		ng.produto.qtd = qtdTotal;
-		ng.atualizaValores();
+		ng.atualizaValores();*/
 	}
 
 	ng.deleteValidadeItem = function(index) {
@@ -329,7 +422,8 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	}
 
 	ng.loadItensPedido = function(id_pedido) {
-			ng.entradaEstoque = [] ;
+		if(ng.entradaEstoque == null || ng.entradaEstoque == "undefined")
+			ng.entradaEstoque = [];
 
 		aj.get(baseUrlApi()+"pedido_itens/"+id_pedido)
 			.success(function(data, status, headers, config) {
@@ -339,7 +433,12 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 					item.imposto  = null;
 					item.desconto = null;
 					item.total    = 0;
-					ng.entradaEstoque.push(item);
+
+					if(ng.entradaEstoque.length > 0){
+						var objNF = _.findWhere(ng.entradaEstoque, {id_produto: parseInt(item.id_produto, 10)});
+						if(objNF == undefined)
+							ng.entradaEstoque.push(item);
+					}
 				});
 
 				ng.atualizaValores();
@@ -395,6 +494,9 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		/* inicio - Ações dos itens dos entrada */
 
 		ng.deleteItem = function(item){
+			if(item == null)
+				ng.entradaEstoque = [];
+
 			$.each(ng.entradaEstoque, function(x, currentItem){
 				if(currentItem.id === item.id && currentItem.validade === item.validade)
 					ng.entradaEstoque.splice(x,1);
