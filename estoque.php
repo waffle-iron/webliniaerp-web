@@ -203,7 +203,7 @@
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
-				<div class="panel panel-default" id="box-novo" style="display:block">
+				<div class="panel panel-default" id="box-novo" style="display:none;">
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Entre com os dados da Nota-Fiscal</div>
 
 					<div class="panel-body">
@@ -230,13 +230,33 @@
 									</div>
 								</div>
 
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label for="" class="control-label">Cadastrar produtos não encontrados?</label>
+										<div class="form-group">
+											<label class="label-radio inline">
+												<input name="flg_cadastra_produto_nao_encontrado" value="1" type="radio" class="inline-radio"
+													ng-model="nota.flg_cadastra_produto_nao_encontrado">
+												<span class="custom-radio"></span>
+												<span>Sim</span>
+											</label>
+											<label class="label-radio inline">
+												<input name="flg_cadastra_produto_nao_encontrado" value="0" type="radio" class="inline-radio"
+													ng-model="nota.flg_cadastra_produto_nao_encontrado">
+												<span class="custom-radio"></span>
+												<span>Não</span>
+											</label>
+										</div>
+									</div>
+								</div>
+
 								<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label"><br/></label>
 										<div class="controls">
 											<button id="loadXMLButton" type="button" class="btn btn-sm btn-info" 
 												ng-click="loadDataFromXML()" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Aguarde, carregando...">
-												<i class="fa fa-file-code-o"></i> Carregar a partir do XML da NF-e
+												<i class="fa fa-file-code-o"></i> Carregar dados a partir do XML da NF-e
 											</button>
 										</div>
 									</div>

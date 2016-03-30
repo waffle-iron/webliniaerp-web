@@ -6,7 +6,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	ng.baseUrl 			   = baseUrl();
 	ng.userLogged 		   = UserService.getUserLogado();
 
-	ng.nota			       = {vlr_total_imposto : '', xml_nfe: ''};
+	ng.nota			       = {vlr_total_imposto : '', xml_nfe: '', flg_cadastra_produto_nao_encontrado: 0};
 
 	ng.entradaEstoque 	   = [];
 	ng.ultimasEntradas	   = [];
@@ -26,9 +26,35 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		$(this).parent().find('label').addClass('selected');
 	});
 
+	ng.reset = function() {
+		ng.nota 				= {vlr_total_imposto : '', xml_nfe: '', flg_cadastra_produto_nao_encontrado: 0};
+		ng.valor_total_entrada 	= 0 ;
+		ng.qtd_total_entrada 	= 0 ;
+		ng.produto 				= {};
+		ng.vlr_frete 			= "";
+	}
+
+	function addItemNF(itemNF) {
+		ng.entradaEstoque.push({
+			id_pedido: 				(ng.entradaEstoque.length > 0) ? ng.entradaEstoque[0].id_pedido : 0,
+			id_produto: 			itemNF.id_produto,
+			margem_atacado: 		itemNF.margem_atacado,
+			margem_intermediario: 	itemNF.margem_intermediario,
+			margem_varejo: 			itemNF.margem_varejo,
+			nome_fabricante: 		itemNF.nome_fabricante,
+			nome_produto: 			itemNF.nome_produto,
+			peso: 					itemNF.peso,
+			qtd: 					itemNF.qtd,
+			validades: 				[{ qtd: itemNF.qtd }],
+			custo: 					itemNF.custo,
+			imposto: 				itemNF.imposto,
+			flg_localizado: 		itemNF.flg_localizado,
+		});
+	}
+
 	ng.loadDataFromXML = function() {
 		$('#form-xml').ajaxForm({
-		 	url: baseUrlApi()+"estoque/importar/nfe?id_empreendimento="+ng.userLogged.id_empreendimento,
+		 	url: baseUrlApi()+"estoque/importar/nfe?id_empreendimento="+ng.userLogged.id_empreendimento+'&flg_cpne='+ng.nota.flg_cadastra_produto_nao_encontrado,
 		 	type: 'POST',
 		 	beforeSend: function() {
 		 		$("#loadXMLButton").button('loading');
@@ -50,31 +76,21 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 				$.each(data.itensBD, function(i, itemNF){
 					if(ng.entradaEstoque.length > 0 && itemNF.flg_localizado) {
 						var newObj 				= _.findWhere(ng.entradaEstoque, {id_produto: itemNF.id_produto.toString()});
-						newObj.validades 		= [{ qtd: itemNF.qtd }];
-						newObj.flg_localizado 	= true;
-						newObj.qtd 				= itemNF.qtd;
-						newObj.custo 			= itemNF.custo;
-						newObj.imposto 			= itemNF.imposto;
+						
+						if(newObj != undefined) {
+							newObj.validades 		= [{ qtd: itemNF.qtd }];
+							newObj.flg_localizado 	= true;
+							newObj.qtd 				= itemNF.qtd;
+							newObj.custo 			= itemNF.custo;
+							newObj.imposto 			= itemNF.imposto;
 
-						ng.entradaEstoque[0] = newObj;
+							ng.entradaEstoque[0] = newObj;
+						}
+						else
+							addItemNF(itemNF);
 					}
-					else{
-						ng.entradaEstoque.push({
-							id_pedido: 				(ng.entradaEstoque.length > 0) ? ng.entradaEstoque[0].id_pedido : 0,
-							id_produto: 			itemNF.id_produto,
-							margem_atacado: 		itemNF.margem_atacado,
-							margem_intermediario: 	itemNF.margem_intermediario,
-							margem_varejo: 			itemNF.margem_varejo,
-							nome_fabricante: 		itemNF.nome_fabricante,
-							nome_produto: 			itemNF.nome_produto,
-							peso: 					itemNF.peso,
-							qtd: 					itemNF.qtd,
-							validades: 				[{ qtd: itemNF.qtd }],
-							custo: 					itemNF.custo,
-							imposto: 				itemNF.imposto,
-							flg_localizado: 		itemNF.flg_localizado,
-						});
-					}
+					else
+						addItemNF(itemNF);
 				});
 
 				ng.atualizaValores();
@@ -146,6 +162,10 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 				});
 				item_atual.desconto = item_atual.desconto / 100 ;
 				item_atual.imposto = item_atual.imposto / 100 ;
+
+				if(validade.validade == undefined)
+					validade.validade = "122009";
+
 				var ano       = parseInt(validade.validade.substring(2,6));
 				var mes       = parseInt(validade.validade.substring(0,2)) -1;
 				var objDate   = new Date(ano, mes , 1);
@@ -164,9 +184,14 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		$($(".has-error").find("button")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
 
+		var postData = angular.copy( ng.nota );
+		postData.vlr_total_imposto 		= parseFloat((postData.vlr_total_imposto != undefined) ? postData.vlr_total_imposto.replace(",", ".") : 0);
+		postData.vlr_total_nota_fiscal 	= parseFloat((postData.vlr_total_nota_fiscal != undefined) ? postData.vlr_total_nota_fiscal.replace(",", ".") : 0);
+		postData.vlr_frete 				= parseFloat((postData.vlr_frete != undefined) ? postData.vlr_frete.replace(",", ".") : 0);
+
 		$http.post(baseUrlApi()+'estoque/entrada',ng.nota)
 			.success(function(data, status, headers, config) {
-				$('#btn-limpa-form').trigger('click');
+				ng.reset();
 				ng.showBoxNovo();
 				ng.mensagens('alert-success',
 							'<strong>Entrada cadastrada com sucesso</strong>, caso deseje agora poderar atualizar as margens dos produtos',
@@ -295,7 +320,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 20 : limit;
 
-		var query_string = "?ped->flg_pedido_real=1&ent->id[exp]=IS NULL&ped->id[exp]=IS NOT NULL&frn->id_empreendimento="+ng.userLogged.id_empreendimento;
+		var query_string = "?frn->id_empreendimento="+ng.userLogged.id_empreendimento;
 		if(ng.busca.fornecedores != ""){
 			query_string += "&"+$.param({nome_fornecedor:{exp:"like'%"+ng.busca.fornecedores+"%'"}})+"";
 		}
@@ -315,7 +340,6 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		ng.nota.nme_fornecedor          = item.nome_fornecedor;
 		ng.nota.id_fornecedor           = item.id;
 		ng.nota.id_pedido_fornecedor    = "" ;
-		ng.entradaEstoque               = [] ;
 		ng.valor_total_entrada          = 0 ;
 		ng.qtd_total_entrada            = 0 ;
 		$('#list_fornecedores').modal('hide');
