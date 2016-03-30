@@ -2448,7 +2448,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	// Funções de comunicação com o WebSocket
 	ng.newConnWebSocket = function(data){
-		ng.conn = new WebSocket('ws://localhost:3000');
+		ng.conn = new WebSocket('ws://localhost:8080');
 		console.log(ng.conn);
 		ng.conn.onopen = function(e) {
 			console.log('Conexão com WebSocket estabelecida!!!')
@@ -2458,7 +2458,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		};
 
 		ng.conn.onmessage = function(e) {
-			var data = JSON.parse(e.data)
+			var data = JSON.parse(e.data);
+			data.message = parseJSON(data.message);
 			console.log(data);
 			switch(data.type){
 				case 'session_id':
@@ -2469,8 +2470,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					window.location = "pdv.php";
 					break;
 				case 'satcfe_error':
-					alert('Ocorreu um erro ao imprimir o cupom!!!')
-					window.location = "pdv.php";
+					$scope.$apply(function () {
+			           ng.erro_sat =  data.message ;
+			        });
+					$('#modal-erro-sat').modal({ backdrop: 'static',keyboard: false});
 					break;
 			}			
 		};

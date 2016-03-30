@@ -2014,6 +2014,30 @@
 			</div>
 			<!-- /.modal -->
 
+			<!-- /Modal Processando erro sat -->
+			<div class="modal fade" id="modal-erro-sat" style="display:none">
+	  			<div class="modal-dialog error modal-md">
+	    			<div class="modal-content">
+	      				<div class="modal-header">
+	      					<h4>Ocorreu um erro ao processar o SAT</h4>
+	      				</div>
+					    <div class="modal-body">
+					    	<div class="row">
+					    		<div class="col-sm-12">
+					    			<b>codigo: </b> {{ erro_sat.codigoErro }} <br/>
+					    			<b>Mensagem: </b> {{ erro_sat.msgErro }} <br/>
+					    			<b>problemas: </b> <br/>
+					    			<p ng-repeat="item in erro_sat.problemas" style="margin: 0px 0 3px 15px;">{{item}}</p>	
+								</div>
+					    	</div>
+					    </div>
+				  	</div>
+				  	<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+
 
 		<!-- Footer
 		================================================== -->

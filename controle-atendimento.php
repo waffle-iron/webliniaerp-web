@@ -304,9 +304,8 @@
 									<td class="text-middle">{{ null }}</td>
 									<td class="text-middle">{{ paciente.nome_paciente }}</td>
 									<td class="text-middle">{{paciente.dsc_status}} 
-										<span ng-if="paciente.id_atendimento_origem == null && paciente.flg_procedimento_agendado == 0"> (Orçamento)</span>
-										<span ng-if="paciente.id_atendimento_origem != null && paciente.flg_procedimento_agendado == 0"> (Procedimento)</span>
-										<span ng-if="paciente.flg_procedimento_agendado == 1"> (Pro. Agendado)</span>
+										<span ng-if="paciente.flg_procedimento == 0"> (Orçamento)</span>
+										<span ng-if="paciente.flg_procedimento == 1"> (Procedimento)</span>
 									</td>
 
 									<td class="text-right" ng-show="paciente.id_status > 2 && paciente.id_atendimento_origem == null">R$ {{ paciente.valor | numberFormat:2:',':'.' }}</td>

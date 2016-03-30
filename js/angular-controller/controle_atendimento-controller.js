@@ -305,18 +305,32 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				btn.button('loading');
 		});
 	}
+	ng.salvarHistoricoAtendimento = function(post){	
+		aj.post(baseUrlApi()+"historico/paciente",post)
+			.success(function(data, status, headers, config) {
+				
+			})
+			.error(function(data, status, headers, config) {
+				console.log('Erro ao salvar historico') ;
+		});
+	}
 	ng.atendimento_selecionado = {} ;
 	ng.setFimAtendimento = function(){
 		var btn =  $("#btn-fim-atendimento") ;
 		btn.button('loading');
 		ng.atendimento_selecionado = ng.paciente_atendimento ;
 		ng.getItensVenda();
+		var id_status = 4;
+		var id_status_procedimento = 3;
+		if(ng.paciente_atendimento.flg_procedimento == 1)
+			id_status = 6 ;
+		
 		var post = {	
 			dta_fim_atendimento:moment().format('YYYY-MM-DD HH:mm:ss'),
-			id_status:4,
+			id_status:id_status,
 			where:'id = '+ng.paciente_atendimento.id,
 			id_item_venda : ng.paciente_atendimento.id_item_venda,
-			id_status_procedimento : 3,
+			id_status_procedimento : id_status_procedimento,
 			id_profissional_atendimento : ng.id_profissional_atendimento
 		};
 		aj.post(baseUrlApi()+"clinica/atendimento/update",post)
@@ -328,6 +342,27 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				ng.loadProcedimentos();
 				ng.loadPaciente();
 				ng.getItensVenda();
+				if(ng.paciente_atendimento.flg_procedimento == 1){
+					aj.get(baseUrlApi()+"clinica/paciente/"+ng.paciente_atendimento.id_paciente+"/procedimentos?id_status_procedimento[exp]=IN(1,2)")
+					.success(function(data, status, headers, config) {
+					})
+					.error(function(data, status, headers, config) {
+						if (status == 404) {
+							var post = {
+								id_paciente 		: ng.paciente_atendimento.id_paciente ,
+								id_usuario 			: ng.userLogged.id, 
+								id_profissional 	: null,
+								id_acao 			: 1,
+								descricao 			: null,
+								dta 				: moment().format('YYYY-MM-DD HH:mm:ss'),
+								id_empreendimento   : ng.userLogged.id_empreendimento,
+								id_profissional     : ng.paciente_atendimento.id_profissional
+
+							}
+							ng.salvarHistoricoAtendimento(post);
+						}
+					});
+				}
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
@@ -545,8 +580,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			return ;
 		}
 
-    	if(empty(ng.atendimento_selecionado.id_venda)){
-    		ng.venda = {
+    	ng.venda = {
     			id_usuario : ng.userLogged.id ,
 				id_cliente : ng.atendimento_selecionado.id_paciente ,
 				venda_confirmada : 0 ,
@@ -603,48 +637,6 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				btn.button('reset');
 				alert('Erro ao cadastrar venda');
 			});
-    	}else{
-    		var item = {
-					desconto_aplicado : 0 ,
-					valor_desconto : 0 ,
-					id_procedimento : ng.procedimento.id_procedimento ,
-					id_dente : ng.procedimento.id_dente ,
-					id_regiao : ng.procedimento.id_regiao,
-					qtd : 0 ,
-					valor_real_item : ng.procedimento.valor,
-					vlr_custo: 0 ,
-					perc_imposto_compra: 0,
-					perc_desconto_compra: 0,
-					perc_margem_aplicada: 0,
-					id_status_procedimento : 1
-				};
-    		var post = {
-			 		produtos : [item],
-					id_empreendimento : ng.userLogged.id_empreendimento,
-					id_deposito : ng.caixa_aberto.id_deposito,
-					id_venda : ng.atendimento_selecionado.id_venda
-			 	}
-			 	aj.post(baseUrlApi()+"clinica/gravarItensVenda",post)
-					.success(function(data, status, headers, config) {
-						btn.button('reset');
-						ng.getItensVenda();	
-						ng.procedimento.id_procedimento = null ;
-						ng.procedimento.id_dente = null ;
-						ng.procedimento.id_regiao = null ;
-						ng.procedimento.valor = null ;
-						ng.procedimento.dsc_procedimento = '';
-						ng.procedimento.nme_dente = '';
-						ng.procedimento.dsc_face = '';
-						ng.procedimento.valor = '';
-						$('#ui-auto-complete-face').val('');
-						$('#ui-auto-complete-odontograma').val('');
-						$('#ui-auto-complete-procedimento').val('');
-					})
-					.error(function(data, status, headers, config) {
-						btn.button('reset');
-						alert('Erro ao cadastrar venda');
-					});
-    	}
     }
     ng.itens_venda = [] ;
     ng.getItensVenda = function(){

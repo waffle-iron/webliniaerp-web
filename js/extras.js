@@ -376,3 +376,12 @@ Date.prototype.addMeses = function(meses){
 Date.prototype.addAnos = function(anos){
     this.setYear(this.getFullYear() + anos)
 };
+
+function parseJSON (jsonString){
+    try {
+        var o = jQuery.parseJSON(jsonString);
+        if (o && typeof o === "object" && o !== null) return o;
+    }
+    catch (e) { }
+    return jsonString;
+};
