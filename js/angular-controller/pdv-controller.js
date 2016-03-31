@@ -477,6 +477,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.salvar = function(){
+		ng.cod_nota_fiscal_reenviar_sat = null ;
 		if(!$.isNumeric(ng.cliente.id) && ng.modo_venda == 'est' && !ng.orcamento ){
 				$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque e necessário selecionar um cliente</strong>');
 				return
@@ -735,6 +736,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				var btn = $('#btn-fazer-compra');
 				
 				if(Number(ng.caixa_aberto.flg_imprimir_sat_cfe) == 1){
+					$('#modal_progresso_venda').modal('hide');
 					ng.showModalSatCfe();
 					var post = { 
 						id_empreendimento : ng.userLogged.id_empreendimento,
@@ -756,10 +758,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 							type 		: 'satcfe_process',
 							message 	: JSON.stringify(data)
 			 			};
+			 			ng.dadosSatCalculados = data ;
 			 			ng.newConnWebSocket(dadosWebSocket);
 					})
 					.error(function(data, status, headers, config) {
-						alert('Erro ao calcular dados do SAT')
+						$('#modal-sat-cfe').modal('hide');
+						$('#modal-erro-cacular-impostos').modal({backdrop: 'static', keyboard: false});
 					});
 			 	}else{
 			 		var btn = $('#btn-fazer-compra');
@@ -2467,16 +2471,146 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					console.log(ng.caixa_aberto);
 					break;
 				case 'satcfe_success':
-					window.location = "pdv.php";
+						var post = angular.copy(ng.dadosSatCalculados);
+						var retornoClient =  data.message ;
+						$scope.$apply(function () {
+				           ng.process_reeviar_sat = false ;
+				        });
+						post.id_empreendimento = ng.userLogged.id_empreendimento ;
+			 			post.dados_emissao.status = 'autorizado' ;
+			 			post.chave_sat = retornoClient.chave;
+						post.codigo_sefaz_sat = retornoClient.codigoSefaz;
+						post.data_processado_sat = moment(retornoClient.dataProcessado).format('YYYY-MM-DD HH:mm:ss');
+						post.id_pdv_sat = retornoClient.idPDV;
+						post.id_qr_code_sat = retornoClient.idQrCode;
+						post.msg_sefaz_sat = retornoClient.msgSefaz;
+						post.n_serie_sat = retornoClient.nserieSAT;
+						post.sessao_sat = retornoClient.sessao;
+						post.tipo_documento_sat = retornoClient.tipoDocumento;
+						post.uuid_sat = retornoClient.uuid;
+						post.xml_envio_base64 = window.btoa(retornoClient.xmlEnvio);
+						post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
+			 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
+						.success(function(data, status, headers, config) {
+							window.location = 'pdv.php';
+						})
+						.error(function(data, status, headers, config) {
+							window.location = 'pdv.php';
+						});
 					break;
 				case 'satcfe_error':
 					$scope.$apply(function () {
 			           ng.erro_sat =  data.message ;
+			           ng.process_reeviar_sat = false ;
 			        });
-					$('#modal-erro-sat').modal({ backdrop: 'static',keyboard: false});
+			        $('#modal-sat-cfe').modal('hide');
+			        $('#modal-erro-sat').modal({ backdrop: 'static',keyboard: false});
+			        var post = angular.copy(ng.dadosSatCalculados);
+			        post.id_empreendimento = ng.userLogged.id_empreendimento ;
+			 		post.dados_emissao.status = 'erro_validacao' ;
+			 		post.codigo_erro_sat = ng.erro_sat.codigoErro
+					post.msg_erro_sat = ng.erro_sat.msgErro
+					post.json_erros_base64_sat = window.btoa(JSON.stringify(ng.erro_sat.problemas));
+					post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
+		 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
+					.success(function(data, status, headers, config) {
+		
+					})
+					.error(function(data, status, headers, config) {
+						
+					});
 					break;
 			}			
 		};
+	}
+	ng.modalListaReenviarSat = function(){
+		ng.process_reeviar_sat = false ;
+		ng.cod_nota_fiscal_reenviar_sat = null ;
+		$('#modal-vendas-reenviar-sat').modal('show');
+		ng.loadVendasReenviarSat(0,10);
+	}
+	ng.loadVendasReenviarSat = function(offset,limit){
+		ng.paginacao.vendas_reenviar_sat = [];
+		ng.vendas_reenviar_sat = null;
+		query = 'SELECT GROUP_CONCAT(id_venda) AS in_venda FROM'+
+				'('+
+					'SELECT 1 AS grp, id_venda FROM tbl_abertura_caixa AS ta '+
+					'INNER JOIN tbl_movimentacao_caixa AS tmc ON ta.id = tmc.id_abertura_caixa '+
+					'LEFT JOIN tbl_nota_fiscal AS tnf ON tmc.id_venda = tnf.cod_venda '+
+					'WHERE ta.id = '+ng.caixa_aberto.id+' AND (tnf.flg_sat = 1 OR tnf.flg_sat IS NULL) AND tnf.n_serie_sat IS NULL '+
+					'GROUP BY tmc.id_venda '+
+				') AS tb '+
+				'GROUP BY grp';
+		aj.get(baseUrlApi()+"crud/read?query="+query+"&fetchAll=false")
+		.success(function(data, status, headers, config) {
+			aj.get(baseUrlApi()+"vendas/"+offset+"/"+limit+"?ven->id[exp]=IN("+data.in_venda+")")
+			.success(function(data, status, headers, config) {
+				ng.vendas_reenviar_sat = data.vendas;
+				ng.paginacao.vendas_reenviar_sat = data.paginacao ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.paginacao.vendas_reenviar_sat = [];
+				ng.vendas_reenviar_sat = [];
+			});
+		})
+		.error(function(data, status, headers, config) {
+			
+		});
+	}
+	ng.process_reeviar_sat = false ;
+	ng.cod_nota_fiscal_reenviar_sat = null ;
+	ng.reenviarSat = function(item,event){
+		ng.process_reeviar_sat = true;
+		$('#modal-vendas-reenviar-sat').modal('hide');
+		ng.showModalSatCfe();
+		var query = {pagamentos:'',nota:''} ;
+		query.pagamentos = 
+			'SELECT tpv.id_forma_pagamento,if(tpv.id_forma_pagamento = 6,COUNT(*),NULL) n_parcelas, ROUND(SUM(tpv.valor_pagamento),2) AS valor_pagamento  FROM tbl_movimentacao_caixa AS tmc '+ 
+			'INNER JOIN tbl_pagamentos_venda AS tpv ON tmc.id_lancamento_entrada = tpv.id '+
+			'WHERE tmc.id_venda = '+item.id+' '+
+			'GROUP BY if(tpv.id_parcelamento IS NULL AND tpv.id_forma_pagamento = 6,tpv.id, if(tpv.id_forma_pagamento <> 6,tpv.id, (if(tpv.id_forma_pagamento <> 6,tpv.id,tpv.id_parcelamento))))';
+		query.nota =
+			'SELECT cod_nota_fiscal FROM tbl_nota_fiscal '+ 
+			'WHERE flg_sat = 1 AND cod_venda = '+item.id+' '+
+			'ORDER BY cod_nota_fiscal DESC LIMIT 1 ';
+		aj.get(baseUrlApi()+"crud/read?"+$.param({query:query,fetchAll:{nota:'false'}}))
+		.success(function(dataCrud, status, headers, config) {
+			var post = { 
+						id_empreendimento : ng.userLogged.id_empreendimento,
+						id_venda          : item.id,
+						cod_operacao      : ng.caixa_aberto.cod_operacao_padrao_sat_cfe
+					} ;
+			aj.post(baseUrlApi()+"nfe/calcular",post)
+			.success(function(data, status, headers, config) {
+				data.pdv = {
+					cod_pdv      : ng.caixa_aberto.id_caixa,
+					cod_operador : ng.caixa_aberto.id_operador,
+					nome_operador : ng.caixa_aberto.nome_operador
+				}
+				data.pagamentos = dataCrud.pagamentos ;
+				ng.cod_nota_fiscal_reenviar_sat = dataCrud.nota.cod_nota_fiscal == undefined ? null : dataCrud.nota.cod_nota_fiscal ;
+				var dadosWebSocket = {
+		 			from 		: ng.caixa_aberto.id_ws_web ,
+		 			to  		: ng.caixa_aberto.id_ws_dsk ,
+					type 		: 'satcfe_process',
+					message 	: JSON.stringify(data)
+	 			};
+	 			ng.dadosSatCalculados = data ;
+	 			ng.newConnWebSocket(dadosWebSocket);
+			})
+			.error(function(data, status, headers, config) {
+				ng.process_reeviar_sat = false ;
+				$('#modal-sat-cfe').modal('hide');
+				$('#modal-erro-cacular-impostos').modal({backdrop: 'static', keyboard: false});
+			});
+		})
+		.error(function(data, status, headers, config) {
+			ng.process_reeviar_sat = false ;
+		});
+	}
+
+	ng.location = function(page){
+		window.location=page;
 	}
 	ng.sendMessageWebSocket = function(data){
 		ng.conn.send(JSON.stringify(data));
@@ -2501,4 +2635,14 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.resizeScreen(); // by default, set fullscreen
 	//ng.abrirVenda('pdv'); // by default, set 'Modo Loja' mode
+});
+app.directive('bsTooltip', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            $timeout(function () {
+                	  element.find("[data-toggle=tooltip]").tooltip();
+            });
+        }
+    }
 });

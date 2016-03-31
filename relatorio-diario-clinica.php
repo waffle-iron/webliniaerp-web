@@ -225,7 +225,7 @@
 									<label class="control-label col-lg-3">Data Apuração:</label>
 									<div class="col-lg-4">
 										<div class="input-group">
-											<input class="form-control input-sm" value="<?php echo date("d/m/Y"); ?>" />
+											<input id="dta-rel-diario" class="form-control input-sm" value="<?php echo date("d/m/Y"); ?>" />
 											<span class="input-group-btn">
 												<button class="btn btn-default btn-sm" type="button">
 													<i class="fa fa-calendar"></i>
@@ -235,447 +235,40 @@
 									</div>
 
 									<div class="col-lg-3">
-										<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-filter"></i> Gerar Relatório</button>
+										<button ng-click="gerarRelatorio()" type="button" class="btn btn-sm btn-primary"><i class="fa fa-filter"></i> Gerar Relatório</button>
 									</div>
 								</div>
 							</form>
 						</div>
-						<div class="col-lg-5 clearfix">
+						<!--<div class="col-lg-5 clearfix">
 							<div class="pull-right">
 								<button type="button" class="btn btn-sm btn-info"><i class="fa fa-file-excel-o"></i> Exportar p/ Excel</button>
 								<button type="button" class="btn btn-sm btn-info"><i class="fa fa-file-pdf-o"></i> Exportar p/ PDF</button>
 								<button type="button" class="btn btn-sm btn-success"><i class="fa fa-print"></i> Imprimir</button>
 							</div>
-						</div>
+						</div>-->
 					</div>
 				</div>
-
-				<h3>Despesas Gerais</h3>
-				<hr/>
-
-				<h5>Comissionados</h5>
-				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<th>Sacado</th>
-						<th class="text-center">Valor</th>
-						<th>Referente a</th>
-						<th>Forma de Pagamento</th>
-						<th width="400">Assinatura</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Dr. Gustavo Ribeiro</td>
-							<td class="text-right">R$ 459,19</td>
-							<td>10%</td>
-							<td>Dinheiro</td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h5>Outras Despesas</h5>
-				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<th>Sacado</th>
-						<th class="text-center">Valor</th>
-						<th>Referente a</th>
-						<th>Forma de Pagamento</th>
-						<th width="400">Assinatura</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td class="text-center" colspan="5">Nenhum registro encontrado</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h3>Controle de Atendimento</h3>
-				<hr/>
-
-				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<th>Matricula</th>
-						<th>Nome</th>
-						<th>Valor Pago</th>
-						<th>Forma de Pagamento</th>
-						<th>Profissional</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>H14123</td>
-							<td>José Bezerra da Silva</td>
-							<td class="text-right">R$ 1.423,12</td>
-							<td>Dinheiro</td>
-							<td>Dr. Gustavo Ribeiro</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h3>Recebimentos por Forma de Pagamento</h3>
-				<hr/>
-
-				<h5>Cartão de Crédito</h5>
-				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<th>Matricula</th>
-						<th>Nome</th>
-						<th>Telefone</th>
-						<th class="text-center">Valor</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>H23753</td>
-							<td>Marisa da Silva Souza</td>
-							<td>(11) 93762-3413</td>
-							<td class="text-right">R$ 1.373,23</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h5>Cartão de Débito</h5>
-				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<th>Matricula</th>
-						<th>Nome</th>
-						<th>Telefone</th>
-						<th class="text-center">Valor</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>H23753</td>
-							<td>Marisa da Silva Souza</td>
-							<td>(11) 93762-3413</td>
-							<td class="text-right">R$ 1.373,23</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h5>Cheque</h5>
-				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<th>Matricula</th>
-						<th>Nome</th>
-						<th>Telefone</th>
-						<th class="text-center">Valor</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>H23753</td>
-							<td>Roberto da Silva Rocha</td>
-							<td>(11) 95435-4122</td>
-							<td class="text-right">R$ 4.826,23</td>
-						</tr>
-						<tr>
-							<td>H23753</td>
-							<td>Roberto da Silva Rocha</td>
-							<td>(11) 95435-4122</td>
-							<td class="text-right">R$ 246,86</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h5>Dinheiro</h5>
-				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
-						<th>Matricula</th>
-						<th>Nome</th>
-						<th>Telefone</th>
-						<th class="text-center">Valor</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>H23753</td>
-							<td>Roberto da Silva Rocha</td>
-							<td>(11) 95435-4122</td>
-							<td class="text-right">R$ 4.826,23</td>
-						</tr>
-						<tr>
-							<td>H23753</td>
-							<td>Roberto da Silva Rocha</td>
-							<td>(11) 95435-4122</td>
-							<td class="text-right">R$ 246,86</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<h3>Consolidado Geral</h3>
-				<hr/>
-
-				<div class="row">
-					<div class="col-lg-5">
-						<table class="table table-bordered table-hover table-striped table-condensed">
-							<tbody>
-								<tr>
-									<th>Total Recebimentos (bruto) <span class="badge badge-primary pull-right">A</span></th>
-									<th class="text-right">R$ 1486,37</th>
-								</tr>
-								<tr>
-									<th>Total Despesas <span class="badge badge-primary pull-right">B</span></th>
-									<th class="text-right">R$ 1486,37</th>
-								</tr>
-								<tr>
-									<th>Total Líquido <span class="badge badge-primary pull-right">C=(A-B)</span></th>
-									<th class="text-right">R$ 1486,37</th>
-								</tr>
-								<tr>
-									<th>Total a Receber (C.Crédito/Cheques) <span class="badge badge-primary pull-right">D</span></th>
-									<th class="text-right">R$ 1486,37</th>
-								</tr>
-								<tr>
-									<th>Mapa Real (saldo) <span class="badge badge-primary pull-right">E=(C-D)</span></th>
-									<th class="text-right">R$ 1486,37</th>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<h3>Estatística por Profissional</h3>
-				<hr/>
-
-				<div class="row">
-					<div class="col-lg-4">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h5 class="panel-title">Dra. Ana Paula da Silva Pereira</h5>
-							</div>
-							<div class="panel-body">
-								<table class="table table-bordered table-hover table-striped table-condensed">
-									<tbody>
-										<tr>
-											<th>Total de Fichas Atendidas</th>
-											<th class="text-right">12</th>
-										</tr>
-										<tr>
-											<th>Total de Fichas c/ Acréscimo</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Não Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Porcentagem (%) de Contratação</th>
-											<th class="text-right">70%</th>
-										</tr>
-										<tr>
-											<th>Média de Pagamentos por Orçamento</th>
-											<th class="text-right">R$ 137,87</th>
-										</tr>
-										<tr>
-											<th>Total de Pacientes</th>
-											<th class="text-right">42</th>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-lg-4">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h5 class="panel-title">Dr. Bento Rodrigues Silveira</h5>
-							</div>
-							<div class="panel-body">
-								<table class="table table-bordered table-hover table-striped table-condensed">
-									<tbody>
-										<tr>
-											<th>Total de Fichas Atendidas</th>
-											<th class="text-right">12</th>
-										</tr>
-										<tr>
-											<th>Total de Fichas c/ Acréscimo</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Não Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Porcentagem (%) de Contratação</th>
-											<th class="text-right">70%</th>
-										</tr>
-										<tr>
-											<th>Média de Pagamentos por Orçamento</th>
-											<th class="text-right">R$ 137,87</th>
-										</tr>
-										<tr>
-											<th>Total de Pacientes</th>
-											<th class="text-right">42</th>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-lg-4">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h5 class="panel-title">Dra. Grasiela Nicolaci</h5>
-							</div>
-							<div class="panel-body">
-								<table class="table table-bordered table-hover table-striped table-condensed">
-									<tbody>
-										<tr>
-											<th>Total de Fichas Atendidas</th>
-											<th class="text-right">12</th>
-										</tr>
-										<tr>
-											<th>Total de Fichas c/ Acréscimo</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Não Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Porcentagem (%) de Contratação</th>
-											<th class="text-right">70%</th>
-										</tr>
-										<tr>
-											<th>Média de Pagamentos por Orçamento</th>
-											<th class="text-right">R$ 137,87</th>
-										</tr>
-										<tr>
-											<th>Total de Pacientes</th>
-											<th class="text-right">42</th>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-lg-4">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h5 class="panel-title">Dr. Paulo Barreto da Silva</h5>
-							</div>
-							<div class="panel-body">
-								<table class="table table-bordered table-hover table-striped table-condensed">
-									<tbody>
-										<tr>
-											<th>Total de Fichas Atendidas</th>
-											<th class="text-right">12</th>
-										</tr>
-										<tr>
-											<th>Total de Fichas c/ Acréscimo</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos</th>
-											<th class="text-right">0</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Total de Orçamentos Não Contratados</th>
-											<th class="text-right">4</th>
-										</tr>
-										<tr>
-											<th>Porcentagem (%) de Contratação</th>
-											<th class="text-right">70%</th>
-										</tr>
-										<tr>
-											<th>Média de Pagamentos por Orçamento</th>
-											<th class="text-right">R$ 137,87</th>
-										</tr>
-										<tr>
-											<th>Total de Pacientes</th>
-											<th class="text-right">42</th>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<h3>Estatística Geral da Clínica</h3>
-				<hr/>
-
-				<div class="row">
-					<div class="col-lg-4">
-						<table class="table table-bordered table-hover table-striped table-condensed">
-							<tbody>
-								<tr>
-									<th>Total de Pacientes</th>
-									<th class="text-right">486</th>
-								</tr>
-								<tr>
-									<th>Total de Pacientes Atendidos</th>
-									<th class="text-right">375</th>
-								</tr>
-								<tr>
-									<th>Pacientes sem Orçamento</th>
-									<th class="text-right">86</th>
-								</tr>
-								<tr>
-									<th>Total de Pagantes</th>
-									<th class="text-right">265</th>
-								</tr>
-								<tr>
-									<th>Média de Pagamentos por Paciente</th>
-									<th class="text-right">R$ 184,76</th>
-								</tr>
-								<tr>
-									<th>Total de Orçamentos</th>
-									<th class="text-right">R$ 2.633,37</th>
-								</tr>
-								<tr>
-									<th>Total de Orçamentos Contratados</th>
-									<th class="text-right">R$ 2.289,07</th>
-								</tr>
-								<tr>
-									<th>Total de Orçamentos Não Contratados</th>
-									<th class="text-right">R$ 1.231,76</th>
-								</tr>
-								<tr>
-									<th>Porcentagem (%) de Contratação</th>
-									<th class="text-right">76%</th>
-								</tr>
-								<tr>
-									<th>Média de Pagamento por Contratação</th>
-									<th class="text-right">R$ 363,76</th>
-								</tr>
-								<tr>
-									<th>Total de Fichas Liquidadas</th>
-									<th class="text-right">85</th>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+				<div id="iframe-rel-diario" class="clearfix">
+					
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+
+		<div class="modal fade" style="display: none" id="loading-relatorio">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Aguarde</h4>
+					</div>
+					<div class="modal-body">
+						<p>Carregando dados do relatório...</p>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
 
 		<!-- Footer
 		================================================== -->

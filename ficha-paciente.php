@@ -279,17 +279,17 @@
 		</div><!-- /main-container -->
 
 		<div class="modal fade" style="display: none" id="loading-relatorio">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Aguarde</h4>
-				</div>
-				<div class="modal-body">
-					<p>Carregando dados do relatório...</p>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Aguarde</h4>
+					</div>
+					<div class="modal-body">
+						<p>Carregando dados do relatório...</p>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->

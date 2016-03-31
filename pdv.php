@@ -345,6 +345,7 @@
 								<li><a ng-if="modo_venda == 'est'" href="#" ng-click="abrirVenda('pdv')"><i class="fa fa-desktop"></i> Nova Venda (Modo Loja)</a></li>
 								<li><a ng-if="modo_venda == 'pdv'" href="#" ng-click="abrirVenda('est')"><i class="fa fa-desktop"></i> Nova Venda (Modo Depósito)</a></li>
 								-->
+								<li ng-if="caixa_aberto.flg_imprimir_sat_cfe == 1"><a href="#" ng-click="modalListaReenviarSat()"><i class="fa fa-file-text-o"></i> Reprocessar Cupom SAT</a></li>
 								<li><a href="#" ng-click="modalTraferencia()"><i class="fa fa-external-link"></i> Transferência (deposito)</a></li>
 								<li ng-if="finalizarOrcamento == false"><a href="#" ng-click="pagamentoFulso()"><i class="fa fa-money"></i> Pagamento</a></li>
 								<li class="hidden-lg"><a href="#" ng-click="resizeScreen()"><i class="fa fa-arrows-alt"></i>Tela Inteira</a></li>
@@ -2024,19 +2025,130 @@
 					    <div class="modal-body">
 					    	<div class="row">
 					    		<div class="col-sm-12">
-					    			<b>codigo: </b> {{ erro_sat.codigoErro }} <br/>
+					    			<b>Código de Erro: </b> {{ erro_sat.codigoErro }} <br/>
 					    			<b>Mensagem: </b> {{ erro_sat.msgErro }} <br/>
-					    			<b>problemas: </b> <br/>
+					    			<b>Problemas: </b> <br/>
 					    			<p ng-repeat="item in erro_sat.problemas" style="margin: 0px 0 3px 15px;">{{item}}</p>	
 								</div>
 					    	</div>
 					    </div>
+					     <div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
+				    		 OK
+				    	</button>
+				    </div>
 				  	</div>
 				  	<!-- /.modal-content -->
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
 			<!-- /.modal -->
+
+			<!-- /Modal Processando erro sat -->
+			<div class="modal fade" id="modal-erro-cacular-impostos" style="display:none">
+	  			<div class="modal-dialog error modal-md">
+	    			<div class="modal-content">
+	      				<div class="modal-header">
+	      					<h4>Erro ao Calcular os Impostos e Tributos</h4>
+	      				</div>
+					    <div class="modal-body">
+					    	<div class="row">
+					    		<div class="col-sm-12">
+					    			Verifique se todos os produtos da venda estão com suas configurações fiscais	
+								</div>
+					    	</div>
+					    </div>
+					     <div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
+				    		 OK
+				    	</button>
+				    </div>
+				  	</div>
+				  	<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+
+			<!-- /Modal Vendas para reenviar SAT-->
+		<div class="modal fade" id="modal-vendas-reenviar-sat" style="display:none">
+  			<div class="modal-dialog modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 ng-if="cdb_busca.status==false">Vendas</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<!-- <div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.produtos" ng-enter="loadProdutos(0,10)" type="text" class="form-control input-sm">
+
+						            <div class="input-group-btn">
+						            	<button tabindex="-1" class="btn btn-sm btn-primary" type="button"
+						            		ng-click="loadProdutos(0,10)">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> 
+						        </div>
+							</div>
+						</div><br> -->
+						<div class="row">
+							<div class="col-md-12">
+								<div class="alert alert-produtos" style="display:none"></div>
+						   		<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(vendas_reenviar_sat.length != 0)">
+										<tr>
+											<th>#</th>
+											<th>Data</th>
+											<th>Vendedor</th>
+											<th>Cliente</th>
+											<th>Valor</th>
+											<th width="40"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-if="vendas_reenviar_sat == null">
+											<th class="text-center" colspan="9" style="text-align:center"><i class="fa fa-refresh fa-spin"></i> <strong>Carregando</strong></th>
+										</tr>
+										<tr ng-show="(vendas_reenviar_sat.length == 0)">
+											<td colspan="3">Nenhum Cliente encontrado</td>
+										</tr>
+										<tr ng-repeat="item in vendas_reenviar_sat" bs-tooltip >
+											<td>{{ item.id }}</td>
+											<td>{{ item.dta_venda }}</td>
+											<td>{{ item.nme_vendedor }}</td>
+											<td>{{ configuracoes.id_cliente_movimentacao_caixa == item.id_cliente && 'S/N'  ||  item.nme_cliente }}</td>
+											<td>R${{ item.vlr_total_venda | numberFormat:2:',':'.'}}</td>
+											<td>
+											<button ng-disabled="process_reeviar_sat" data-toggle="tooltip" title="Enviar SAT" data-loading-text='<i class="fa fa-refresh fa-spin"></i>' ng-click="reenviarSat(item,$event)" class="btn btn-success btn-xs" type="button">
+												<i class="fa fa-paper-plane-o"></i>
+											</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					    <div class="row">
+					    	<div class="col-md-12">
+								<div class="input-group pull-right">
+						             <ul class="pagination pagination-xs m-top-none" ng-show="paginacao.vendas_reenviar_sat.length > 1">
+										<li ng-repeat="item in paginacao.vendas_reenviar_sat" ng-class="{'active': item.current}">
+											<a href="" ng-click="loadVendasReenviarSat(item.offset,item.limit)">{{ item.index }}</a>
+										</li>
+									</ul>
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+					</div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 
 		<!-- Footer
