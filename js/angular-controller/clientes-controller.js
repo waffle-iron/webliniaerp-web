@@ -5,10 +5,12 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
-	ng.cliente 	= { 
-					tipo_cadastro: "pf",empreendimentos:[],cod_regime_tributario:null,cod_regime_pis_cofins:null,
-					cod_tipo_empresa:null,flg_contribuinte_icms:0,flg_contribuinte_ipi:0,cod_zoneamento:null ,regime_especial:[]
-				  };
+	var clienteTO 	= { 
+						tipo_cadastro: "pf",empreendimentos:[],cod_regime_tributario:null,cod_regime_pis_cofins:null,
+						cod_tipo_empresa:null,flg_contribuinte_icms:0,flg_contribuinte_ipi:0,cod_zoneamento:null ,regime_especial:[],
+						empreendimentos: [{id:ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento}]
+				  	};
+	ng.cliente = angular.copy(clienteTO);
     ng.clientes	= [];
     ng.paginacao = {};
     ng.busca = {clientes:""};
@@ -28,6 +30,10 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 					$('i','#btn-novo').removeClass("fa-plus-circle").addClass("fa-minus-circle");
 				}else{
 					$('i','#btn-novo').removeClass("fa-minus-circle").addClass("fa-plus-circle");
+					$('a',$('#tab-cliente .tab-bar li').eq(0)).tab('show');
+					$scope.$apply(function () {
+			           ng.cliente = angular.copy(clienteTO);
+			        });
 				}
 				$("select").trigger("chosen:updated");
 			});
@@ -115,7 +121,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.reset = function() {
-		ng.cliente = {};
+		ng.cliente = angular.copy(clienteTO);
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
@@ -135,14 +141,17 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 
 	ng.loadCidadesByEstado = function (nome_cidade) {
 		ng.cidades = [];
-
+		var id_cidade = angular.copy(ng.cliente.id_cidade);
 		aj.get(baseUrlApi()+"cidades/"+ng.cliente.id_estado)
 		.success(function(data, status, headers, config) {
+			ng.cliente.id_cidade = angular.copy(id_cidade);
+			console.log(ng.cliente.id_cidade);
 			ng.cidades = data;
+			setTimeout(function(){$("select").trigger("chosen:updated");},300);
 			if(nome_cidade != null){
 				$.each(ng.cidades,function(i,x){
 					if(removerAcentos(nome_cidade) == removerAcentos(x.nome)){
-						ng.cliente.id_cidade = x.id;
+						ng.cliente.id_cidade = angular.copy(x.id);
 						return false ;
 					}
 				});
@@ -290,13 +299,14 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 			});
 	}
 
-	ng.salvar = function() {
+	ng.salvar = function(event) {
 		ng.removeError();
 		//console.log(ng.cliente);
 		var cliente = angular.copy(ng.cliente);
-		var btn = $('#btn_salvar');
+		var btn = $(event.target) ;
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
 		btn.button('loading');
-
 		var msg = 'Cliente salvo com sucesso!';
 		var url = 'cliente';
 
@@ -323,12 +333,12 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 cliente.cod_tipo_empresa = cliente.cod_tipo_empresa 		   == 0 ? null : cliente.cod_tipo_empresa ;
 		 cliente.cod_zoneamento = cliente.cod_zoneamento 			   == 0 ? null : cliente.cod_zoneamento ;*/
 
-		if(!(empty(ng.cliente.id_estado) && empty(ng.cliente.id_cidade) && empty(ng.cliente.endereco) && empty(ng.cliente.numero) && empty(ng.cliente.bairro))){
-			 var estado_selecionado = ng.getEstadoByidIBGE(ng.cliente.id_estado);
+		if((!empty(ng.cliente.id_estado) && !empty(ng.cliente.id_cidade) && !empty(ng.cliente.endereco) && !empty(ng.cliente.numero) && !empty(ng.cliente.bairro))){
+		 	 var estado_selecionado = ng.getEstadoByidIBGE(ng.cliente.id_estado);
 			 var cidade_selecionada = ng.getCidadeByIBGE(ng.cliente.id_cidade);
 			 var address = ng.cliente.endereco + ", " + ng.cliente.numero + ", " + ng.cliente.bairro + "," + cidade_selecionada.nome +"," +estado_selecionado.nome ;
 			
-			aj.get('https://maps.googleapis.com/maps/api/geocode/json?region=BR&address='+address)
+			 aj.get('https://maps.googleapis.com/maps/api/geocode/json?region=BR&address='+address)
 				.success(function(data, status, headers, config) {
 					if(data.status = 'OK'){
 						cliente.num_latitude  = data.results[0].geometry.location.lat ;
@@ -353,6 +363,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 		ng.mensagens('alert-success','<strong>'+msg+'</strong>');
 		 		ng.showBoxNovo();
 		 		ng.reset();
+		 		$('html,body').animate({scrollTop: 0},'slow');
 		 		btn.button('reset');
 		 		ng.loadClientes(0,10);
 		 	})
@@ -360,7 +371,14 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 		btn.button('reset');
 		 		if(status == 406) {
 		 			var errors = data;
-
+		 			if(Object.keys(errors).length == 1 && typeof errors.id_perfil != 'undefined'){
+		 				$('a',$('#tab-cliente .tab-bar li').eq(4)).tab('show');
+		 				setTimeout(function(){
+		 					$('html,body').animate({scrollTop: 0 },'slow');
+		 					$("#id_perfil").tooltip('show');
+		 				},150);
+		 			}
+		 			var count = 0 ;
 		 			$.each(errors, function(i, item) {
 		 				$("#"+i).addClass("has-error");
 
@@ -379,7 +397,14 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 					.attr("data-original-title", item);
 		 					$("#"+i).parent().tooltip();
 		 				}
+
+		 				if(count == 0){
+		 					$('html,body').animate({scrollTop: $("#"+i).parents('.row').offset().top - 50},'slow');
+		 					formControl.tooltip('show');
+		 				}
+		 				count ++ ;
 		 			});
+		 			
 		 		}
 		 	});
 	}
@@ -407,6 +432,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	}
 	ng.load_empreendimentos = false ;
 	ng.editar = function(item) {
+		$('a',$('#tab-cliente .tab-bar li').eq(0)).tab('show');
 		ng.load_empreendimentos = true ;
 		ng.cliente = angular.copy(item);
 
@@ -584,6 +610,49 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 					ng.paginacao.regimes = [];
 				}
 			});
+	}
+
+	ng.atendimentos = [] ;
+    ng.getAtendimentos = function(){
+    	ng.atendimentos = null ;
+   		aj.get(baseUrlApi()+"clinica/paciente/"+ ng.cliente.id +"/procedimentos")
+			.success(function(data, status, headers, config) {
+				$.each(data,function(i,x){
+					x.dta_inicio_procedimento = ""+x.dta_inicio_procedimento;
+            		data[i].dta_inicio_procedimento = x.dta_inicio_procedimento.substring(0,2)+'/'+x.dta_inicio_procedimento.substring(2,4)+'/'+x.dta_inicio_procedimento.substring(4,8)+' '+x.dta_inicio_procedimento.substring(8,10)+':'+x.dta_inicio_procedimento.substring(10,12)
+            	});
+				ng.atendimentos = data ;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.atendimentos = [];
+		});
+	}
+
+	ng.totalAtendimentos = function(){
+		var vlr_total = 0 ;
+		$.each(ng.atendimentos,function(i,x){
+			vlr_total += x.valor_real_item;
+		});
+		//ng.vlrTotalCompra = numberFormat(vlr_total,2,'.','') ;
+		return vlr_total ;
+	}
+
+	ng.pagamentosCliente = {} ;
+	ng.loadPagamentosPaciente = function(){
+		ng.pagamentosCliente.pagamentos = null ;
+		 aj.get(baseUrlApi()+"pagamentos/cliente/"+ng.cliente.id)
+            .success(function(data, status, headers, config) {
+				ng.pagamentosCliente.pagamentos = data.pagamentos ;
+				ng.pagamentosCliente.total = 0 ;
+				$.each(data.pagamentos,function(i,v){
+					ng.pagamentosCliente.total += v.valor_pagamento ;
+				});
+         }).error(function(data, status, headers, config) {
+   					ng.pagamentosCliente.pagamentos = [] ;
+            });
+
+          console.log(ng.pagamentosCliente);
 	}
 
 	ng.loadRegimeCliente = function (cod_cliente) {

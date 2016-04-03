@@ -225,9 +225,9 @@
 									<label class="control-label col-lg-3">Data Apuração:</label>
 									<div class="col-lg-4">
 										<div class="input-group">
-											<input id="dta-rel-diario" class="form-control input-sm" value="<?php echo date("d/m/Y"); ?>" />
+											<input id="dta-rel-diario" class="form-control input-sm datepicker" value="<?php echo date("d/m/Y"); ?>" />
 											<span class="input-group-btn">
-												<button class="btn btn-default btn-sm" type="button">
+												<button class="btn btn-default btn-sm"  type="button">
 													<i class="fa fa-calendar"></i>
 												</button>
 											</span>
@@ -354,7 +354,13 @@
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/relatorio-diario-clinica_controller.js"></script>
-	<script type="text/javascript"></script>>
+	<script type="text/javascript"></script>
+	<script type="text/javascript">
+		$('.datepicker').datepicker();
+		$('.datepicker').parent('.input-group').find('button').on("click", function(){ $("#dtaInicial").trigger("focus"); });
+		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+		$('.datepicker').parent('.input-group').find('button').on("click", function(){ $(this).parents('.input-group').find('input').trigger("focus") });
+	</script>
 	<?php include("google_analytics.php"); ?>
   </body>
 </html>

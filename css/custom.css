@@ -292,3 +292,9 @@ overflow-x: hidden;
 * html .ui-autocomplete {
     height: 100px;
 }
+
+.tab-content{
+	overflow: visible !important;
+	padding-bottom: 0 !important;
+	border-right: none !important;
+}

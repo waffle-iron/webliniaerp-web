@@ -15,7 +15,7 @@
       <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
 
 	<!-- Font Awesome -->
-	<link href="css/font-awesome-4.1.0.min.css" rel="stylesheet">
+	<link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
 
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
@@ -28,6 +28,10 @@
 	<link href="css/endless-skin.css" rel="stylesheet">
 	<link href="css/custom.css" rel="stylesheet">
 	<style type="text/css">
+
+		.panel.panel-default {
+		    overflow: visible !important;
+		}
 
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
 
@@ -191,7 +195,7 @@
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-users"></i> Clientes/Usuários</h3>
 					<br/>
-					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Cliente/Usuário</a>
+					<a class="btn btn-info" id="btn-novo"  ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Cliente/Usuário</a>
 					<a href="desejos_clientes.php" ng-if="userLogged.id_empreendimento != 75" class="btn btn-primary"><i class="fa fa-clipboard"></i> Desejos</a>
 					<a href="extrato.php" class="btn btn-success"><i class="fa fa-clipboard"></i> Extrato</a>
 				</div><!-- /page-title -->
@@ -199,544 +203,629 @@
 
 			<div class="padding-md">
 				<div class="alert alert-sistema" style="display:none"></div>
-
 				<div class="panel panel-default" id="box-novo" style="display:none">
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Cliente/Usuário</div>
-
+					<div class="panel-tab clearfix" id="tab-cliente">
+						<ul class="tab-bar">
+							<li class="active"><a href="#informacoes_basicas" data-toggle="tab"><i class="fa fa-user"></i> Informações Básicas</a></li>
+							<li><a href="#informacoes_complementares" data-toggle="tab"><i class="fa fa-user-plus"></i> Informações Complementares</a></li>
+							<li><a href="#empreendimentos" data-toggle="tab"><i class="fa fa-building-o"></i> Empreendimentos</a></li>
+							<li><a href="#dados_fiscais" data-toggle="tab"><i class="fa fa-file-text-o"></i> Dados Fiscais</a></li>
+							<li><a href="#dados_acesso" data-toggle="tab"><i class="fa fa-user-secret"></i> Dados de Acesso</a></li>
+							<li><a href="#atendimentos" ng-if="userLogged.id_empreendimento == 75" ng-click="getAtendimentos()" data-toggle="tab"><i class="fa fa-list-alt"></i> Atendimentos</a></li>
+							<li><a href="#pagamentos" ng-if="userLogged.id_empreendimento == 75" ng-click="loadPagamentosPaciente()" data-toggle="tab"><i class="fa fa-list-alt"></i> Pagamentos</a></li>
+						</ul>
+					</div>
 					<div class="panel-body">
 						<form role="form">
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group">
-										<label for="" class="control-label">Tipo de Cadastro</label>
-										<div class="form-group">
-											<label class="label-radio inline">
-												<input ng-model="cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Pessoa Física</span>
-											</label>
-
-											<label class="label-radio inline">
-												<input ng-model="cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Pessoa Jurídica</span>
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-6">
-									<div id="nome" class="form-group">
-										<label for="nome" class="control-label">Nome <span style="color:red;font-weight: bold;">*</span></label>
-										<input type="text" class="form-control" id="nome" ng-model="cliente.nome">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="dta_nacimento" class="form-group">
-										<label class="control-label">Data de Nacimento</label>
-										<input class="form-control" ui-mask="99/99/9999" id="dta_nacimento" ng-model="cliente.dta_nacimento">
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div id="apelido" class="form-group">
-										<label for="apelido" class="control-label">Apelido</label>
-										<input type="text" class="form-control" id="apelido" ng-model="cliente.apelido">
-									</div>
-								</div>
-
-							</div>
-
-							<div class="row" ng-if="cliente.tipo_cadastro == 'pf'">
-								<div class="col-sm-2">
-									<div id="rg" class="form-group">
-										<label class="control-label">RG</label>
-										<input class="form-control"  ng-model="cliente.rg"></input>
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="cpf" class="form-group">
-										<label class="control-label">CPF</label>
-										<input class="form-control" ui-mask="999.999.999-99" ng-model="cliente.cpf"></input>
-									</div>
-								</div>
-							</div>
-
-							<div class="row" ng-if="cliente.tipo_cadastro == 'pj'">
-								<div class="col-lg-3">
-									<div id="razao_social" class="form-group">
-										<label class="control-label">Razão Social  <span style="color:red;font-weight: bold;">*</span></label>
-										<input class="form-control" ng-model="cliente.razao_social">
-									</div>
-								</div>
-
-								<div class="col-sm-3">
-									<div id="nome_fantasia" class="form-group">
-										<label class="control-label">Nome Fantasia  <span style="color:red;font-weight: bold;">*</span></label>
-										<input class="form-control" ng-model="cliente.nome_fantasia">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="cnpj" class="form-group">
-										<label class="control-label">CNPJ  <span style="color:red;font-weight: bold;">*</span></label>
-										<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="cliente.cnpj">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="inscricao_estadual" class="form-group">
-										<label class="control-label">I.E.  <span style="color:red;font-weight: bold;">*</span></label>
-										<input class="form-control" ng-model="cliente.inscricao_estadual">
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<div id="inscricao_estadual" class="form-group">
-										<label class="control-label">I.M.  <span style="color:red;font-weight: bold;">*</span></label>
-										<input class="form-control" ng-model="cliente.num_inscricao_municipal">
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-2">
-									<div id="tel_fixo" class="form-group">
-										<label for="" class="control-label">Telefone Fixo  <span style="color:red;font-weight: bold;">*</span></label>
-										<input type="text" ui-mask="(99) 99999999" class="form-control" ng-model="cliente.tel_fixo">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="celular" class="form-group">
-										<label for="" class="control-label">Celular</label>
-										<input type="text" ui-mask="(99) 99999999?9" class="form-control" ng-model="cliente.celular">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="nextel" class="form-group">
-										<label for="" class="control-label">ID Nextel</label>
-										<input type="text" class="form-control" ng-model="cliente.nextel">
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div id="email" class="form-group">
-										<label for="" class="control-label">End. Email  <span style="color:red;font-weight: bold;">*</span></label>
-										<input type="text" class="form-control" ng-model="cliente.email">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="email_marketing" class="form-group">
-										<label for="" class="control-label">Newsletter?</label>
-										<div class="form-group">
-											<label class="label-radio inline">
-												<input ng-model="cliente.email_marketing" value="1" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Sim</span>
-											</label>
-
-											<label class="label-radio inline">
-												<input ng-model="cliente.email_marketing" value="0" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Não</span>
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-2">
-									<div id="cep" class="form-group">
-										<label class="control-label">CEP  <span style="color:red;font-weight: bold;">*</span></label>
-										<input type="text" class="form-control" ui-mask="99999-999" ng-model="cliente.cep" ng-keyUp="validCep(cliente.cep)" ng-blur="validCep(cliente.cep)">
-									</div>
-								</div>
-
-								<div class="col-sm-7">
-									<div id="endereco" class="form-group">
-										<label class="control-label">Endereço  <span style="color:red;font-weight: bold;">*</span></label>
-										<input type="text" class="form-control" ng-model="cliente.endereco">
-									</div>
-								</div>
-
-								<div class="col-sm-1">
-									<div id="numero" class="form-group">
-										<label class="control-label">No. <span style="color:red;font-weight: bold;">*</span></label>
-										<input id="num_logradouro" type="text" class="form-control" ng-model="cliente.numero" ng-blur="consultaLatLog()">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="bairro" class="form-group">
-										<label class="control-label">Bairro  <span style="color:red;font-weight: bold;">*</span></label>
-										<input type="text" class="form-control" ng-model="cliente.bairro">
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-12">
-									<div id="complemento" class="form-group">
-										<label class="control-label">Complemento:</label>
-										<input type="text" class="form-control" ng-model="cliente.end_complemento">
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div id="ponto_referencia" class="form-group">
-										<label class="control-label">Ponto Referência</label>
-										<input type="text" class="form-control" ng-model="cliente.ponto_referencia">
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<div id="regiao" class="form-group">
-										<label class="control-label">Região</label>
-										<input type="text" class="form-control" ng-model="cliente.regiao">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="id_estado" class="form-group">
-										<label class="control-label">Estado  <span style="color:red;font-weight: bold;">*</span></label>
-										<select id="id_select_estado" class="form-control" readonly="readonly" ng-model="cliente.id_estado" ng-options="item.id as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div id="id_cidade" class="form-group">
-										<label class="control-label">Cidade  <span style="color:red;font-weight: bold;">*</span></label>
-										<select class="form-control" readonly="readonly" ng-model="cliente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-2">
-									<div id="indicacao" class="form-group">
-										<label class="control-label">Indicação?</label>
-										<div class="form-group">
-											<label class="label-radio inline">
-												<input ng-model="cliente.indicacao" value="1" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Sim</span>
-											</label>
-
-											<label class="label-radio inline">
-												<input ng-model="cliente.indicacao" value="0" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Não</span>
-											</label>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-sm-3" ng-if="cliente.indicacao == 1">
-									<div id="indicado_por_quem" class="form-group">
-										<label class="control-label">Indicado por Quem?</label>
-										<input type="text" class="form-control" ng-model="cliente.indicado_por_quem">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="id_como_encontrou" class="form-group">
-										<label class="control-label">Como Encontrou?</label>
-										<select class="form-control" ng-model="cliente.id_como_encontrou" ng-options="a.id as a.nome for a in comoencontrou">	
-<option value=""></option></select>
-									</div>
-								</div>
-
-								<div class="col-sm-4" ng-show="cliente.id_como_encontrou == 'outros' ">
-									<div id="como_entrou_outros" class="form-group">
-										<label class="control-label">Descreva</label>
-										<input type="text" class="form-control" ng-model="cliente.como_entrou_outros">
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div id="id_finalidade" class="form-group">
-										<label class="control-label">Finalidade</label>
-										<select class="form-control" ng-model="cliente.id_finalidade" ng-options="a.id as a.nome for a in finalidades"></select>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div id="id_perfil" class="form-group">
-										<label class="control-label">Perfil  <span style="color:red;font-weight: bold;">*</span></label>
-										<select class="form-control" ng-model="cliente.id_perfil" ng-options="a.id as a.nome for a in perfis"></select>
-									</div>
-								</div>
-
-								<div class="col-sm-4">
-									<div id="id_finalidade" class="form-group">
-										<label class="control-label">Grupo de Comissionamento</label>
-										<select class="form-control" ng-model="cliente.id_grupo_comissionamento" ng-options="a.id as a.nme_grupo_comissao for a in grupo_comissionamento">
-
-										</select>
-									</div>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="form-group" id="empreendimentos">
-										<table class="table table-bordered table-condensed table-striped table-hover">
-											<thead>
-												<tr>
-													<td><i class="fa fa-building-o"></i> Empreendimentos <span style="color:red;font-weight: bold;">*</span></td>
-													<td width="60" align="center">
-														<img style="float: right;" ng-if="load_empreendimentos == true" src="img/loder_circular_15x15.gif">
-														<button ng-if="(cliente.id == undefined || cliente.id == '') || (load_empreendimentos == false)" ng-click="loadEmpreendimentos()"  class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"></i></button>
-													</td>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="item in cliente.empreendimentos" >
-													<td>{{ item.nome_empreendimento }}</td>
-													<td align="center">
-														<button ng-click="delEmpreendimento($index)" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-
-							<div style="padding: 10px 15px 10px 0px; margin-bottom:10px" class="panel-heading">
-								<i class="fa fa-dollar"></i> Dados Bancário
-							</div>
-
-							<div class="row">
-								<div class="col-sm-6">
-									<div id="id_banco" class="form-group">
-										<label class="control-label">Banco</label>
-										<select class="form-control" ng-model="cliente.id_banco" ng-options="a.id as a.nome for a in bancos"></select>
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="agencia" class="form-group">
-										<label class="control-label">Agência</label>
-										<input type="text" class="form-control" ng-model="cliente.agencia">
-									</div>
-								</div>
-
-								<div class="col-sm-2">
-									<div id="conta" class="form-group">
-										<label class="control-label">C/C</label>
-										<input type="text" class="form-control" ng-model="cliente.conta">
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<div id="cliente_desde" class="form-group">
-										<label for="cliente_desde" class="control-label">Cliente Desde</label>
-										<input type="text" class="form-control" ui-mask="99/9999" ng-model="cliente.cliente_desde">
-									</div>
-								</div>
-							</div>
-
-							<div style="padding: 10px 15px 10px 0px; margin-bottom:10px" class="panel-heading">
-								<i class="fa fa-barcode"></i>&nbsp; Dados Fiscais
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group" id="regimeTributario">
-										<label class="ccontrol-label">Regime Tributario </label> 
-										<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
-									    option="regimeTributario"
-									    no-results-text ="'Nenhum valor encontrado'"
-									    allow-single-deselect="true"
-									    ng-model="cliente.cod_regime_tributario"
-									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in regimeTributario">
-										</select>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group" id="regimePisCofins">
-										<label class="ccontrol-label">Regime Pis Cofins  </label> 
-										<select chosen ng-change="ClearChosenSelect('cod_regime_pis_cofins')"
-									    option="regimePisCofins"
-									    no-results-text ="'Nenhum valor encontrado'"
-									    allow-single-deselect="true"
-									    ng-model="cliente.cod_regime_pis_cofins"
-									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in regimePisCofins">
-										</select>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group" id="tipoEmpresaeso">
-										<label class="ccontrol-label">Tipo da Empresa</label> 
-										<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa')"
-									    option="tipoEmpresa"
-									    no-results-text ="'Nenhum valor encontrado'"
-									    allow-single-deselect="true"
-									    ng-model="cliente.cod_tipo_empresa"
-									    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in tipoEmpresa">
-										</select>
-									</div>
-								</div>
-
-							</div>
-
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group" id="zoneamento">
-										<label class="ccontrol-label">Zoneamento</label> 
-										<select chosen ng-change="ClearChosenSelect('cod_zoneamento')"
-									    option="zoneamentos"
-									    no-results-text ="'Nenhum valor encontrado'"
-									    allow-single-deselect="true"
-									    ng-model="cliente.cod_zoneamento"
-									    ng-options="zoneamento.cod_zoneamento as zoneamento.dsc_zoneamento for zoneamento in zoneamentos">
-										</select>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<label for="" class="control-label">Contribuinte ICMS</label>
-										<div class="form-group">
-											<label class="label-radio inline">
-												<input ng-model="cliente.flg_contribuinte_icms" value="0" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Não</span>
-											</label>
-
-											<label class="label-radio inline">
-												<input ng-model="cliente.flg_contribuinte_icms" value="1" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Sim</span>
-											</label>
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="form-group">
-										<label for="" class="control-label">Contribuinte IPI</label>
-										<div class="form-group">
-											<label class="label-radio inline">
-												<input ng-model="cliente.flg_contribuinte_ipi" value="0" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Não</span>
-											</label>
-
-											<label class="label-radio inline">
-												<input ng-model="cliente.flg_contribuinte_ipi" value="1" type="radio" class="inline-radio">
-												<span class="custom-radio"></span>
-												<span>Sim</span>
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row" ng-show="cliente.tipo_cadastro == 'pj'">
-								<div class="col-sm-2">
-									<div class="form-group">
-										<div id="inscricao_estadual_st" class="form-group">
-											<label class="control-label">I.E. ST</label>
-											<input class="form-control" ng-model="cliente.inscricao_estadual_st">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row" ng-show="cliente.id != null">
+							<div class="tab-content">
+								<div class="tab-pane fade in active" id="informacoes_basicas">
+									<div class="row">
 										<div class="col-sm-12">
-											<div class="empreendimentos form-group" id="produto_cliente">
-													<table class="table table-bordered table-condensed table-striped table-hover">
-														<thead>
-															<tr>
-																<td colspan="3">
-																		<strong>Regime Especial</strong> <i ng-click="showModalRegimeEspecial()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-																</td>
-															</tr>
-															<tr>
-																<td>#</td>
-																<td>Descrição</td>
-																<td width="60" align="center">
-																	
-																</td>
-															</tr>
-														</thead>
-														<tbody>
-															<tr ng-show="(cliente.regime_especial.length == 0 && cliente.regime_especial != null)">
-																<td colspan="3" align="center">Nenhum Regime Relacionado</td>
-															</tr>
-															<tr>
-																<td colspan="3" class="text-center" ng-if="cliente.regime_especial == null">
-																	<i class='fa fa-refresh fa-spin'></i> Carregando
-																</td>
-															</tr>
-															<tr ng-repeat="item in cliente.regime_especial" bs-tooltip >
-																<td>{{ item.cod_regime_especial }}</td>
-																<td>{{ item.dsc_regime_especial }}</td>
-																<td align="center">
-																	<button class="btn btn-xs btn-danger" ng-disabled="itemEditing($index)" ng-click="delRegimeEspecial($index)" tooltip="excluir" title="excluir" data-toggle="tooltip"><i class="fa fa-trash-o"></i></button>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-										
+											<div class="form-group">
+												<label for="" class="control-label">Tipo de Cadastro</label>
+												<div class="form-group">
+													<label class="label-radio inline">
+														<input ng-model="cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio"/>
+														<span class="custom-radio"></span>
+														<span>Pessoa Física</span>
+													</label>
+
+													<label class="label-radio inline">
+														<input ng-model="cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio"/>
+														<span class="custom-radio"></span>
+														<span>Pessoa Jurídica</span>
+													</label>
+												</div>
 											</div>
 										</div>
-							</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div id="nome" class="form-group">
+												<label for="nome" class="control-label">Nome <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input type="text" class="form-control input-sm" id="nome" ng-model="cliente.nome">
+											</div>
+										</div>
 
-							<div style="padding: 10px 15px 10px 0px; margin-bottom:10px" class="panel-heading">
-								<i class="fa fa-lock"></i> Dados de Acesso Restrito
-							</div>
+										<div class="col-sm-2">
+											<div id="dta_nacimento" class="form-group">
+												<label class="control-label">Data de Nacimento</label>
+												<input class="form-control input-sm" ui-mask="99/99/9999" id="dta_nacimento" ng-model="cliente.dta_nacimento">
+											</div>
+										</div>
 
-							<div class="row">
-								<div class="col-sm-4">
-									<div id="login" class="form-group">
-										<label class="control-label">Login</label>
-										<input type="text" class="form-control" ng-model="cliente.login">
+										<div class="col-sm-4">
+											<div id="apelido" class="form-group">
+												<label for="apelido" class="control-label">Apelido</label>
+												<input type="text" class="form-control input-sm" id="apelido" ng-model="cliente.apelido">
+											</div>
+										</div>
+									</div>
+									<div class="row" ng-if="cliente.tipo_cadastro == 'pf'">
+										<div class="col-sm-2">
+											<div id="rg" class="form-group">
+												<label class="control-label">RG</label>
+												<input class="form-control input-sm"  ng-model="cliente.rg" />
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="cpf" class="form-group">
+												<label class="control-label">CPF</label>
+												<input class="form-control input-sm" ui-mask="999.999.999-99" ng-model="cliente.cpf" />
+											</div>
+										</div>
+									</div>
+									<div class="row" ng-if="cliente.tipo_cadastro == 'pj'">
+										<div class="col-lg-3">
+											<div id="razao_social" class="form-group">
+												<label class="control-label">Razão Social  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input placeholder="" class="form-control input-sm" ng-model="cliente.razao_social">
+											</div>
+										</div>
+
+										<div class="col-sm-3">
+											<div id="nome_fantasia" class="form-group">
+												<label class="control-label">Nome Fantasia  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input class="form-control input-sm" ng-model="cliente.nome_fantasia">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="cnpj" class="form-group">
+												<label class="control-label">CNPJ  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input class="form-control input-sm" ui-mask="99.999.999/9999-99" ng-model="cliente.cnpj">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="inscricao_estadual" class="form-group">
+												<label class="control-label">I.E.  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input class="form-control input-sm" ng-model="cliente.inscricao_estadual">
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div id="inscricao_estadual" class="form-group">
+												<label class="control-label">I.M.  <i style="font-size: 10px;color: #Telefone Fixo ;" class="fa fa-asterisk"></i></label>
+												<input class="form-control input-sm" ng-model="cliente.num_inscricao_municipal">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-2">
+											<div id="tel_fixo" class="form-group">
+												<label for="" class="control-label">Telefone Fixo  <i style="font-size: 10px;color: #Telefone Fixo ;" class="fa fa-asterisk"></i></label>
+												<input type="text" ui-mask="(99) 99999999" class="form-control input-sm" ng-model="cliente.tel_fixo">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="celular" class="form-group">
+												<label for="" class="control-label">Celular </label>
+												<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="cliente.celular">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="nextel" class="form-group">
+												<label for="" class="control-label">ID Nextel</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.nextel">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div id="email" class="form-group">
+												<label for="" class="control-label">End. Email </label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.email">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-2">
+											<div id="cep" class="form-group">
+												<label class="control-label">CEP  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input type="text" class="form-control input-sm" ui-mask="99999-999" ng-model="cliente.cep" ng-keyUp="validCep(cliente.cep)" ng-blur="validCep(cliente.cep)">
+											</div>
+										</div>
+
+										<div class="col-sm-7">
+											<div id="endereco" class="form-group">
+												<label class="control-label">Endereço  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.endereco">
+											</div>
+										</div>
+
+										<div class="col-sm-1">
+											<div id="numero" class="form-group">
+												<label class="control-label">No. <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input id="num_logradouro" type="text" class="form-control input-sm" ng-model="cliente.numero" ng-blur="consultaLatLog()">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="bairro" class="form-group">
+												<label class="control-label">Bairro  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.bairro">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<div id="complemento" class="form-group">
+												<label class="control-label">Complemento:</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.end_complemento">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-4">
+											<div id="ponto_referencia" class="form-group">
+												<label class="control-label">Ponto Referência</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.ponto_referencia">
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div id="regiao" class="form-group">
+												<label class="control-label">Região</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.regiao">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="id_estado" class="form-group">
+												<label class="control-label">Estado  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<select chosen id="id_select_estado" class="form-control input-sm" readonly="readonly" ng-model="cliente.id_estado" ng-options="item.id as item.nome for item in estados" ng-change="cliente.id_cidade=null;loadCidadesByEstado()"></select>
+											</div>
+										</div>
+
+
+										<div class="col-sm-4">
+											<div id="id_cidade" class="form-group">
+												<label class="control-label">Cidade  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<select chosen class="form-control input-sm" readonly="readonly" ng-model="cliente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
+											</div>
+										</div>
+									</div>			
+								</div>
+								<div class="tab-pane fade" id="informacoes_complementares">
+									<div class="row">
+										<div class="col-sm-2">
+											<div id="indicacao" class="form-group">
+												<label class="control-label">Indicação?</label>
+												<div class="form-group">
+													<label class="label-radio inline">
+														<input ng-model="cliente.indicacao" value="1" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Sim</span>
+													</label>
+
+													<label class="label-radio inline">
+														<input ng-model="cliente.indicacao" value="0" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Não</span>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-3" ng-if="cliente.indicacao == 1">
+											<div id="indicado_por_quem" class="form-group">
+												<label class="control-label">Indicado por Quem?</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.indicado_por_quem">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="id_como_encontrou" class="form-group">
+												<label class="control-label">Como Encontrou?</label>
+												<select class="form-control input-sm" ng-model="cliente.id_como_encontrou" ng-options="a.id as a.nome for a in comoencontrou"><option value=""></option></select>
+											</div>
+										</div>
+
+										<div class="col-sm-4" ng-show="cliente.id_como_encontrou == 'outros' ">
+											<div id="como_entrou_outros" class="form-group">
+												<label class="control-label">Descreva</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.como_entrou_outros">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div id="id_finalidade" class="form-group">
+												<label class="control-label">Finalidade</label>
+												<select class="form-control input-sm" ng-model="cliente.id_finalidade" ng-options="a.id as a.nome for a in finalidades"></select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-2">
+											<div id="email_marketing" class="form-group">
+												<label for="" class="control-label">Newsletter?</label>
+												<div class="form-group">
+													<label class="label-radio inline">
+														<input ng-model="cliente.email_marketing" value="1" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Sim</span>
+													</label>
+
+													<label class="label-radio inline">
+														<input ng-model="cliente.email_marketing" value="0" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Não</span>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div id="id_finalidade" class="form-group">
+												<label class="control-label">Grupo de Comissionamento</label>
+												<select chosen class="form-control input-sm" ng-model="cliente.id_grupo_comissionamento" ng-options="a.id as a.nme_grupo_comissao for a in grupo_comissionamento">
+
+												</select>
+											</div>
+										</div>
+									</div>
+									<div style="padding: 10px 15px 10px 0px; margin-bottom:10px" class="panel-heading">
+										<i class="fa fa-dollar"></i> Dados Bancário
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<div id="id_banco" class="form-group">
+												<label class="control-label">Banco</label>
+												<select class="form-control input-sm" ng-model="cliente.id_banco" ng-options="a.id as a.nome for a in bancos"></select>
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="agencia" class="form-group">
+												<label class="control-label">Agência</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.agencia">
+											</div>
+										</div>
+
+										<div class="col-sm-2">
+											<div id="conta" class="form-group">
+												<label class="control-label">C/C</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.conta">
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<div id="cliente_desde" class="form-group">
+												<label for="cliente_desde" class="control-label">Cliente Desde</label>
+												<input type="text" class="form-control input-sm" ui-mask="99/9999" ng-model="cliente.cliente_desde">
+											</div>
+										</div>
+									</div>	
+								</div>
+								<div class="tab-pane fade" id="empreendimentos">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group" id="empreendimentos">
+												<table class="table table-bordered table-condensed table-striped table-hover">
+													<thead>
+														<tr>
+															<td><i class="fa fa-building-o"></i> Empreendimentos</td>
+															<td width="60" align="center">
+																<img style="float: right;" ng-if="load_empreendimentos == true" src="img/loder_circular_15x15.gif">
+																<button ng-if="(cliente.id == undefined || cliente.id == '') || (load_empreendimentos == false)" ng-click="loadEmpreendimentos()"  class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"></i></button>
+															</td>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="item in cliente.empreendimentos" >
+															<td>{{ item.nome_empreendimento }}</td>
+															<td align="center">
+																<button ng-show="item.id != userLogged.id_empreendimento" ng-click="delEmpreendimento($index)" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
+															</td>
+														</tr>
+														<tr ng-show="(cliente.empreendimentos == 0)">
+															<td colspan="2" class="text-center">Nenhum empreendimento selecionado</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
 									</div>
 								</div>
-								<div class="col-sm-3">
-									<div id="senha" class="form-group">
-										<label class="control-label">senha</label>
-										<input class="form-control" type="password" id="input_senha" ng-model="cliente.senha">
-										
+								<div class="tab-pane fade" id="dados_fiscais">
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="form-group" id="regimeTributario">
+												<label class="ccontrol-label">Regime Tributario </label> 
+												<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+											    option="regimeTributario"
+											    no-results-text ="'Nenhum valor encontrado'"
+											    allow-single-deselect="true"
+											    ng-model="cliente.cod_regime_tributario"
+											    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in regimeTributario">
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group" id="regimePisCofins">
+												<label class="ccontrol-label">Regime Pis Cofins  </label> 
+												<select chosen ng-change="ClearChosenSelect('cod_regime_pis_cofins')"
+											    option="regimePisCofins"
+											    no-results-text ="'Nenhum valor encontrado'"
+											    allow-single-deselect="true"
+											    ng-model="cliente.cod_regime_pis_cofins"
+											    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in regimePisCofins">
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group" id="tipoEmpresaeso">
+												<label class="ccontrol-label">Tipo da Empresa</label> 
+												<select chosen ng-change="ClearChosenSelect('cod_tipo_empresa')"
+											    option="tipoEmpresa"
+											    no-results-text ="'Nenhum valor encontrado'"
+											    allow-single-deselect="true"
+											    ng-model="cliente.cod_tipo_empresa"
+											    ng-options="regime.cod_controle_item_nfe as regime.nme_item for regime in tipoEmpresa">
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="form-group" id="zoneamento">
+												<label class="ccontrol-label">Zoneamento</label> 
+												<select chosen ng-change="ClearChosenSelect('cod_zoneamento')"
+											    option="zoneamentos"
+											    no-results-text ="'Nenhum valor encontrado'"
+											    allow-single-deselect="true"
+											    ng-model="cliente.cod_zoneamento"
+											    ng-options="zoneamento.cod_zoneamento as zoneamento.dsc_zoneamento for zoneamento in zoneamentos">
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="" class="control-label">Contribuinte ICMS</label>
+												<div class="form-group">
+													<label class="label-radio inline">
+														<input ng-model="cliente.flg_contribuinte_icms" value="0" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Não</span>
+													</label>
+
+													<label class="label-radio inline">
+														<input ng-model="cliente.flg_contribuinte_icms" value="1" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Sim</span>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="" class="control-label">Contribuinte IPI</label>
+												<div class="form-group">
+													<label class="label-radio inline">
+														<input ng-model="cliente.flg_contribuinte_ipi" value="0" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Não</span>
+													</label>
+
+													<label class="label-radio inline">
+														<input ng-model="cliente.flg_contribuinte_ipi" value="1" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Sim</span>
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row" ng-show="cliente.tipo_cadastro == 'pj'">
+										<div class="col-sm-2">
+											<div class="form-group">
+												<div id="inscricao_estadual_st" class="form-group">
+													<label class="control-label">I.E. ST</label>
+													<input class="form-control input-sm" ng-model="cliente.inscricao_estadual_st">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row" ng-show="cliente.id != null">
+												<div class="col-sm-12">
+													<div class="empreendimentos form-group" id="produto_cliente">
+															<table class="table table-bordered table-condensed table-striped table-hover">
+																<thead>
+																	<tr>
+																		<td colspan="3">
+																				<strong>Regime Especial</strong> <i ng-click="showModalRegimeEspecial()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>#</td>
+																		<td>Descrição</td>
+																		<td width="60" align="center">
+																			
+																		</td>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-show="(cliente.regime_especial.length == 0 && cliente.regime_especial != null)">
+																		<td colspan="3" align="center">Nenhum Regime Relacionado</td>
+																	</tr>
+																	<tr>
+																		<td colspan="3" class="text-center" ng-if="cliente.regime_especial == null">
+																			<i class='fa fa-refresh fa-spin'></i> Carregando
+																		</td>
+																	</tr>
+																	<tr ng-repeat="item in cliente.regime_especial" bs-tooltip >
+																		<td>{{ item.cod_regime_especial }}</td>
+																		<td>{{ item.dsc_regime_especial }}</td>
+																		<td align="center">
+																			<button class="btn btn-xs btn-danger" ng-disabled="itemEditing($index)" ng-click="delRegimeEspecial($index)" tooltip="excluir" title="excluir" data-toggle="tooltip"><i class="fa fa-trash-o"></i></button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+											
+													</div>
+												</div>
 									</div>
 								</div>
-								<div class="col-sm-3">
-									<div  class="form-group">
-										<label class="control-label"></label>
-										<div class="checkbox" style="padding-left: 0px;">
-										    <label class="label-checkbox">
-												<input type="checkbox" onclick="if($(this).is(':checked')){$('#input_senha').attr('type','text')}else{$('#input_senha').attr('type','password')}">
-												<span class="custom-checkbox"></span>
-												 mostrar senha<br>
-											</label>
+								<div class="tab-pane fade" id="dados_acesso">
+									<div class="row">
+										<div class="col-sm-4">
+											<div id="id_perfil" class="form-group">
+												<label class="control-label">Perfil  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<select chosen class="form-control input-sm" ng-model="cliente.id_perfil" ng-options="a.id as a.nome for a in perfis"></select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-4">
+											<div id="login" class="form-group">
+												<label class="control-label">Login</label>
+												<input type="text" class="form-control input-sm" ng-model="cliente.login">
+											</div>
+										</div>
+										<div class="col-sm-3">
+											<div id="senha" class="form-group">
+												<label class="control-label">senha</label>
+												<input class="form-control input-sm" type="password" id="input_senha" ng-model="cliente.senha">
+												
+											</div>
+										</div>
+										<div class="col-sm-3">
+											<div  class="form-group">
+												<label class="control-label"></label>
+												<div class="checkbox" style="padding-left: 0px;">
+												    <label class="label-checkbox">
+														<input type="checkbox" onclick="if($(this).is(':checked')){$('#input_senha').attr('type','text')}else{$('#input_senha').attr('type','password')}">
+														<span class="custom-checkbox"></span>
+														 mostrar senha<br>
+													</label>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="atendimentos">
+									<div class="row">
+										<div class="col-sm-12">
+											<table class="table table-bordered table-hover table-striped table-condensed">
+												<thead>
+													<th class="text-center">Data</th>
+													<th class="text-center">Procedimento</th>
+													<th class="text-center">Dente/Região</th>
+													<th class="text-center">Face</th>
+													<th class="text-center">Status</th>
+													<th class="text-center">Agendamento</th>
+													<th class="text-center">Valor</th>
+												</thead>
+												<tbody>
+													<tr ng-repeat="item in atendimentos" bs-tooltip>
+														<td class="text-center">{{ item.dta_venda | dateFormat: 'dateTime' }}</td>
+														<td>{{ item.dsc_procedimento }}</td>
+														<td>{{ item.nme_dente }}</td>
+														<td>{{ item.dsc_face }}</td>
+														<td><i class="fa fa-circle" ng-class="{'text-danger':item.id_status_procedimento == 1,'text-warning':item.id_status_procedimento == 2,'text-success': item.id_status_procedimento == 3 }"></i> 
+															{{item.dsc_status_procedimento}}
+														</td>
+														<td style="width: 154px">
+															{{ item.dta_inicio_procedimento }}
+														</td>
+														<td class="text-right"><!--<i class="fa fa-circle" ng-class="{'text-danger':item.flg_item_pago == 0,'text-success':item.flg_item_pago == 1}"></i> -->R$ {{ item.valor_real_item | numberFormat:2:',':'.'}}</td>
+													</tr>
+													<tr ng-if="atendimentos.length == 0">
+														<td colspan="8" class="text-center" text-center>
+															Nenhum procedimento encontrado
+														</td>
+													</tr>
+													<tr ng-if="atendimentos==null">
+														<td colspan="8" class="text-center">
+															<i class='fa fa-refresh fa-spin'></i> Carregando ...
+														</td>
+													</tr>
+												</tbody>
+												<tfoot ng-if="atendimentos.length > 0">
+													<th class="text-right" colspan="6">Total</th>
+													<th class="text-right">R$ {{ totalAtendimentos() | numberFormat:2:',':'.' }}</th>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="pagamentos">
+									<div class="row">
+										<div class="col-sm-12">
+											<table class="table table-bordered table-hover table-striped table-condensed">
+												<thead>
+													<th class="text-center">Dta lançamento</th>
+													<th class="text-center">Forma Pagamento</th>
+													<th class="text-center">Valor</th>
+												</thead>
+												<tbody>
+													<tr ng-repeat="item in pagamentosCliente.pagamentos" bs-tooltip>
+														<td class="text-center">{{ item.dta_entrada | dateFormat: 'dateTime' }}</td>
+
+														<td ng-show="item.id_forma_pagamento != 6">{{ item.descricao_forma_pagamento }}</td>
+														<td ng-show="item.id_forma_pagamento == 6">{{ item.descricao_forma_pagamento }} em {{ item.num_parcelas }}x de R$ {{ item.vlr_parcela |numberFormat:2:',':'.' }}</td>
+														
+														<td class="text-right">{{ item.valor_pagamento |numberFormat:2:',':'.' }}</td>
+														
+													</tr>
+													<tr ng-if="pagamentosCliente.pagamentos.length == 0">
+														<td colspan="8" class="text-center" text-center>
+															Nenhum pagamento encontrado
+														</td>
+													</tr>
+													<tr ng-if="pagamentosCliente.pagamentos==null">
+														<td colspan="8" class="text-center">
+															<i class='fa fa-refresh fa-spin'></i> Carregando ...
+														</td>
+													</tr>
+												</tbody>
+												<tfoot ng-if="pagamentosCliente.pagamentos.length > 0">
+													<th class="text-right" colspan="2">Total</th>
+													<th class="text-right">R$ {{ pagamentosCliente.total | numberFormat:2:',':'.' }}</th>
+												</tfoot>
+											</table>
 										</div>
 									</div>
 								</div>
 							</div>
-
-							<div class="row">
+						</form>
+					</div>
+					<div class="panel-footer">
+						<div class="row">
 								<div class="col-sm-12">
 									<div class="form-group">
 										<div class="pull-right">
 											<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 												<i class="fa fa-times-circle"></i> Cancelar
 											</button>
-											<button data-loading-text="Aguarde..." id="btn_salvar" ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." id="btn_salvar" ng-click="salvar($event)" type="submit" class="btn btn-success btn-sm">
 												<i class="fa fa-save"></i> Salvar
 											</button>
 										</div>
 									</div>
 								</div>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div><!-- /panel -->
 
