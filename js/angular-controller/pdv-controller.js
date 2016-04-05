@@ -160,6 +160,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.busca.codigo = "" ;
 				if(data.produtos.length == 1){
 					ng.incluirCarrinho(data.produtos[0]);
+					$('#buscaCodigo').focus();
 				}else if((data.produtos.length > 1)){
 					ng.cdb_busca          = { status:true, codigo:codigo } ;
 					ng.showProdutos(true);
@@ -217,25 +218,25 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.incluirCarrinho = function(produto){
 		produto = angular.copy(produto);
-		if(ng.cliente.tp_perc_venda == "perc_venda_atacado"){
+		if(ng.cliente.nome_perfil == "atacado"){
 
 			produto.vlr_unitario    	 = produto.vlr_venda_atacado;
 			produto.vlr_real        	 = produto.vlr_venda_atacado;
 			produto.perc_margem_aplicada = produto.margem_atacado;
 
-		}else if(ng.cliente.tp_perc_venda == "perc_venda_varejo"){
+		}else if(ng.cliente.nome_perfil == "varejo"){
 
 			produto.vlr_unitario		 = produto.vlr_venda_varejo;
 			produto.vlr_real       		 = produto.vlr_venda_varejo;
 			produto.perc_margem_aplicada = produto.margem_varejo;
 
-		}else if(ng.cliente.tp_perc_venda == "perc_venda_intermediario"){
+		}else if(ng.cliente.nome_perfil == "vendedor externo"){
 
 			produto.vlr_unitario		 = produto.vlr_venda_intermediario;
 			produto.vlr_real       		 = produto.vlr_venda_intermediario;
 			produto.perc_margem_aplicada = produto.margem_intermediario;
 
-		}else if(ng.cliente.tp_perc_venda == 'vlr_custo'){
+		}else if(ng.cliente.nome_perfil == 'parceiro'){
 
 			produto.vlr_unitario    	 = produto.vlr_custo_real;
 			produto.vlr_real       		 = produto.vlr_custo_real;
@@ -580,7 +581,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		         	if (init+1 >= cont_itens){
 		         		if(ng.out_produtos.length > 0){
-			         		$('html,body').animate({scrollTop: 0},'slow');
+			         		$('html,body').animate({scrollTop: $('.alert-out').offset().top-10},'slow');
 		         		}
 		         		if(ng.out_descontos.length > 0){
 			         		$dialogs.notify('Atenção!','<strong>'+ng.formatMsgOutDesconto()+'</strong>');
@@ -1533,7 +1534,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					error ++ ;
 				}
 
-				if(v.doc_boleto == "" || v.doc_boleto == 0 || v.doc_boleto == undefined ){
+				/*if(v.doc_boleto == "" || v.doc_boleto == 0 || v.doc_boleto == undefined ){
 					$('.boleto_doc').eq(i).addClass("has-error");
 
 					var formControl = $('.boleto_doc').eq(i)
@@ -1543,19 +1544,19 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						.attr("data-original-title", 'O documento do boleto é obrigatório');
 					formControl.tooltip();
 					error ++ ;
-				}
+				}*/
 
-				if(v.num_boleto == "" || v.num_boleto == 0 || v.num_boleto == undefined ){
+				/*if(v.num_boleto == "" || v.num_boleto == 0 || v.num_boleto == undefined ){
 					$('.boleto_num').eq(i).addClass("has-error");
 
 					var formControl = $('.boleto_num').eq(i)
 						.attr("data-toggle", "tooltip")
 						.attr("data-placement", "bottom")
 						.attr("title", 'O Núm. Cheque é obrigatório')
-						.attr("data-original-title", 'O Núm. Cheque é obrigatório');
+						.attr("data-original-title", 'O Núm. do boleto é obrigatório');
 					formControl.tooltip();
 					error ++ ;
-				}
+				}*/
 			});
 
 			//ng.calTotalCheque();
@@ -1569,7 +1570,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					.attr("data-original-title", 'Selecione o banco');
 				formControl.tooltip();
 			}
-			if(empty(ng.pagamento.agencia_transferencia)){
+			/*if(empty(ng.pagamento.agencia_transferencia)){
 				$("#pagamento_agencia_transferencia").addClass("has-error");
 				var formControl = $("#pagamento_agencia_transferencia")
 					.attr("data-toggle", "tooltip")
@@ -1577,8 +1578,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					.attr("title", 'Informe o número da agência')
 					.attr("data-original-title", 'Informe o número da agência');
 				formControl.tooltip();
-			}
-			if(empty(ng.pagamento.conta_transferencia)){
+			}*/
+			/*if(empty(ng.pagamento.conta_transferencia)){
 				$("#pagamento_conta_transferencia").addClass("has-error");
 				var formControl = $("#pagamento_conta_transferencia")
 					.attr("data-toggle", "tooltip")
@@ -1586,7 +1587,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					.attr("title", 'Informe o número da conta')
 					.attr("data-original-title", 'Informe o número da conta');
 				formControl.tooltip();
-			}
+			}*/
 			if(empty(ng.pagamento.proprietario_conta_transferencia)){
 				$("#proprietario_conta_transferencia").addClass("has-error");
 				var formControl = $("#proprietario_conta_transferencia")
@@ -1702,7 +1703,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 			$.each(ng.formas_pagamento,function(i,v){
 				if(v.id == ng.pagamento.id_forma_pagamento){
-					item.forma_pagamento = v.nome ;
+					item.forma_pagamento = v.descricao_forma_pagamento ;
 					return;
 				}
 			});
@@ -2632,6 +2633,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadPerfil();
 	ng.loadContas();
 	ng.loadFormasPagamento();
+
+	ng.isNumeric = function(vlr){
+		return $.isNumeric(vlr);
+	}
 
 	ng.resizeScreen(); // by default, set fullscreen
 	//ng.abrirVenda('pdv'); // by default, set 'Modo Loja' mode

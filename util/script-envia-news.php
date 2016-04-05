@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ERROR);
 include_once '../util/PHPMailer/PHPMailer.php';
 
 function isEmail($email) {
@@ -36,16 +36,17 @@ if($_POST) {
 
         $mail = new PHPMailer();
         $mail->IsSMTP();
-        $mail->Host     = "mail.weblinia.com.br";
+        $mail->Host     = "mail.webliniaerp.com.br";
+        $mail->IsHTML(true);
         $mail->SMTPAuth = true;
-        $mail->Username = 'filipecoelho@weblinia.com.br';
-        $mail->Password = '150679';
+        $mail->Username = 'no-reply@webliniaerp.com.br';
+        $mail->Password = 'web@linia123';
         $mail->Port     = 587;
-        $mail->From     = 'news@weblinia.com.br';
-        $mail->Sender   = "news@weblinia.com.br";
+        $mail->From     = 'no-reply@webliniaerp.com.br';
+        $mail->Sender   = "no-reply@webliniaerp.com.br";
         $mail->FromName = 'WebliniaERP';
 
-        $mail->AddAddress('sistemas@weblinia.com.br', '');
+        $mail->AddAddress('comercial@webliniaerp.com.br', '');
 
         $mail->IsHTML(true);
 

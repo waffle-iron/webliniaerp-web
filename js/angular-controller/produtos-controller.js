@@ -373,6 +373,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		 	type: 'post',
 		 	data:produto,
 		 	success:function(data){
+		 		$('#formProdutos')[0].reset();
 		 		btn.button('reset');
 		 		if(ng.editing)
 		 			ng.loadProdutos(currentPaginacao.offset,currentPaginacao.limit);

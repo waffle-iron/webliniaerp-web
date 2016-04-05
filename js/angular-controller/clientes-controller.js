@@ -611,7 +611,6 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 				}
 			});
 	}
-
 	ng.atendimentos = [] ;
     ng.getAtendimentos = function(){
     	ng.atendimentos = null ;

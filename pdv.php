@@ -996,7 +996,7 @@
 							<button type="button" class="btn btn-lg btn-warning" ng-if="receber_pagamento" ng-click="cancelarPagamento()"><i class="fa fa-times-circle"></i> Cancelar Pagamento</button>
 							<button type="button" class="btn btn-lg btn-success" ng-if="receber_pagamento || modo_venda == 'est'" data-loading-text=" Aguarde..." id="btn-fazer-compra" ng-click="salvar()" ng-disabled=" (modo_venda == 'pdv' && (total_pg == 0 || total_pg < vlrTotalCompra)) || (modo_venda == 'est' && (carrinho.length <= 0))"><i class="fa fa-save"></i> Finalizar</button>
 							<button type="button" class="btn btn-lg btn-primary" ng-if="receber_pagamento == false" ng-disabled="carrinho.length == 0" ng-click="receberPagamento()"><i class="fa fa-money"></i> Receber</button>
-							<button type="button" class="btn btn-lg btn-success" ng-if="receber_pagamento == false" data-loading-text=" Aguarde..." id="btn-fazer-orcamento" ng-click="salvarOrcamento()" ng-disabled="carrinho.length <= 0"><i class="fa fa-save"></i> Orçamento</button>
+							<button type="button" class="btn btn-lg btn-success" ng-if="receber_pagamento == false" data-loading-text=" Aguarde..." id="btn-fazer-orcamento" ng-click="salvarOrcamento()" ng-disabled="carrinho.length <= 0 || !isNumeric(cliente.id)"><i class="fa fa-save"></i> Orçamento</button>
 						</div>
 					</div>
 				</div>
@@ -1673,12 +1673,12 @@
 													<td>{{ item.peso }}</td>
 													<td class="text-center" width="20">{{ item.qtd_total }}</td>
 													<td class="text-right">R$ {{ item.vlr_unitario | numberFormat : 2 : ',' : '.' }}</td>
-													<td class="text-center"><span ng-if="item.valor_desconto_real > 0 && item.valor_desconto_real != undefined">R$<span> {{ item.valor_desconto_real }}</td>
+													<td class="text-center"><span ng-if="item.valor_desconto_real > 0 && item.valor_desconto_real != undefined">R$<span> {{ item.valor_desconto_real | numberFormat : 2 : ',' : '.' }}</td>
 													<td class="text-right">R$ {{ item.sub_total | numberFormat : 2 : ',' : '.' }}</td>
 												</tr>
 												<tr>
 													<td colspan="6"><b>TOTAL</b></td>
-													<td style="text-align:right">R$ {{ vlrTotalCompra }}</td>
+													<td style="text-align:right">R$ {{ vlrTotalCompra | numberFormat : 2 : ',' : '.' }}</td>
 												</tr>
 											</tbody>
 										</table>
