@@ -377,7 +377,8 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 	ng.loadProdutosVencer = function() {
 		aj.get(baseUrlApi()+"produtos/vencer/"+ ng.userLogged.id_empreendimento +"/30")
 			.success(function(data, status, headers, config) {
-				ng.itensVencer = data.produtos;
+				ng.itensVencer = Object.keys(data.produtos).map(function(key){return data.produtos[key]});
+				//ng.itensVencer = data.produtos;
 
 				if(ng.itensVencer.length > 0) {
 					var qtd = 0;

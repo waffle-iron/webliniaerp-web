@@ -1674,7 +1674,13 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 	}
 
 	ng.imprimirRomaneio = function(item){
-		var caminho = baseUrlApi()+'relPDF?'+$.param({classe:'PedidoVendaDao',metodo:'getRelRomaneio',parametros:[item.id],template:'romaneio_pedido_personalizado'});
+		var caminho = baseUrlApi()+'relPDF?' + $.param({
+			classe : 		'PedidoVendaDao',
+			metodo : 		'getRelRomaneio',
+			parametros : 	[ item.id ],
+			template : 		'romaneio_pedido_personalizado'
+		});
+		
 		eModal.setEModalOptions({ loadingHtml: '<div><div style="text-align: center;margin-top:5px;margin-bottom:3px"><span class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></span></div><div style="text-align: center;"><span class="h4">Carregando, aguarde...</span></div></div>'});
 		var title = 'Controle Interno de Produção';
         eModal
