@@ -123,8 +123,7 @@ function baseUrl(){
 	if(window.location.hostname == "localhost"){
 		pasta = "/webliniaerp-web";
 	}
-	//var pasta = window.location.pathname.substring(0,pos);
-	return "http://localhost/webliniaerp-web/";
+	return 'http://localhost/webliniaerp-web/';
 }
 
 function baseUrlApi(){
@@ -136,7 +135,7 @@ function baseUrlApi(){
 		var a = document.URL;
 		a = a.split(".br");
 
-		return a[0] + ".br/hage_suplementos/api/";
+		return "http://localhost/webliniaerp-api/";
 
 	}
 }
@@ -375,4 +374,13 @@ Date.prototype.addMeses = function(meses){
 };
 Date.prototype.addAnos = function(anos){
     this.setYear(this.getFullYear() + anos)
+};
+
+function parseJSON (jsonString){
+    try {
+        var o = jQuery.parseJSON(jsonString);
+        if (o && typeof o === "object" && o !== null) return o;
+    }
+    catch (e) { }
+    return jsonString;
 };
