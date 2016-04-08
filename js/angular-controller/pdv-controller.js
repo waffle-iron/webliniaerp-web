@@ -581,7 +581,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		         	if (init+1 >= cont_itens){
 		         		if(ng.out_produtos.length > 0){
-			         		$('html,body').animate({scrollTop: $('.alert-out').offset().top-10},'slow');
+		         			setTimeout(function(){
+		         				$('html,body').animate({scrollTop: $('.alert-out').offset().top-10},'slow');
+		         			},300);
+			         		
 		         		}
 		         		if(ng.out_descontos.length > 0){
 			         		$dialogs.notify('Atenção!','<strong>'+ng.formatMsgOutDesconto()+'</strong>');
