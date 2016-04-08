@@ -1640,6 +1640,8 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				bairro : ng.dados_paciente.bairro ,
 				id_estado : ng.dados_paciente.id_estado ,
 				id_cidade : ng.dados_paciente.id_cidade,
+				cpf : ng.dados_paciente.cpf,
+				rg : ng.dados_paciente.rg,
 				num_ficha_paciente : ( empty(ng.dados_paciente.num_ficha_paciente) ? null : ng.dados_paciente.num_ficha_paciente )
 			},
 			empreendimentos : [{id:ng.userLogged.id_empreendimento}],

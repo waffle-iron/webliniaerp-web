@@ -386,6 +386,17 @@
 											<input type="text" class="form-control input-sm" ng-model="dados_paciente.email">
 										</div>
 									</div>
+									<div class="form-group">
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">RG:</label> 
+										<div class="col-xs-12 col-sm-6 col-md-6 col-lg-2" id="dados-paciente-nome">
+											<input type="text" class="form-control input-sm" ng-model="dados_paciente.rg">
+										</div>
+
+										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">CPF:</label> 
+										<div class="col-xs-12 col-sm-4 col-md-4 col-lg-2" id="dados-paciente-email">
+											<input type="text" class="form-control input-sm" ui-mask="999.999.999-99" ng-model="dados_paciente.cpf">
+										</div>
+									</div>
 
 									<div class="form-group">
 										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
