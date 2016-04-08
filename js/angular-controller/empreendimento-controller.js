@@ -1,8 +1,6 @@
 app.controller('EmpreendimentoController', function($scope, $http, $window, $dialogs, UserService){
-
 	var ng = $scope
 		aj = $http;
-
 	ng.baseUrl 			= baseUrl();
 
 	ng.userLogged 		= UserService.getUserLogado();
@@ -16,14 +14,10 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
     ng.paginacao = {} ;
     ng.busca     = {} ;
 
-
     ng.editing 	= false;
-
-
 
     ng.showBoxNovo = function(onlyShow){
     	//ng.editing = !ng.editing;
-
     	if(onlyShow) {
 			$('i','#btn-novo').removeClass("fa-plus-circle").addClass("fa-minus-circle");
 			$('#box-novo').show();

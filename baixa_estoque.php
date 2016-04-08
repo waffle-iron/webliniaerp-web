@@ -53,6 +53,9 @@
 
 		.pad { padding: 25px; }
 
+		.has-error td {
+			background: #FA8072 !important ;
+		}
 
 	</style>
   </head>
@@ -228,7 +231,7 @@
 										<div class="input-group">
 											<input ng-click="selDeposito()" type="text" class="form-control" ng-model="estoqueSaida.nome_deposito" readonly="readonly" style="cursor: pointer;" />
 											<span class="input-group-btn">
-												<button ng-click="selDeposito()" type="button" class="btn"><i class="fa fa-sitemap"></i></button>
+												<button ng-click="selDeposito()" type="button"  class="btn"><i class="fa fa-sitemap"></i></button>
 											</span>
 										</div>
 									</div>
@@ -243,7 +246,7 @@
 													<tr>
 														<td colspan="6"><i class="fa fa fa-th fa-lg"></i> Produtos</td>
 														<td width="60" align="center">
-															<button class="btn btn-xs btn-primary" ng-click="selProduto()"><i class="fa fa-plus-circle"></i></button>
+															<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(estoqueSaida.id_deposito)" ng-click="selProduto()"><i class="fa fa-plus-circle"></i></button>
 														</td>
 													</tr>
 												</thead>
@@ -260,15 +263,17 @@
 														<td class="text-center" width="50">Qtd.</td>
 														<td class="text-center" align="center"></td>
 													</tr>
-													<tr ng-repeat="item in estoqueSaida.produtos">
-														<td>{{ item.id }}</td>
-														<td>{{ item.nome }}</td>
+													<tr ng-repeat="item in estoqueSaida.produtos" id="tr-list-produtos-{{ item.id_produto  }}">
+														<td>{{ item.id_produto }}</td>
+														<td>{{ item.nome_produto }}</td>
 														<td>{{ item.nome_fabricante }}</td>
 														<td>{{ item.peso }}</td>
 														<td>{{ item.sabor }}</td>
-														<td  width="80"><input style="text-align: center" onKeyPress="return SomenteNumero(event);" ng-model="item.qtd_saida" ng-keyup="" type="text" class="form-control input-xs" /></td>
+														<td  width="80">
+															<input style="text-align: center" onKeyPress="return SomenteNumero(event);" ng-model="item.qtd_saida" ng-keyup="" type="text" class="form-control input-xs" />
+														</td>
 														<td align="center">
-															<button class="btn btn-xs btn-danger" ng-click="delProduto($index,item)"><i class="fa fa-trash-o"></i></button>
+															<button class="btn btn-xs btn-danger" ng-click="delProduto($index)"><i class="fa fa-trash-o"></i></button>
 														</td>
 													</tr>
 												</tbody>
@@ -482,7 +487,7 @@
         <!-- /.modal -->
        <!-- /Modal Produtos-->
 		<div class="modal fade" id="list_produtos" style="display:none">
-  			<div class="modal-dialog modal-lg">
+  			<div class="modal-dialog modal-xl">
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -514,7 +519,8 @@
 											<th >Fabricante</th>
 											<th >Tamanho</th>
 											<th >Sabor/cor</th>
-											<th >Qtd.</th>
+											<th >Qtd. estoque</th>
+											<th >Qtd. saida</th>
 											<th ></th>
 										</tr>
 									</thead>
@@ -526,16 +532,20 @@
                                         <th colspan="4" class="text-center">Não a resultados para a busca</th>
                                     </tr>
 										<tr ng-repeat="item in produtos">
-											<td>{{ item.id }}</td>
-											<td>{{ item.nome }}</td>
+											<td>{{ item.id_produto }}</td>
+											<td>{{ item.nome_produto }}</td>
 											<td>{{ item.nome_fabricante }}</td>
 											<td>{{ item.peso }}</td>
 											<td>{{ item.sabor }}</td>
+											<td>{{ item.qtd_real_estoque }}</td>
 											<td  width="80"><input onKeyPress="return SomenteNumero(event);"  ng-model="item.qtd_saida" type="text" class="form-control input-xs" /></td>
 											<td width="50" align="center">
-												<button type="button" class="btn btn-xs btn-success" ng-disabled="" ng-click="addProduto(item)">
+												<button  ng-show="!produtoSelected(item.id_produto)" type="button" class="btn btn-xs btn-success" ng-disabled="" ng-click="addProduto(item)">
 													<i class="fa fa-check-square-o"></i> Selecionar
 												</button>
+												<button ng-show="produtoSelected(item.id_produto)" ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                                	<i class="fa fa-check-circle-o"></i> Selecionado
+                                            	</button>
 											</td>
 										</tr>
 									</tbody>

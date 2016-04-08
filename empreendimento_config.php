@@ -600,10 +600,23 @@
 									</div>
 								</div>
 
+								<div class="row" ng-show="userLogged.id_empreendimento == 75">
+									<div class="col-sm-5">
+										<div class="form-group" id="num_modelo_documento_fiscal">
+											<label class="control-label">Plano de conta para pagamento a profissional</label>
+											<select chosen
+											    option="plano_contas"
+											    allow-single-deselect="true"
+											    ng-model="configuracoes.id_plano_conta_pagamento_profissional"
+											    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
+											</select>
+										</div>
+									</div>
+								</div>
 								<div class="row">
 									<div class="col-sm-2">
 										<div class="form-group">
-											<label for="" class="control-label">Emit NF-e no pdv ?</label>
+											<label for="" class="control-label">Emitir NF-e no pdv ?</label>
 											<div class="form-group">
 												<label class="label-radio inline">
 													<input ng-model="configuracoes.flg_emitir_nfe_pdv" value="1" name="flg_emitir_nfe_pdv"   type="radio" class="inline-radio">
@@ -619,7 +632,6 @@
 										</div>
 									</div>
 								</div>
-
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">

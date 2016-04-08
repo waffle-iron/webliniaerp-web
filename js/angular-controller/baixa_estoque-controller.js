@@ -11,6 +11,11 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 	ng.busca         = {'pacientes':"",'profissionais':"",'produtos':"",'depositos':""};
 
     ng.editing = false;
+
+    ng.isNumeric = function(vlr){
+    	return $.isNumeric(vlr);
+    }
+
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
 
@@ -111,16 +116,16 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
     	ng.produtos = null ;
-    	var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
+    	var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&qtd->id_deposito="+ng.estoqueSaida.id_deposito;
     	if(ng.busca.produtos != ""){
     		if(isNaN(Number(ng.busca.produtos)))
-    			query_string += "&("+$.param({'pro->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
+    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
     		else
-    			query_string += "&("+$.param({'pro->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%' OR pro.id = "+ng.busca.produtos+""}})+")";
+    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%' OR prd.id = "+ng.busca.produtos+""}})+")";
     	}
 
 		ng.produtos =  null;
-		aj.get(baseUrlApi()+"produtos/"+offset+"/"+limit+"/"+query_string)
+		aj.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
 				ng.produtos           = data.produtos ;
 				ng.paginacao_produtos = data.paginacao;
@@ -131,10 +136,21 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 	}
 	ng.estoqueSaida.produtos = [] ;
 	ng.addProduto = function(item){
-		var item = angular.copy(item);
-		item.qtd_saida = $.isNumeric(item.qtd_saida) ? item.qtd_saida : 1 ;
-		ng.estoqueSaida.produtos.push(item) ;
-		$("#list_produtos").modal('hide');
+		var produto = angular.copy(item);
+		produto.qtd_saida = $.isNumeric(produto.qtd_saida) ? produto.qtd_saida : 1 ;
+		ng.estoqueSaida.produtos.push(produto) ;
+		item.qtd_saida = null ;
+	}
+
+	ng.produtoSelected = function(id){
+		var r = false ;
+		$.each(ng.estoqueSaida.produtos,function(i,x){
+			if(Number(x.id_produto) == Number(id)){
+				r = true ;
+				return false ;
+			}
+		});
+		return r ;
 	}
 
 	ng.selDeposito = function(){
@@ -171,6 +187,8 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 	}
 
 	ng.salvar = function(){
+		$('tr.has-error').find('input').tooltip('destroy');
+		$('tr.has-error').removeClass('has-error');
 		var btn = $('#salvar-baixa-estoque');
 		btn.button('loading');
 		if(!$.isNumeric(ng.estoqueSaida.id_profissional) || !$.isNumeric(ng.estoqueSaida.id_deposito) || ng.estoqueSaida.produtos.length == 0){
@@ -179,25 +197,45 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 		}
 		var produtos = [] ;
 		$.each(ng.estoqueSaida.produtos,function(i,v){
-			produtos.push({id:v.id,qtd_saida:( $.isNumeric(v.qtd_saida) ? v.qtd_saida : 1 )});
+			produtos.push({id:v.id_produto,qtd_saida:( $.isNumeric(v.qtd_saida) ? v.qtd_saida : 1 )});
 		});
 		var post = {
-			id_empreendimento : ng.userLogged.id_empreendimento ,
-			id_deposito : ng.estoqueSaida.id_deposito,
-			id_profissional : ng.estoqueSaida.id_profissional,
-			id_usuario : ng.userLogged.id,
-			produtos: produtos 
+			id_empreendimento 	: ng.userLogged.id_empreendimento ,
+			id_deposito 		: ng.estoqueSaida.id_deposito,
+			id_profissional 	: ng.estoqueSaida.id_profissional,
+			id_usuario 			: ng.userLogged.id,
+			produtos 			: produtos 
 		}
 		aj.post(baseUrlApi()+"clinica/produto/baixa",post)
 		.success(function(data, status, headers, config) {
 			ng.mensagens('alert-success','Baixa realizada com sucesso','.alert-success-baixa');
 			btn.button('reset');
-			ng.estoqueSaida = {} ;
+			ng.estoqueSaida = {produtos:[]} ;
 		})
 		.error(function(data, status, headers, config) {
-			ng.depositos = [] ;	
+			if(status == 406){
+				$.each(data.out_estoque,function(i,x){	
+					var msg = 'A quantidade solicitada ( '+x.qtd_saida+' ) é maior que a em estoque ( '+x.qtd_estoque+' )';			
+					$('#tr-list-produtos-'+i).addClass('has-error');
+					$('#tr-list-produtos-'+i).find('input').attr("data-placement", "top").attr("title", msg).attr("data-original-title", msg); 
+					$('#tr-list-produtos-'+i).find('input').tooltip();
+				});
+			}
+			btn.button('reset');
 		});
+	}
+	ng.delProduto = function(index){
+		ng.estoqueSaida.produtos.splice(index,1);
 	}
 
 	ng.loadDepositos();
+});
+
+
+$("body").on("mouseenter","tr.has-error",function() {
+  $(this).find('input').focus();
+});
+
+$("body").on("mouseleave","tr.has-error",function() {
+  $(this).find('input').blur();
 });

@@ -124,6 +124,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+
 				$.each(data,function(i,x){
 					ng.keysConfig[i] = { 
 											nome : i,
@@ -138,6 +139,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				});
 				data.emails_notificacoes = emails ;
 				ng.configuracoes = data;
+				ng.configuracoes.id_plano_conta_pagamento_profissional = ""+ng.configuracoes.id_plano_conta_pagamento_profissional ;
 				ng.notEmails = emails;
 				if(data.id_plano_caixa == undefined){
 					$('#id_plano_caixa').addClass('has-error');
@@ -217,7 +219,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 							id_empreendimento	:ng.userLogged.id_empreendimento
 						}
 			chaves.push(item2);
-		}if(ng.configuracoes.flg_emitir_nfe_pdv != undefined){
+		}
+		if(ng.configuracoes.flg_emitir_nfe_pdv != undefined){
 			var item3 = {
 							nome 				:'flg_emitir_nfe_pdv',
 							valor 				:ng.configuracoes.flg_emitir_nfe_pdv , 
@@ -225,6 +228,16 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 						}
 			chaves.push(item3);
 		}
+
+		if(ng.configuracoes.id_plano_conta_pagamento_profissional != undefined){
+			var item4 = {
+							nome 				:'id_plano_conta_pagamento_profissional',
+							valor 				:ng.configuracoes.id_plano_conta_pagamento_profissional , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item4);
+		}
+
 		btn.button('loading');
 		var pth_local_sucess = false ;
 		if(ng.config.pth_local != undefined){
@@ -503,6 +516,18 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 
+	ng.loadPlanoContas = function() {
+		ng.plano_contas = [{id:"",dsc_completa:"Selecione"}];
+		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				ng.roleList = data;
+				ng.plano_contas = ng.plano_contas.concat(data);
+			})
+			.error(function(data, status, headers, config) {
+				ng.plano_contas = [] ;
+			});
+	}
+
 
 	ng.loadControleNfe('modelo_nota_fiscal','chosen_modelo_nota_fiscal');
 	function defaulErrorHandler(data, status, headers, config) {
@@ -524,6 +549,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadControleNfe('regime_tributario','regimeTributario');
 	ng.loadControleNfe('regime_tributario_pis_cofins','regimePisCofins');
 	ng.loadControleNfe('tipo_empresa','tipoEmpresa');
+	ng.loadPlanoContas();
 
 	
 });
