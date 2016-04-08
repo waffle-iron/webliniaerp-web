@@ -548,7 +548,7 @@
 											<th style="line-height: 40px;" rowspan="2">Nome</th>
 											<th style="line-height: 40px;" rowspan="2">Fabricante</th>
 											<th style="line-height: 40px;" rowspan="2">Tamanho</th>
-											<th style="text-align: center;" colspan="3">Preços</th>
+											<th style="text-align: center;" colspan="3">Margem de Lucro (% sobre Custo)</th>
 										</tr>
 										<tr>
 											<th style="text-align: center;width:100px">Atacado</th>

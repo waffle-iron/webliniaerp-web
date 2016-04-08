@@ -197,8 +197,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 							'<strong>Entrada cadastrada com sucesso</strong>, caso deseje agora poderar atualizar as margens dos produtos',
 							'.alert-entrada');
 				ng.loadEntradas(0,20);
-				ng.showModalPrecos();
-
+				// ng.showModalPrecos(); // Inativado temporariamente
 			})
 			.error(function(data, status) {
 				if(status == 406) {
@@ -232,7 +231,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 						var b = true;
 
 						$.each(ng.precoProduto, function(y, itemPreco){
-							if(itemEntrada.id === itemPreco.id)
+							if(itemEntrada.id_produto === itemPreco.id_produto)
 								b = false;
 						});
 
@@ -274,7 +273,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 				itemEntrada.margem_intermediario        =  parseFloat(itemEntrada.margem_intermediario) / 100;
 				itemEntrada.margem_atacado              =  parseFloat(itemEntrada.margem_atacado)       / 100;
 				itemEntrada.margem_varejo               =  parseFloat(itemEntrada.margem_varejo)        / 100;
-				itemEntrada.id_empreendimento           =   ng.userLogged.id_empreendimento ;
+				itemEntrada.id_empreendimento           =  ng.userLogged.id_empreendimento ;
 
 				itens.push(itemEntrada);
 			});
