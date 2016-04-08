@@ -533,7 +533,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				formControl.tooltip();
 		}
 
-		if(empty(ng.procedimento.id_dente)){
+		/*if(empty(ng.procedimento.id_dente)){
 			error ++ ;
 			 $("#id_dente").addClass("has-error");
 				var formControl = $("#id_dente")
@@ -545,7 +545,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				formControl.tooltip('show');
 			else
 				formControl.tooltip();
-		}
+		}*/
 
 		/*if(empty(ng.procedimento.id_regiao)){
 			error ++ ;
@@ -1530,6 +1530,8 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	ng.abrirFichaPaciente = function(paciente){
 		if(empty(paciente.id_atendimento_origem)){
 			ng.atendimento_selecionado = paciente ;
+			ng.getItensVenda();
+			ng.loadPagamentosPaciente();
 			ng.loadPaciente();
 			ng.loadPagamentosPaciente();
 			ng.openModal('dados');
@@ -1538,6 +1540,8 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			 aj.get(baseUrlApi()+"clinica/atendimento/"+paciente.id_atendimento_origem)
             .success(function(data, status, headers, config) {
 				ng.atendimento_selecionado = data ;
+				ng.getItensVenda();
+				ng.loadPagamentosPaciente();
 				ng.loadPaciente();
 				ng.openModal('dados');
 				ng.loadProcedimentos();
