@@ -217,6 +217,7 @@
 							<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
 							<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> Fiscal</a></li>
 							<li><a href="#notificacoes" data-toggle="tab"><i class="fa fa-bell"></i> Notificações</a></li>
+							<li><a href="#mod_clinica" ng-if="userLogged.id_empreendimento == 75" data-toggle="tab"><i class="fa fa-list"></i> Mod. Clinica</a></li>
 							<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
 						</ul>
 					</div>
@@ -823,6 +824,49 @@
 									<div class="col-sm-12">
 										<div class="pull-right">
 											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigNotificacoes($event)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="mod_clinica">
+								<div class="alert alert-config-atendimento" style="display:none"></div>
+								<div class="row" ng-show="userLogged.id_empreendimento == 75">
+									<div class="col-sm-5">
+										<div class="form-group" id="num_modelo_documento_fiscal">
+											<label class="control-label">Plano de conta para pagamento a profissional</label>
+											<select chosen
+											    option="plano_contas"
+											    allow-single-deselect="true"
+											    ng-model="configuracoes.id_plano_conta_pagamento_profissional"
+											    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label for="" class="control-label">Controlar tempo de atendimento ? </label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_controlar_tempo_atendimento" value="1" name="flg_controlar_tempo_atendimento"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_controlar_tempo_atendimento" value="0" name="flg_controlar_tempo_atendimento"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigAtendimento($event)" type="submit" class="btn btn-success btn-sm">
 												<i class="fa fa-save"></i> Salvar
 											</button>
 										</div>

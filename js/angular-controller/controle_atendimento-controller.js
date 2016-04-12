@@ -316,6 +316,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	}
 	ng.atendimento_selecionado = {} ;
 	ng.setFimAtendimento = function(){
+		setTime = Number(ng.configuracoes.flg_controlar_tempo_atendimento) == 1 ? true : false ;
 		var btn =  $("#btn-fim-atendimento") ;
 		btn.button('loading');
 		ng.atendimento_selecionado = ng.paciente_atendimento ;
@@ -326,7 +327,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			id_status = 6 ;
 		
 		var post = {	
-			dta_fim_atendimento:moment().format('YYYY-MM-DD HH:mm:ss'),
+			dta_fim_atendimento: ( setTime ? moment().format('YYYY-MM-DD HH:mm:ss') : null ),
 			id_status:id_status,
 			where:'id = '+ng.paciente_atendimento.id,
 			id_item_venda : ng.paciente_atendimento.id_item_venda,

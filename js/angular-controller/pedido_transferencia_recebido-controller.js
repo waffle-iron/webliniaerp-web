@@ -226,6 +226,36 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 	}
 
 	ng.salvarTransferencia = function(){
+		$('.tr-out-estoque').find('input').tooltip('destroy');
+		$('.tr-out-estoque').removeClass('tr-out-estoque');
+		$('.has-error').find('input').tooltip('destroy');
+		$('.has-error').removeClass('has-error');
+		var error = 0 ;
+		if(!$.isNumeric(ng.id_deposito_principal)){
+			$('#id_deposito_principal').addClass('has-error');
+			$('#id_deposito_principal').attr("data-placement", "top").attr("title", 'Informe o deposito').attr("data-original-title", 'Informe o deposito'); 
+			$('#id_deposito_principal').tooltip('show');	
+			$('html,body').animate({scrollTop: 0},'slow');
+			error ++ ;
+		}
+		$.each(ng.transferencia.produtos,function(key,item){
+			if(!($.isNumeric(item.qtd_transferida))){
+				$('#td-prd-'+item.id).addClass('has-error');
+				$('#td-prd-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade para transferência não poder ser vazio').attr("data-original-title", 'A quantidade para transferência não poder ser vazia'); 
+				if(error == 0) {
+					$('#td-prd-'+item.id).find('input').tooltip('show');
+					$('html,body').animate({scrollTop: $('#td-prd-'+item.id).offset().top - 10 },'slow');
+				}else {
+					$('#td-prd-'+item.id).find('input').tooltip();
+				}
+				error ++ ;
+			}	
+		});
+
+		if(error > 0){
+			return ;
+		}
+
 		aj.post(baseUrlApi()+"estoque/pedido/transferencia/transferir/",ng.transferencia)
 		.success(function(data, status, headers, config) {
 			

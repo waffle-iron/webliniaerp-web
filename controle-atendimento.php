@@ -325,10 +325,13 @@
 
 									<td class="text-middle">{{ paciente.nome_profissional }}</td>
 									<td class="text-middle">
-										<button class="btn btn-xs btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  ng-click="setInitAtendimento(paciente,$event)" ng-disabled="paciente.dta_inicio_atendimento != null" data-toggle="tooltip" title="Iniciar Atendimento">
+										<button ng-if="configuracoes.flg_controlar_tempo_atendimento == 1" class="btn btn-xs btn-success" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  ng-click="setInitAtendimento(paciente,$event)" ng-disabled="paciente.dta_inicio_atendimento != null" data-toggle="tooltip" title="Iniciar Atendimento">
 											<i class="fa fa-play"></i>
 										</button>
-										<button class="btn btn-xs btn-danger" ng-disabled="paciente.dta_inicio_atendimento == null || paciente.dta_fim_atendimento != null"  data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="selProfissionais(paciente)" data-toggle="tooltip" title="Finalizar Atendimento">
+										<button ng-if="configuracoes.flg_controlar_tempo_atendimento == 1" class="btn btn-xs btn-danger" ng-disabled="paciente.dta_inicio_atendimento == null || paciente.dta_fim_atendimento != null"  data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="selProfissionais(paciente)" data-toggle="tooltip" title="Finalizar Atendimento">
+											<i class="fa fa-stop"></i>
+										</button>
+										<button ng-if="configuracoes.flg_controlar_tempo_atendimento != 1" class="btn btn-xs btn-danger"  data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="selProfissionais(paciente)" data-toggle="tooltip" title="Selecionar Profissional" ng-disabled="paciente.id_profissional_atendimento != null	">
 											<i class="fa fa-stop"></i>
 										</button>
 										<button class="btn btn-xs btn-primary" ng-click="abrirFichaPaciente(paciente)" data-toggle="tooltip" title="Abrir Fichar do Paciente">

@@ -57,6 +57,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 
 	ng.update = function(event) {
 		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
 		btn.button('loading');
 		ng.reset();
 		$('.formEmprendimento').ajaxForm({
@@ -203,6 +205,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.config = {} ;
 	ng.salvarConfig = function(event){
 		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
 		var chaves = [];
 		if(ng.id_plano_fechamento_caixa != undefined){
 			var item1 = {
@@ -398,6 +402,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.salvarConfigFiscal = function(event){
 		var serie = angular.copy(ng.serie_documento_fiscal);
 		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
 		var chaves = [];
 		if(ng.configuracoes.id_operacao_padrao_venda != undefined){
 			var item = {nome:'id_operacao_padrao_venda',valor:ng.configuracoes.id_operacao_padrao_venda,id_empreendimento:ng.userLogged.id_empreendimento}
@@ -454,6 +460,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
  
 	ng.salvarConfigNotificacoes = function(event){
 		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
 		var chaves = [];
 		if(!empty(ng.notEmails) || ng.notEmails.length > 0){
 			var emails = [] ;
@@ -478,6 +486,44 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				btn.button('reset');
 			});
 		
+	}
+
+	ng.salvarConfigAtendimento = function(event){
+		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		var chaves = [];
+
+
+		if(ng.configuracoes.id_plano_conta_pagamento_profissional != undefined){
+			var item = {
+							nome 				:'id_plano_conta_pagamento_profissional',
+							valor 				:ng.configuracoes.id_plano_conta_pagamento_profissional , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item);
+		}
+
+		if(ng.configuracoes.flg_controlar_tempo_atendimento != undefined){
+			var item = {
+							nome 				:'flg_controlar_tempo_atendimento',
+							valor 				:ng.configuracoes.flg_controlar_tempo_atendimento , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item);
+		}
+
+		btn.button('loading');
+		
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves, pth_local: ng.config.pth_local} )
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-atendimento');
+				ng.loadConfig();
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+			});
 	}
 
 	ng.loadEstados = function () {

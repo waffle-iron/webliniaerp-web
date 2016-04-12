@@ -215,7 +215,7 @@
 						</div>
 						<div class="row">
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="form-group" id="id_deposito_principal">
 									<label class="control-label">Deposito</label>
 									<div class="input-group">
 										<input ng-click="selDeposito()" type="text" class="form-control" ng-model="nome_deposito_principal" readonly="readonly" style="cursor: pointer;" />
@@ -256,7 +256,7 @@
 													<td>{{ item.peso }}</td>
 													<td>{{ item.sabor }}</td>
 													<td width="80" class="text-center">{{ item.qtd_pedida }}</td>
-													<td  width="100" align="center"><input style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
+													<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
 													<td>
 														<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
 													    option="depositos_chosen"
@@ -265,7 +265,7 @@
 														</select>
 													</td>
 													<td align="center">
-														<button class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
+														<button ng-if="!isNumeric(item.qtd_pedida)" class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
 													</td>
 												</tr>
 											</tbody>

@@ -1473,7 +1473,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					error ++ ;
 				}
 
-				if(v.num_conta_corrente == "" || v.num_conta_corrente == 0 || v.num_conta_corrente == undefined ){
+				/*if(v.num_conta_corrente == "" || v.num_conta_corrente == 0 || v.num_conta_corrente == undefined ){
 					$('.cheque_cc').eq(i).addClass("has-error");
 
 					var formControl = $('.cheque_cc').eq(i)
@@ -1483,7 +1483,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						.attr("data-original-title", 'O Num. C/C é obrigatório');
 					formControl.tooltip();
 					error ++ ;
-				}
+				}*/
 
 				if(v.num_cheque == "" || v.num_cheque == 0 || v.num_cheque == undefined ){
 					$('.cheque_num').eq(i).addClass("has-error");
