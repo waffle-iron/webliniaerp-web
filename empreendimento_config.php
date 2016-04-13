@@ -634,7 +634,7 @@
 									</div>
 									<div class="col-sm-4">
 										<div class="form-group" id="pth_local"  >
-											<label class="control-label">Patch socket SAT </label>
+											<label class="control-label">URL socket SAT </label>
 											<input ng-model="configuracoes.patch_socket_sat"  type="text" class="form-control input-sm parsley-validated">
 										</div>
 									</div>
