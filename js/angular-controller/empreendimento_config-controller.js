@@ -242,6 +242,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item4);
 		}
 
+		if(ng.configuracoes.patch_socket_sat != undefined){
+			var item5 = {
+							nome 				:'patch_socket_sat',
+							valor 				:ng.configuracoes.patch_socket_sat , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item5);
+		}
+
 		btn.button('loading');
 		var pth_local_sucess = false ;
 		if(ng.config.pth_local != undefined){

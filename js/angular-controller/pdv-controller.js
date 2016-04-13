@@ -2456,7 +2456,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	// Funções de comunicação com o WebSocket
 	ng.newConnWebSocket = function(data){
-		ng.conn = new WebSocket('ws://localhost:8080');
+		ng.conn = new WebSocket(ng.config.patch_socket_sat);
 		console.log(ng.conn);
 		ng.conn.onopen = function(e) {
 			console.log('Conexão com WebSocket estabelecida!!!')
