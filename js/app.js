@@ -321,7 +321,6 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 	ng.count = {
 		orcamentos : 0
 	};
-
 	ng.loadCountOrcamentos = function(first_date,last_date) {
 		var vlrTotalVendasPeriodoComparativo = 0 ;
 		aj.get(baseUrlApi()+"count_orcamentos/dashboard/"+first_date+"/"+last_date+"?id_empreendimento="+ng.userLogged.id_empreendimento)
@@ -421,10 +420,46 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 			});
 	}
 
+	ng.loadPedidosTransferenciaRecebido = function() {
+		var vlrTotalVendasPeriodoComparativo = 0 ;
+		aj.get(baseUrlApi()+"transferencias/estoque/?id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+"&id_status_transferencia=1")
+			.success(function(data, status, headers, config) {
+				if(data.length > 0) {
+					ng.alertas.push({
+						type: 'warning',
+						message: "Você tem "+ data.length +" "+ (data.length == 1 ? 'pedido' : 'pedidos' ) + " de transferência de estoque",
+						link: "pedido_transferencia_recebido.php"
+					});
+				}
+			})
+			.error(function(data, status, headers, config) {
+				ng.count.orcamentos  = 0 ;
+			});
+	}
+
+	ng.loadPedidosTransferenciaTransporte = function() {
+		var vlrTotalVendasPeriodoComparativo = 0 ;
+		aj.get(baseUrlApi()+"transferencias/estoque/?id_empreendimento_pedido="+ng.userLogged.id_empreendimento+"&id_status_transferencia=2")
+			.success(function(data, status, headers, config) {
+				if(data.length > 0) {
+					ng.alertas.push({
+						type: 'warning',
+						message: "Você tem "+ data.length +" "+ (data.length == 1 ? 'pedido' : 'pedidos' ) + " de transferência de estoque em transporte",
+						link: "pedido_transferencia.php"
+					});
+				}
+			})
+			.error(function(data, status, headers, config) {
+				ng.count.orcamentos  = 0 ;
+			});
+	}
+
 	ng.loadCountOrcamentos(formatDate(getFirstDateOfMonthString()), formatDate(getLastDateOfMonthString()));
 	ng.loadProdutosVencidos();
 	ng.loadProdutosVencer();
 	ng.loadProdutosEstoqueMinimo();
+	ng.loadPedidosTransferenciaRecebido();
+	ng.loadPedidosTransferenciaTransporte();
 });
 
 /*app.factory('httpRequestInterceptor',function () {

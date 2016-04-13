@@ -256,16 +256,16 @@
 													<td>{{ item.peso }}</td>
 													<td>{{ item.sabor }}</td>
 													<td width="80" class="text-center">{{ item.qtd_pedida }}</td>
-													<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
-													<td>
-														<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
+													<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input onKeyPress="return SomenteNumero(event);" style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
+													<td id="td-prd-deposito-saida-{{ item.id }}">
+														<select chosen ng-change="" 
 													    option="depositos_chosen"
 													    ng-model="item.id_deposito_saida"
 													    ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
 														</select>
 													</td>
 													<td align="center">
-														<button ng-if="!isNumeric(item.qtd_pedida)" class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
+														<button ng-if="item.add == 1" class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
 													</td>
 												</tr>
 											</tbody>
@@ -298,6 +298,7 @@
 								<tr>
 									<th>#</th>
 									<th>Dta. Pedido</th>
+									<th>Dta. transferência</th>
 									<th>Usuario</th>
 									<th>Empreendimento</th>
 									<th>Status</th>
@@ -305,17 +306,31 @@
 								</tr>
 							</thead>
 							<tbody>
+								<tr ng-show="listaTransferencias.transferencias == null">
+									<td colspan="7" class="text-center">
+										<i class='fa fa-refresh fa-spin'></i> Carregando...
+									</td>
+								</tr>
+								<tr ng-show="listaTransferencias.transferencias.length == 0">
+									<td colspan="7" class="text-center">
+										Nenhuma transferência encontrada
+									</td>
+								</tr>
 								<tr ng-repeat="item in listaTransferencias.transferencias" bs-tooltip>
 									<td width="80">{{ item.id }}</td>
 									<td>{{ item.dta_pedido | dateFormat : 'dateTime' }}</td>
+									<td>{{ item.dta_transferencia | dateFormat : 'dateTime' }}</td>
 									<td>{{ item.nome_usuario_pedido }}</td>
 									<td>{{ item.nome_empreendimento_pedido }}</td>
-									<td>{{ item.dsc_status_transferencia_estoque }}</td>
+									<td>{{ item.id_status_transferencia == 1 && 'Pedido recebido' || item.dsc_status_transferencia_estoque }}</td>
 									<td align="center">
-										<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia(item.id,$event)" title="Realizar Transferência" class="btn btn-xs btn-warning" data-toggle="tooltip">
+										<button type="button" ng-show="item.id != transferencia.id && item.id_status_transferencia == 1" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia($index,$event)" title="Realizar Transferência" class="btn btn-xs btn-warning" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button type="button"  ng-click="viewTransferencia(item.id)" title="Detalhes" class="btn btn-xs btn-primary" data-toggle="tooltip">
+										<button type="button" ng-show="item.id == transferencia.id" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  title="Em edição" class="btn btn-xs btn-success" data-toggle="tooltip">
+											<i class="fa fa-edit"></i>
+										</button>
+										<button type="button"  ng-click="detalhesPedido(item)" title="Detalhes" class="btn btn-xs btn-primary" data-toggle="tooltip">
 											<i class="fa fa-tasks"></i>
 										</button>
 									</td>
@@ -656,6 +671,12 @@
 	<!-- Chosen -->
 	<script src='js/chosen.jquery.min.js'></script>
 
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
+	<!-- Easy Modal -->
+    <script src="js/eModal.js"></script>
+    
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
