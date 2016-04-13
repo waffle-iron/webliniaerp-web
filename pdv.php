@@ -326,7 +326,7 @@
 			<div class="padding-md" id="content-pdv" ng-if="caixa_aberto && abrir_pdv == false && caixa_configurado == true" style="padding-bottom: 0px !important;">
 				<div class="panel panel-primary" style="margin-bottom: 0px !important;">
 					<div class="panel-heading">
-						<i class="fa fa-desktop"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
+						<i class="fa fa-desktop" ng-class="{'text-danger': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 0, 'text-warning': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 1,'text-success': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 2 }"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
 						<div class="btn-group"  style="margin-left: 40px;" >
 							<i class="fa fa-user"></i> Vendedor - {{ vendedor.nome_vendedor }}
 						</div>

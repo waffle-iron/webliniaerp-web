@@ -2455,77 +2455,179 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	// Funções de comunicação com o WebSocket
+	ng.status_websocket = null ;
+	ng.id_ws_dsk        = null ;
 	ng.newConnWebSocket = function(data){
-		ng.conn = new WebSocket(ng.config.patch_socket_sat);
-		console.log(ng.conn);
-		ng.conn.onopen = function(e) {
-			console.log('Conexão com WebSocket estabelecida!!!')
-			console.log(e);
-			if(typeof data == 'object')
-	    		ng.sendMessageWebSocket(data);
-		};
+		aj.get(baseUrlApi()+"caixa/aberto/"+ng.userLogged.id_empreendimento+"/"+ng.pth_local+"/"+ng.userLogged.id)
+		.success(function(data_caixa, status, headers, config) {
+			ng.id_ws_dsk = data_caixa.id_ws_dsk ;
+			ng.conn = new WebSocket(ng.config.patch_socket_sat);
+			ng.conn.onopen = function(e) {
+				//console.log('Conexão com WebSocket estabelecida!!!')
+				//console.log(e);
+				//console.log(config);
+				$scope.$apply(function () {
+					if(empty(ng.id_ws_dsk))
+						ng.status_websocket = 1 ;
+					else
+						ng.status_websocket = 2 ;
+				});
+				if(typeof data == 'object'){
+					data.to = data_caixa.id_ws_dsk ;
+		    		ng.sendMessageWebSocket(data);
+				}
+			};
 
-		ng.conn.onmessage = function(e) {
-			var data = JSON.parse(e.data);
-			data.message = parseJSON(data.message);
-			console.log(data);
-			switch(data.type){
-				case 'session_id':
-					ng.caixa_aberto.id_ws_web = data.to ;
-					console.log(ng.caixa_aberto);
-					break;
-				case 'satcfe_success':
-						var post = angular.copy(ng.dadosSatCalculados);
-						var retornoClient =  data.message ;
+			ng.conn.onclose = function(e) {
+				$scope.$apply(function () {
+					ng.status_websocket = 0 ;
+				});
+			}
+
+			ng.conn.onmessage = function(e) {
+				var data = JSON.parse(e.data);
+				data.message = parseJSON(data.message);
+				console.log(data);
+				switch(data.type){
+					case 'session_id':
+						ng.caixa_aberto.id_ws_web = data.to ;
+						console.log(ng.caixa_aberto);
+						break;
+					case 'satcfe_success':
+							var post = angular.copy(ng.dadosSatCalculados);
+							var retornoClient =  data.message ;
+							$scope.$apply(function () {
+					           ng.process_reeviar_sat = false ;
+					        });
+							post.id_empreendimento = ng.userLogged.id_empreendimento ;
+				 			post.dados_emissao.status = 'autorizado' ;
+				 			post.chave_sat = retornoClient.chave;
+							post.codigo_sefaz_sat = retornoClient.codigoSefaz;
+							post.data_processado_sat = moment(retornoClient.dataProcessado).format('YYYY-MM-DD HH:mm:ss');
+							post.id_pdv_sat = retornoClient.idPDV;
+							post.id_qr_code_sat = retornoClient.idQrCode;
+							post.msg_sefaz_sat = retornoClient.msgSefaz;
+							post.n_serie_sat = retornoClient.nserieSAT;
+							post.sessao_sat = retornoClient.sessao;
+							post.tipo_documento_sat = retornoClient.tipoDocumento;
+							post.uuid_sat = retornoClient.uuid;
+							post.xml_envio_base64 = window.btoa(retornoClient.xmlEnvio);
+							post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
+				 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
+							.success(function(data, status, headers, config) {
+								window.location = 'pdv.php';
+							})
+							.error(function(data, status, headers, config) {
+								window.location = 'pdv.php';
+							});
+						break;
+					case 'satcfe_error':
 						$scope.$apply(function () {
+				           ng.erro_sat =  data.message ;
 				           ng.process_reeviar_sat = false ;
 				        });
-						post.id_empreendimento = ng.userLogged.id_empreendimento ;
-			 			post.dados_emissao.status = 'autorizado' ;
-			 			post.chave_sat = retornoClient.chave;
-						post.codigo_sefaz_sat = retornoClient.codigoSefaz;
-						post.data_processado_sat = moment(retornoClient.dataProcessado).format('YYYY-MM-DD HH:mm:ss');
-						post.id_pdv_sat = retornoClient.idPDV;
-						post.id_qr_code_sat = retornoClient.idQrCode;
-						post.msg_sefaz_sat = retornoClient.msgSefaz;
-						post.n_serie_sat = retornoClient.nserieSAT;
-						post.sessao_sat = retornoClient.sessao;
-						post.tipo_documento_sat = retornoClient.tipoDocumento;
-						post.uuid_sat = retornoClient.uuid;
-						post.xml_envio_base64 = window.btoa(retornoClient.xmlEnvio);
+				        $('#modal-sat-cfe').modal('hide');
+				        $('#modal-erro-sat').modal({ backdrop: 'static',keyboard: false});
+				        var post = angular.copy(ng.dadosSatCalculados);
+				        post.id_empreendimento = ng.userLogged.id_empreendimento ;
+				 		post.dados_emissao.status = 'erro_validacao' ;
+				 		post.codigo_erro_sat = ng.erro_sat.codigoErro
+						post.msg_erro_sat = ng.erro_sat.msgErro
+						post.json_erros_base64_sat = window.btoa(JSON.stringify(ng.erro_sat.problemas));
 						post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
 			 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
 						.success(function(data, status, headers, config) {
-							window.location = 'pdv.php';
+			
 						})
 						.error(function(data, status, headers, config) {
-							window.location = 'pdv.php';
+							
 						});
-					break;
-				case 'satcfe_error':
-					$scope.$apply(function () {
-			           ng.erro_sat =  data.message ;
-			           ng.process_reeviar_sat = false ;
-			        });
-			        $('#modal-sat-cfe').modal('hide');
-			        $('#modal-erro-sat').modal({ backdrop: 'static',keyboard: false});
-			        var post = angular.copy(ng.dadosSatCalculados);
-			        post.id_empreendimento = ng.userLogged.id_empreendimento ;
-			 		post.dados_emissao.status = 'erro_validacao' ;
-			 		post.codigo_erro_sat = ng.erro_sat.codigoErro
-					post.msg_erro_sat = ng.erro_sat.msgErro
-					post.json_erros_base64_sat = window.btoa(JSON.stringify(ng.erro_sat.problemas));
-					post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
-		 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
-					.success(function(data, status, headers, config) {
-		
-					})
-					.error(function(data, status, headers, config) {
-						
-					});
-					break;
-			}			
-		};
+						break;
+				}			
+			};
+		})
+		.error(function(data, status, headers, config) {
+			ng.id_ws_dsk = null ;
+			ng.conn = new WebSocket(ng.config.patch_socket_sat);
+			ng.conn.onopen = function(e) {
+				$scope.$apply(function () {
+					if(empty(ng.id_ws_dsk))
+						ng.status_websocket = 1 ;
+					else
+						ng.status_websocket = 2 ;
+				});
+				if(typeof data == 'object')
+		    		ng.sendMessageWebSocket(ng.caixa_aberto);
+			};
+
+			ng.conn.onclose = function(e) {
+				$scope.$apply(function () {
+					ng.status_websocket = 0 ;
+				});
+			}
+
+			ng.conn.onmessage = function(e) {
+				var data = JSON.parse(e.data);
+				data.message = parseJSON(data.message);
+				console.log(data);
+				switch(data.type){
+					case 'session_id':
+						ng.caixa_aberto.id_ws_web = data.to ;
+						console.log(ng.caixa_aberto);
+						break;
+					case 'satcfe_success':
+							var post = angular.copy(ng.dadosSatCalculados);
+							var retornoClient =  data.message ;
+							$scope.$apply(function () {
+					           ng.process_reeviar_sat = false ;
+					        });
+							post.id_empreendimento = ng.userLogged.id_empreendimento ;
+				 			post.dados_emissao.status = 'autorizado' ;
+				 			post.chave_sat = retornoClient.chave;
+							post.codigo_sefaz_sat = retornoClient.codigoSefaz;
+							post.data_processado_sat = moment(retornoClient.dataProcessado).format('YYYY-MM-DD HH:mm:ss');
+							post.id_pdv_sat = retornoClient.idPDV;
+							post.id_qr_code_sat = retornoClient.idQrCode;
+							post.msg_sefaz_sat = retornoClient.msgSefaz;
+							post.n_serie_sat = retornoClient.nserieSAT;
+							post.sessao_sat = retornoClient.sessao;
+							post.tipo_documento_sat = retornoClient.tipoDocumento;
+							post.uuid_sat = retornoClient.uuid;
+							post.xml_envio_base64 = window.btoa(retornoClient.xmlEnvio);
+							post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
+				 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
+							.success(function(data, status, headers, config) {
+								window.location = 'pdv.php';
+							})
+							.error(function(data, status, headers, config) {
+								window.location = 'pdv.php';
+							});
+						break;
+					case 'satcfe_error':
+						$scope.$apply(function () {
+				           ng.erro_sat =  data.message ;
+				           ng.process_reeviar_sat = false ;
+				        });
+				        $('#modal-sat-cfe').modal('hide');
+				        $('#modal-erro-sat').modal({ backdrop: 'static',keyboard: false});
+				        var post = angular.copy(ng.dadosSatCalculados);
+				        post.id_empreendimento = ng.userLogged.id_empreendimento ;
+				 		post.dados_emissao.status = 'erro_validacao' ;
+				 		post.codigo_erro_sat = ng.erro_sat.codigoErro
+						post.msg_erro_sat = ng.erro_sat.msgErro
+						post.json_erros_base64_sat = window.btoa(JSON.stringify(ng.erro_sat.problemas));
+						post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
+			 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
+						.success(function(data, status, headers, config) {
+			
+						})
+						.error(function(data, status, headers, config) {
+							
+						});
+						break;
+				}			
+			};
+		});
 	}
 	ng.modalListaReenviarSat = function(){
 		ng.process_reeviar_sat = false ;
@@ -2595,7 +2697,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.cod_nota_fiscal_reenviar_sat = dataCrud.nota.cod_nota_fiscal == undefined ? null : dataCrud.nota.cod_nota_fiscal ;
 				var dadosWebSocket = {
 		 			from 		: ng.caixa_aberto.id_ws_web ,
-		 			to  		: ng.caixa_aberto.id_ws_dsk ,
+		 			to  		: null ,
 					type 		: 'satcfe_process',
 					message 	: JSON.stringify(data)
 	 			};
