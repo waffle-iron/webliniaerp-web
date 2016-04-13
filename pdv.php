@@ -2003,7 +2003,7 @@
 					    	<div class="row">
 					    		<div class="col-sm-6" id="valor_pagamento">
 					    		<p>
-					    			<strong id="text_status_sat_cfe">Imprimindo cumpom fiscal</strong><img src="assets/imagens/progresso_venda.gif">
+					    			<strong id="text_status_sat_cfe">Imprimindo cupom fiscal</strong><img src="assets/imagens/progresso_venda.gif">
 					    		</p>
 								</div>
 					    	</div>
