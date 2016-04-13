@@ -18,7 +18,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
     ng.edit_serie_documento_fiscal = false ;
     ng.notEmails = [] ;
 
-	 ng.loadPlanoContas = function() {
+	ng.loadPlanoContasSelect = function() {
 	 	ng.currentNode 	= null;
 		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
@@ -572,14 +572,13 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	}
 
 	ng.loadPlanoContas = function() {
-		ng.plano_contas = [{id:"",dsc_completa:"Selecione"}];
-		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"plano_contas_treeview?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
-				ng.roleList = data;
-				ng.plano_contas = ng.plano_contas.concat(data);
+				ng.planoContas = data;
 			})
 			.error(function(data, status, headers, config) {
-				ng.plano_contas = [] ;
+				if(status == 404)
+					ng.planoContas = [];
 			});
 	}
 
@@ -605,6 +604,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadControleNfe('regime_tributario_pis_cofins','regimePisCofins');
 	ng.loadControleNfe('tipo_empresa','tipoEmpresa');
 	ng.loadPlanoContas();
+	ng.loadPlanoContasSelect();
 
 	
 });
