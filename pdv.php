@@ -2114,7 +2114,7 @@
 											<th class="text-center" colspan="9" style="text-align:center"><i class="fa fa-refresh fa-spin"></i> <strong>Carregando</strong></th>
 										</tr>
 										<tr ng-show="(vendas_reenviar_sat.length == 0)">
-											<td colspan="3">Nenhum Cliente encontrado</td>
+											<td colspan="3">Nenhum venda encontrada</td>
 										</tr>
 										<tr ng-repeat="item in vendas_reenviar_sat" bs-tooltip >
 											<td>{{ item.id }}</td>
