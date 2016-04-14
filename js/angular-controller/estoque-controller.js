@@ -34,8 +34,8 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		ng.vlr_frete 			= "";
 	}
 
-	function addItemNF(itemNF) {
-		ng.entradaEstoque.push({
+	ng.addItemNF = function(itemNF) {
+		ng.entradaEstoque.push(angular.copy({
 			id_pedido: 				(ng.entradaEstoque.length > 0) ? ng.entradaEstoque[0].id_pedido : 0,
 			id_produto: 			itemNF.id_produto,
 			margem_atacado: 		itemNF.margem_atacado,
@@ -49,7 +49,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 			custo: 					itemNF.custo,
 			imposto: 				itemNF.imposto,
 			flg_localizado: 		itemNF.flg_localizado,
-		});
+		}));
 	}
 
 	ng.loadDataFromXML = function() {
@@ -84,13 +84,13 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 							newObj.custo 			= itemNF.custo;
 							newObj.imposto 			= itemNF.imposto;
 
-							ng.entradaEstoque[0] = newObj;
+							ng.entradaEstoque[0] = angular.copy(newObj);
 						}
 						else
-							addItemNF(itemNF);
+							ng.addItemNF(itemNF);
 					}
 					else
-						addItemNF(itemNF);
+						ng.addItemNF(itemNF);
 				});
 
 				ng.atualizaValores();
@@ -201,6 +201,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 			})
 			.error(function(data, status) {
 				if(status == 406) {
+					$('html,body').animate({scrollTop: 0},'slow');
 					$.each(data, function(i, item) {
 						$("#"+i).addClass("has-error");
 

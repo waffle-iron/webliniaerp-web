@@ -346,7 +346,6 @@
 								<li><a ng-if="modo_venda == 'pdv'" href="#" ng-click="abrirVenda('est')"><i class="fa fa-desktop"></i> Nova Venda (Modo Depósito)</a></li>
 								-->
 								<li ng-if="caixa_aberto.flg_imprimir_sat_cfe == 1"><a href="#" ng-click="modalListaReenviarSat()"><i class="fa fa-file-text-o"></i> Reprocessar Cupom SAT</a></li>
-								<li><a href="#" ng-click="modalTraferencia()"><i class="fa fa-external-link"></i> Transferência (deposito)</a></li>
 								<li ng-if="finalizarOrcamento == false"><a href="#" ng-click="pagamentoFulso()"><i class="fa fa-money"></i> Pagamento</a></li>
 								<li class="hidden-lg"><a href="#" ng-click="resizeScreen()"><i class="fa fa-arrows-alt"></i>Tela Inteira</a></li>
 								<li class="hidden-lg"><a href="#" ng-click="selVendedor()"><i class="fa fa-retweet fa-lg"></i>  Trocar Vendedor</a></li>
@@ -362,19 +361,42 @@
 							<div class="alert alert-pagamento" style="display:none"></div>
 					    	<div class="row">
 					    		<div class="col-sm-9">
-					    		<div class="row" ng-if="pagamento_fulso">
-					    			<div class="col-sm-12">
-					    				<div class="form-group">
-												<label class="control-label">Cliente</label>
+					    		<div class="row">
+					    			<div class="col-sm-10" id="col-sm-auto-complete-cliente">
+											<div class="form-group">
+												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
+" class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 												<div class="input-group">
-													<input ng-click="selCliente(0,10)"  type="text" class="form-control" ng-model="cliente.nome" readonly="readonly" style="cursor: pointer;" />
+													<input onKeyPress="return SomenteNumeroLetras(event);" id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
+													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
+														<table class="table table-striped itens-outo-complete">
+															<thead>
+																<tr>
+																	<th width="80" >ID</th>
+																	<th class="text-center">Nome</th>
+																	<th class="text-center">Apelido</th>
+																	<th width="140">CPF/CNPJ</th>
+
+																	
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="item in clientes_auto_complete" ng-click="addClienteAutoComplete(item)">
+																	<td>{{ item.id }}</td>
+																	<td class="text-center">{{ item.nome    | uppercase }}</td>
+																	<td class="text-center">{{ item.apelido | uppercase }}</td>
+																	<td ng-if="item.tipo_cadastro == 'pf'">{{ item.cpf | maskCpf }}</td>
+																	<td ng-if="item.tipo_cadastro == 'pj'">{{ item.cnpj | maskCnpj }}</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
 													<span class="input-group-btn">
-														<button ng-click="selCliente(0,10)" type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
+														<button ng-click="selCliente(0,10)"  type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
 													</span>
 												</div>
-												
+											</div>
 										</div>
-					    			</div>
 					    		</div>
 					    		<div class="row">
 					    			<div class="col-sm-12">

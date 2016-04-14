@@ -21,6 +21,13 @@
 		</a>
 	</li>
 	<li>
+		<a href="controle_protese.php">
+			<span class="submenu-label">
+				<i class="fa fa-list-alt "></i> Contr. de Prótese
+			</span>
+		</a>
+	</li>
+	<li>
 		<a href="fabricantes.php">
 			<span class="submenu-label">
 				<i class="fa fa-puzzle-piece"></i> Fabricantes

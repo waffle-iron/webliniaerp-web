@@ -251,6 +251,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item5);
 		}
 
+		if(ng.configuracoes.cadastro_cpf_pdv != undefined){
+			var item6 = {
+							nome 				:'cadastro_cpf_pdv',
+							valor 				:ng.configuracoes.cadastro_cpf_pdv , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item6);
+		}
+
 		btn.button('loading');
 		var pth_local_sucess = false ;
 		if(ng.config.pth_local != undefined){

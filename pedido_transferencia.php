@@ -186,13 +186,13 @@
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
 					 <li class="active"><i class="fa fa-sitemap"></i> Depósitos</li>
-					 <li class="active"><i class="fa fa-sitemap"></i> Transferência</li>
+					 <li class="active"><i class="fa fa-arrows-h"></i> Transferência</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-tags"></i> Transferência</h3>
+					<h3 class="no-margin"><i class="fa fa-arrows-h "></i> Transferência</h3>
 					<br/>
 					<a ng-if="!isNumeric(transferencia.id)" class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Transferência</a>
 				</div><!-- /page-title -->

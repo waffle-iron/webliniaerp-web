@@ -2372,6 +2372,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			}
 		}
 		ng.clientes_auto_complete_visible = true ;
+		$('.content-outo-complete-cliente-pdv').css('width',($('#input_auto_complete_cliente').parent().width()-1)+'px');
         clearInterval(interval_cliente);
         if(empty(busca)){
         	ng.clientes_auto_complete = [] ;
@@ -2387,9 +2388,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			}
 			aj.get(baseUrlApi()+"usuarios/"+query_string)
 				.success(function(data, status, headers, config) {
-					
-					ng.clientes_auto_complete = data.usuarios;
-
+					if((isCPF(busca) || isCnpj(busca)) && data.usuarios.length == 1)
+						ng.addClienteAutoComplete(data.usuarios[0]);
+					else
+						ng.clientes_auto_complete = data.usuarios;
 				})
 				.error(function(data, status, headers, config) {
 					ng.clientes_auto_complete = [] ;
