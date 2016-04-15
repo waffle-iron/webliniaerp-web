@@ -22,7 +22,8 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 			vlr_cofins 							: null,
 			vlr_pis_st 							: null,
 			vlr_cofins_st 						: null,
-			nome_produto                        : null
+			nome_produto                        : null,
+			cod_produto 						: null
 	}
 	ng.busca = {clientes:'',produtos:''} ;
 	ng.editingBaseTributaria = false ;
@@ -183,8 +184,8 @@ app.controller('BaseTributariaController', function($scope, $http, $window, $dia
 		delete ng.base_tributaria_item.cod_tipo_tributacao_pis_cofins_st;
 		var error = 0 ;
 		$.each(ng.base_tributaria_item,function(i,x){
-			if(i != 'cod_base_tributaria_item' && i != 'cod_base_tributaria' && i != 'index'){
-				if(empty(x)){
+			if(i != 'cod_base_tributaria_item' && i != 'cod_base_tributaria' && i != 'index' &&  i != 'nome_produto' ){
+				if(!$.isNumeric(x)){
 					$("#"+i).addClass("has-error");
 					var formControl = $("#"+i)
 						.attr("data-toggle", "tooltip")

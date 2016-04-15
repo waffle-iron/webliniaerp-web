@@ -401,7 +401,7 @@
 										<button ng-click="showBoxNovo(); reset();" id="btn-limpa-form" type="submit" class="btn btn-default btn-sm">
 											<i class="fa fa-times-circle"></i> Cancelar
 										</button>
-										<button ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
+										<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." id="btn-salvar-entrada" ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
 											<i class="fa fa-save"></i> Salvar
 										</button>
 									</div>
@@ -415,12 +415,19 @@
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Últimas Entradas</div>
 
 					<div class="panel-body">
+						<div class="row">
+					  	    <div class="col-sm-12">
+	      						<div class="alert alert-entrada-lista" style="display:none"></div>
+	      					</div>
+	      				</div>
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead ng-show="ultimasEntradas.length > 0">
 								<tr>
-
+									<th>ID</th>
 									<th width="150">Dt. Recebimento</th>
+									<th>Usuário</th>
 									<th>Fornecedor</th>
+									<th>N° Nota Fiscal</th>
 									<th width="100">Pedido</th>
 									<th>Depósito</th>
 									<th width="80" style="text-align: center;">Detalhes</th>
@@ -433,8 +440,11 @@
 									</td>
 								</tr>
 								<tr ng-repeat="item in ultimasEntradas" ng-show="ultimasEntradas.length > 0">
+									<td>#{{  item.id}}</td>
 									<td>{{ item.dta_entrada | dateFormat : 'date' }}</td>
+									<td>{{ item.nome_usuario }}</td>
 									<td>{{ item.nome_fornecedor }}</td>
+									<td>{{ item.num_nota_fiscal }}</td>
 									<td>{{ item.id_pedido_fornecedor }}</td>
 									<td>{{ item.nme_deposito }}</td>
 									<td align="center">
@@ -445,7 +455,7 @@
 								</tr>
 							</tbody>
 						</table>
-							<div class="panel-footer clearfix">
+						<div class="panel-footer clearfix">
 						<div class="pull-right">
 							<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.entradas.length > 1">
 								<li ng-repeat="item in paginacao.entradas" ng-class="{'active': item.current}">
@@ -812,6 +822,9 @@
 						<h4>Itens</span></h4>
       				</div>
 				    <div class="modal-body">
+				    	<div class="loading-ajax" id="loading-ajax-lista-detalhes">
+						 	<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+						</div>
 				   		<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
@@ -837,6 +850,15 @@
 							</tbody>
 						</table>
 				    </div>
+				    <div class="panel-footer clearfix">
+						<div class="pull-right">
+							<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.detalhes.length > 1">
+								<li ng-repeat="item in paginacao.detalhes" ng-class="{'active': item.current}">
+									<a href="" ng-click="loadItensEntrada(item.id_estoque_entrada,item.offset,item.limit,'#loading-ajax-lista-detalhes')">{{ item.index }}</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div>

@@ -222,7 +222,7 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-sm-4">
-										<div class="form-group" id="nome_produto">
+										<div class="form-group" id="cod_produto">
 											<label class="control-label">Produto</label>
 											<div class="input-group"  >
 												<input readonly="readonly" ng-click="showProdutos()"  ng-model="base_tributaria_item.nome_produto" type="text" class="form-control input-sm" ng-click="showProdutos()" >
@@ -235,13 +235,13 @@
 									<div class="col-sm-2">
 										<div id="vlr_base_calculo_icms" class="form-group">
 											<label class="control-label">Base Cálculo ICMS</label>
-											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_base_calculo_icms">
+											<input type="text" class="form-control input-sm" mask-moeda ng-model="base_tributaria_item.vlr_base_calculo_icms">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div id="vlr_base_calculo_icms_st" class="form-group">
 											<label class="control-label">Base Cálculo ICMS ST</label>
-											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_base_calculo_icms_st">
+											<input type="text" class="form-control input-sm" mask-moeda ng-model="base_tributaria_item.vlr_base_calculo_icms_st">
 										</div>
 									</div>
 									<div class="col-sm-2">
@@ -257,7 +257,7 @@
 									<div class="col-sm-2">
 										<div id="vlr_base_calculo_ipi" class="form-group">
 											<label class="control-label">Base Cálculo IPI</label>
-											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_base_calculo_ipi">
+											<input type="text" class="form-control input-sm" mask-moeda ng-model="base_tributaria_item.vlr_base_calculo_ipi">
 										</div>
 									</div>
 								</div>
@@ -265,25 +265,25 @@
 									<div class="col-sm-2">
 										<div id="vlr_pis" class="form-group">
 											<label class="control-label">Vlr. PIS</label>
-											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_pis">
+											<input type="text" class="form-control input-sm" mask-moeda ng-model="base_tributaria_item.vlr_pis">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div id="vlr_cofins" class="form-group">
 											<label class="control-label">Vlr. COFINS</label>
-											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_cofins">
+											<input type="text" class="form-control input-sm" mask-moeda ng-model="base_tributaria_item.vlr_cofins">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div id="vlr_pis_st" class="form-group">
 											<label class="control-label">Vlr. PIS ST</label>
-											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_pis_st">
+											<input type="text" class="form-control input-sm" mask-moeda ng-model="base_tributaria_item.vlr_pis_st">
 										</div>
 									</div>
 									<div class="col-sm-2">
 										<div id="vlr_cofins_st" class="form-group">
 											<label class="control-label">Vlr. COFINS ST</label>
-											<input type="text" class="form-control input-sm" thousands-formatter ng-model="base_tributaria_item.vlr_cofins_st">
+											<input type="text" class="form-control input-sm" mask-moeda ng-model="base_tributaria_item.vlr_cofins_st">
 										</div>
 									</div>
 

@@ -260,6 +260,24 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item6);
 		}
 
+		if(ng.configuracoes.num_cnpj_sw != undefined){
+			var item7 = {
+							nome 				:'num_cnpj_sw',
+							valor 				:ng.configuracoes.num_cnpj_sw , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item7);
+		}
+
+		if(ng.configuracoes.txt_sign_ac != undefined){
+			var item8 = {
+							nome 				:'txt_sign_ac',
+							valor 				:ng.configuracoes.txt_sign_ac , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item8);
+		}
+
 		btn.button('loading');
 		var pth_local_sucess = false ;
 		if(ng.config.pth_local != undefined){

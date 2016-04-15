@@ -53,6 +53,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	}
 
 	ng.loadDataFromXML = function() {
+		ng.entradaEstoque = [] ; 
 		$('#form-xml').ajaxForm({
 		 	url: baseUrlApi()+"estoque/importar/nfe?id_empreendimento="+ng.userLogged.id_empreendimento+'&flg_cpne='+ng.nota.flg_cadastra_produto_nao_encontrado,
 		 	type: 'POST',
@@ -122,6 +123,8 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	}
 
 	ng.salvar = function(){
+		var btn = $('#btn-salvar-entrada');
+		btn.button('loading');
 		if(!ng.entradaEstoque.length > 0){
 			$dialogs.notify('Atenção!','Nenhum pedido foi adicionado para dar entrada');
 			return false;
@@ -148,6 +151,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		});
 
 		if(!validar_validade){
+			btn.button('reset');
 			$dialogs.notify('Atenção!','A quantidade e data de validade de nenhum produto pode ser fazio');
 			return;
 		}
@@ -179,6 +183,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		ng.nota.id_empreendimento = ng.userLogged.id_empreendimento;
 		ng.nota.itens             = entradaEstoque;
 		ng.nota.dta_entrada       = formatDate($("#pagamentoData").val());
+		ng.nota.id_usuario		  = ng.userLogged.id ; 
 
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$($(".has-error").find("button")).tooltip('destroy');
@@ -191,15 +196,18 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 
 		$http.post(baseUrlApi()+'estoque/entrada',ng.nota)
 			.success(function(data, status, headers, config) {
+				btn.button('reset');
 				ng.reset();
 				ng.showBoxNovo();
+				$('html,body').animate({scrollTop: 0},'slow');
 				ng.mensagens('alert-success',
-							'<strong>Entrada cadastrada com sucesso</strong>, caso deseje agora poderar atualizar as margens dos produtos',
-							'.alert-entrada');
+							'<strong>Entrada cadastrada com sucesso</strong>',
+							'.alert-entrada-lista');
 				ng.loadEntradas(0,20);
 				// ng.showModalPrecos(); // Inativado temporariamente
 			})
 			.error(function(data, status) {
+				btn.button('reset');
 				if(status == 406) {
 					$('html,body').animate({scrollTop: 0},'slow');
 					$.each(data, function(i, item) {
@@ -247,18 +255,27 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		}
 
 		ng.showDetalhes = function(item){
+			ng.current_detalhes = item ;
 			ng.loadItensEntrada(item.id,0,10);
 			$('#list_detalhes').modal('show');
 		}
 
-		ng.loadItensEntrada = function(id_estoque_entrada,offset,limit) {
+		ng.loadItensEntrada = function(id_estoque_entrada,offset,limit,divLoadingAjax) {
 			offset = offset == null ? 0  : offset;
-				limit  = limit  == null ? 20 : limit;
+			limit  = limit  == null ? 20 : limit;
 
-			ng.detalhes = [];
+			if(divLoadingAjax == null) ng.detalhes = null;
+			else
+				$(divLoadingAjax).show();
+
+
 			aj.get(baseUrlApi()+"estoque/entradas/itens/"+offset+"/"+limit+"?id_estoque_entrada="+id_estoque_entrada)
 				.success(function(data, status, headers, config) {
-					ng.detalhes                      = data.itens ;
+					ng.detalhes    = data.itens ;
+					$(divLoadingAjax).hide();
+					$.each(data.paginacao,function(i,x){
+						data.paginacao[i].id_estoque_entrada = id_estoque_entrada ;
+					});
 					ng.paginacao.detalhes            = data.paginacao;
 				})
 				.error(function(data, status, headers, config) {
@@ -658,7 +675,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 
 
 
-	ng.loadEntradas(0,20);
+	ng.loadEntradas(0,10);
 
 });
 

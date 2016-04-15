@@ -152,12 +152,18 @@ angular.module('filters', [])
 	              link: function (scope, element, attrs, ctrl) {
 
 	            ctrl.$formatters.push(function (data) {
-	                var formatted = $filter('numberFormat')(data,2,',','.');
-	                $(element).val(formatted);
-	                if(formatted != '0,00' )
-	                	return formatted;
-	                else
-	                	return '';
+	            	if(data != null && data != undefined){
+		                var formatted = $filter('numberFormat')(data,2,',','.');
+		                $(element).val(formatted);
+		                if(formatted != '0,00' )
+		                	return formatted;
+		                else{
+		                	ctrl.$setViewValue('0');
+		                	ctrl.$render();
+		                	return '0,00';
+		                }
+	            	}else
+	            		return '';
 	            });
 
 	            element.bind('focusout', function (event) {
@@ -172,6 +178,58 @@ angular.module('filters', [])
 
 	            ctrl.$parsers.push(function (data) {
 	                var plainNumber = data.replace(/[^\d|\-+|\+]/g, '');
+	                var length = plainNumber.length;
+	                var intValue = plainNumber.substring(0,length-precision);
+	                var decimalValue = plainNumber.substring(length-precision,length)
+	                var plainNumberWithDecimal = intValue + '.' + decimalValue;
+	                //convert data from view format to model format
+	                var formatted = $filter('numberFormat')(plainNumberWithDecimal,2,',','.');
+	                element.val(formatted);
+
+	                return isNaN(Number(plainNumberWithDecimal)) ? 0 : Number(plainNumberWithDecimal);
+	            });
+	        }
+	    };
+	})
+	.directive('maskMoeda', function ($filter) {
+	    var precision = 2;
+	    return {
+	        require: 'ngModel',
+	              link: function (scope, element, attrs, ctrl) {
+
+	            ctrl.$formatters.push(function (data) {
+	            	if(data != null && data != undefined){
+		                var formatted = $filter('numberFormat')(data,2,',','.');
+		                $(element).val(formatted);
+		                if(formatted != '0,00' )
+		                	return formatted;
+		                else{
+		                	ctrl.$setViewValue('0');
+		                	ctrl.$render();
+		                	return '0,00';
+		                }
+	            	}else
+	            		return '';
+	            });
+
+	            /*element.bind('focusout', function (event) {
+		       		if(element.val() == '0,00')
+		       			element.val('');
+	            });*/
+
+	            element.bind('focusin', function (event) {
+		       		if(Number(ctrl.viewValue) == 0)
+		       			element.val('0,00');
+	            });
+
+	            ctrl.$parsers.push(function (data) {
+	            	if(data == "")
+	            		return null ;
+	                var plainNumber = data.replace(/[^\d|\-+|\+]/g, '');
+	                if(Number(plainNumber) == 0){
+	                	element.val('0.00');
+	                	return 0 ;
+	                }
 	                var length = plainNumber.length;
 	                var intValue = plainNumber.substring(0,length-precision);
 	                var decimalValue = plainNumber.substring(length-precision,length)

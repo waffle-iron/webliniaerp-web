@@ -650,9 +650,23 @@
 										</div>
 									</div>
 									<div class="col-sm-4">
-										<div class="form-group" id="pth_local"  >
+										<div class="form-group" id="patch_socket_sat"  >
 											<label class="control-label">URL socket SAT </label>
 											<input ng-model="configuracoes.patch_socket_sat"  type="text" class="form-control input-sm parsley-validated">
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group" id="num_cnpj_sw"  >
+											<label class="control-label">CNPJ SW</label>
+											<input ng-model="configuracoes.num_cnpj_sw"  type="text" class="form-control input-sm parsley-validated">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12" id="txt_sign_ac">
+										<div class="form-group">
+										  <label for="txt_sign_ac">Assinatura AC:</label>
+										  <textarea class="form-control" rows="5" ng-model="configuracoes.txt_sign_ac"></textarea>
 										</div>
 									</div>
 								</div>

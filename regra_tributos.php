@@ -199,7 +199,7 @@
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-tags"></i> Regra de Tributos</h3>
 					<br/>
-					<a class="btn btn-info" id="btn-novo"  ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> {{ editing_filtro && 'Novo Filtro de Tributos' || 'Nova Regra de Tributos' }}</a>
+					<a class="btn btn-info" id="btn-novo"  ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> {{ editing_filtro && 'Novo Filtro de Tributos' || 'Nova Regra de Tributos' }}</a><br/><br/>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -655,7 +655,7 @@
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_icms" class="form-group">
 									<label class="control-label">Alíquota ICMS</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms">
 								</div>
 							</div>
 						</div>
@@ -663,25 +663,25 @@
 							<div class="col-sm-2">
 								<div id="num_percentual_reducao_icms" class="form-group">
 									<label class="control-label">Per. Redução ICMS</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms">
 								</div>
 							</div>
 							<div class="col-sm-2">
 								<div id="num_percentual_mva_proprio" class="form-group">
 									<label class="control-label">Perc. MVA Proprio</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_mva_proprio">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_mva_proprio">
 								</div>
 							</div>
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_icms_proprio_st" class="form-group">
 									<label class="control-label">Alíquota ICMS Proprio ST</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_proprio_st">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_proprio_st">
 								</div>
 							</div>
 							<div class="col-sm-2">
 								<div id="num_percentual_reducao_icms_st" class="form-group">
 									<label class="control-label">Per. Redução ICMS ST</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms_st">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms_st">
 								</div>
 							</div>
 							<div class="col-sm-2">
@@ -725,7 +725,7 @@
 							<div class="col-sm-2">
 								<div id="num_percentual_mva_ajustado_st" class="form-group">
 									<label class="control-label">Perc. MVA Ajustado ST</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_mva_ajustado_st">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_mva_ajustado_st">
 								</div>
 							</div>
 							<div class="col-sm-2">
@@ -744,13 +744,13 @@
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_icms_st" class="form-group">
 									<label class="control-label">Alíquota ICMS ST</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_st">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_st">
 								</div>
 							</div>
 							<div class="col-sm-2">
 								<div id="num_percentual_base_icms_proprio" class="form-group">
 									<label class="control-label">Perc. Base ICM Proprio</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_base_icms_proprio">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_base_icms_proprio">
 								</div>
 							</div>
 							
@@ -799,13 +799,13 @@
 							<div class="col-sm-2">
 								<div id="num_percentual_diferimento" class="form-group">
 									<label class="control-label">Perc. Dif</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento">
 								</div>
 							</div>
 							<div class="col-sm-3">
 								<div id="num_percentual_diferimento_icms" class="form-group">
 									<label class="control-label">Perc. Dif. ICMS</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento_icms">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento_icms">
 								</div>
 							</div>
 							<div class="col-sm-3">
@@ -845,7 +845,7 @@
 								<div class="col-sm-2">
 									<div id="vlr_aliquota" class="form-group">
 										<label class="control-label">vlr Aliquota</label>
-										<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_ipi.vlr_aliquota">
+										<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_ipi.vlr_aliquota">
 									</div>
 								</div>
 								<div class="col-sm-2">
@@ -893,25 +893,25 @@
 							<div class="col-sm-2">
 									<div id="vlr_aliquota_pis" class="form-group">
 										<label class="control-label">Aliquota PIS</label>
-										<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_pis">
+										<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_pis">
 									</div>
 								</div>
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_cofins" class="form-group">
 									<label class="control-label">Aliquota COFINS</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_cofins">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_cofins">
 								</div>
 							</div>
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_pis_st" class="form-group">
 									<label class="control-label">Aliquota PIS ST</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_pis_st">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_pis_st">
 								</div>
 							</div>
 							<div class="col-sm-2">
 								<div id="vlr_aliquota_cofins_st" class="form-group">
 									<label class="control-label">Aliquota COFINS ST</label>
-									<input type="text" class="form-control input-sm" thousands-formatter ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_cofins_st">
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_pis_cofins.vlr_aliquota_cofins_st">
 								</div>
 							</div>
 							<div class="col-sm-2">

@@ -478,11 +478,29 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.salvar = function(){
+		$("#input_auto_complete_cliente").parent().tooltip('destroy');
+		$("#input_auto_complete_cliente").parents('.form-group').removeClass("has-error");
 		ng.cod_nota_fiscal_reenviar_sat = null ;
 		if(!$.isNumeric(ng.cliente.id) && ng.modo_venda == 'est' && !ng.orcamento ){
 				$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque e necessário selecionar um cliente</strong>');
 				return
-		  }
+		 }else if( !$.isNumeric(ng.cliente.id) && !empty(ng.busca.cliente_outo_complete,true) && !(isCPF(ng.busca.cliente_outo_complete) || isCnpj(ng.busca.cliente_outo_complete) ) ){
+		 	$("#input_auto_complete_cliente").parents('.form-group').addClass("has-error");
+			var formControl = $("#input_auto_complete_cliente").parent()
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "top")
+				.attr("title", "CPF/CNPJ inválido")
+				.attr("data-original-title", "CPF/CNPJ inválido");
+			formControl.tooltip('show');
+			$('html,body').animate({scrollTop: 0},'slow');
+			return
+		 }else if( !$.isNumeric(ng.cliente.id) && !empty(ng.busca.cliente_outo_complete,true) && (isCPF(ng.busca.cliente_outo_complete) || isCnpj(ng.busca.cliente_outo_complete) ) ){
+		 	if(isCPF(ng.busca.cliente_outo_complete)){
+		 		ng.newCliente = { tipo_cadastro : 'pf', cpf: ng.busca.cliente_outo_complete }
+		 	}else{
+		 		ng.newCliente = { tipo_cadastro : 'pj', cnpj: ng.busca.cliente_outo_complete }
+		 	}
+		 }
 		if(ng.orcamento){
 			$('#btn-fazer-orcamento').button('loading');
 		}else{
@@ -634,9 +652,18 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.gravarVenda = function(venda){
+		if(typeof ng.newCliente == 'object'){
+			ng.venda.newCliente = ng.newCliente ;
+		}
 		aj.post(baseUrlApi()+"venda/gravarVenda",{venda:ng.venda})
 			.success(function(data, status, headers, config) {
 				$('#text_status_venda').text('Salvando Itens');
+				if($.isNumeric(data.id_cliente)){
+					ng.cliente.id = $.isNumeric(data.id_cliente) ? Number(data.id_cliente) : ng.cliente.id ; 
+					$.each(ng.pagamentos_enviar,function(i,x){
+						ng.pagamentos_enviar[i].id_cliente = Number(data.id_cliente);
+					});
+				}
 				ng.id_venda = data.id_venda;
 				ng.salvarItensVenda(data.id_venda,ng.produtos_enviar,0);
 			})
@@ -736,7 +763,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 															   id_cliente:ng.cliente.id,
 															   id_empreendimento:ng.userLogged.id_empreendimento
 															 }
-			).success(function(data, status, headers, config) {
+			).success(function(data, status, headers) {
 				var btn = $('#btn-fazer-compra');
 				
 				if(Number(ng.caixa_aberto.flg_imprimir_sat_cfe) == 1){
@@ -749,13 +776,17 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					} ;
 
 					aj.post(baseUrlApi()+"nfe/calcular",post)
-					.success(function(data, status, headers, config) {
+					.success(function(data, status, headers) {
 						data.pdv = {
 							cod_pdv      : ng.caixa_aberto.id_caixa,
 							cod_operador : ng.caixa_aberto.id_operador,
 							nome_operador : ng.caixa_aberto.nome_operador
 						}
 						data.pagamentos = angular.copy(ng.recebidos) ;
+						data.ide = {
+							txt_sign_ac : ng.config.txt_sign_ac,
+							num_cnpj_sw : ng.config.num_cnpj_sw
+						};
 						var dadosWebSocket = {
 				 			from 		: ng.caixa_aberto.id_ws_web ,
 				 			to  		: ng.caixa_aberto.id_ws_dsk ,
@@ -833,6 +864,13 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.addCliente = function(item){
+		item = angular.copy(item);
+		if(empty(item.nome)){
+			if(item.tipo_cadastro == 'pf'){
+				item.nome = 'CPF: '+item.cpf ;
+			}else
+				item.nome = 'CNPJ: '+item.cnpj ;
+		}
 		ng.cliente = item;
 		$("#list_clientes").modal("hide");
 		aj.get(baseUrlApi()+"usuarios/saldodevedor/"+ ng.userLogged.id_empreendimento+"?usu->id="+item.id)
@@ -2488,6 +2526,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 			ng.conn.onmessage = function(e) {
 				var data = JSON.parse(e.data);
+				data.message = decodeURIComponent(escape(data.message));
 				data.message = parseJSON(data.message);
 				console.log(data);
 				switch(data.type){
@@ -2525,6 +2564,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						break;
 					case 'satcfe_error':
 						$scope.$apply(function () {
+						   data.message.problemas = typeof data.message.problemas == 'string' ? [data.message.problemas] : data.message.problemas  ;
 				           ng.erro_sat =  data.message ;
 				           ng.process_reeviar_sat = false ;
 				        });
@@ -2682,20 +2722,24 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			'WHERE flg_sat = 1 AND cod_venda = '+item.id+' '+
 			'ORDER BY cod_nota_fiscal DESC LIMIT 1 ';
 		aj.get(baseUrlApi()+"crud/read?"+$.param({query:query,fetchAll:{nota:'false'}}))
-		.success(function(dataCrud, status, headers, config) {
+		.success(function(dataCrud, status, headers) {
 			var post = { 
 						id_empreendimento : ng.userLogged.id_empreendimento,
 						id_venda          : item.id,
 						cod_operacao      : ng.caixa_aberto.cod_operacao_padrao_sat_cfe
 					} ;
 			aj.post(baseUrlApi()+"nfe/calcular",post)
-			.success(function(data, status, headers, config) {
+			.success(function(data, status, headers) {
 				data.pdv = {
 					cod_pdv      : ng.caixa_aberto.id_caixa,
 					cod_operador : ng.caixa_aberto.id_operador,
 					nome_operador : ng.caixa_aberto.nome_operador
 				}
 				data.pagamentos = dataCrud.pagamentos ;
+				data.ide = {
+					txt_sign_ac : ng.config.txt_sign_ac,
+					num_cnpj_sw : ng.config.num_cnpj_sw
+				};
 				ng.cod_nota_fiscal_reenviar_sat = dataCrud.nota.cod_nota_fiscal == undefined ? null : dataCrud.nota.cod_nota_fiscal ;
 				var dadosWebSocket = {
 		 			from 		: ng.caixa_aberto.id_ws_web ,

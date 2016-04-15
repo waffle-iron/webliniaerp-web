@@ -2050,7 +2050,7 @@
 					    			<b>Código de Erro: </b> {{ erro_sat.codigoErro }} <br/>
 					    			<b>Mensagem: </b> {{ erro_sat.msgErro }} <br/>
 					    			<b>Problemas: </b> <br/>
-					    			<p ng-repeat="item in erro_sat.problemas" style="margin: 0px 0 3px 15px;">{{item}}</p>	
+					    			<p ng-repeat="item in erro_sat.problemas"><i class="fa fa-circle text-danger"></i> {{item}}</p>	
 								</div>
 					    	</div>
 					    </div>

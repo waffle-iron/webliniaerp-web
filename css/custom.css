@@ -298,3 +298,22 @@ overflow-x: hidden;
 	padding-bottom: 0 !important;
 	border-right: none !important;
 }
+
+.loading-ajax{
+	position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #000;
+    filter: alpha(opacity=65);
+    opacity: 0.65;
+    -moz-opacity: 0.65;
+    left: 0;
+    top: 0;
+    display: none;
+}
+
+.loading-ajax .fa{
+	margin: 0 auto;
+    margin-left: 47%;
+    margin-top: 18%;
+}
