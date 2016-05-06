@@ -101,9 +101,12 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 
-		var query_string = "?tpe->id_empreendimento="+ng.transferencia.id_empreendimento_transferencia;
+		var query_string = "?tpe->id_empreendimento="+ng.transferencia.id_empreendimento_pedido;
 		query_string +="&pro->id[exp]= IN(SELECT tp.id FROM tbl_produtos AS tp INNER JOIN tbl_produto_empreendimento AS tpe ON tp.id = tpe.id_produto WHERE tpe.id_empreendimento IN ("+ng.userLogged.id_empreendimento+"))";
 
+		if($.isNumeric(ng.id_deposito_principal)){
+			query_string +="&id_deposito_estoque="+ng.id_deposito_principal;
+		}
 		if(ng.busca.produto != ""){
 			if(isNaN(Number(ng.busca.produto)))
 				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%'"}})+")";
@@ -189,6 +192,46 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			ng.transferencia.produtos[i].id_deposito_saida = item.id;
 		});
 		ng.verificarEstoque();
+		ng.loadestoque();
+	}
+
+	ng.loadestoque = function(item){
+		if(item == null){
+			$.each(ng.transferencia.produtos,function(i,x){
+				ng.transferencia.produtos[i].load_estoque = true;
+			});	
+			var prd_in = ''; aux = [];
+			$.each(ng.transferencia.produtos,function(i,x){
+				prd_in += x.id+",";
+			});
+			prd_in = prd_in.substring(0,prd_in.length-1);	
+			var id_deposito_principal = ng.id_deposito_principal ;
+		}else{
+			var id_deposito_principal = item.id_deposito_saida ;
+			var prd_in = item.id;
+			item.load_estoque = true ;
+		}
+		
+		aj.get(baseUrlApi()+"produtos?pro->id[exp]=IN("+prd_in+")&tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&id_deposito_estoque="+id_deposito_principal)
+		.success(function(prd, status, headers, config) {
+			if(item == null){
+				$.each(prd.produtos,function(i,x){
+					$.each(ng.transferencia.produtos,function(y,z){
+						if(Number(x.id) == Number(z.id)){
+							ng.transferencia.produtos[y].qtd_item =  x.qtd_item;
+							ng.transferencia.produtos[y].load_estoque = false ;
+						}
+					});
+				});
+			}else{
+				item.qtd_item = prd.produtos[0].qtd_item ;
+				item.load_estoque = false ;
+			}
+		})
+		.error(function(data, status, headers, config) {
+			console.log('Ocorreu um erro ao buscar os dados');
+		});
+		
 	}
 
 	ng.loadDepositos = function(offset, limit) {
@@ -375,10 +418,10 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 				aux[x.id_produto] = x.qtd_pedida ;
 			});
 			prd_in = prd_in.substring(0,prd_in.length-1);	
-			aj.get(baseUrlApi()+"produtos?pro->id[exp]=IN("+prd_in+")")
+			aj.get(baseUrlApi()+"produtos?pro->id[exp]=IN("+prd_in+")&tpe->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(prd, status, headers, config) {
 				ng.transferencia.id = data.id ;
-				//ng.transferencia.id_empreendimento_pedido = data.id_empreendimento_pedido ;
+				ng.transferencia.id_empreendimento_pedido = data.id_empreendimento_pedido ;
 				ng.transferencia.id_empreendimento_transferencia = data.id_empreendimento_transferencia ;
 				//ng.transferencia.id_usuario_pedido = data.id_usuario_pedido ;
 				ng.transferencia.id_usuario_transferencia = ng.userLogged.id ;
@@ -389,6 +432,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 				ng.showBoxNovo(true);
 				$.each(prd.produtos,function(x,i){
 					i.qtd_pedida = aux[i.id_produto];
+					i.load_estoque = false;
 					i.add = 0 ;
 					ng.addProduto(i);
 				});

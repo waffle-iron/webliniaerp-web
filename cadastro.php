@@ -192,7 +192,7 @@
 								<div class="col-sm-2">
 									<div id="cep" class="form-group">
 										<label class="control-label">CEP</label>
-										<input type="text" class="form-control" ui-mask="99999-999" ng-model="cliente.cep" ng-blur="consultaCep()">
+										<input type="text" class="form-control" ui-mask="99999-999" ng-model="cliente.cep" ng-keyUp="validCep(cliente.cep)" ng-blur="validCep(cliente.cep)">
 									</div>
 								</div>
 
@@ -206,7 +206,7 @@
 								<div class="col-sm-1">
 									<div id="numero" class="form-group">
 										<label class="control-label">Número</label>
-										<input id="num_logradouro" type="text" class="form-control" ng-model="cliente.numero" ng-blur="consultaLatLog()">
+										<input id="num_logradouro" type="text" class="form-control" ng-model="cliente.numero">
 									</div>
 								</div>
 
@@ -243,14 +243,14 @@
 								<div class="col-sm-2">
 									<div id="id_estado" class="form-group">
 										<label class="control-label">Estado</label>
-										<select class="form-control" readonly="readonly" ng-model="cliente.id_estado" ng-options="item.id_ibge as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
+										<select class="form-control" readonly="readonly" ng-model="cliente.id_estado" ng-options="item.id as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
 									</div>
 								</div>
 
 								<div class="col-sm-4">
 									<div id="id_cidade" class="form-group">
 										<label class="control-label">Cidade</label>
-										<select class="form-control" readonly="readonly" ng-model="cliente.id_cidade" ng-options="a.id_ibge as a.nome for a in cidades"></select>
+										<select class="form-control" readonly="readonly" ng-model="cliente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
 									</div>
 								</div>
 							</div>
@@ -353,6 +353,22 @@
 		</div><!-- /login-widget -->
 	</div><!-- /login-wrapper -->
 
+	<!-- /Modal load CEP-->
+		<div class="modal fade" id="busca-cep" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+    				<div class="modal-header">
+						<h4>Aguarde</h4>
+      				</div>
+
+				    <div class="modal-body">
+				   		<strong>buscando CEP ...</strong>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 	<a href="<?php echo URL_BASE ?>" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
     <!-- Le javascript
@@ -405,6 +421,7 @@
 	</script>
 
 	<!-- Extras -->
+	<script src="<?php echo URL_BASE ?>js/constants.js"></script>
 	<script src="<?php echo URL_BASE ?>js/extras.js"></script>
 
 	<!-- Google Maps API -->

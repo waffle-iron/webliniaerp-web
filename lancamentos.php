@@ -985,6 +985,8 @@
 												<th class="text-center" rowspan="2">Natureza da Operação</th>
 												<th class="text-center" rowspan="2">Forma de Pgto.</th>
 
+												<th class="text-center" rowspan="2" ng-if="config_table.observacao == true">Observação</th>
+
 												<th class="text-center" rowspan="2" ng-if="config_table.cheque">Banco</th>
 												<th class="text-center" colspan="3" ng-if="config_table.cheque">Dados Cheque</th>
 												<th class="text-center" colspan="2" ng-if="config_table.boleto">Dados Boleto</th>
@@ -1028,6 +1030,8 @@
 												<td>{{ item.nome | uppercase }}</td>
 												<td>{{ item.cod_plano }} - {{ item.dsc_natureza_operacao | uppercase}}</td>
 												<td>{{ item.descricao_forma_pagamento }}</td>
+
+												<td ng-if="config_table.observacao == true" control-size-string content="{{ item.nome }}" size="16"></td>
 
 												<th class="text-center" ng-if="config_table.cheque">{{ item.nome_banco }}</th>
 												<th class="text-center" ng-if="config_table.cheque">{{ item.num_conta_corrente }}</th>
@@ -1561,6 +1565,11 @@
 											<input type="checkbox" ng-model="config_table.transferencia">
 											<span class="custom-checkbox"></span>
 											Tranferência 	
+										</label>
+										<label class="label-checkbox"> 
+											<input type="checkbox" ng-model="config_table.observacao">
+											<span class="custom-checkbox"></span>
+											Observação 	
 										</label>
 									</div>
 

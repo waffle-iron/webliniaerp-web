@@ -60,7 +60,9 @@
 		#list_produtos .modal-dialog  {width:70%;}
 
 		#list_produtos .modal-content {min-height: 640px;;}
-
+		.panel.panel-default {
+		    overflow: visible !important;
+		}
 
 	</style>
   </head>
@@ -269,7 +271,9 @@
 													<td>{{ item.nome_fabricante }}</td>
 													<td>{{ item.peso }}</td>
 													<td>{{ item.sabor }}</td>
-													<td ng-if="!isNumeric(transferencia.id)" width="75"><input  ng-model="item.qtd_pedida" type="text" class="form-control input-xs" /></td>
+													<td ng-if="!isNumeric(transferencia.id)" width="75" id="td-trasnferencia-qtd-pedida-{{ item.id_produto }}">
+														<input  ng-model="item.qtd_pedida" type="text" class="form-control input-xs" />
+													</td>
 													<td class="text-center" ng-if="isNumeric(transferencia.id)">{{ item.qtd_pedida }}</td>
 													<td class="text-center" ng-if="isNumeric(transferencia.id)">{{ item.qtd_transferida }}</td>
 													<td ng-if="isNumeric(transferencia.id)" width="100" id="td-trasnferencia-qtd-recebida-{{ item.id_produto }}">

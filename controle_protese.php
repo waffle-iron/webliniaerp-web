@@ -249,7 +249,7 @@
                     				<label class="control-label">Data Prevista para Entrega</label>
                     				<div class="controls">
                     					<div class="input-group">
-                    						<input id="input-dta-previsao-entrega" ui-mask="99/99/9999" ng-model="atendimento.dta_entrada" class="form-control input-sm datepicker"/>
+                    						<input id="input-dta-previsao-entrega" ui-mask="99/99/9999" ng-model="dta_entrada" class="form-control input-sm datepicker"/>
                     						<span class="input-group-btn">
 												<button  id="btnDtaCalendar" style="margin-top: 1px" class="btn btn-default btn-sm" type="button">
 													<i class="fa fa-calendar"></i>
@@ -264,7 +264,7 @@
                     				<label class="control-label">Data de Envio</label>
                     				<div class="controls">
                     					<div class="input-group">
-                    						<input id="input-dta-envio" ui-mask="99/99/9999" ng-model="atendimento.dta_entrada" class="form-control input-sm datepicker"/>
+                    						<input id="input-dta-envio" ui-mask="99/99/9999" ng-model="dta_envio" class="form-control input-sm datepicker"/>
                     						<span class="input-group-btn">
 												<button  id="btnDtaCalendar" style="margin-top: 1px" class="btn btn-default btn-sm" type="button">
 													<i class="fa fa-calendar"></i>
@@ -279,7 +279,7 @@
                     				<label class="control-label">Data de Entrega</label>
                     				<div class="controls">
                     					<div class="input-group">
-                    						<input id="input-dta-entrega" ui-mask="99/99/9999" ng-model="atendimento.dta_entrada" class="form-control input-sm datepicker"/>
+                    						<input id="input-dta-entrega" ui-mask="99/99/9999" ng-model="dta_entrega" class="form-control input-sm datepicker"/>
                     						<span class="input-group-btn">
 												<button  id="btnDtaCalendar" style="margin-top: 1px" class="btn btn-default btn-sm" type="button">
 													<i class="fa fa-calendar"></i>
@@ -646,7 +646,7 @@
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Fornecedores</h4>
+						<h4>Laboratórios</h4>
       				</div>
 				    <div class="modal-body">
 				    	<div class="row">

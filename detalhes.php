@@ -239,6 +239,7 @@
 	<script src="<?php echo URL_BASE ?>js/endless/endless.js"></script>
 
 	<!-- Extras -->
+	<script src="<?php echo URL_BASE ?>js/constants.js"></script>
 	<script src="<?php echo URL_BASE ?>js/extras.js"></script>
 
 	<!-- AngularJS -->

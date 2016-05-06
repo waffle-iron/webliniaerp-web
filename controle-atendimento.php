@@ -212,6 +212,8 @@
 					<h3 class="no-margin"><i class="fa fa-list"></i> Controle de Atendimento</h3>
 					<br/>
 					<button class="btn btn-info" id="btn-novo" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Atendimento</button>
+					<button class="btn btn-info" id="btn-novo" ng-click="selCliente('selecionar_ficha')"><i class="fa fa-users"></i></button>
+					
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -293,8 +295,8 @@
 						<table class="table table-bordered table-hover table-striped table-condensed">
 							<thead>
 								<th class="text-center">Chegada</th>
-								<th class="text-center">Inicio Atend.</th>
-								<th class="text-center">Fim Atend.</th>
+								<th class="text-center" ng-if="configuracoes.flg_controlar_tempo_atendimento == 1">Inicio Atend.</th>
+								<th class="text-center" ng-if="configuracoes.flg_controlar_tempo_atendimento == 1">Fim Atend.</th>
 								<th class="text-center">Ficha</th>
 								<th>Paciente</th>
 								<th>Status</th>
@@ -311,8 +313,8 @@
 							<tbody>
 								<tr ng-repeat="paciente in lista_atendimento" bs-tooltip>
 									<td class="text-center text-middle">{{ paciente.dta_entrada | dateFormat:'time' }}</td>
-									<td class="text-center text-middle">{{ paciente.dta_inicio_atendimento | dateFormat:'time' }}</td>
-									<td class="text-center text-middle">{{ paciente.dta_fim_atendimento | dateFormat:'time' }}</td>
+									<td class="text-center text-middle" ng-if="configuracoes.flg_controlar_tempo_atendimento == 1">{{ paciente.dta_inicio_atendimento | dateFormat:'time' }}</td>
+									<td class="text-center text-middle" ng-if="configuracoes.flg_controlar_tempo_atendimento == 1">{{ paciente.dta_fim_atendimento | dateFormat:'time' }}</td>
 									<td class="text-middle">{{ null }}</td>
 									<td class="text-middle">{{ paciente.nome_paciente }}</td>
 									<td class="text-middle">{{paciente.dsc_status}} 
@@ -331,8 +333,8 @@
 										<button ng-if="configuracoes.flg_controlar_tempo_atendimento == 1" class="btn btn-xs btn-danger" ng-disabled="paciente.dta_inicio_atendimento == null || paciente.dta_fim_atendimento != null"  data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="selProfissionais(paciente)" data-toggle="tooltip" title="Finalizar Atendimento">
 											<i class="fa fa-stop"></i>
 										</button>
-										<button ng-if="configuracoes.flg_controlar_tempo_atendimento != 1" class="btn btn-xs btn-danger"  data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="selProfissionais(paciente)" data-toggle="tooltip" title="Selecionar Profissional" ng-disabled="paciente.id_profissional_atendimento != null	">
-											<i class="fa fa-stop"></i>
+										<button ng-if="configuracoes.flg_controlar_tempo_atendimento != 1" class="btn btn-xs btn"  data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="selProfissionais(paciente)" data-toggle="tooltip" title="Selecionar Profissional" ng-disabled="paciente.id_profissional_atendimento != null	">
+											<i class="fa fa-user-md"></i>
 										</button>
 										<button class="btn btn-xs btn-primary" ng-click="abrirFichaPaciente(paciente)" data-toggle="tooltip" title="Abrir Fichar do Paciente">
 											<i class="fa fa-user"></i>
@@ -366,9 +368,14 @@
 										<i class="fa fa-user"></i> Dados Cadastrais
 									</a>
 								</li>
-								<li  ng-click="getItensVenda();loadPagamentosPaciente(); showButtonSalvar = false;">
+								<li ng-click="getItensVenda();loadPagamentosPaciente(); showButtonSalvar = false;">
 									<a href="#procedimentos" data-toggle="tab">
 										<i class="fa fa-list-alt"></i> Procedimentos
+									</a>
+								</li>
+								<li>
+									<a  href="#procedimeto-atividades" data-toggle="tab">
+										<i class="fa fa-list-alt"></i> Atividades
 									</a>
 								</li>
 								<li  ng-click="loadPagamentosPaciente();showButtonSalvar = false;">
@@ -386,87 +393,93 @@
 
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="dados">
-								<div class="alert alerta-dados-paciente" style="display:none">
-										
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="alert alerta-dados-paciente" style="display:none"></div>
+									</div>
 								</div>
-								<form class="form form-horizontal" role="form">
-									<div class="form-group">
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Nome:</label> 
-										<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="dados-paciente-nome">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.nome">
-										</div>
+								<div class="row">
+									<div class="col-lg-12">
+										<form class="form form-horizontal" role="form">
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Nome:</label> 
+												<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="dados-paciente-nome">
+													<input type="text" class="form-control input-sm" ng-model="dados_paciente.nome">
+												</div>
 
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">E-mail:</label> 
-										<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="dados-paciente-email">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.email">
-										</div>
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">E-mail:</label> 
+												<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="dados-paciente-email">
+													<input type="text" class="form-control input-sm" ng-model="dados_paciente.email">
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">RG:</label> 
+												<div class="col-xs-12 col-sm-6 col-md-6 col-lg-2" id="dados-paciente-nome">
+													<input type="text" class="form-control input-sm" ng-model="dados_paciente.rg">
+												</div>
+
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">CPF:</label> 
+												<div class="col-xs-12 col-sm-4 col-md-4 col-lg-2" id="dados-paciente-email">
+													<input type="text" class="form-control input-sm" ui-mask="999.999.999-99" ng-model="dados_paciente.cpf">
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
+												<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="dados-paciente-tel_fixo">
+													<input ui-mask="(99) 99999999" ng-model="dados_paciente.tel_fixo" type="text" class="form-control input-sm">
+												</div>
+
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Celular):</label> 
+												<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="dados-paciente-celular">
+													<input ui-mask="(99) 99999999?9" ng-model="dados_paciente.celular" type="text" class="form-control input-sm">
+												</div>
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">N° ficha:</label> 
+												<div class="col-xs-12 col-sm-5 col-md-5 col-lg-2" id="dados-paciente-num_ficha_paciente">
+													<input type="text" class="form-control input-sm" ng-model="dados_paciente.num_ficha_paciente">
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">CEP:</label> 
+												<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" id="dados-paciente-cep">
+													<input type="text" class="form-control input-sm" ui-mask="99999-999" ng-model="dados_paciente.cep">
+												</div>
+
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Endereço:</label> 
+												<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5" id="dados-paciente-endereco">
+													<input type="text" class="form-control input-sm" ng-model="dados_paciente.endereco">
+												</div>
+
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">No:</label> 
+												<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" id="dados-paciente-numero">
+													<input type="text" class="form-control input-sm" ng-model="dados_paciente.numero">
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Bairro:</label> 
+												<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="dados-paciente-bairro">
+													<input type="text" class="form-control input-sm" ng-model="dados_paciente.bairro">
+												</div>
+
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Estado:</label> 
+												<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="nome">
+													<select id="id_select_estado" class="form-control" readonly="readonly" ng-model="dados_paciente.id_estado" ng-options="item.id as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
+												</div>
+
+												<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Cidade:</label> 
+												<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="nome">
+													<select class="form-control" readonly="readonly" ng-model="dados_paciente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
+												</div>
+											</div>
+										</form>
 									</div>
-									<div class="form-group">
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">RG:</label> 
-										<div class="col-xs-12 col-sm-6 col-md-6 col-lg-2" id="dados-paciente-nome">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.rg">
-										</div>
-
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">CPF:</label> 
-										<div class="col-xs-12 col-sm-4 col-md-4 col-lg-2" id="dados-paciente-email">
-											<input type="text" class="form-control input-sm" ui-mask="999.999.999-99" ng-model="dados_paciente.cpf">
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Fixo):</label> 
-										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="dados-paciente-tel_fixo">
-											<input ui-mask="(99) 99999999" ng-model="dados_paciente.tel_fixo" type="text" class="form-control input-sm">
-										</div>
-
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label" style="padding-top: 0;">Telefone<br class="hidden-xs"/><span class="hidden-sm hidden-md hidden-lg"> </span>(Celular):</label> 
-										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2" id="dados-paciente-celular">
-											<input ui-mask="(99) 99999999?9" ng-model="dados_paciente.celular" type="text" class="form-control input-sm">
-										</div>
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">N° ficha:</label> 
-										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-2" id="dados-paciente-num_ficha_paciente">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.num_ficha_paciente">
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">CEP:</label> 
-										<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" id="dados-paciente-cep">
-											<input type="text" class="form-control input-sm" ui-mask="99999-999" ng-model="dados_paciente.cep">
-										</div>
-
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Endereço:</label> 
-										<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5" id="dados-paciente-endereco">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.endereco">
-										</div>
-
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">No:</label> 
-										<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" id="dados-paciente-numero">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.numero">
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Bairro:</label> 
-										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="dados-paciente-bairro">
-											<input type="text" class="form-control input-sm" ng-model="dados_paciente.bairro">
-										</div>
-
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Estado:</label> 
-										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="nome">
-											<select id="id_select_estado" class="form-control" readonly="readonly" ng-model="dados_paciente.id_estado" ng-options="item.id as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
-										</div>
-
-										<label class="col-xs-12 col-sm-1 col-md-1 col-lg-1 control-label">Cidade:</label> 
-										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="nome">
-											<select class="form-control" readonly="readonly" ng-model="dados_paciente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
-										</div>
-									</div>
-								</form>
+								</div>
 							</div>
 
 							<div class="tab-pane fade" id="procedimentos">
-								<form class="form" role="form">
+								<form class="form" role="form" ng-show="!hide_add_procedimentos" >
 									<div class="row">
 										<div class="col-lg-3">
 											<div class="form-group" id="id_procedimento">
@@ -537,9 +550,9 @@
 											<th class="text-center">Dente/Região</th>
 											<th class="text-center">Face</th>
 											<th class="text-center">Status</th>
-											<th class="text-center">Agendamento</th>
+											<th ng-if="configuracoes.flg_controlar_tempo_atendimento == 1" class="text-center">Agendamento</th>
 											<th class="text-center">Valor</th>
-											<th class="text-center">Ações</th>
+											<th class="text-center" ng-if="configuracoes.flg_controlar_tempo_atendimento == 1">Ações</th >
 										</thead>
 										<tbody>
 											<tr ng-repeat="item in itens_venda" bs-tooltip>
@@ -550,43 +563,43 @@
 												<td><i class="fa fa-circle" ng-class="{'text-danger':item.id_status_procedimento == 1,'text-warning':item.id_status_procedimento == 2,'text-success': item.id_status_procedimento == 3 }"></i> 
 													{{item.dsc_status_procedimento}}
 												</td>
-												<td style="width: 154px">
+												<td ng-if="configuracoes.flg_controlar_tempo_atendimento == 1" style="width: 154px">
 													<input ng-model="item.dta_inicio_procedimento" class="form-control input-xs" ui-mask="99/99/9999 99:99"
 														ng-disabled="((pagamentosCliente.total-totalItensVendaAgendados()) < item.valor_real_item) || item.id_status_procedimento != 1 "/>
 												</td>
 												<td class="text-right"><!--<i class="fa fa-circle" ng-class="{'text-danger':item.flg_item_pago == 0,'text-success':item.flg_item_pago == 1}"></i> -->R$ {{ item.valor_real_item | numberFormat:2:',':'.'}}</td>
-												<td class="text-center">
+												<td class="text-center" ng-if="configuracoes.flg_controlar_tempo_atendimento == 1">
 													<!--<button class="btn btn-xs btn-primary" ng-disabled="item.flg_item_pago == 1" ng-click="efetuarPagamento(item)" data-toggle="tooltip" title="Efetuar pagamento">
 														<i class="fa fa-money"></i>
 													</button>-->
-													<button class="btn btn-xs btn-primary" 
+													<button  ng-if="configuracoes.flg_controlar_tempo_atendimento == 1"    class="btn btn-xs btn-primary" 
 														data-loading-text="<i class='fa fa-refresh fa-spin'></i>" 
 														ng-disabled="((pagamentosCliente.total-totalItensVendaAgendados()) < item.valor_real_item) || item.id_status_procedimento != 1 "
 														ng-click="agendarProcedimento(item,$event)" 
 														data-toggle="tooltip" title="Agendar realização">
 														<i class="fa fa-calendar"></i>
 													</button>
-													<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Cancelar agendamento"
+													<button ng-if="configuracoes.flg_controlar_tempo_atendimento == 1"  class="btn btn-xs btn-danger" data-toggle="tooltip" title="Cancelar agendamento"
 														ng-disabled="(item.flg_item_pago != 1) || (item.id_status_procedimento == 3 || item.id_status_procedimento == 4 && item.flg_item_pago == 1)">
 														<i class="fa fa-times-circle"></i>
 													</button>
 												</td>
 											</tr>
 											<tr ng-if="itens_venda.length == 0">
-												<td colspan="8" class="text-center" text-center>
+												<td colspan="{{ configuracoes.flg_controlar_tempo_atendimento == 1 && 8 || 6 }}" class="text-center" text-center>
 													Nenhum procedimento encontrado
 												</td>
 											</tr>
 											<tr ng-if="itens_venda==null">
-												<td colspan="8" class="text-center">
+												<td colspan="{{ configuracoes.flg_controlar_tempo_atendimento == 1 && 8 || 6 }}" class="text-center">
 													<i class='fa fa-refresh fa-spin'></i> Carregando ...
 												</td>
 											</tr>
 										</tbody>
 										<tfoot ng-if="itens_venda.length > 0">
-											<th class="text-right" colspan="6">Total</th>
+											<th class="text-right" colspan="{{ configuracoes.flg_controlar_tempo_atendimento == 1 && 6 || 5 }}">Total</th>
 											<th class="text-right">R$ {{ totalItensVenda() | numberFormat:2:',':'.' }}</th>
-											<th></th>
+											<th ng-if="configuracoes.flg_controlar_tempo_atendimento == 1"></th>
 										</tfoot>
 									</table>
 								</div>
@@ -917,6 +930,113 @@
 								    </div>
 								</div>
 							</div>
+							<div class="tab-pane fade" id="procedimeto-atividades">
+								<div class="row">
+								<div class="col-lg-2">
+										<div class="form-group" id="id_profissional_atividade">
+											<label class="control-label">Profissional</label>
+											<div class="controls">
+												<div class="input-group">
+													<input type="text" id="ui-auto-complete-profissioal-atividade" class="form-control input-sm">
+													<span class="input-group-btn">
+														<button class="btn btn-default btn-sm" ng-click="selAtividadeProfissionais()" type="button"><i class="fa fa-search"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<div class="form-group" id="id_procedimento_principal_atividade">
+											<label class="control-label">Procedimento Principal</label>
+											<div class="controls">
+												<div class="input-group">
+													<input type="text" id="ui-auto-complete-procedimento-principal-atividade" class="form-control input-sm">
+													<span class="input-group-btn">
+														<button class="btn btn-default btn-sm" ng-click="selAtividadeProcedimento('principal')" type="button"><i class="fa fa-search"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<div class="form-group" id="id_procedimento_atividade">
+											<label class="control-label">Procedimento</label>
+											<div class="controls">
+												<div class="input-group">
+													<input type="text" id="ui-auto-complete-procedimento-atividade" class="form-control input-sm">
+													<span class="input-group-btn">
+														<button class="btn btn-default btn-sm" ng-click="selAtividadeProcedimento()" type="button"><i class="fa fa-search"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!--<div class="col-lg-3">
+										<div class="form-group" id="id_dente">
+											<label class="control-label">Dente/Região</label>
+											<div class="controls">
+												<div class="input-group">
+													<input type="text" id="ui-auto-complete-odontograma-atividade" class="form-control input-sm"/>
+													<span class="input-group-btn">
+														<button ng-click="selOdontograma()"  class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<div class="form-group" id="id_regiao">
+											<label class="control-label">Face</label>
+											<div class="controls">
+												<div class="input-group">
+													<input type="text" id="ui-auto-complete-face-atividade" class="form-control input-sm"/>
+													<span class="input-group-btn">
+														<button class="btn btn-default btn-sm" ng-click="selFaceDente()" ng- type="button"><i class="fa fa-search"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>-->
+									<div class="col-lg-2">
+										<div class="form-group" id="data_atividade">
+											<label class="control-label">Data</label>
+											<div class="controls">
+												<input ng-model="atividade.data" id="atividade-data" class="form-control input-sm" ui-mask="99/99/9999 99:99"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group">
+											<label for="" class="control-label">Finalizar Procedimento</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="atividade.flg_concluido" value="1" type="radio" class="inline-radio"/>
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="atividade.flg_concluido" value="0" type="radio" class="inline-radio"/>
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-1">
+										<div class="form-group">
+											<label class="control-label"><br/></label>
+											<div class="controls">
+												<button class="btn btn-sm btn-primary" ng-click="salvarAtividadeProcedimento()" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  data-toggle="tooltip" id="salvar-atividade-procedimento" title="Incluir procedimento"><i class="fa fa-plus-square"></i></button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="alert alert-atividades" style="display: none"></div>
+									</div>
+								</div>
+							</div>
 							<div class="tab-pane fade" id="pagamentos">
 								<div style="max-height: 300px;overflow: auto;">
 									<table class="table table-bordered table-hover table-striped table-condensed">
@@ -1022,9 +1142,14 @@
                                             <td>{{ item.nome }}</td>
                                             <td>{{ item.apelido }}</td>
                                             <td>{{ item.nome_perfil }}</td>
-                                            <td width="50" align="center">
+                                            <td width="50" ng-if="acao_modal_pacientes == 'novo_atendimento'"  align="center">
                                                 <button type="button" class="btn btn-xs btn-success" ng-click="addCliente(item)">
                                                     <i class="fa fa-check-square-o"></i> Selecionar
+                                                </button>
+                                            </td>
+                                             <td width="70" ng-if="acao_modal_pacientes == 'selecionar_ficha'" align="center">
+                                                <button  type="button" class="btn btn-xs btn-success" ng-click="abrirFichaPaciente(item,'ver_ficha')">
+                                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -1106,6 +1231,77 @@
                                 <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_procedimentos.length > 1">
                                     <li ng-repeat="item in paginacao_procedimentos" ng-class="{'active': item.current}">
                                         <a href="" h ng-click="loadProcedimentos(item.offset,item.limit)">{{ item.index }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+         <!-- /Modal atividade procedimentos-->
+        <div class="modal fade" id="list_atividade_procedimentos" style="display:none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Procedimentos</span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input ng-enter="loadAtividadeProcedimentos(0,10)" ng-model="busca.procedimentos" type="text" class="form-control input-sm">
+                                    <div class="input-group-btn">
+                                        <button ng-click="loadAtividadeProcedimentos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div> <!-- /input-group-btn -->
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <tr ng-show="atividade_procedimentos != false && (atividade_procedimentos.length <= 0 || atividade_procedimentos == null)">
+                                        <th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+                                    </tr>
+                                    <tr ng-show="atividade_procedimentos == false">
+                                        <th colspan="4" class="text-center">Não a resultados para a busca</th>
+                                    </tr>
+                                    <thead ng-show="(atividade_procedimentos.length != 0)">
+                                        <tr>
+                                            <th >Cod.</th>
+                                            <th >Descrição</th>
+                                            <th ></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in atividade_procedimentos">
+                                            <td>{{ item.cod_procedimento }}</td>
+                                            <td>{{ item.dsc_procedimento }}</td>
+                                            <td width="50" align="center">
+                                                <button ng-show="(atividade.id_procedimento != item.id && atividade_tipo_procedimento != 'principal') || (atividade.id_procedimento_principal != item.id_procedimento && atividade_tipo_procedimento == 'principal')" type="button" class="btn btn-xs btn-success" ng-click="addAtividadeProcedimento(item,atividade_tipo_procedimento)">
+                                                    <i class="fa fa-check-square-o"></i> Selecionar
+                                                </button>
+                                                <button ng-show="(atividade.id_procedimento == item.id && atividade_tipo_procedimento != 'principal') || (atividade.id_procedimento_principal == item.id_procedimento && atividade_tipo_procedimento == 'principal')" ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                               		 <i class="fa fa-check-circle-o"></i> Selecionado
+                                           		 </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="atividade_paginacao_procedimentos.length > 1">
+                                    <li ng-repeat="item in atividade_paginacao_procedimentos" ng-class="{'active': item.current}">
+                                        <a href="" h ng-click="loadAtividadeProcedimentos(item.offset,item.limit,atividade_tipo_procedimento)">{{ item.index }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -1252,7 +1448,7 @@
 		</div>
 		<!-- /.modal -->
 
-        <!-- /Modal Clientes-->
+        <!-- /Modal profissional-->
         <div class="modal fade" id="list_profissionais" style="display:none">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1333,6 +1529,79 @@
 					    	</button>
 				    	</div>
 				    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+         <!-- /Modal profissional Atividade-->
+        <div class="modal fade" id="list_atividade_profissionais" style="display:none">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Profissionais</span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input ng-model="busca.atividade_profissionais"  ng-enter="loadProfissionais(0,10)" type="text" class="form-control input-sm">
+                                    <div class="input-group-btn">
+                                        <button ng-click="loadAtividadeProfissionais(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div> <!-- /input-group-btn -->
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <tr ng-show="atividade_profissionais != false && (atividade_profissionais.length <= 0 || atividade_profissionais == null)">
+                                        <th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+                                    </tr>
+                                    <tr ng-show="atividade_profissionais == false">
+                                        <th colspan="4" class="text-center">Não a resultados para a busca</th>
+                                    </tr>
+                                    <thead ng-show="(atividade_profissionais.length != 0)">
+                                        <tr>
+                                            <th >Nome</th>
+                                            <th >Apelido</th>
+                                            <th >Perfil</th>
+                                            <th colspan="2">selecionar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in atividade_profissionais">
+                                            <td>{{ item.nome }}</td>
+                                            <td>{{ item.apelido }}</td>
+                                            <td>{{ item.nome_perfil }}</td>
+                                            <td width="50" align="center">
+                                                <button ng-show="atividade.id_profissional != item.id" type="button" class="btn btn-xs btn-success" ng-click="addAtividadeProfissional(item)">
+                                                    <i class="fa fa-check-square-o"></i> Selecionar
+                                                </button>
+                                                <button ng-show="atividade.id_profissional  == item.id" ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                               		 <i class="fa fa-check-circle-o"></i> Selecionado
+                                           		 </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_atividade_profissionais.length > 1">
+                                    <li ng-repeat="item in paginacao_atividade_profissionais" ng-class="{'active': item.current}">
+                                        <a href="" ng-click="loadAtividadeProfissionais(item.offset,item.limit)">{{ item.index }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div>

@@ -1,10 +1,10 @@
-app.controller('DashboardController', function($scope, $http, $window, UserService) {
+app.controller('DashboardController', function($scope, $http, $window, UserService,ConfigService) {
 	try {
 		var ng = $scope,
 			aj = $http;
 
 		ng.userLogged = UserService.getUserLogado();
-
+		ng.config     = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 		// Labels de Valores Totais
 		ng.total = {
 			vlrTotalFaturamento 				: 0,
@@ -300,17 +300,38 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 				});
 		}
 
-		ng.loadSaldoDevedorCliente = function(first_date, last_date) {
-			aj.get(baseUrlApi()+"saldo_devedor_cliente/dashboard/?id_empreendimento="+ng.userLogged.id_empreendimento+"&id_cliente[exp]=!="+ng.configuracao.id_cliente_movimentacao_caixa)
+		ng.loadSaldoDevedorCliente = function(){
+			var queryString = "?(usu->id[exp]= NOT IN("+ng.config .id_cliente_movimentacao_caixa+","+ng.config.id_usuario_venda_vitrine+"))";
+			queryString      += "&having=vlr_saldo_devedor<0";
+			aj.get(baseUrlApi()+"usuarios/saldodevedor/"+ng.userLogged.id_empreendimento+"/null/true"+queryString)
 				.success(function(data, status, headers, config) {
-					ng.total.vlrSaldoDevedorClientes = numberFormat(data.saldo_devedor_clientes, 2, ",", ".");
+					data.vlr_saldo_devedor
 
+					data.saldo_devedor_clientes = data.vlr_saldo_devedor  * (-1);
+					ng.total.vlrSaldoDevedorClientes = numberFormat(data.vlr_saldo_devedor *(-1), 2, ",", ".");
 					$('#negativeCount').text(ng.total.vlrSaldoDevedorClientes);
+
 				})
 				.error(function(data, status, headers, config) {
 					ng.total.vlrSaldoDevedorClientes = 0;
 				});
 		}
+
+		/*ng.loadSaldoDevedorCliente = function(first_date, last_date) {
+			aj.get(baseUrlApi()+"saldo_devedor_cliente/dashboard/?id_empreendimento="+ng.userLogged.id_empreendimento+"&id_cliente[exp]=!="+ng.configuracao.id_cliente_movimentacao_caixa)
+				.success(function(data, status, headers, config) {
+					if(Number(data.saldo_devedor_clientes) < 0){
+						data.saldo_devedor_clientes = data.saldo_devedor_clientes  * (-1);
+						ng.total.vlrSaldoDevedorClientes = numberFormat(data.saldo_devedor_clientes, 2, ",", ".");
+						$('#negativeCount').text(ng.total.vlrSaldoDevedorClientes);
+					}else{
+						$('#negativeCount').text('0,00');
+					}
+				})
+				.error(function(data, status, headers, config) {
+					ng.total.vlrSaldoDevedorClientes = 0;
+				});
+		}*/
 
 		ng.loadComparativoVendas = function() {
 			ng.vendasUltimos3Meses = [];

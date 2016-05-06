@@ -872,10 +872,11 @@
 									</tr>
 									<thead>
 										<tr>
-											<th class="text-center" width="80">#</th>
+											<th class="text-center" width="50">#</th>
+											<th class="text-center" width="80">dta. cadastro</th>
 											<th class="text-center" width="100">Saldo</th>
-											<th class="text-center" style="min-width: 150px;">Nome</th>
-											<th class="text-center">Apelido</th>
+											<th class="text-center" style="min-width: 150px;">Nome/CPF</th>
+											<th class="text-center" width="130">Apelido</th>
 											<th class="text-center">Perfil</th>
 											<th class="text-center" style="min-width: 100px;">Telefone</th>
 											<th class="text-center" style="min-width: 100px;">Celular</th>
@@ -887,6 +888,7 @@
 									<tbody>
 										<tr ng-repeat="item in clientes">
 											<td class="text-center">{{ item.id }}</td>
+											<td class="text-center">{{ item.dta_cadastro | dateFormat:'date' }}</td>
 											<td class="text-center" ng-if="item.vlr_saldo_devedor == undefined">
 												<p class="label"><i class="fa fa-refresh fa-spin"></i> Carregando ...</p>
 											</td>
@@ -895,8 +897,9 @@
 												<span class="label label-success" ng-if="item.vlr_saldo_devedor > 0">R$ {{ item.vlr_saldo_devedor | numberFormat: 2 : ',' : '.' }}</span>
 												<span class="label label-danger" ng-if="item.vlr_saldo_devedor < 0">R$ {{ item.vlr_saldo_devedor | numberFormat: 2 : ',' : '.' }}</span>
 											</td>
-											<td>{{ item.nome | uppercase }}</td>
-											<td>{{ item.apelido | uppercase }}</td>
+											<td ng-if="!(item.nome == null || item.nome=='')">{{ item.nome | uppercase }}</td>
+											<td ng-if="(item.nome == null || item.nome=='')" ng-bind-html="item.cpf | cpfFormat:'<b>CPF:</b> '"></td>
+											<td control-size-string content="{{ item.apelido | uppercase }}" size="14"></td>
 											<td class="text-center">{{ item.nome_perfil | uppercase }}</td>
 											<td class="text-center">{{ item.tel_fixo | phoneFormat }}</td>
 											<td class="text-center">{{ item.celular | phoneFormat }}</td>
