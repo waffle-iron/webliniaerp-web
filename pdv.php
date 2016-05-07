@@ -15,7 +15,7 @@
     <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css?version=<?php echo date("dmY-His", filemtime("bootstrap/css/bootstrap.min.css")) ?>'>
 
 	<!-- Font Awesome -->
-	<link href="css/font-awesome-4.1.0.min.css?version<?php  echo date("dmY-His", filemtime("css/font-awesome-4.1.0.min.css")) ?>" rel="stylesheet">
+	<link href="css/font-awesome-4.6.2/css/font-awesome.min.css?version<?php  echo date("dmY-His", filemtime("css/font-awesome-4.1.0.min.css")) ?>" rel="stylesheet">
 
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
@@ -326,7 +326,7 @@
 			<div class="padding-md" id="content-pdv" ng-if="caixa_aberto && abrir_pdv == false && caixa_configurado == true" style="padding-bottom: 0px !important;">
 				<div class="panel panel-primary" style="margin-bottom: 0px !important;">
 					<div class="panel-heading">
-						<i class="fa fa-desktop" ng-class="{'text-danger': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 0, 'text-warning': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 1,'text-success': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 2 }"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
+						<i style="cursor: pointer" id="dados-websocket" class="fa fa-desktop" ng-class="{'text-danger': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 0, 'text-warning': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 1,'text-success': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 2 }"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
 						<div class="btn-group"  style="margin-left: 40px;" >
 							<i class="fa fa-user"></i> Vendedor - {{ vendedor.nome_vendedor }}
 						</div>
@@ -362,43 +362,6 @@
 					    	<div class="row">
 					    		<div class="col-sm-9">
 					    		<div class="row">
-					    			<div class="col-sm-10" id="col-sm-auto-complete-cliente">
-											<div class="form-group">
-												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
-" class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
-												<div class="input-group">
-													<input onKeyPress="return SomenteNumeroLetras(event);" id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
-													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
-														<table class="table table-striped itens-outo-complete">
-															<thead>
-																<tr>
-																	<th width="80" >ID</th>
-																	<th class="text-center">Nome</th>
-																	<th class="text-center">Apelido</th>
-																	<th width="140">CPF/CNPJ</th>
-
-																	
-																</tr>
-															</thead>
-															<tbody>
-																<tr ng-repeat="item in clientes_auto_complete" ng-click="addClienteAutoComplete(item)">
-																	<td>{{ item.id }}</td>
-																	<td class="text-center">{{ item.nome    | uppercase }}</td>
-																	<td class="text-center">{{ item.apelido | uppercase }}</td>
-																	<td ng-if="item.tipo_cadastro == 'pf'">{{ item.cpf | maskCpf }}</td>
-																	<td ng-if="item.tipo_cadastro == 'pj'">{{ item.cnpj | maskCnpj }}</td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-													<span class="input-group-btn">
-														<button ng-click="selCliente(0,10)"  type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
-													</span>
-												</div>
-											</div>
-										</div>
-					    		</div>
-					    		<div class="row">
 					    			<div class="col-sm-12">
 					    				<div class="form-group">
 											<div style="font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor>0">
@@ -413,6 +376,12 @@
 											</div>
 										</div>
 					    		</div>
+
+			    				<!--<div class="row" ng-repeat="(key,formas) in formas_pagamento">
+					    			<div class="col-sm-2" ng-repeat="forma in formas" >
+					    				<a ng-click="selectChange(forma.id)" data-loading-text=" Aguarde..." id="btn-logar" class="bounceIn btn btn-default btn-sm" ng-click="logar()" style="max-width: 95px;word-wrap: break-word;white-space: inherit;padding-left: 5px;padding-right: 5px;"><i class="fa fa-3x {{ forma.icon }}" style=" margin-bottom: 5px; margin-top: 5px; "></i><span style="" class="clearfix">{{ forma.descricao_forma_pagamento }}</span></a>
+					    			</div>
+				    			</div>	-->	
 						    	<div class="row">
 						    		<div class="col-sm-6" id="pagamento_forma_pagamento">
 						    			<label class="control-label">Forma de Pagamento</label>
@@ -460,6 +429,16 @@
 						    					<input ng-disabled="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 4" ng-model="pagamento.valor" thousands-formatter type="text" class="form-control input-sm" />
 						    			</div>
 						    		</div>
+
+					    			<div class="col-sm-3" ng-show="pagamento.id_forma_pagamento == 9">
+										<div class="form-group cheque_data">
+											<label class="control-label">Data</label>
+											<div class="input-group">
+												<input ui-mask="99/99/9999" readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="pagamento.data" type="text" id="pagamentoData" class="datepicker form-control chequeData">
+												<span class="input-group-addon" class="data_pagamento"><i class="fa fa-calendar"></i></span>
+											</div>
+										</div>
+									</div>
 						    	</div>
 
 						    	<div class="row">
@@ -631,6 +610,43 @@
 								</div>
 							</div>
 							<div class="col-sm-3">
+													    		<div class="row">
+					    			<div class="col-sm-12" id="col-sm-auto-complete-cliente">
+											<div class="form-group">
+												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
+" class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
+												<div class="input-group">
+													<input onKeyPress="return SomenteNumeroLetras(event);" id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event,false)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
+													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
+														<table class="table table-striped itens-outo-complete">
+															<thead>
+																<tr>
+																	<th width="80" >ID</th>
+																	<th class="text-center">Nome</th>
+																	<th class="text-center">Apelido</th>
+																	<th width="140">CPF/CNPJ</th>
+
+																	
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="item in clientes_auto_complete" ng-click="addClienteAutoComplete(item)">
+																	<td>{{ item.id }}</td>
+																	<td class="text-center">{{ item.nome    | uppercase }}</td>
+																	<td class="text-center">{{ item.apelido | uppercase }}</td>
+																	<td ng-if="item.tipo_cadastro == 'pf'">{{ item.cpf | maskCpf }}</td>
+																	<td ng-if="item.tipo_cadastro == 'pj'">{{ item.cnpj | maskCnpj }}</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+													<span class="input-group-btn">
+														<button ng-click="selCliente(0,10)"  type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+					    		</div>
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(clientes.length != 0)">
 										<tr>
@@ -783,7 +799,7 @@
 												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
 " class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 												<div class="input-group">
-													<input id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
+													<input id="input_auto_complete_cliente" onKeyPress="return SomenteNumeroLetras(event);" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
 													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
 														<table class="table table-striped itens-outo-complete">
 															<thead>
@@ -873,6 +889,30 @@
 												<i ng-if="show_aditional_columns == true" class="fa fa-th-list fa-lg"></i>
 												<i ng-if="show_aditional_columns == false" class="fa fa-align-justify fa-lg"></i>
 											</button>
+											<button  class="btn btn-xs btn-default" title="Desconto" type="button" init-popover placement="bottom" 
+											content='
+												<div class="input-group">
+							            			<input ng-model="descontoAllItens.valor"  placeholder="R$" thousands-formatter  type="text" class="form-control input-sm" ng-enter="DesAllVenda(descontoAllItens.valor)">
+										            <div class="input-group-btn">
+										            	<button ng-click="DesAllVenda(descontoAllItens.valor,descontoAllItens.vlr)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+										            		Aplicar
+										            	</button>
+										            </div> 
+										        </div> 
+										        <br/>
+										        <div class="input-group">
+							            			<input ng-model="descontoAllItens.porcentagem"  placeholder="%" thousands-formatter  type="text" class="form-control input-sm" ng-enter="DesAllVenda(descontoAllItens.porcentagem)">
+										            <div class="input-group-btn">
+										            	<button ng-click="DesAllVenda(descontoAllItens.porcentagem,descontoAllItens.per)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+										            		Aplicar
+										            	</button>
+										            </div> 
+										        </div> '
+
+											>
+												<i class="fa fa-minus-square-o fa-lg fa-align-justify"></i>
+											</button>
+											
 										</div>
 										<div class="col-sm-6" ng-show="userLogged.id_perfil == 1">
 											<div style="float: right;font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor>0">
@@ -888,6 +928,7 @@
 									</div>
 									<br/>
 									<div class="row">
+									
 										<div class="col-sm-12">
 											<div class="form-group" >
 												<table id="tbl_carrinho" class="table table-condensed table-bordered">
@@ -908,7 +949,8 @@
 															<th class="text-center" style="width: 230px;" colspan="3">Desconto</th>
 															<th class="text-center" style="width: 100px;">Vlr. c/ Desc.</th>
 															<th class="text-center" style="width: 100px;">Subtotal</th>
-															<th class="text-center" style="width: 20px;" class="hidden-print"></th>
+															<th class="text-center" style="width: 20px;" class="hidden-print"></ul>
+															</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -1807,6 +1849,7 @@
 
 					    <div class="modal-body">
 					    	<div class="alert alert-cadastro-rapido" style="display:none"></div>
+					    	<div class="alert alert-cadastro-rapido-error" style="display:none"></div>
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="form-group">
@@ -1827,8 +1870,14 @@
 											<div class="row">
 												<div class="col-sm-4">
 													<div id="nome" class="form-group">
-														<label for="nome" class="control-label">Nome <span style="color:red;font-weight: bold;">*</span></label>
+														<label for="nome" class="control-label">Nome</label>
 														<input type="text" class="form-control" id="nome" ng-model="new_cliente.nome">
+													</div>
+												</div>
+												<div class="col-sm-3">
+													<div id="dta_nacimento" class="form-group">
+														<label class="control-label">Data de Nacimento</label>
+														<input class="form-control input-sm" ui-mask="99/99/9999" id="dta_nacimento" ng-model="new_cliente.dta_nacimento">
 													</div>
 												</div>
 												<div class="col-sm-4">
@@ -1837,22 +1886,22 @@
 														<input type="text" class="form-control" id="email" ng-model="new_cliente.email">
 													</div>
 												</div>
-												<div class="col-sm-4">
-													<div id="id_perfil" class="form-group">
-														<label class="control-label">Perfil  <span style="color:red;font-weight: bold;">*</span></label>
-														<select class="form-control" ng-model="new_cliente.id_perfil" ng-options="a.id as a.nome for a in perfis"></select>
-													</div>
-												</div>
 										    </div>
 										    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pj'">
-												<div class="col-lg-4">
+										    	<div class="col-sm-2">
+													<div id="celular" class="form-group">
+														<label for="" class="control-label">Telefone </label>
+														<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="new_cliente.celular">
+													</div>
+												</div>
+												<div class="col-lg-3">
 													<div id="razao_social" class="form-group">
 														<label class="control-label">Razão Social</label>
 														<input class="form-control" ng-model="new_cliente.razao_social">
 													</div>
 												</div>
 
-												<div class="col-sm-4">
+												<div class="col-sm-3">
 													<div id="nome_fantasia" class="form-group">
 														<label class="control-label">Nome Fantasia</label>
 														<input class="form-control" ng-model="new_cliente.nome_fantasia">
@@ -1874,16 +1923,22 @@
 												</div>
 											</div>
 										    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pf'">
-												<div class="col-sm-2">
+										    	<div class="col-sm-2">
+													<div id="celular" class="form-group">
+														<label for="" class="control-label">Telefone </label>
+														<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="new_cliente.celular">
+													</div>
+												</div>
+												<div class="col-sm-3">
 													<div id="rg" class="form-group">
 														<label class="control-label">RG</label>
-														<input class="form-control" ui-mask="99.999.999-9" ng-model="new_cliente.rg"/>
+														<input class="form-control" ng-model="new_cliente.rg"/>
 													</div>
 												</div>
 
-												<div class="col-sm-2">
+												<div class="col-sm-3">
 													<div id="cpf" class="form-group">
-														<label class="control-label">CPF <span style="color:red;font-weight: bold;">*</span></label>
+														<label class="control-label">CPF</label>
 														<input class="form-control" ui-mask="999.999.999-99" ng-model="new_cliente.cpf"/>
 													</div>
 												</div>
@@ -2094,6 +2149,33 @@
 			</div>
 			<!-- /.modal -->
 
+			<!-- /Modal Processando erro sat -->
+			<div class="modal fade" id="modal-conexao-websocket" style="display:none">
+	  			<div class="modal-dialog error modal-md">
+	    			<div class="modal-content">
+	      				<div class="modal-header">
+	      					<h4>Conexão com WebSocket</h4>
+	      				</div>
+					    <div class="modal-body">
+					    	<div class="row">
+					    		<div class="col-sm-12">
+					    			<strong>Não foi possível emitir o cupom SAT CF-e pois o aplicativo cliente (WebliniaERP Client) não está aberto.<br/>Após iniciar o aplicativo tente reprocessar este cupom.</strong>	
+								</div>
+					    	</div>
+					    </div>
+					     <div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
+				    		 OK
+				    	</button>
+				    </div>
+				  	</div>
+				  	<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+
 			<!-- /Modal Vendas para reenviar SAT-->
 		<div class="modal fade" id="modal-vendas-reenviar-sat" style="display:none">
   			<div class="modal-dialog modal-md">
@@ -2236,7 +2318,7 @@
 	<script src="js/endless/endless.js"></script>
 
 	<!-- Extras -->
-	<script src="js/extras.js"></script>
+	<script src="js/extras.js?version=<?php echo date("dmY-His", filemtime("js/extras.js")) ?>"></script>
 
 	<!-- UnderscoreJS -->
 	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
@@ -2259,6 +2341,9 @@
   	<script src="js/auto-complete/ng-sanitize.js"></script>
   	<script src="js/angular-chosen.js"></script>
     <script type="text/javascript">
+    	$(".datepicker").datepicker();
+        $("#btnDtaCalendar").on("click", function(){$("#data-atendimento").trigger("focus");});
+        $('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
     	var addParamModule = ['angular.chosen'] ;
     </script>
     <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>

@@ -1,10 +1,11 @@
-app.controller('Empreendimento_config-Controller', function($scope, $http, $window, $dialogs, UserService){
+app.controller('Empreendimento_config-Controller', function($scope, $http, $window, $dialogs, UserService,ConfigService){
 
 	var ng = $scope
 		aj = $http;
 
 	ng.baseUrl 		 = baseUrl();
 	ng.userLogged 	 = UserService.getUserLogado();
+	ng.cfg  		 = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.currentNode 	 = null;
 	ng.exists_cookie = null ; 
     serieDocumentoFiscalTO = {
@@ -143,6 +144,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				ng.configuracoes = data;
 				ng.configuracoes.id_plano_conta_pagamento_profissional = ""+ng.configuracoes.id_plano_conta_pagamento_profissional ;
 				ng.notEmails = emails;
+				
 				if(data.id_plano_caixa == undefined){
 					$('#id_plano_caixa').addClass('has-error');
 					error++ ;
@@ -276,6 +278,16 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 							id_empreendimento	:ng.userLogged.id_empreendimento
 						}
 			chaves.push(item8);
+		}
+
+		if(typeof ng.formas_pagamento_pdv == 'object'){
+			var formas_pagamento_pdv = JSON.stringify(angular.copy(ng.formas_pagamento_pdv));
+			var item9 = {
+							nome 				:'formas_pagamento_pdv',
+							valor 				:formas_pagamento_pdv , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item9);
 		}
 
 		btn.button('loading');
@@ -609,6 +621,30 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 
+	ng.loadFormasPagamento = function() {
+		ng.formas_pagamento = [];
+		aj.get(baseUrlApi()+"formas_pagamento")
+			.success(function(data, status, headers, config) {
+				ng.formas_pagamento_pdv = data ;
+				var aux = typeof parseJSON(ng.cfg.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.cfg.formas_pagamento_pdv) : [] ;
+				$.each(ng.formas_pagamento_pdv,function(i,x){ 
+					ng.formas_pagamento_pdv[i].value = 0 ;
+					var exists = false ;
+					$.each(aux,function(y,z){ 
+						if(x.id == z.id && Number(z.value) == 1){
+							exists = true
+							return ;
+						}
+					});
+					if(exists)
+						ng.formas_pagamento_pdv[i].value = aux[i].value ;
+					else
+						ng.formas_pagamento_pdv[i].value = 0 ;
+
+				});
+			});
+	}
+
 
 	ng.loadControleNfe('modelo_nota_fiscal','chosen_modelo_nota_fiscal');
 	function defaulErrorHandler(data, status, headers, config) {
@@ -632,6 +668,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadControleNfe('tipo_empresa','tipoEmpresa');
 	ng.loadPlanoContas();
 	ng.loadPlanoContasSelect();
+	ng.loadFormasPagamento();
 
 	
 });

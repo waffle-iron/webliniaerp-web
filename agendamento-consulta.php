@@ -740,9 +740,10 @@
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/agendamento_consulta-controller.js"></script>
 	<script type="text/javascript">
-        $(".datepicker").datepicker();
-        $("#btnDtaCalendar").on("click", function(){$("#data-atendimento").trigger("focus");});
-        $('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+       $('.datepicker').datepicker();
+  	   $('.datepicker').parent('.input-group').find('button').on("click", function(){ $("#dtaInicial").trigger("focus"); });
+       $('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+ 	   $('.datepicker').parent('.input-group').find('button').on("click", function(){ $(this).parents('.input-group').find('input').trigger("focus") });
 	</script>
 	<?php include("google_analytics.php"); ?>
   </body>

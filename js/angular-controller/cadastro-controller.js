@@ -32,20 +32,6 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 		}
 	}
 
-	ng.consultaCep = function(){
-		aj.get("http://api.postmon.com.br/v1/cep/"+ng.cliente.cep)
-		.success(function(data, status, headers, config) {
-			ng.cliente.endereco = data.logradouro;
-			ng.cliente.bairro = data.bairro;
-			ng.cliente.id_estado = data.estado_info.codigo_ibge;
-			ng.cliente.id_cidade = data.cidade_info.codigo_ibge.substr(0,6);
-			ng.loadCidadesByEstado();
-			$("#num_logradouro").focus();
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
 
 	ng.consultaLatLog = function() {
 		var address = ng.cliente.endereco + ", " + ng.cliente.numero + ", " + ng.cliente.cep.substr(0,5) + "-" + ng.cliente.cep.substr(5,ng.cliente.cep.length);
@@ -78,29 +64,6 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 		$(".has-error").removeClass("has-error");
 	}
 
-	ng.loadEstados = function () {
-		ng.estados = [];
-
-		aj.get(baseUrlApi()+"estados")
-		.success(function(data, status, headers, config) {
-			ng.estados = data;
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
-	ng.loadCidadesByEstado = function () {
-		ng.cidades = [];
-
-		aj.get(baseUrlApi()+"cidades/"+ng.cliente.id_estado)
-		.success(function(data, status, headers, config) {
-			ng.cidades = data;
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
 
 	ng.loadComoEncontrou = function () {
 		ng.comoencontrou = [];
@@ -179,7 +142,7 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 	ng.salvar = function() {
 		ng.cliente.empreendimentos 		= [{id:ng.id_empreendimento}];
 		ng.cliente.id_empreendimento 	= ng.id_empreendimento ;
-		if(empty(ng.configuracoes)){
+		/*if(empty(ng.configuracoes)){
 			ng.configuracoes = ConfigService.getConfig(ng.id_empreendimento);
 
 			var emails_notificacoes = !empty(ng.configuracoes.emails_notificacoes) ? JSON.parse(ng.configuracoes.emails_notificacoes) : false ;
@@ -190,7 +153,7 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 				};
 			});
 		}
-		console.log(emails_notificacoes);
+		console.log(emails_notificacoes);*/
 		var btn = $('#btn-salvar');
    		btn.button('loading');
 		ng.removeError();
@@ -215,6 +178,33 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 
 		 }
 
+
+
+		 if((!empty(ng.cliente.id_estado) && !empty(ng.cliente.id_cidade) && !empty(ng.cliente.endereco) && !empty(ng.cliente.numero) && !empty(ng.cliente.bairro))){
+		 	 var estado_selecionado = ng.getEstadoByidIBGE(ng.cliente.id_estado);
+			 var cidade_selecionada = ng.getCidadeByIBGE(ng.cliente.id_cidade);
+			 var address = ng.cliente.endereco + ", " + ng.cliente.numero + ", " + ng.cliente.bairro + "," + cidade_selecionada.nome +"," +estado_selecionado.nome ;
+			
+			 aj.get('https://maps.googleapis.com/maps/api/geocode/json?region=BR&address='+address)
+				.success(function(data, status, headers, config) {
+					if(data.status = 'OK'){
+						cliente.num_latitude  = data.results[0].geometry.location.lat ;
+						cliente.num_longitude = data.results[0].geometry.location.lng ;
+						ng.ajaxSalvar(cliente,url,msg,btn);
+				    }else
+				        ng.ajaxSalvar(cliente,url,msg,btn);
+
+				})
+				.error(function(data, status, headers, config) {
+					ng.ajaxSalvar(cliente,url,msg,btn);
+
+				});
+			}else{
+				ng.ajaxSalvar(cliente,url,msg,btn);
+			}
+	}
+
+	ng.ajaxSalvar = function(cliente,url,msg,btn){
 		 aj.post(baseUrlApi()+url, cliente)
 		 	.success(function(data, status, headers, config) {
 		 		var form_data = data ;
@@ -319,6 +309,110 @@ app.controller('CadastroController', function($scope, $http, $window, $dialogs, 
 				if(status == 404)
 					ng.empreendimento = [];
 			});
+	}
+
+	ng.loadEstados = function () {
+		ng.estados = [];
+
+		aj.get(baseUrlApi()+"estados")
+		.success(function(data, status, headers, config) {
+			ng.estados = data;
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
+	ng.getEstado = function(uf){
+		var estado = null ;
+		$.each(ng.estados,function(i,x){
+			if(x.uf.toUpperCase() == uf.toUpperCase()){
+			    estado = x;
+				return false;
+			}
+		});
+
+		return estado;
+	}
+
+	var cep_anterior = null;
+	ng.validCep = function(cep){
+		if(cep != cep_anterior){
+			 var exp  = /^[0-9]{8}$/;
+	         var cep = cep;
+	         if(exp.test(cep)){
+	         	cep_anterior = cep ;
+	         	$('#busca-cep').modal({
+				  backdrop: 'static',
+				  keyboard: false
+				});
+				ng.consultaCep();
+	         }
+		}
+	}
+
+	ng.consultaCep = function(){
+		aj.get("http://api.postmon.com.br/v1/cep/"+ng.cliente.cep)
+		.success(function(data, status, headers, config) {
+
+			ng.cliente.endereco = data.logradouro;
+			ng.cliente.bairro = data.bairro;
+			var estado = ng.getEstado(data.estado);
+			ng.cliente.id_estado = estado.id;
+			ng.loadCidadesByEstado(data.cidade);
+			//ng.cliente.id_cidade = data.cidade_info.codigo_ibge.substr(0,6);
+			$("#num_logradouro").focus();
+			$('#busca-cep').modal('hide');
+		})
+		.error(function(data, status, headers, config) {
+			$('#busca-cep').modal('hide');
+			alert('CEP inválido');
+		});
+	}
+
+	ng.loadCidadesByEstado = function (nome_cidade) {
+		ng.cidades = [];
+		var id_cidade = angular.copy(ng.cliente.id_cidade);
+		aj.get(baseUrlApi()+"cidades/"+ng.cliente.id_estado)
+		.success(function(data, status, headers, config) {
+			ng.cliente.id_cidade = angular.copy(id_cidade);
+			console.log(ng.cliente.id_cidade);
+			ng.cidades = data;
+			setTimeout(function(){$("select").trigger("chosen:updated");},300);
+			if(nome_cidade != null){
+				$.each(ng.cidades,function(i,x){
+					if(removerAcentos(nome_cidade) == removerAcentos(x.nome)){
+						ng.cliente.id_cidade = angular.copy(x.id);
+						return false ;
+					}
+				});
+			}
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+	ng.getCidadeByIBGE = function(id){
+		var cidade = null ;
+		$.each(ng.cidades,function(i,x){
+			if(Number(id) == Number(x.id)){
+			    cidade = x;
+				return false;
+			}
+		});
+
+		return cidade;
+	}
+	ng.getEstadoByidIBGE = function(id){
+		var estado = null ;
+		$.each(ng.estados,function(i,x){
+			if(Number(id) == Number(x.id) ){
+			    estado = x;
+				return false;
+			}
+		});
+
+		return estado;
 	}
 
 	ng.loadEstados();

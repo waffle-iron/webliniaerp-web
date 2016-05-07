@@ -671,6 +671,20 @@
 									</div>
 								</div>
 								<div class="row">
+									<div class="col-sm-12" id="txt_sign_ac">
+										<div class="form-group">
+										 <label for="txt_sign_ac">Formas de Pag. visiveis no PDV:</label>
+										 	<div>
+												 <label class="label-checkbox inline" ng-repeat="item in formas_pagamento_pdv">
+													<input type="checkbox" ng-model="item.value"  ng-true-value="1" ng-false-value="0">
+													<span class="custom-checkbox"></span>
+													{{ item.descricao_forma_pagamento }}
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">
 											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">

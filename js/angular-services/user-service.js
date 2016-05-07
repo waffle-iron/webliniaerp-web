@@ -61,4 +61,21 @@ app.service('NFService', function($http) {
 	}
 });
 
+app.service('CaixaService', function($http) {
+	this.getCaixaAberto = function(id_empreendimento,pth_local,id_usuario) {
+		var caixa ;
+		 $.ajax({
+		 	url: baseUrlApi()+"caixa/aberto/"+id_empreendimento+"/"+pth_local+"/"+id_usuario,
+		 	async: false,
+		 	success: function(data) {
+		 		caixa = data ;
+		 	},
+		 	error: function(error) {
+		 		console.log(error);
+		 	}
+		 });
+		return caixa ;
+	}
+});
+
 

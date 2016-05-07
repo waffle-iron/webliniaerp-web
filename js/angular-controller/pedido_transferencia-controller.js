@@ -161,8 +161,10 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 				.attr("title", 'Informe o empreendimento que está solicitando a transferência')
 				.attr("data-original-title", 'Informe o empreendimento que está solicitando a transferência');
 			formControl.tooltip();
-			if(error == 0) formControl.tooltip('show');
-
+			if(error == 0){
+				$('html,body').animate({scrollTop: 0},'slow');
+				formControl.tooltip('show');
+			} 
 			error ++ ;
 		}
 
@@ -174,13 +176,29 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 				.attr("title", 'Informe os produtos para transferência')
 				.attr("data-original-title", 'Informe os produtos para transferência');
 			formControl.tooltip();
-			if(error == 0) formControl.tooltip('show');
+			if(error == 0){
+				$('html,body').animate({scrollTop: 0},'slow');
+				formControl.tooltip('show');
+			} 
 			error ++ ;
 		}	
 
+		$.each(ng.transferencia.produtos,function(key,item){
+			if(!($.isNumeric(item.qtd_pedida))){
+				$('#td-trasnferencia-qtd-pedida-'+item.id).addClass('has-error');
+				$('#td-trasnferencia-qtd-pedida-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade pedida não pode ser vazia').attr("data-original-title", 'A quantidade para pedida não pode ser vazia'); 
+				if(error == 0) {
+					$('#td-trasnferencia-qtd-pedida-'+item.id).find('input').tooltip('show');
+					$('html,body').animate({scrollTop: $('#td-trasnferencia-qtd-pedida-'+item.id).offset().top - 100 },'slow');
+				}else {
+					$('#td-trasnferencia-qtd-pedida-'+item.id).find('input').tooltip();
+				}
+				error ++ ;
+			}
+		});
+
 		if(error > 0){
 			btn.button('reset'); 
-			$('html,body').animate({scrollTop: 0},'slow');
 			return ;
 		}
 		var post = angular.copy(ng.transferencia);
@@ -345,7 +363,17 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		$.each(ng.transferencia.produtos,function(key,item){
 			if(!($.isNumeric(item.qtd_recebida))){
 				$('#td-trasnferencia-qtd-recebida-'+item.id).addClass('has-error');
-				$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade para recebida não poder ser vazia').attr("data-original-title", 'A quantidade para transferência não poder ser vazia'); 
+				$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade recebida não pode ser vazia').attr("data-original-title", 'A quantidade para transferência não pode ser vazia'); 
+				if(error == 0) {
+					$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').tooltip('show');
+					$('html,body').animate({scrollTop: $('#td-trasnferencia-qtd-recebida-'+item.id).offset().top - 100 },'slow');
+				}else {
+					$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').tooltip();
+				}
+				error ++ ;
+			}else if( !(Number(item.qtd_recebida) == Number(item.qtd_transferida)) ){
+				$('#td-trasnferencia-qtd-recebida-'+item.id).addClass('has-error');
+				$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade recebida não pode diferente da transferida').attr("data-original-title", 'A quantidade recebida não pode diferente da transferida'); 
 				if(error == 0) {
 					$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').tooltip('show');
 					$('html,body').animate({scrollTop: $('#td-trasnferencia-qtd-recebida-'+item.id).offset().top - 100 },'slow');
@@ -356,7 +384,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 			}
 			if(!$.isNumeric(item.id_deposito_entrada) && ( $.isNumeric(item.qtd_recebida) && Number(item.qtd_recebida) > 0 ) ){
 				$('#td-trasnferencia-id-deposito-entrada-'+item.id).addClass('has-error');
-				$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').attr("data-placement", "top").attr("title", 'Informe o deposito de entrada').attr("data-original-title", 'A quantidade para transferência não poder ser vazia'); 
+				$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').attr("data-placement", "top").attr("title", 'Informe o deposito de entrada').attr("data-original-title", 'A quantidade para transferência não pode ser vazia'); 
 				$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').attr('style','border: 1px solid #A94442;');
 				$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').find('span').attr('style','color:#A94442;');
 				if(error == 0) {

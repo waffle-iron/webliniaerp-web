@@ -7,6 +7,8 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	ng.busca 		 = {clientes:"",profissionais:"",procedimentos:"",odontogramas:"",faces:""};
 	ng.cliente       = {acao_cliente:'insert'} ;
 	ng.paginacao     = {} ;
+	var atividadeTO    = {id_procedimento_principal:null,id_procedimento:null,data:'',flg_concluido:0};
+	ng.atividade     = angular.copy(atividadeTO);  
 	$scope.openModal = function(aba){
 		$("#modalFichaPaciente").modal('show');
 		if(empty(aba)){
@@ -79,12 +81,12 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			});
 	}
 
-	ng.selCliente = function(){
+	ng.selCliente = function(acao){
+		ng.acao_modal_pacientes = acao == null ? 'novo_atendimento' : acao ;
 		var offset = 0  ;
     	var limit  =  10 ;;
-
-			ng.loadCliente(offset,limit);
-			$("#list_clientes").modal("show");
+		ng.loadCliente(offset,limit);
+		$("#list_clientes").modal("show");
 	}
 
 	ng.addCliente = function(item){
@@ -305,6 +307,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				btn.button('loading');
 		});
 	}
+
 	ng.salvarHistoricoAtendimento = function(post){	
 		aj.post(baseUrlApi()+"historico/paciente",post)
 			.success(function(data, status, headers, config) {
@@ -314,6 +317,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				console.log('Erro ao salvar historico') ;
 		});
 	}
+
 	ng.atendimento_selecionado = {} ;
 	ng.setFimAtendimento = function(){
 		setTime = Number(ng.configuracoes.flg_controlar_tempo_atendimento) == 1 ? true : false ;
@@ -642,7 +646,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
     ng.itens_venda = [] ;
     ng.getItensVenda = function(){
     	ng.itens_venda = null ;
-   		aj.get(baseUrlApi()+"clinica/paciente/"+ ng.atendimento_selecionado.id_paciente +"/procedimentos")
+   		aj.get(baseUrlApi()+"clinica/paciente/"+ ng.atendimento_selecionado.id_paciente +"/procedimentos?cplSql=( (ta.id_atendimento_origem IS NULL) OR (ta.id_atendimento_origem IS NOT NULL AND tiv.id_procedimento_principal IS NOT NULL ) )")
 			.success(function(data, status, headers, config) {
 				ng.itens_venda = data ;
 			})
@@ -1528,8 +1532,19 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 
           console.log(ng.pagamentosCliente);
 	}
-	ng.abrirFichaPaciente = function(paciente){
-		if(empty(paciente.id_atendimento_origem)){
+	ng.abrirFichaPaciente = function(paciente,acao){
+		ng.hide_add_procedimentos = false ;
+		if(acao == 'ver_ficha'){
+			ng.hide_add_procedimentos = true ;
+			$('#list_clientes').modal('hide');
+			ng.atendimento_selecionado = {id_paciente : paciente.id};
+			ng.getItensVenda();
+			ng.loadPagamentosPaciente();
+			ng.loadPaciente();
+			ng.loadPagamentosPaciente();
+			ng.openModal('dados');
+			ng.loadProcedimentos();
+		}else if(empty(paciente.id_atendimento_origem)){
 			ng.atendimento_selecionado = paciente ;
 			ng.getItensVenda();
 			ng.loadPagamentosPaciente();
@@ -1537,6 +1552,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			ng.loadPagamentosPaciente();
 			ng.openModal('dados');
 			ng.loadProcedimentos();
+
 		}else{
 			 aj.get(baseUrlApi()+"clinica/atendimento/"+paciente.id_atendimento_origem)
             .success(function(data, status, headers, config) {
@@ -1699,7 +1715,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				id_usuario_entrada : ng.userLogged.id,
 				id_status  : 1 ,
 				dta_entrada : data,
-				id_atendimento_origem : ng.atendimento_selecionado.id,
+				id_atendimento_origem : item.id_atendimento,
 				id_venda : item.id_venda,
 				id_item_venda : item.id,
 				id_status_procedimento : 2
@@ -1763,6 +1779,258 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				ng.procedimento.dsc_face = '';
 				ng.procedimento.id_regiao = null;
 		});	
+	}
+
+
+    ng.selAtividadeProcedimento = function(tipo){
+    	ng.busca.procedimentos = ''; 
+    	ng.atividade_tipo_procedimento = tipo;
+		var offset = 0  ;
+    	var limit  =  10 ;
+		ng.loadAtividadeProcedimentos(offset,limit,tipo);
+		$("#list_atividade_procedimentos").modal("show");
+
+	}
+
+	ng.addAtividadeProcedimento = function(item,tipo){
+		if(tipo == 'principal'){
+			ng.atividade.id_procedimento_principal = item.id_procedimento;
+			ng.atividade.id_atendimento_origem 	   = item.id_atendimento;
+			ng.atividade.id_item_venda_principal   = item.id;
+			//ng.atividade.id_procedimento_principal	 = item.cod_procedimento+" - "+item.dsc_procedimento;
+			$('#ui-auto-complete-procedimento-principal-atividade').val(item.cod_procedimento+" - "+item.dsc_procedimento)
+			$("#list_atividade_procedimentos").modal("hide");
+		}else{
+			ng.atividade.id_procedimento = item.id;
+			//ng.atividade.id_procedimento	 = item.cod_procedimento+" - "+item.dsc_procedimento;
+			$('#ui-auto-complete-procedimento-atividade').val(item.cod_procedimento+" - "+item.dsc_procedimento)
+			$("#list_atividade_procedimentos").modal("hide");
+		}
+		
+	}
+
+	ng.atividade_procedimentos = null ;
+	ng.loadAtividadeProcedimentos= function(offset,limit,tipo) {
+		offset = offset == null ? 0  : offset;
+    	limit  = limit  == null ? 10 : limit;
+		ng.procedimentos = [];
+		if(tipo=="principal"){
+			var query_string = "clinica/paciente/"+ng.atendimento_selecionado.id_paciente+"/procedimentos/"+offset+"/"+limit+"?tiv->id_procedimento_principal[exp]=IS NULL&tav->id_item_venda[exp]= IS NULL&tiv->id_status_procedimento[exp]= IN(1,2)";
+			if(ng.busca.procedimentos != ""){
+				query_string += "&"+$.param({'tp->dsc_procedimento':{exp:"like'%"+ng.busca.procedimentos+"%'"}});
+			}
+		}else{
+			query_string = "clinica/procedimentos/"+offset+"/"+limit+"/?id_empreendimento="+ng.userLogged.id_empreendimento+"";
+			if(ng.busca.procedimentos != ""){
+				query_string += "&"+$.param({'dsc_procedimento':{exp:"like'%"+ng.busca.procedimentos+"%'"}});
+			}
+		}
+		
+		aj.get(baseUrlApi()+query_string)
+			.success(function(data, status, headers, config) {		
+					ng.atividade_procedimentos = tipo == 'principal' ? data.atendimentos : data.procedimentos;
+					ng.atividade_paginacao_procedimentos = data.paginacao ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.procedimentos = false ;
+				ng.atividade_procedimentos = false ;
+			});
+	}
+
+	ng.selAtividadeProfissionais = function(paciente){
+		var offset = 0  ;
+    	var limit  =  10 ;;
+		ng.loadAtividadeProfissionais(offset,limit);
+		$("#list_atividade_profissionais").modal("show");
+	}
+
+	ng.addAtividadeProfissional = function(item){
+		ng.atividade.id_profissional = item.id;
+		ng.atividade.nome_profissional = item.nome ;
+		$('#ui-auto-complete-profissioal-atividade').val(item.nome);
+		$("#list_atividade_profissionais").modal("hide");
+	}
+
+	ng.loadAtividadeProfissionais= function(offset,limit) {
+		offset = offset == null ? 0  : offset;
+    	limit  = limit  == null ? 10 : limit;
+		ng.atividade_profissionais = [];
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=9&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
+
+		if(ng.busca.profissionais != ""){
+			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.profissionais+"%' OR usu.apelido LIKE '%"+ng.busca.profissionais+"%')"}});
+		}
+
+		aj.get(baseUrlApi()+"usuarios/"+offset+"/"+limit+"/"+query_string)
+			.success(function(data, status, headers, config) {
+				$.each(data.usuarios,function(i,item){
+					ng.atividade_profissionais.push(item);
+				});
+				ng.paginacao_atividade_profissionais = [];
+				$.each(data.paginacao,function(i,item){
+					ng.paginacao_atividade_profissionais.push(item);
+				});
+			})
+			.error(function(data, status, headers, config) {
+				ng.profissionais = false ;
+			});
+	}
+
+	ng.salvarAtividadeProcedimento = function(){
+		var btn = $('#salvar-atividade-procedimento');
+		btn.button('loading');
+		var error = 0 ;
+		$('.has-error input').tooltip('destroy');
+    	$('.has-error').removeClass('has-error');
+
+    	if(empty(ng.atividade.id_profissional)){
+			$("#ui-auto-complete-profissioal-atividade").parents('.form-group').addClass("has-error");
+			var formControl = $("#ui-auto-complete-profissioal-atividade")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'Campo obrigatório')
+				.attr("data-original-title", 'Campo obrigatório');
+			if(error == 0) formControl.tooltip('show');
+			else formControl.tooltip();
+			error ++ ;
+		}		
+		if(empty(ng.atividade.id_procedimento_principal)){
+			$("#ui-auto-complete-procedimento-principal-atividade").parents('.form-group').addClass("has-error");
+			var formControl = $("#ui-auto-complete-procedimento-principal-atividade")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'Campo obrigatório')
+				.attr("data-original-title", 'Campo obrigatório');
+			if(error == 0) formControl.tooltip('show');
+			else formControl.tooltip();
+			error ++ ;
+		}
+		if(empty(ng.atividade.id_procedimento)){
+			$("#ui-auto-complete-procedimento-atividade").parents('.form-group').addClass("has-error");
+			var formControl = $("#ui-auto-complete-procedimento-atividade")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'Campo obrigatório')
+				.attr("data-original-title", 'Campo obrigatório');
+			if(error == 0) formControl.tooltip('show');
+			else formControl.tooltip();
+			error ++ ;
+		}
+		if(ng.atividade.data.length !=12){
+			$("#atividade-data").parents('.form-group').addClass("has-error");
+			var formControl = $("#atividade-data")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'Campo obrigatório')
+				.attr("data-original-title", 'Campo obrigatório');
+			if(error == 0) formControl.tooltip('show');
+			else formControl.tooltip();
+			error ++ ;
+		}
+		
+
+		if(error > 0){
+			btn.button('reset');
+			return;
+		}
+
+		var atividade = angular.copy(ng.atividade);
+		atividade.data = atividade.data.substring(4,8)+'-'+atividade.data.substring(2,4)+'-'+atividade.data.substring(0,2)+' '+atividade.data.substring(8,10)+':'+atividade.data.substring(10,12)+":00";	
+	    venda = {
+			id_usuario : ng.userLogged.id ,
+			id_cliente : ng.atendimento_selecionado.id_paciente ,
+			venda_confirmada : 1 ,
+			dta_venda : moment().format('YYYY-MM-DD HH:mm:ss'),
+			id_empreendimento : ng.userLogged.id_empreendimento ,
+			id_status_venda : 6 ,
+			id_atendimento  : null
+		}
+		aj.post(baseUrlApi()+"clinica/gravarVenda",{venda:venda})
+		.success(function(data, status, headers, config) {
+			atividade.id_venda = data.id_venda;
+			var item = {
+				desconto_aplicado : 0 ,
+				valor_desconto : 0 ,
+				id_procedimento : ng.atividade.id_procedimento ,
+				id_procedimento_principal : ng.atividade.id_procedimento_principal ,
+				qtd : 1 ,
+				valor_real_item : 0,
+				vlr_custo: 0 ,
+				perc_imposto_compra: 0,
+				perc_desconto_compra: 0,
+				perc_margem_aplicada: 0,
+				id_status_procedimento : 3
+			};
+		 	var post = {
+		 		produtos : [item],
+				id_empreendimento : ng.userLogged.id_empreendimento,
+				id_deposito : ng.caixa_aberto.id_deposito,
+				id_venda : atividade.id_venda
+		 	}
+
+		 	aj.post(baseUrlApi()+"clinica/gravarItensVenda",post)
+				.success(function(data, status, headers, config) {
+					atividade.id_item_venda = data.id_item_venda ;
+					var atendimento = {
+						id_empreendimento : ng.userLogged.id_empreendimento ,
+						id_paciente : ng.atendimento_selecionado.id_paciente,
+						id_usuario_entrada : ng.userLogged.id,
+						id_status  : 1 ,
+						dta_entrada : atividade.data,
+						id_atendimento_origem : ng.atividade.id_atendimento_origem,
+						id_venda : atividade.id_venda,
+						id_item_venda : atividade.id_item_venda,
+						id_status : 6,
+						id_profissional_atendimento : ng.atividade.id_profissional
+
+					}
+					aj.post(baseUrlApi()+"clinica/atendimento/save",atendimento)
+						.success(function(data, status,headers, config) {
+							if(Number(atividade.flg_concluido) == 0){
+								btn.button('reset');
+								ng.atividade = angular.copy(atividadeTO);
+								$('#ui-auto-complete-profissioal-atividade').val('');
+								$('#ui-auto-complete-procedimento-principal-atividade').val('');
+								$('#ui-auto-complete-procedimento-atividade').val('');
+								ng.mensagens('alert-success','<b>procedimento agendado com sucesso.</b>','.alert-atividades');
+								ng.getItensVenda();
+								ng.getListaAtendimento();
+							}else{
+								var post = {
+									campos : {
+										id_status_procedimento : 3
+									},
+									where : 'id = '+atividade.id_item_venda_principal
+								}
+								aj.post(baseUrlApi()+"clinica/item_venda/update",post)
+									.success(function(data, status, headers, config) {
+										btn.button('reset');
+										ng.atividade = angular.copy(atividadeTO);
+										$('#ui-auto-complete-profissioal-atividade').val('');
+										$('#ui-auto-complete-procedimento-principal-atividade').val('');
+										$('#ui-auto-complete-procedimento-atividade').val('');
+										ng.mensagens('alert-success','<b>procedimento agendado com sucesso.</b>','.alert-atividades');
+										ng.getItensVenda();
+										ng.getListaAtendimento();
+									})
+									.error(function(data, status, headers, config) {
+										btn.button('reset');
+								});
+							}
+						})
+						.error(function(data, status, headers, config) {
+							btn.button('reset');
+					});	
+				})
+				.error(function(data, status, headers, config) {
+					btn.button('reset');
+					alert('Erro ao cadastrar venda');
+				});
+		})
+		.error(function(data, status, headers, config) {
+			btn.button('reset');
+			alert('Erro ao cadastrar venda');
+		});
 	}
 
 	//$scope.openModal();
@@ -1938,6 +2206,119 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
     	var self = this ;
     	setTimeout(function(){
     		if(!$.isNumeric(ng.procedimento.id_regiao)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
+
+    var atividade_procedimentos_principal_auto_complete = [] ;
+    $( "#ui-auto-complete-procedimento-principal-atividade" ).autocomplete({
+      source: function (request, response) {
+      	var query_string = "clinica/paciente/"+ng.atendimento_selecionado.id_paciente+"/procedimentos?tiv->id_procedimento_principal[exp]=IS NULL&tav->id_item_venda[exp]= IS NULL&tiv->id_status_procedimento[exp]= IN(1,2)";
+      	query_string += "&"+$.param({'(tp->dsc_procedimento':{exp:"like '%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR tp.cod_procedimento='"+request.term.replace(/^\s+|\s+$/g,"")+"')"}});
+      	aj.get(baseUrlApi()+query_string)
+			.success(function(data, status, headers, config) {
+				atividade_procedimentos_principal_auto_complete = []
+				$.each(data,function(i,v){
+					atividade_procedimentos_principal_auto_complete.push({
+						label : v.dsc_procedimento,
+						valor : v.dsc_procedimento,
+						id    : v.id_procedimento
+					})
+				});
+				response(atividade_procedimentos_principal_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+      	//$(this).attr('data-id-procedimento',ui.item.id);
+      	$scope.$apply(function () {
+            ng.atividade.id_procedimento_principal = ui.item.id ;
+        });
+      }
+    }).keydown(function(e){
+    	 var tecla = (e.keyCode?e.keyCode:e.which);
+    	 if(tecla == 9 && atividade_procedimentos_principal_auto_complete.length == 1){
+    	 	//$(this).attr('data-id-procedimento',atividade_procedimentos_principal_auto_complete[0].id) ;
+    	 	$(this).val(atividade_procedimentos_principal_auto_complete[0].label);
+    	 	$('#ui-auto-complete-procedimento-atividade').focus();
+    	 	$scope.$apply(function () {
+            	ng.atividade.id_procedimento_principal = atividade_procedimentos_principal_auto_complete[0].id ;
+        	});
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#ui-auto-complete-procedimento-atividade').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	//$(this).attr('data-id-procedimento','') ;
+      	$scope.$apply(function () {
+            ng.atividade.id_procedimento_principal = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.atividade.id_procedimento_principal)){
+    			$(self).val('');
+    		}
+    	},300);
+    });
+
+    var atividade_procedimentos_auto_complete = [] ;
+    $( "#ui-auto-complete-procedimento-atividade" ).autocomplete({
+      source: function (request, response) {
+      	var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento+"&"+$.param({'dsc_procedimento':{exp:"like '%"+request.term.replace(/^\s+|\s+$/g,"")+"%' OR cod_procedimento='"+request.term.replace(/^\s+|\s+$/g,"")+"'"}});
+      	aj.get(baseUrlApi()+"clinica/procedimentos"+query_string)
+			.success(function(data, status, headers, config) {
+				atividade_procedimentos_auto_complete = []
+				$.each(data,function(i,v){
+					atividade_procedimentos_auto_complete.push({
+						label : v.dsc_procedimento,
+						valor : v.dsc_procedimento,
+						id    : v.id
+					})
+				});
+				response(atividade_procedimentos_auto_complete);
+			})
+			.error(function(data, status, headers, config) {
+				response([]);
+		});	
+      },
+      select:function(event, ui){
+      	//$(this).attr('data-id-procedimento',ui.item.id);
+      	$scope.$apply(function () {
+            ng.atividade.id_procedimento = ui.item.id ;
+        });
+      }
+    }).keydown(function(e){
+    	 var tecla = (e.keyCode?e.keyCode:e.which);
+    	 if(tecla == 9 && atividade_procedimentos_auto_complete.length == 1){
+    	 	//$(this).attr('data-id-procedimento',atividade_procedimentos_auto_complete[0].id) ;
+    	 	$(this).val(atividade_procedimentos_auto_complete[0].label);
+    	 	$('#atividade-data').focus();
+    	 	$scope.$apply(function () {
+            	ng.atividade.id_procedimento = atividade_procedimentos_auto_complete[0].id ;
+        	});
+    	 	return false ;
+
+    	 }else if(tecla == 9){
+    	 	$('#atividade-data').focus();
+    	 	return false ;
+    	 }
+    }).focus(function(e){
+    	$(this).val('');
+      	//$(this).attr('data-id-procedimento','') ;
+      	$scope.$apply(function () {
+            ng.atividade.id_procedimento = null ;
+        });
+    }).blur(function(e){
+    	var self = this ;
+    	setTimeout(function(){
+    		if(!$.isNumeric(ng.atividade.id_procedimento)){
     			$(self).val('');
     		}
     	},300);

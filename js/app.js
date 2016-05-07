@@ -124,6 +124,9 @@ angular.module('filters', [])
 	})
 	.filter('phoneFormat', function () {
 		return function (inputFormat) {
+			if(empty(inputFormat)){
+				return "" ;
+			}
 			inputFormat = ""+inputFormat;
 			if(empty(inputFormat)){
 				return "" ;
@@ -143,6 +146,19 @@ angular.module('filters', [])
 			telefone = part1 +"-"+ part2;
 
 			return "("+ ddd +") "+ telefone;
+	    };
+	})
+	.filter('cpfFormat', function () {
+		return function (inputFormat,prefix) {
+			prefix = empty(prefix) ? '' : prefix ;
+			inputFormat = ""+inputFormat;
+			if(inputFormat.length != 11 && $.isNumeric(inputFormat)){
+				return "" ;
+			}
+			var cpf = inputFormat.substring(0,3)+'.'+inputFormat.substring(3,6)+'.'+inputFormat.substring(6,9)+'-'+inputFormat.substring(9,11);
+
+			return prefix+cpf ;
+
 	    };
 	})
 	.directive('thousandsFormatter', function ($filter) {
@@ -243,45 +259,55 @@ angular.module('filters', [])
 	        }
 	    };
 	})
-	.directive('teste', function ($filter) {
-	    var precision = 2;
+	.directive('controlSizeString', function ($filter) {
 	    return {
-	        require: 'ngModel',
-	              link: function (scope, element, attrs, ctrl) {
+	    	link:function(scope,element,attrs,ctrl){
+	    		var size = Number(attrs.size);
+	    		if(attrs.content.length > size){
+	    			element.html( attrs.content.substring(0,size)+' <a style="cursor:pointer;color:black" class="controlSizeString-active">...</a>' );
+		    		var trigger = empty(attrs.trigger) ? 'hover' : attrs.trigger ;
+		    		var container = empty(attrs.container) ? 'body' : attrs.container;
+		    		var title     = empty(attrs.title) ? false : attrs.title ;
+		    		var placement = empty(attrs.placement) ? 'top' : attrs.placement;
 
-	            ctrl.$formatters.push(function (data) {
-	                var formatted = $filter('numberFormat')(data,2,',','.');
-	                $(element).val(formatted);
-	                if(formatted != '0,00' )
-	                	return formatted;
-	                else
-	                	return '';
-	            });
+		    		var config = {
+						title: ( title==false ? '' : title ) ,
+		                placement: placement ,
+		                content: attrs.content ,
+		                html: true,
+		                container: container,
+		                trigger  :trigger
+		            }
+		            if(title == false)
+		           	 config.template =  '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+	    			$('.controlSizeString-active',element).popover(config).popover();
+	    		}else{
+	    			element.html((attrs.content))
+	    		}
+	    	}
+	    }
+	}).directive('initPopover', function ($compile,$filter) {
+	    return {
+	    	link:function(scope,element,attrs,ctrl){
+		    		var trigger = empty(attrs.trigger) ? 'click' : attrs.trigger ;
+		    		var container = empty(attrs.container) ? 'body' : attrs.container;
+		    		var title     = empty(attrs.title) ? false : attrs.title ;
+		    		var placement = empty(attrs.placement) ? 'top' : attrs.placement;
 
-	            element.bind('change', function (event) {
-		       		if(element.val() == '0,00')
-		       			element.val('');
-	            });
-
-	            element.bind('focusin', function (event) {
-		       		if(element.val() == '')
-		       			element.val('0,00');
-	            });
-
-	            ctrl.$parsers.push(function (data) {
-	                var plainNumber = data.replace(/[^\d|\-+|\+]/g, '');
-	                var length = plainNumber.length;
-	                var intValue = plainNumber.substring(0,length-precision);
-	                var decimalValue = plainNumber.substring(length-precision,length)
-	                var plainNumberWithDecimal = intValue + '.' + decimalValue;
-	                //convert data from view format to model format
-	                var formatted = $filter('numberFormat')(plainNumberWithDecimal,2,',','.');
-	                element.val(formatted);
-
-	                return isNaN(Number(plainNumberWithDecimal)) ? 0 : Number(plainNumberWithDecimal);
-	            });
-	        }
-	    };
+		    		var config = {
+						title: ( title==false ? '' : title ) ,
+		                placement: placement ,
+		                content:  $compile($(attrs.content))(scope) ,
+		                html: true,
+		                container: container,
+		                trigger  :trigger
+		            }
+		            if(title == false)
+		           	 config.template =  '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+	    			$(element).popover(config).popover();
+	    		
+	    	}
+	    }
 	});
 
 function Ctrl($scope) {

@@ -194,6 +194,10 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		postData.vlr_total_nota_fiscal 	= parseFloat((postData.vlr_total_nota_fiscal != undefined) ? postData.vlr_total_nota_fiscal.replace(",", ".") : 0);
 		postData.vlr_frete 				= parseFloat((postData.vlr_frete != undefined) ? postData.vlr_frete.replace(",", ".") : 0);
 
+		$.each(ng.nota,function(i,x){
+			ng.nota[i].imposto = $.isNumeric(x.imposto) ? Number(x.imposto)/100 : 0 ;
+		});	
+
 		$http.post(baseUrlApi()+'estoque/entrada',ng.nota)
 			.success(function(data, status, headers, config) {
 				btn.button('reset');

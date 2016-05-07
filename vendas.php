@@ -854,7 +854,7 @@
       carregando
     </div>
     <div id="tip" ng-show="loadPopover == false">
-      <b>Dta da venda:</b> R$ {{ last_venda.dta_venda | dateFormat:'date' }}  <br/> 
+      <b>Dta da venda:</b> R$ {{ last_venda.dta_venda | dateFormat:'dateTime' }}  <br/> 
       <b>Valor de custo:</b> R$ {{ last_venda.vlr_custo | numberFormat:2:',':'.' }}  <br/>
       <b>Valor de venda:</b> R$ {{ last_venda.vlr_produto | numberFormat:2:',':'.' }} <br/>
       <b>Valor desconto(%):</b> {{ last_venda.valor_desconto}}%<br/>

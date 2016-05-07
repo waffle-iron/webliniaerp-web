@@ -66,6 +66,10 @@
 			color: black;
 		}
 
+		.panel.panel-default {
+		    overflow: visible !important;
+		}
+
 
 	</style>
   </head>
@@ -233,7 +237,7 @@
 										<table class="table table-bordered table-condensed table-striped table-hover">
 											<thead>
 												<tr>
-													<td colspan="7"><i class="fa fa-archive"></i> Produtos</td>
+													<td colspan="8"><i class="fa fa-archive"></i> Produtos</td>
 													<td width="60" align="center">
 													<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
 													</td>
@@ -243,9 +247,11 @@
 												<tr>
 													<th>ID</th>
 													<th>Produto</th>
+													<th>Fabricante</th>
 													<th>Peso</th>
 													<th>sabor</th>
-													<th>Qtd.Pedida</th>
+													<th class="text-center" >Estoque</th>
+													<th class="text-center" >Qtd.Pedida</th>
 													<th>Qtd. transferir</th>
 													<th width="250">Deposito</th>
 													<th></th>
@@ -253,12 +259,15 @@
 												<tr ng-repeat="item in transferencia.produtos" id="tr-prd-{{ item.id }}">
 													<td>{{ item.id	 }}</td>
 													<td>{{ item.nome }}</td>
+													<td>{{ item.nome_fabricante }}</td>
 													<td>{{ item.peso }}</td>
 													<td>{{ item.sabor }}</td>
+													<td class="text-center" ng-if="!item.load_estoque">{{ item.qtd_item }}</td>
+													<td class="text-center" ng-if="item.load_estoque"><i class='fa fa-refresh fa-spin'></i></td>
 													<td width="80" class="text-center">{{ item.qtd_pedida }}</td>
 													<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input onKeyPress="return SomenteNumero(event);" style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
 													<td id="td-prd-deposito-saida-{{ item.id }}">
-														<select chosen ng-change="" 
+														<select chosen ng-change="loadestoque(item)" 
 													    option="depositos_chosen"
 													    ng-model="item.id_deposito_saida"
 													    ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
@@ -457,6 +466,7 @@
 											<th >Fabricante</th>
 											<th >Tamanho</th>
 											<th >Sabor/cor</th>
+											<th >Estoque</th>
 											<th >qtd</th>
 											<th ></th>
 										</tr>
@@ -474,6 +484,7 @@
 											<td>{{ item.nome_fabricante }}</td>
 											<td>{{ item.peso }}</td>
 											<td>{{ item.sabor }}</td>
+											<td>{{ item.qtd_item }}</td>
 											<td  width="50"><input  ng-model="item.qtd_pedida" type="text" class="form-control input-xs" /></td>
 											<td width="50" align="center">
 												<button ng-show="!produtoSelected(item.id)" type="button" class="btn btn-xs btn-success" ng-click="addProduto(item)">

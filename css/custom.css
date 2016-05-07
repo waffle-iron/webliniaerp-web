@@ -317,3 +317,7 @@ overflow-x: hidden;
     margin-left: 47%;
     margin-top: 18%;
 }
+
+.upload-file label {
+	cursor: pointer;
+}
