@@ -207,7 +207,7 @@
 				</ul>
 			</div><!-- breadcrumb -->
 
-			<div class="main-header clearfix">
+			<div class="main-header clearfix" style="padding-bottom: 20px !important;">
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-list"></i> Controle de Atendimento</h3>
 					<br/>
@@ -216,6 +216,30 @@
 					
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
+
+			<div class="grey-container shortcut-wrapper">
+				<a href="agendamento-consulta.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-calendar"></i>
+					</span>
+					<span class="text">Agenda de Atendimento</span>
+				</a>
+				<a href="controle_protese.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-list-alt"></i></span>
+					<span class="text">Controle de Próteses</span>
+				</a>
+				<a href="produtos.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-archive"></i></span>
+					<span class="text">Controle de Estoque</span>
+				</a>
+				<a href="clientes.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-users"></i></span>
+					<span class="text">Pacientes e Usuários</span>
+				</a>
+			</div><!-- /grey-container -->
 
 			<div class="padding-md">
 				<div class="panel panel-primary"  id="box-novo" style="display: none">

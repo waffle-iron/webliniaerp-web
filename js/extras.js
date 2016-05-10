@@ -174,19 +174,32 @@ function numberFormat(number, decimals, dec_point, thousands_sep) {
 		return $.isNumeric(vlr) ? Number(vlr) : vlr ;
 }
 
+// function getUrlVars()
+// {
+//     var vars = [], hash;
+
+//     var url =  window.location.href.split("#");
+//    	if(url.length > 1)
+//    		var hashes = url[0].slice(window.location.href.indexOf('?') + 1).split('&');
+//    	else
+//     	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+//     for(var i = 0; i < hashes.length; i++)
+//     {
+//         hash = hashes[i].split('=');
+//         //vars.push(hash[0]);
+//         vars[hash[0]] = hash[1];
+//     }
+
+//     return vars;
+// }
+
 function getUrlVars()
 {
-    var vars = [], hash;
-
-    var url =  window.location.href.split("#");
-   	if(url.length > 1)
-   		var hashes = url[0].slice(window.location.href.indexOf('?') + 1).split('&');
-   	else
-    	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    var vars = {}, hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < hashes.length; i++)
     {
         hash = hashes[i].split('=');
-        //vars.push(hash[0]);
         vars[hash[0]] = hash[1];
     }
 
