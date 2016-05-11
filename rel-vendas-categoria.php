@@ -41,7 +41,7 @@
 		}
 	</style>
   </head>
-  <body ng-click="limparPopOver($event)" class="overflow-hidden" ng-controller="RelatorioTotalVendasCliente" ng-cloak>
+  <body ng-click="limparPopOver($event)" class="overflow-hidden" ng-controller="RelatorioVendasCategoriaCtrl" ng-cloak>
     	<div id="wrapper" class="bg-white preload">
 		<div id="top-nav" class="fixed skin-1">
 			<a href="#" class="brand">
@@ -163,8 +163,8 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório de Vendas por Produto</h3>
-							<span class="text-muted">Margem de Lucro por Produto</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Vendas por Categoria</h3>
+							<span class="text-muted">Consolidação de vendas por categoria de produto</span>
 						</div>
 					</div>
 
@@ -186,7 +186,7 @@
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control">
+											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
 											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
@@ -196,7 +196,7 @@
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control">
+											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control text-center">
 											<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
@@ -204,11 +204,13 @@
 
 								<div class="col-lg-6">
 									<div class="form-group">
-										<label class="control-label">Produtos</label>
+										<label class="control-label">Categoria</label>
 										<div class="input-group">
-											<input ng-click="showProdutos(0,10)" type="text" class="form-control" ng-model="produto.nome_produto" readonly="readonly" style="cursor: pointer;"></input>
+											<input ng-click="showCategorias(0,10)" type="text" class="form-control" ng-model="categoria.descricao_categoria" readonly="readonly" style="cursor: pointer;"></input>
 											<span class="input-group-btn">
-												<button ng-enter="showProdutos(0,10)" ng-click="showProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
+												<button ng-enter="showCategorias(0,10)" ng-click="showCategorias(0,10)" type="button" class="btn">
+													<i class="fa fa-tags"></i>
+												</button>
 											</span>
 										</div>
 									</div>
@@ -221,67 +223,46 @@
 						<div class="pull-right">
 							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
 							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
-							<button class="btn btn-sm btn-success hidden-print" ng-show="itens.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
+							<button class="btn btn-sm btn-success hidden-print" ng-show="items.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
 				</div>
 
-				<ul class="pagination pagination-sm m-top-none pull-right hidden-print" ng-show="paginacao.itens.length > 1">
-					<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
-						<a href="" h ng-click="loadItens(item.offset,item.limit)">{{ item.index }}</a>
-					</li>
-				</ul>
-				<br>
+				<br/>
+
 				<table id="data" class="table table-bordered table-hover table-striped table-condensed">
 					<thead>
 						<tr>
-							<th width="50"></th>
+							<th>Categoria</th>
 							<th>Produto</th>
-							<th>Fabricante</th>
-							<th class="text-center" width="60">Tamanho</th>
 							<th class="text-center">Qtd. Vendida</th>
-							<th class="text-right" width="100">Custo Total</th>
 							<th class="text-right" width="100">Total Vendido</th>
-							<th class="text-right">Margem Lucro</th>
-							<th class="text-right" width="100">Lucro Bruto</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-if="vendas.length == 0 && vendas != null">
-							<td class="text-center" colspan="10">
+						<tr ng-if="items.length == 0 && items != null">
+							<td class="text-center" colspan="4">
 								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
 							</td>
 						</tr>
-						<tr ng-if="vendas.length < 0 && vendas == null">
-							<td colspan="10">
-								Nenhuma movimentação encontrada para este caixa.
+						<tr ng-if="items == null">
+							<td colspan="4" class="text-center">
+								Nenhum registro encontrado.
 							</td>
 						</tr>
-						<tr ng-repeat="venda in vendas" bs-popover>
-							<td class="text-cente">{{ venda.cod_produto }}</td>
-							<td>{{ venda.nme_produto }}</td>
-							<td>{{ venda.nome_fabricante }}</td>
-							<td class="text-center">{{ venda.peso }}</td>
-							<td class="text-center">{{ venda.qtd_vendida }}</td>
-							<td class="text-right">
-								 <div class="cardBody"><a style="cursor:pointer;text-decoration: underline;" style="font-size: 12px;color: #777" ng-click="detalCustoProduto(venda)" href="#" id="pop{{venda.nme_produto }}" rel="popover" data-content="<i class='fa fa-refresh fa-spin'></i> Aguarde, carregando itens..." data-trigger="focus">
-									R$ {{venda.vlr_custo_total | numberFormat:2:',':'.'}}
-								 </a>
-							</td>
-							<td class="text-right">R$ {{venda.vlr_vendido | numberFormat:2:',':'.'}}</td>
-							<td class="text-right">{{ venda.med_margem_lucro * 100 | numberFormat:2:',':'.'}}%</td>
-							<td class="text-right" ng-if="venda.vlr_lucro_bruto > 0">{{ venda.vlr_lucro_bruto | numberFormat:2:',':'.' }}</td>
-							<td class="text-right" ng-if="venda.vlr_lucro_bruto < 0"><a style="cursor:pointer;text-decoration: underline;" ng-click="showProdutoDebito(venda)">{{ venda.vlr_lucro_bruto | numberFormat:2:',':'.' }}</a></td>
+						<tr ng-repeat="item in items" bs-popover>
+							<td>{{ item.nme_categoria }}</td>
+							<td>{{ item.nme_produto }}</td>
+							<td class="text-center">{{ item.qtd_total_vendida }}</td>
+							<td class="text-right">R$ {{ item.vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<td colspan="2"><strong>TOTAL</strong></td>
+						<td class="text-center">{{ qtd_total_vendida }}</td>
+						<td class="text-right">R$ {{ vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
+					</tfoot>
 				</table>
-				<!--<div class="pull-right">
-						<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.vendas.length > 1">
-							<li ng-repeat="item in paginacao.vendas" ng-class="{'active': item.current}">
-								<a href="" h ng-click="loadVendas(item.offset,item.limit)">{{ item.index }}</a>
-							</li>
-						</ul>
-				</div>-->
 				</div>
 			</div><!-- /.padding20 -->
 		</div><!-- /main-container -->
@@ -291,7 +272,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Aguarde</h4>
+					<h4 class="modal-title">Aguarde!</h4>
 				</div>
 				<div class="modal-body">
 					<p>Carregando dados do relatório...</p>
@@ -300,148 +281,77 @@
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
-	<div class="modal fade" id="list_produtos" style="display:none">
-  			<div class="modal-dialog">
-    			<div class="modal-content">
-      				<div class="modal-header">
-        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Produtos</span></h4>
-      				</div>
-				    <div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="input-group">
-						            <input ng-model="busca.produtos" ng-enter="loadProdutos(0,10)" type="text" class="form-control input-sm">
+	<div class="modal fade" id="list_categorias" style="display:none">
+		<div class="modal-dialog">
+			<div class="modal-content">
+  				<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4><i class="fa fa-tags"></i> Categorias</h4>
+  				</div>
+			    <div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="input-group">
+					            <input ng-model="busca.produtos" ng-enter="loadCategorias(0,10)" type="text" class="form-control input-sm">
 
-						            <div class="input-group-btn">
-						            	<button ng-click="loadProdutos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
-						            </div> <!-- /input-group-btn -->
-						        </div> <!-- /input-group -->
-							</div><!-- /.col -->
-						</div>
+					            <div class="input-group-btn">
+					            	<button ng-click="loadCategorias(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
+					            </div> <!-- /input-group-btn -->
+					        </div> <!-- /input-group -->
+						</div><!-- /.col -->
+					</div>
 
-						<br>
+					<br>
 
-						<div class="row">
-							<div class="col-md-12">
-								<div class="alert alert-produtos" style="display:none"></div>
-						   		<table class="table table-bordered table-condensed table-striped table-hover">
-									<thead ng-show="(produtos.length != 0)">
-										<tr>
-											<th>#</th>
-											<th>Nome</th>
-											<th>Fabricante</th>
-											<th>Tamanho</th>
-											<th width="80"></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-show="(produtos.length == 0)">
-											<td colspan="3">Não a Produtos cadastrados</td>
-										</tr>
-										<tr ng-repeat="item in produtos">
-											<td>{{ item.id_produto }}</td>
-											<td>{{ item.nome_produto }}</td>
-											<td>{{ item.nome_fabricante }}</td>
-											<td>{{ item.peso }}</td>
-											<td>
-											<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="alert alert-produtos" style="display:none"></div>
+					   		<table class="table table-bordered table-condensed table-striped table-hover">
+								<thead ng-show="(categorias.length != 0)">
+									<tr>
+										<th>#</th>
+										<th>Categoria</th>
+										<th width="80"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-show="(categorias.length == 0)">
+										<td colspan="3">Nenhum registro encontrado!</td>
+									</tr>
+									<tr ng-repeat="item in categorias">
+										<td>{{ item.id }}</td>
+										<td>{{ item.descricao_categoria }}</td>
+										<td>
+											<button ng-click="selectCategoria(item)" class="btn btn-success btn-xs" type="button">
 												<i class="fa fa-check-square-o"></i> Selecionar
 											</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-
-					    <div class="row">
-					    	<div class="col-md-12">
-								<div class="input-group pull-right">
-						             <ul class="pagination pagination-xs m-top-none" ng-show="paginacao.produtos.length > 1">
-										<li ng-repeat="item in paginacao.produtos" ng-class="{'active': item.current}">
-											<a href="" ng-click="loadProdutos(item.offset,item.limit)">{{ item.index }}</a>
-										</li>
-									</ul>
-						        </div> <!-- /input-group -->
-							</div><!-- /.col -->
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
-			  	</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div>
 
-	<div class="modal fade" id="list_produtos_debito" style="display:none">
-  			<div class="modal-dialog modal-lg">
-    			<div class="modal-content">
-      				<div class="modal-header">
-        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4><span>Itens em debito</span></h4>
-						<span class="text-muted">lista de itens do produto <b>{{ produto_debito.nome_produto }}</b> que foram vendidos a baixo do valor de custo</span>
-      				</div>
-				    <div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="alert alert-produtos" style="display:none"></div>
-						   		<table class="table table-bordered table-condensed table-striped table-hover">
-									<thead ng-show="(produtos.length != 0)">
-										<tr>
-											<th>ID Venda</th>
-											<th>Data venda</th>
-											<th>Operador</th>
-											<th>Cliente</th>
-											<th>Vlr. Custo</th>
-											<th>Qtd.</th>
-											<th>Vlr. Vendido</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-show="(produto_debito.itens.length == 0)">
-											<td colspan="3">Não a itens vendido a baixo do valor de custo</td>
-										</tr>
-										<tr ng-repeat="item in produto_debito.itens">
-											<td>{{ item.id_venda }}</td>
-											<td>{{ item.dta_venda | dateFormat:'dateTime' }}</td>
-											<td>{{ item.nome_usuario }}</td>
-											<td>{{ item.nome_cliente }}</td>
-											<td class="text-right">R${{ item.vlr_custo_total | numberFormat:2:',':'.' }}</td>
-											<td class="text-center">{{ item.qtd }}</td>
-											<td class="text-right">R${{ item.valor_real_item | numberFormat:2:',':'.' }}</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-
-					    <div class="row">
-					    	<div class="col-md-12">
-								<div class="input-group pull-right">
-						             <ul class="pagination pagination-xs m-top-none" ng-show="produto_debito.paginacao.length > 1">
-										<li ng-repeat="item in produto_debito.paginacao" ng-class="{'active': item.current}">
-											<a href="" ng-click="loadProdutoDebito(item.offset,item.limit)">{{ item.index }}</a>
-										</li>
-									</ul>
-						        </div> <!-- /input-group -->
-							</div><!-- /.col -->
-						</div>
+				    <div class="row">
+				    	<div class="col-md-12">
+							<div class="input-group pull-right">
+					             <ul class="pagination pagination-xs m-top-none" ng-show="paginacao.categorias.length > 1">
+									<li ng-repeat="item in paginacao.categorias" ng-class="{'active': item.current}">
+										<a href="" ng-click="loadCategorias(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+					        </div> <!-- /input-group -->
+						</div><!-- /.col -->
 					</div>
-			  	</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div>
+				</div>
+		  	</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
 
 	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
 	<!-- Logout confirmation -->
-	<div class="custom-popup width-100" id="logoutConfirm">
-		<div class="padding-md">
-			<h4 class="m-top-none"> Do you want to logout?</h4>
-		</div>
-
-		<div class="text-center">
-			<a class="btn btn-success m-right-sm" href="login.html">Logout</a>
-			<a class="btn btn-danger logoutConfirm_close">Cancel</a>
-		</div>
-	</div>
+	<?php include("logoutConfirm.php"); ?>
 </body>
 
 
@@ -521,7 +431,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/relatorio_vendas_produtos-controller.js"></script>
+	<script src="js/angular-controller/rel-vendas-categoria_controller.js"></script>
 
 
 	<script id="printFunctions">

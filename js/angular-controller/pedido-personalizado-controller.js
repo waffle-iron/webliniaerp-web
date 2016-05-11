@@ -18,9 +18,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
   	ng.chinelosInfantis = {
 							tamanhos:['23/24','31/32'],
 							precos:{
-								'1-100'  : 5.99,
-								'101-149' : 4.99,
-								'150'     : 4.00
+								'30': 4.00
 							}
 
     					  };
@@ -28,9 +26,9 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
     						tamanhos:['33/34'],
     						precos:{
 								'1-49'  : 13.50,
-								'50-100' : 6.99,
-								'101-149': 6.50,
-								'150'    : 5.99
+								'50-99' : 6.99,
+								'100-149': 5.99,
+								'150'    : 5.50
 							}
     					  };
     ng.carrinhoPedido = {} ;
@@ -492,7 +490,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		}
 
 		if(ng.length(ng.carrinhoPedido) == 0){
-			$dialogs.notify('Atenção!','<strong>Nunhum Produto Foi Montado.</strong>');
+			$dialogs.notify('Atenção!','<strong>Nenhum Produto Foi Montado.</strong>');
 			return ;
 		}
 
@@ -887,7 +885,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		}
 
 		if(ng.length(ng.carrinhoPedido) == 0){
-			$dialogs.notify('Atenção!','<strong>Nunhum Produto Foi Montado.</strong>');
+			$dialogs.notify('Atenção!','<strong>Nenhum Produto Foi Montado.</strong>');
 			return ;
 		}
 

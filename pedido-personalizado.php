@@ -922,7 +922,7 @@
                             <button type="button" class="btn btn-primary" ng-disabled="vlrTotalCompra <= 0" ng-click="telaPagamento()">
                                  <i class="fa fa-money"></i> Receber
                             </button>
-							<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde" type="button" ng-click="tool()" class="btn btn-success" id="btn-salvar"><i class="fa fa-save"></i> Salvar Pedido</button>
+							<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde" type="button" ng-click="salvar()" class="btn btn-success" id="btn-salvar"><i class="fa fa-save"></i> Salvar Pedido</button>
 						</div>
                           <div class="pull-right" ng-show="tela=='receber_pagamento'">
                                 <button type="button" class="btn btn-warning" ng-disabled="length(carrinhoPedido) == 0"  ng-click="cancelarPagamento()"><i class="fa fa-times-circle"></i> Cancelar Pagamento</button>

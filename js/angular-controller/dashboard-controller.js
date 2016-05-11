@@ -369,13 +369,24 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 
 					$.each(data,function(i,item){
 						var insert = {
+							id: item.id,
 							label : item.nome_categoria,
 							value : item.qtd_total_vendas
 						};
 
 						ng.vendasCategoria.push(insert);
 					});
-					Morris.Donut({ element: "categoriasDonutChart", data: ng.vendasCategoria/*, colors:['#ffc545','#fe402b','#222222','#9AD268']*/ });
+					var chart = Morris.Donut({
+						element: "categoriasDonutChart", 
+						data: ng.vendasCategoria,
+						/*, colors:['#ffc545','#fe402b','#222222','#9AD268']*/
+					});
+					chart.on('click', function(i, row) {
+						var dtaInicial 	= $("#dtaInicial").val();
+						var dtaFinal 	= $("#dtaFinal").val();
+
+						window.location.href = "rel-vendas-categoria.php?id_categoria="+ row.id +"&nme_categoria="+ row.label +"&dtaInicial="+ dtaInicial +"&dtaFinal="+ dtaFinal;
+					});
 				})
 				.error(function(data, status, headers, config) {
 					if(status == 404){

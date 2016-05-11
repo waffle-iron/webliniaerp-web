@@ -185,15 +185,15 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-list-alt "></i> Controle Prótese</li>
+					 <li class="active"><i class="fa fa-list-alt "></i> Controle de Prótese</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-list-alt "></i> Novo Controle</h3>
+					<h3 class="no-margin"><i class="fa fa-list-alt"></i> Controle de Prótese</h3>
 					<br/>
-					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Controle</a>
+					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Pedido de Prótese</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -201,7 +201,7 @@
 				<div class="alert alert-sistema" style="display:none"></div>
 
 				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Controle</div>
+					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Pedido de Prótese</div>
 
 					<div class="panel-body">
 						<div class="row">
@@ -220,7 +220,7 @@
 						        </div>
 							</div>
 							<div class="col-sm-4" id="id_paciente">
-								<label class="control-label">Cliente</label>
+								<label class="control-label">Paciente</label>
 								<div class="input-group">
 						            <input ng-model="controle_protese.nome_paciente" ng-disabled="true" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
@@ -246,7 +246,7 @@
 						<div class="row">
 							<div class="col-sm-3" id="dta_previsao_entrega">
                     			<div class="form-group" >
-                    				<label class="control-label">Data Prevista para Entrega</label>
+                    				<label class="control-label">Previsão de Entrega</label>
                     				<div class="controls">
                     					<div class="input-group">
                     						<input id="input-dta-previsao-entrega" ui-mask="99/99/9999" ng-model="dta_entrada" class="form-control input-sm datepicker"/>
@@ -300,7 +300,7 @@
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-list-alt "></i> Controle Realizados</div>
+					<div class="panel-heading"><i class="fa fa-list-alt "></i> Pedidos Realizados</div>
 
 					<div class="panel-body">
 						<div class="row">
@@ -323,10 +323,10 @@
 							</thead>
 							<tbody>
 								<tr ng-if="controles == null">
-									<td colspan="10" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
+									<td colspan="10" class="text-center"><i class='fa fa-refresh fa-spin'></i> Aguarde, carregando registros...</td>
 								</tr>
 								<tr ng-if="controles.length == 0">
-									<td colspan="10" class="text-center">Nenhum  Controle encontrado</td>
+									<td colspan="10" class="text-center">Nenhum registro encontrado</td>
 								</tr>
 								<tr ng-repeat="item in controles" ng-if="controles.length > 0" bs-tooltip>
 									<td>{{ item.id }}</td>
@@ -342,7 +342,7 @@
 										<button ng-if="item.id_status == 1" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="changeStatus(2,$index,$event)" type="button" title="Enviar para produção" class="btn btn-xs btn-warning" data-toggle="tooltip">
 											<i class="fa fa-paper-plane"></i>
 										</button>
-										<button ng-if="item.id_status == 2" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="changeStatus(3,$index,$event)" type="button" title="Marcar como entregue" class="btn btn-xs btn-primary" data-toggle="tooltip">
+										<button ng-if="item.id_status == 2" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="changeStatus(3,$index,$event)" type="button" title="Confirmar entrega" class="btn btn-xs btn-primary" data-toggle="tooltip">
 											<i class="fa fa-check-circle-o "></i>
 										</button>
 										<button ng-if="item.id_status!= 4 && item.id_status!=3" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="changeStatus(4,$index,$event)" type="button" title="Cancelar pedido" class="btn btn-xs btn-danger" data-toggle="tooltip">
