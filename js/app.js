@@ -259,6 +259,24 @@ angular.module('filters', [])
 	        }
 	    };
 	})
+	.directive('datePicker', function ($filter) {
+	    return {
+	        require: 'ngModel',
+	            link: function (scope, element, attrs, ctrl) {
+	            $(element).datepicker().on('changeDate', function(e) {
+	            	ctrl.$viewValue = e.date;
+               		ctrl.$commitViewValue();
+               		ctrl.$setViewValue(e.date);
+               		ctrl.render ;
+			    });
+	            ctrl.$parsers.push(function (data) {
+	            	var data = $(element).val();
+	            	if(data.length == 10)
+	            		return formatDate(data) ;
+	            });
+	        }
+	    };
+	})
 	.directive('controlSizeString', function ($filter) {
 	    return {
 	    	link:function(scope,element,attrs,ctrl){

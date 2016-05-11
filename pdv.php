@@ -477,9 +477,9 @@
 									<div class="row" ng-show="pagamento.id_forma_pagamento == 2" ng-repeat="item in cheques">
 										<div class="col-sm-3">
 											<div class="form-group cheque_data">
-												<label class="control-label">Data</label>
+												<label class="control-label">Data :</label>
 												<div class="input-group">
-													<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="pagamento.data" type="text" id="pagamentoData" class="datepicker form-control chequeData">
+													<input  ng-model="item.data_pagamento" date-picker style="background:#FFF;cursor:pointer"  type="text" id="pagamentoData" class=" form-control chequeData input-cheque-date-{{$index}}">
 													<span class="input-group-addon" class="cld_pagameto" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
 												</div>
 											</div>
@@ -2341,9 +2341,10 @@
   	<script src="js/auto-complete/ng-sanitize.js"></script>
   	<script src="js/angular-chosen.js"></script>
     <script type="text/javascript">
+    /*
     	$(".datepicker").datepicker();
         $("#btnDtaCalendar").on("click", function(){$("#data-atendimento").trigger("focus");});
-        $('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+        $('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});*/
     	var addParamModule = ['angular.chosen'] ;
     </script>
     <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>

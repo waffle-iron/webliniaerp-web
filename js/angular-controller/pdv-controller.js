@@ -1,6 +1,7 @@
-app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService,CaixaService) {
+app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService,CaixaService,$timeout) {
 	var ng = $scope,
 		aj = $http;
+    ng.date_1 = 'CO';
 	ng.userLogged 	 		= UserService.getUserLogado();
 	ng.config  		        = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.pth_local            = $.cookie('pth_local');
@@ -483,9 +484,13 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		$("#input_auto_complete_cliente").parents('.form-group').removeClass("has-error");
 		ng.cod_nota_fiscal_reenviar_sat = null ;
 		if(!$.isNumeric(ng.cliente.id) && ng.modo_venda == 'est' && !ng.orcamento ){
-				$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque e necessário selecionar um cliente</strong>');
-				return
-		 }else if( !$.isNumeric(ng.cliente.id) && !empty(ng.busca.cliente_outo_complete) && !(isCPF(ng.busca.cliente_outo_complete) || isCnpj(ng.busca.cliente_outo_complete) ) ){
+			$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque é necessário selecionar um cliente</strong>');
+			return;
+		}else if(ng.pagamento_fulso && !$.isNumeric(ng.cliente.id) && empty(ng.busca.cliente_outo_complete)){
+			$dialogs.notify('Atenção!','<strong>Para realizar uma pagamento é necessário selecionar um cliente</strong>');
+			return;
+		}
+		else if( !$.isNumeric(ng.cliente.id) && !empty(ng.busca.cliente_outo_complete) && !(isCPF(ng.busca.cliente_outo_complete) || isCnpj(ng.busca.cliente_outo_complete) ) ){
 		 	$("#input_auto_complete_cliente").parents('.form-group').addClass("has-error");
 			var formControl = $("#input_auto_complete_cliente").parent()
 				.attr("data-toggle", "tooltip")
@@ -495,13 +500,14 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			formControl.tooltip('show');
 			$('html,body').animate({scrollTop: 0},'slow');
 			return
-		 }else if( !$.isNumeric(ng.cliente.id) && !empty(ng.busca.cliente_outo_complete) && (isCPF(ng.busca.cliente_outo_complete) || isCnpj(ng.busca.cliente_outo_complete) ) ){
+		}else if( !$.isNumeric(ng.cliente.id) && !empty(ng.busca.cliente_outo_complete) && (isCPF(ng.busca.cliente_outo_complete) || isCnpj(ng.busca.cliente_outo_complete) ) ){
 		 	if(isCPF(ng.busca.cliente_outo_complete)){
 		 		ng.newCliente = { tipo_cadastro : 'pf', cpf: ng.busca.cliente_outo_complete }
 		 	}else{
 		 		ng.newCliente = { tipo_cadastro : 'pj', cnpj: ng.busca.cliente_outo_complete }
 		 	}
-		 }
+		}
+
 		if(ng.orcamento){
 			$('#btn-fazer-orcamento').button('loading');
 		}else{
@@ -758,6 +764,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	};
 
 	ng.gravarMovimentacoes = function(){
+			console.log(ng.pagamentos_enviar);
 			var id_venda = ng.finalizarOrcamento == true ? ng.id_orcamento : ng.id_venda
 			aj.post(baseUrlApi()+"venda/gravarMovimentacoes",{ id_venda:id_venda,
 															   pagamentos:ng.pagamentos_enviar,
@@ -1478,13 +1485,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				.attr("data-original-title", 'O escolha da maquineta é obrigatório');
 			formControl.tooltip();
 		}
-
 		if(ng.pagamento.id_forma_pagamento == 2){
 			$.each(ng.cheques, function(i,v){
-				if($('.cheque_data input').eq(i).val() == "" || $('.cheque_data input').eq(i).val() == undefined ){
-					$('.cheque_data').eq(i).addClass("has-error");
+				if(!moment(v.data_pagamento).isValid()){
+					$('.input-cheque-date-'+i).parent('.input-group').addClass("has-error");
 
-					var formControl = $('.cheque_data').eq(i)
+					var formControl = $('.input-cheque-date-'+i)
 						.attr("data-toggle", "tooltip")
 						.attr("data-placement", "bottom")
 						.attr("title", 'A data do cheque é obrigatória')
@@ -1492,7 +1498,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					formControl.tooltip();
 					error ++ ;
 				}
-
 				if(v.valor_pagamento == "" || v.valor_pagamento == 0 || v.valor_pagamento == undefined ){
 					$('.cheque_valor').eq(i).addClass("has-error");
 
@@ -1683,7 +1688,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				value.valor 				= Math.round(valor_parcelas * 100) / 100;
 				value.id_maquineta 			= ng.pagamento.id_maquineta;
 				value.parcelas 				= 1 ;
-				value.data_pagamento		= formatDate($('.chequeData').eq(count).val());
 				//value.valor_pagamento		= valor_parcelas;
 				ng.pg_cheques.push(value);
 				count ++ ;
@@ -2147,13 +2151,13 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 
 	ng.loadDatapicker = function(){
-		$(".chequeData").datepicker();
+		/*$(".chequeData").datepicker();
 		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});*/
 
-		$(".boletoData").datepicker();
+		/*$(".boletoData").datepicker();
 		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});*/
 	}
 
 	ng.selectChange = function(){
@@ -2182,7 +2186,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.focusData  = function($index){
 		if(ng.pagamento.id_forma_pagamento == 2)
-			$(".chequeData").eq($index).trigger("focus");
+			$(".input-cheque-date-"+$index).trigger("focus");
 		if(ng.pagamento.id_forma_pagamento == 4)
 			$(".boletoData").eq($index).trigger("focus");
 	}
@@ -2529,6 +2533,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	// Funções de comunicação com o WebSocket
 	ng.status_websocket = null ;
 	ng.id_ws_dsk        = null ;
+	var timeOutSendTestConection ;
+	var timeOutWaitingResponseTestConection ;
+	var TimeWaitingResponseTestConection = 10000;
 	ng.newConnWebSocket = function(){
 		ng.id_ws_dsk = ng.caixa_open.id_ws_dsk ;
 		ng.conn = new WebSocket(ng.config.patch_socket_sat);
@@ -2542,6 +2549,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}
 
 		ng.conn.onmessage = function(e) {
+			console.log('Mensagem Recebida'+e.data);
 			var data = JSON.parse(e.data);
 			data.message = parseJSON(data.message);
 			switch(data.type){
@@ -2564,8 +2572,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					 	var mg = {
 					 		from : ng.caixa_open.id_ws_web,
 					 		to : ng.caixa_open.id_ws_dsk,
-					 		type : 'test_conect',
-					 		message : 'Testando a conexão'
+					 		type : 'connection_search_request',
+					 		message : 'buscando conexão com cliente'
 					 	}
 					 	ng.sendMessageWebSocket(mg);
 					 }
@@ -2634,9 +2642,52 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						
 					});
 					break;
+				case 'connection_search_response':
+					ng.caixa_open.id_ws_dsk = data.from ;
+					$scope.$apply(function () {ng.status_websocket = 2 ;});
+					clearTimeout(timeOutSendTestConection);
+					timeOutSendTestConection = setTimeout(function(){
+						console.log('enviando teste de conexão...');
+					},3000);
+					break;
+				case 'connection_search_request':
+					ng.caixa_open.id_ws_dsk = data.from ;
+					$scope.$apply(function () {ng.status_websocket = 2 ;});
+					ng.timeOutSendTestConection = true ;
+					var mg = {
+						from:ng.caixa_open.id_ws_web,
+						to:ng.caixa_open.id_ws_dsk,
+						type:'connection_search_response',
+						message:"Respondendo a busca por conexão"
+					};
+					ng.sendMessageWebSocket(mg);
+					clearTimeout(timeOutSendTestConection);
+					timeOutSendTestConection = setTimeout(function(){
+						console.log('enviando teste de conexão...');
+					},3000);
+					break;
+				case 'connection_test_request':
+					console.log('connection_test_request');
+				break; 
+				case 'connection_test_response':
+					console.log('connection_test_response');
+				break; 
 			}			
 		};
 	}
+
+	function enviaTesteConexao(){	
+		timeOutSendTestConection = setTimeout(function(){
+			ng.sendMessageWebSocket(mg);
+			var mg = {
+				from:ng.caixa_open.id_ws_web,
+				to:ng.caixa_open.id_ws_dsk,
+				type:'connection_test_request',
+				message:"Teste de conexão"
+			};
+		},3000);
+	}
+
 	ng.modalListaReenviarSat = function(){
 		ng.process_reeviar_sat = false ;
 		ng.cod_nota_fiscal_reenviar_sat = null ;
@@ -2778,7 +2829,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			ng.descontoAllItens.valor = 0 ;
 		}
 	}
-	if(Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1)
+	if(typeof ng.caixa_open == 'object' &&  Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1)
 		ng.newConnWebSocket();
 	ng.existsCookie();
 	ng.loadConfig();
