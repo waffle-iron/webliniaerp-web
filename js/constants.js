@@ -13,6 +13,6 @@ function baseUrlApi(){
         return "http://"+ location.hostname +"/webliniaerp-api/";
 	else if(location.hostname == 'localhost')
 		return "http://localhost/webliniaerp-api/";
-	else {
+	else
 		return location.protocol+'//'+location.hostname+location.pathname+'api/';
 }
