@@ -108,9 +108,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="btn btn-sm pull-right logoutConfirm_open"  href="#logoutConfirm">
-						<i class="fa fa-power-off"></i>
-					</a>
+					<?php include("menu-bar-buttons.php"); ?>
 				</div><!-- /size-toggle -->
 				<div class="user-block clearfix">
 					<img src="img/hage.png" alt="User Avatar">
@@ -273,7 +271,7 @@
 						<div class="pull-right">
 							<button type="button" class="btn btn-sm btn-primary" ng-click="getExtrato()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
 							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
-							<button class="btn btn-sm btn-success hidden-print" ng-show="itens.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
+							<button class="btn btn-sm btn-success" ng-show="dadosExtrato.extrato.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
 				</div>
@@ -282,7 +280,7 @@
 				
 
 				
-				<div class="panel panel-default hidden-print" style="margin-top: 15px;">
+				<div class="panel panel-default" style="margin-top: 15px;">
 					<div class="panel-heading"><i class="fa fa-bars"></i> Extrato  </div>
 					<div class="panel-body">
 					<div ng-show="dadosExtrato.extrato.length > 0">

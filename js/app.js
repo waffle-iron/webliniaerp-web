@@ -415,6 +415,46 @@ app.directive('bsTooltip', function ($timeout) {
     }
 });
 
+app.controller('MasterController', function($scope, $http, $window, UserService) {
+	var ng = $scope,
+		aj = $http;
+
+	ng.userLogged = UserService.getUserLogado();
+	ng.meusEmpreendimentos = UserService.getMeusEmpreendimentos(ng.userLogged.id);
+	
+	ng.logout = function() {
+		UserService.clearSessionData();
+		window.location.href = "logout.php";
+	}
+
+	ng.changeEmpreendimento = function(empSelected) {
+		var url = "util/login/login.php?";
+			url += "id_empreendimento=" 	+ empSelected.id;
+			url += "&nome_empreendimento=" 	+ empSelected.nome_empreendimento;
+			url += "&nickname=" 			+ empSelected.nickname;
+			url += "&nme_logo=" 			+ empSelected.nme_logo;
+			url += "&id_perfil=" 			+ ng.userLogged.id_perfil;
+			url += "&id=" 					+ ng.userLogged.id;
+			url += "&end_email=" 			+ ng.userLogged.end_email;
+			url += "&nme_usuario=" 			+ ng.userLogged.nme_usuario;
+
+		aj.get(url)
+			.success(function(data, status, headers, config) {
+				UserService.clearSessionData();
+				window.location.reload();
+			})
+			.error(function(data, status, headers, config) {
+				alert('Desculpe, ocorreu um erro inesperado !!!');
+			});
+
+		return false;
+	};
+	
+	ng.openModalMeusEmpreendimentos = function(){
+		$(".modal.meus-empreendimentos").modal("show");
+	}
+});
+
 app.controller('AlertasController', function($scope, $http, $window, UserService) {
 	var ng = $scope,
 		aj = $http;

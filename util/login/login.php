@@ -59,7 +59,6 @@
 		$info 	 = curl_getinfo($ch);
 		curl_close ($ch);
 
-
 		if($info['http_code'] == 200){
 			$_SESSION['user_emp'] = json_decode($output);
 		}
@@ -72,16 +71,22 @@
 
 		echo $output;
 	}else if(isset($_GET['id_empreendimento']) && isset($_GET['nome_empreendimento'])  ){
+		
 		$saida = array();
 		foreach ($_SESSION['user_emp'] as $key => $value) {
 			$saida[$key] = $value;
 		}
 		$dados_teste = validaEmpreendimentoPeriodoTeste($_GET['id_empreendimento']);
 
-		$saida['id_empreendimento']   = (int)$_GET['id_empreendimento'];
-		$saida['nome_empreendimento'] = $_GET['nome_empreendimento'];
-		$saida['nickname'] 		      = $_GET['nickname'];
-		$saida['nme_logo'] 		      = $_GET['nme_logo'];
+		$saida['id']   					= (int)$_GET['id'];
+		$saida['id_perfil'] 			= (int)$_GET['id_perfil'];
+		$saida['id_empreendimento'] 	= (int)$_GET['id_empreendimento'];
+		$saida['end_email']   			= $_GET['end_email'];
+		$saida['nme_usuario']   		= $_GET['nme_usuario'];
+		$saida['nome_empreendimento'] 	= $_GET['nome_empreendimento'];
+		$saida['nickname'] 				= $_GET['nickname'];
+		$saida['nme_logo'] 				= $_GET['nme_logo'];
+
 		if($dados_teste['flg_teste'] == 1){
 			$saida['flg_teste']              = 1 ;
 			$saida['status_teste']           = $dados_teste['status_teste'];
@@ -106,12 +111,11 @@
 		if($info['http_code'] == 200) $saida['modulos'] = json_decode($modulos,true);
 		else $saida['modulos'] = array();
 
-		unset($_SESSION['user_emp']);
+		//unset($_SESSION['user_emp']);
 		$_SESSION['user'] = $saida;
 
 	}else{
 		header("HTTP/1.1 500");
 		//http_response_code(500);
 	}
-
 ?>

@@ -15,6 +15,4 @@ function baseUrlApi(){
 		return "http://localhost/webliniaerp-api/";
 	else {
 		return location.protocol+'//'+location.hostname+location.pathname+'api/';
-	}
-	//return 'http://www.webliniaerp.com.br/api/';
 }

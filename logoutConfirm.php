@@ -8,3 +8,5 @@
 		<a class="btn btn-danger logoutConfirm_close">Não</a>
 	</div>
 </div>
+
+<?php include("modal-meus-empreendimentos.php"); ?>

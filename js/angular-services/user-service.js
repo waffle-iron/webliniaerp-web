@@ -1,5 +1,8 @@
-app.service('UserService', function($http) {
+app.service('UserService', function($http, $window) {
 	var aj = $http;
+
+	this.KEY_USER_LOGGED 			= "KEY_USER_LOGGED";
+	this.KEY_MEUS_EMPREENDIMENTOS 	= "KEY_MEUS_EMPREENDIMENTOS";
 
 	this.getUserLogado = function() {
 		var user = {};
@@ -25,6 +28,44 @@ app.service('UserService', function($http) {
 		return user;
 	}
 
+	this.getMeusEmpreendimentos = function(id_usuario) {
+		var empreendimentos = this.getSessionData(this.KEY_MEUS_EMPREENDIMENTOS);
+		var serviceScope = this;
+		if(empreendimentos == null) {
+			$.ajax({
+				url: baseUrlApi() + "empreendimentos?id_usuario="+id_usuario,
+				async: false,
+				success: function(items) {
+					empreendimentos = items;
+					
+					serviceScope.setSessionData(serviceScope.KEY_MEUS_EMPREENDIMENTOS, items);
+				},
+				error: function(error) {
+					console.log(error);
+				}
+			});
+		}
+
+		return empreendimentos;
+	};
+
+	this.getSessionData = function(key) {
+		var value = $window.sessionStorage.getItem(key);
+		
+		if(!value)
+			return null;
+		
+		return JSON.parse(value);
+	};
+
+	this.setSessionData = function(key, value) {
+		$window.sessionStorage.setItem(key, JSON.stringify(value));
+	};
+
+	this.clearSessionData = function() {
+		$window.sessionStorage.removeItem(this.KEY_USER_LOGGED);
+		$window.sessionStorage.removeItem(this.KEY_MEUS_EMPREENDIMENTOS);
+	}
 });
 
 app.service('ConfigService', function($http) {
