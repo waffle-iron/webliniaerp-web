@@ -358,6 +358,26 @@ $(function(){
 	return string.replace( /\s/g, '' ).toUpperCase();
 }
 
+ function removerAcentosSAT(newStringComAcento) {
+  var string = newStringComAcento.toLowerCase();
+  var mapaAcentosHex  = {
+    a : /[\xE0-\xE6]/g,
+    e : /[\xE8-\xEB]/g,
+    i : /[\xEC-\xEF]/g,
+    o : /[\xF2-\xF6]/g,
+    u : /[\xF9-\xFC]/g,
+    c : /\xE7/g,
+    n : /\xF1/g
+  };
+ 
+  for ( var letra in mapaAcentosHex ) {
+    var expressaoRegular = mapaAcentosHex[letra];
+    string = string.replace( expressaoRegular, letra );
+  }
+  string = string.replace(/[^0-9A-Za-z ]/g,"");
+  return string.toUpperCase();
+}
+
 Date.prototype.addHoras = function(horas){
     this.setHours(this.getHours() + horas)
 };
@@ -440,104 +460,35 @@ function isCnpj(str){
         return false;
 }
 
-/* http://locutusjs.io/php/ : repositorio de funções em php para javaSript */
-function utf8_encode (argString) {
-  if (argString === null || typeof argString === 'undefined') {
-    return ''
-  }
-  var string = (argString + '')
-  var utftext = ''
-  var start
-  var end
-  var stringl = 0
-
-  start = end = 0
-  stringl = string.length
-  for (var n = 0; n < stringl; n++) {
-    var c1 = string.charCodeAt(n)
-    var enc = null
-
-    if (c1 < 128) {
-      end++
-    } else if (c1 > 127 && c1 < 2048) {
-      enc = String.fromCharCode(
-        (c1 >> 6) | 192, (c1 & 63) | 128
-      )
-    } else if ((c1 & 0xF800) !== 0xD800) {
-      enc = String.fromCharCode(
-        (c1 >> 12) | 224, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
-      )
-    } else {
-      // surrogate pairs
-      if ((c1 & 0xFC00) !== 0xD800) {
-        throw new RangeError('Unmatched trail surrogate at ' + n)
-      }
-      var c2 = string.charCodeAt(++n)
-      if ((c2 & 0xFC00) !== 0xDC00) {
-        throw new RangeError('Unmatched lead surrogate at ' + (n - 1))
-      }
-      c1 = ((c1 & 0x3FF) << 10) + (c2 & 0x3FF) + 0x10000
-      enc = String.fromCharCode(
-        (c1 >> 18) | 240, ((c1 >> 12) & 63) | 128, ((c1 >> 6) & 63) | 128, (c1 & 63) | 128
-      )
-    }
-    if (enc !== null) {
-      if (end > start) {
-        utftext += string.slice(start, end)
-      }
-      utftext += enc
-      start = end = n + 1
-    }
-  }
-
-  if (end > start) {
-    utftext += string.slice(start, stringl)
-  }
-
-  return utftext
+function Utf8Decode(strUtf) {
+    // note: decode 3-byte chars first as decoded 2-byte strings could appear to be 3-byte char!
+    var strUni = strUtf.replace(
+        /[\u00e0-\u00ef][\u0080-\u00bf][\u0080-\u00bf]/g,  // 3-byte chars
+        function(c) {  // (note parentheses for precedence)
+            var cc = ((c.charCodeAt(0)&0x0f)<<12) | ((c.charCodeAt(1)&0x3f)<<6) | ( c.charCodeAt(2)&0x3f);
+            return String.fromCharCode(cc); }
+    );
+    strUni = strUni.replace(
+        /[\u00c0-\u00df][\u0080-\u00bf]/g,                 // 2-byte chars
+        function(c) {  // (note parentheses for precedence)
+            var cc = (c.charCodeAt(0)&0x1f)<<6 | c.charCodeAt(1)&0x3f;
+            return String.fromCharCode(cc); }
+    );
+    return strUni;
 }
 
-function utf8_decode (strData) { 
-  var tmpArr = []
-  var i = 0
-  var c1 = 0
-  var seqlen = 0
-
-  strData += ''
-
-  while (i < strData.length) {
-    c1 = strData.charCodeAt(i) & 0xFF
-    seqlen = 0
-
-    // http://en.wikipedia.org/wiki/UTF-8#Codepage_layout
-    if (c1 <= 0xBF) {
-      c1 = (c1 & 0x7F)
-      seqlen = 1
-    } else if (c1 <= 0xDF) {
-      c1 = (c1 & 0x1F)
-      seqlen = 2
-    } else if (c1 <= 0xEF) {
-      c1 = (c1 & 0x0F)
-      seqlen = 3
-    } else {
-      c1 = (c1 & 0x07)
-      seqlen = 4
-    }
-
-    for (var ai = 1; ai < seqlen; ++ai) {
-      c1 = ((c1 << 0x06) | (strData.charCodeAt(ai + i) & 0x3F))
-    }
-
-    if (seqlen === 4) {
-      c1 -= 0x10000
-      tmpArr.push(String.fromCharCode(0xD800 | ((c1 >> 10) & 0x3FF)))
-      tmpArr.push(String.fromCharCode(0xDC00 | (c1 & 0x3FF)))
-    } else {
-      tmpArr.push(String.fromCharCode(c1))
-    }
-
-    i += seqlen
-  }
-
-  return tmpArr.join('')
+function Utf8Encode(strUni) {
+    var strUtf = strUni.replace(
+        /[\u0080-\u07ff]/g,  // U+0080 - U+07FF => 2 bytes 110yyyyy, 10zzzzzz
+        function(c) {
+            var cc = c.charCodeAt(0);
+            return String.fromCharCode(0xc0 | cc>>6, 0x80 | cc&0x3f); }
+    );
+    strUtf = strUtf.replace(
+        /[\u0800-\uffff]/g,  // U+0800 - U+FFFF => 3 bytes 1110xxxx, 10yyyyyy, 10zzzzzz
+        function(c) {
+            var cc = c.charCodeAt(0);
+            return String.fromCharCode(0xe0 | cc>>12, 0x80 | cc>>6&0x3F, 0x80 | cc&0x3f); }
+    );
+    return strUtf;
 }

@@ -790,7 +790,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						.success(function(data, status, headers) {
 
 							$.each(data.itens,function(i,v){
-								data.itens[i].prod.xProd =  removerAcentos(v.prod.xProd) ;
+								data.itens[i].prod.xProd =  removerAcentosSAT(v.prod.xProd) ;
 							});
 
 							data.pdv = {
@@ -833,14 +833,15 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.aplicarDesconto = function(index,$event,checkebox,calc){
+		var vlr_real     = parseFloat(accounting.toFixed(ng.carrinho[index].vlr_real,2));
 		if(calc == true){
-			var prc_dsc =(ng.carrinho[index].valor_desconto_real * 100)/ng.carrinho[index].vlr_real;
-				ng.carrinho[index].valor_desconto = prc_dsc ;
+			var prc_dsc =((ng.carrinho[index].valor_desconto_real * 100)/vlr_real)*100;
+			prc_dsc = parseFloat(accounting.toFixed(prc_dsc,2))/100;
+			ng.carrinho[index].valor_desconto = prc_dsc ;
 		}else if(checkebox != null){
-			ng.carrinho[index].valor_desconto_real = (ng.carrinho[index].vlr_real * (ng.carrinho[index].valor_desconto/100)) ;
+			var ax_valor_desconto = (vlr_real * (ng.carrinho[index].valor_desconto/100)) ;
+			ng.carrinho[index].valor_desconto_real = parseFloat(accounting.toFixed(ax_valor_desconto,2)); 
 		}
-
-
 		checkebox = checkebox == null ? true : false ;
 		/*if(checkebox)
 			var element = $event.target ;
@@ -849,15 +850,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}else if(calc == true){
 			var element = $($event.target).parent().prev().prev().children().children('input');
 		}*/
-
-
 		var valor_desconto = ng.carrinho[index].valor_desconto/100 ;
-		var vlr_real     = ng.carrinho[index].vlr_real ;
 		if(Number(ng.carrinho[index].flg_desconto) == 1){
 			if(checkebox)
-			ng.carrinho[index].vlr_unitario =  vlr_real - (vlr_real * valor_desconto) ;
+				ng.carrinho[index].vlr_unitario =  vlr_real - parseFloat(accounting.toFixed((vlr_real * valor_desconto),2));
 			else{
-	            ng.carrinho[index].vlr_unitario =  vlr_real - (vlr_real * valor_desconto) ;
+	            ng.carrinho[index].vlr_unitario =  vlr_real - parseFloat(accounting.toFixed((vlr_real * valor_desconto),2)) ;
 			}
 		}else{
 			ng.carrinho[index].vlr_unitario =  vlr_real ;
@@ -2634,7 +2632,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				case 'satcfe_error':
 					$scope.$apply(function () {
 					   data.message.problemas = typeof data.message.problemas == 'string' ? [data.message.problemas] : data.message.problemas  ;
-			           ng.erro_sat =  data.message ;
+			           ng.erro_sat =  angular.copy(data.message) ;
 			           ng.process_reeviar_sat = false ;
 			        });
 			        $('#modal-sat-cfe').modal('hide');
@@ -2798,7 +2796,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers) {
 				$.each(data.itens,function(i,v){
-					data.itens[i].prod.xProd =  removerAcentos(v.prod.xProd) ;
+					data.itens[i].prod.xProd =  removerAcentosSAT(v.prod.xProd) ;
 				});
 				data.pdv = {
 					cod_pdv      : ng.caixa_aberto.id_caixa,

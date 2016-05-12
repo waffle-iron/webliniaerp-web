@@ -68,6 +68,10 @@ angular.module('filters', [])
 		  }
 		  return s.join(dec);
 	    };
+	}).filter('Utf8Decode', function () {
+		return function (inputFormat) {
+			return Utf8Decode(inputFormat);
+		}
 	})
 	.filter('dateFormat', function () {
 		return function (inputFormat,tipo) {

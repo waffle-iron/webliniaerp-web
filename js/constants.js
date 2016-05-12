@@ -9,12 +9,12 @@ function baseUrl(){
 }
 
 function baseUrlApi(){
-    /*if(location.hostname.indexOf("192.168.") != -1)
+    if(location.hostname.indexOf("192.168.") != -1)
         return "http://"+ location.hostname +"/webliniaerp-api/";
 	else if(location.hostname == 'localhost')
 		return "http://localhost/webliniaerp-api/";
 	else {
 		return location.protocol+'//'+location.hostname+location.pathname+'api/';
-	}*/
-	return 'http://www.webliniaerp.com.br/api/';
+	}
+	//return 'http://www.webliniaerp.com.br/api/';
 }

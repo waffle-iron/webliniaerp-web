@@ -2102,10 +2102,10 @@
 					    <div class="modal-body">
 					    	<div class="row">
 					    		<div class="col-sm-12">
-					    			<b>Código de Erro: </b> {{ erro_sat.codigoErro }} <br/>
-					    			<b>Mensagem: </b> {{ erro_sat.msgErro }} <br/>
+					    			<b>Código de Erro: </b> {{ erro_sat.codigoErro | Utf8Decode }} <br/>
+					    			<b>Mensagem: </b> {{ erro_sat.msgErro | Utf8Decode }} <br/>
 					    			<b>Problemas: </b> <br/>
-					    			<p ng-repeat="item in erro_sat.problemas"><i class="fa fa-circle text-danger"></i> {{item}}</p>	
+					    			<p ng-repeat="item in erro_sat.problemas track by $index"><i class="fa fa-circle text-danger"></i> {{item | Utf8Decode}}</p>	
 								</div>
 					    	</div>
 					    </div>
@@ -2316,6 +2316,12 @@
 
 	<!-- Endless -->
 	<script src="js/endless/endless.js"></script>
+
+	<!-- accounting -->
+	<script type="text/javascript" src="js/accounting.min.js"></script>
+
+	<!-- fold-to-ascii -->
+	<script type="text/javascript" src="js/fold-to-ascii.js"></script>
 
 	<!-- Extras -->
 	<script src="js/extras.js?version=<?php echo date("dmY-His", filemtime("js/extras.js")) ?>"></script>
