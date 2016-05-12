@@ -8,6 +8,8 @@ app.controller('LoginController', function($scope, $http, $window){
 
 	var id_perfil_user = null ;
 	var id_usuario     = null ;
+	var email_user     = null ;
+	var nome_user     = null ;
 
 	ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
@@ -31,6 +33,8 @@ app.controller('LoginController', function($scope, $http, $window){
 				//window.location.href = "selecionar_emp.php";
 				id_perfil_user = data.id_perfil ;
 				id_usuario     = Number(data.id) ;
+				email_user     = data.email ;
+				nome_user     = data.nome ;
 				ng.loadEmpreendimentos(data.id);
 
 			})
@@ -91,6 +95,10 @@ app.controller('LoginController', function($scope, $http, $window){
 			url += "&nome_empreendimento=" + item.nome_empreendimento;
 			url += "&nickname=" + item.nickname;
 			url += "&nme_logo=" + item.nme_logo;
+			url += "&id=" + id_usuario;
+			url += "&id_perfil=" + id_perfil_user;
+			url += "&nme_usuario=" + nome_user;
+			url += "&end_email=" + email_user;
 
 		aj.get(url)
 			.success(function(data, status, headers, config) {
