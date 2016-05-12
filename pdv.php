@@ -375,19 +375,19 @@
 										</div>
 					    		</div>
 
-			    				<!--<div class="row" ng-repeat="(key,formas) in formas_pagamento">
+			    				<div class="row" ng-repeat="(key,formas) in formas_pagamento">
 					    			<div class="col-sm-2" ng-repeat="forma in formas" >
 					    				<a ng-click="selectChange(forma.id)" data-loading-text=" Aguarde..." id="btn-logar" class="bounceIn btn btn-default btn-sm" ng-click="logar()" style="max-width: 95px;word-wrap: break-word;white-space: inherit;padding-left: 5px;padding-right: 5px;"><i class="fa fa-3x {{ forma.icon }}" style=" margin-bottom: 5px; margin-top: 5px; "></i><span style="" class="clearfix">{{ forma.descricao_forma_pagamento }}</span></a>
 					    			</div>
-				    			</div>	-->	
+				    			</div>	
 						    	<div class="row">
-						    		<div class="col-sm-6" id="pagamento_forma_pagamento">
+						    		<!--<div class="col-sm-6" id="pagamento_forma_pagamento">
 						    			<label class="control-label">Forma de Pagamento</label>
 										<select ng-model="pagamento.id_forma_pagamento" ng-change="selectChange()" class="form-control input-sm">
 											<option ng-if="pagamento.id_forma_pagamento != null" value=""></option>
 											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.descricao_forma_pagamento }}</option>
 										</select>
-									</div>
+									</div>-->
 									<div class="col-sm-6" id="pagamento_valor" ng-if="pagamento.id_forma_pagamento == 7" >
 										<label class="control-label">Vale troca</label>
 										<div class="input-group">

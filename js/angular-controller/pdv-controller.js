@@ -1792,8 +1792,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		aj.get(baseUrlApi()+"formas_pagamento")
 			.success(function(data, status, headers, config) {
-				ng.formas_pagamento = data ;
-				/*var aux = typeof parseJSON(ng.config.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.config.formas_pagamento_pdv) : [] ;
+				var aux = typeof parseJSON(ng.config.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.config.formas_pagamento_pdv) : [] ;
 				var count = 0 ;
 				var group = 0 ;
 				$.each(data,function(i,x){ 
@@ -1816,7 +1815,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					else count ++ ;
 				}	
 				});
-				console.log(ng.formas_pagamento);*/
 			});
 	}
 
