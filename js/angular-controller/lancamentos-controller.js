@@ -1129,7 +1129,8 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 				ng.modalProgressoPagamento('hide');
 				ng.vlr_saldo_devedor = data.vlr_saldo_devedor ;
 				ng.id_controle_pagamento = data.id_controle_pagamento ;
-				ng.showModalPrint();
+				ng.refresh();
+				//ng.showModalPrint();
 			})
 			.error(function(data, status, headers, config) {
 				ng.modalProgressoPagamento('hide');
