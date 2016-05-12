@@ -1,7 +1,6 @@
 app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService,CaixaService,$timeout) {
 	var ng = $scope,
 		aj = $http;
-    ng.date_1 = 'CO';
 	ng.userLogged 	 		= UserService.getUserLogado();
 	ng.config  		        = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.pth_local            = $.cookie('pth_local');
@@ -789,6 +788,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 						aj.post(baseUrlApi()+"nfe/calcular",post)
 						.success(function(data, status, headers) {
+
+							$.each(data.itens,function(i,v){
+								data.itens[i].prod.xProd =  removerAcentos(v.prod.xProd) ;
+							});
+
 							data.pdv = {
 								cod_pdv      : ng.caixa_aberto.id_caixa,
 								cod_operador : ng.caixa_aberto.id_operador,
@@ -946,7 +950,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		window.location = "pdv.php";
 	}
 
-		ng.produtos = [] ;
+	ng.produtos = [] ;
 
    	ng.showProdutos = function(busca_cdb){
    		if(busca_cdb != true)
@@ -2155,9 +2159,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
 		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});*/
 
-		/*$(".boletoData").datepicker();
+		$(".boletoData").datepicker();
 		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});*/
+		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
 	}
 
 	ng.selectChange = function(){
@@ -2536,20 +2540,26 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	var timeOutSendTestConection ;
 	var timeOutWaitingResponseTestConection ;
 	var TimeWaitingResponseTestConection = 10000;
+
 	ng.newConnWebSocket = function(){
 		ng.id_ws_dsk = ng.caixa_open.id_ws_dsk ;
 		ng.conn = new WebSocket(ng.config.patch_socket_sat);
 		ng.conn.onopen = function(e) {
 			$scope.$apply(function () { ng.status_websocket = 1 ;});
-			console.log('WebSocket conectado.');
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - WebSocket conectado.');
 		};
 
 		ng.conn.onclose = function(e) {
-			$scope.$apply(function () {ng.status_websocket = 0 ;});
+			 $scope.$apply(function () {ng.status_websocket = 0 ;});
+			 $.ajax({url: baseUrlApi() + "websocket/update/sessionid",async: false,type:'POST',data:{id_ws_web:'null',id_empreendimento:ng.userLogged.id_empreendimento,pth_local:ng.pth_local},
+			 	success: function(data) {}
+			 });
+			 clearTimeout(timeOutWaitingResponseTestConection);
+			 clearTimeout(timeOutSendTestConection);
 		}
 
 		ng.conn.onmessage = function(e) {
-			console.log('Mensagem Recebida'+e.data);
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Mensagem Recebida : '+e.data);
 			var data = JSON.parse(e.data);
 			data.message = parseJSON(data.message);
 			switch(data.type){
@@ -2560,7 +2570,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					 	url: baseUrlApi() + "websocket/update/sessionid",async: false,type:'POST',data:{id_ws_web:data.to,id_empreendimento:ng.userLogged.id_empreendimento,pth_local:ng.pth_local},
 					 	success: function(data) {
 					 		aux = true ;
-					 		console.log('id_ws_web gravado com sucesso');
+					 		console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - id_ws_web gravado com sucesso');
 					 	},
 					 	error: function(error) {
 					 		console.log('Não foi possível gravar o id_ws_web');
@@ -2573,9 +2583,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					 		from : ng.caixa_open.id_ws_web,
 					 		to : ng.caixa_open.id_ws_dsk,
 					 		type : 'connection_search_request',
-					 		message : 'buscando conexão com cliente'
+					 		message : 'find desktop'
 					 	}
 					 	ng.sendMessageWebSocket(mg);
+					 }else{
+					 	console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível estabelecer conexão com o APP Client');
 					 }
 
 
@@ -2645,15 +2657,30 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				case 'connection_search_response':
 					ng.caixa_open.id_ws_dsk = data.from ;
 					$scope.$apply(function () {ng.status_websocket = 2 ;});
-					clearTimeout(timeOutSendTestConection);
-					timeOutSendTestConection = setTimeout(function(){
-						console.log('enviando teste de conexão...');
-					},3000);
+					var config = {
+							title: 'Conexão WebSocket' ,
+			                placement: 'right' ,
+			                content:  '<b>Web:</b>'+ng.caixa_open.id_ws_web+'<br/><b>Desk:</b>'+ng.caixa_open.id_ws_dsk ,
+			                html: true,
+			                container: 'body',
+			                trigger  :'click'
+			            }
+		    		$('#dados-websocket').popover(config).popover();
+					console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Conexão com App client extabelecida');
+					enviaTesteConexao();
 					break;
 				case 'connection_search_request':
 					ng.caixa_open.id_ws_dsk = data.from ;
 					$scope.$apply(function () {ng.status_websocket = 2 ;});
-					ng.timeOutSendTestConection = true ;
+					var config = {
+							title: 'Conexão WebSocket' ,
+			                placement: 'right' ,
+			                content:  '<b>Web:</b>'+ng.caixa_open.id_ws_web+'<br/><b>Desk:</b>'+ng.caixa_open.id_ws_dsk ,
+			                html: true,
+			                container: 'body',
+			                trigger  :'click'
+			            }
+		    		$('#dados-websocket').popover(config).popover();
 					var mg = {
 						from:ng.caixa_open.id_ws_web,
 						to:ng.caixa_open.id_ws_dsk,
@@ -2661,31 +2688,49 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						message:"Respondendo a busca por conexão"
 					};
 					ng.sendMessageWebSocket(mg);
-					clearTimeout(timeOutSendTestConection);
-					timeOutSendTestConection = setTimeout(function(){
-						console.log('enviando teste de conexão...');
-					},3000);
+					enviaTesteConexao();
 					break;
 				case 'connection_test_request':
-					console.log('connection_test_request');
+					var mg = {
+						from:ng.caixa_open.id_ws_web,
+						to:ng.caixa_open.id_ws_dsk,
+						type:'connection_test_response',
+						message:"Respondendo ao teste de conexão"
+					};
+					ng.sendMessageWebSocket(mg);
+					enviaTesteConexao();
 				break; 
 				case 'connection_test_response':
-					console.log('connection_test_response');
+					ng.caixa_open.id_ws_dsk = data.from ;
+					$scope.$apply(function () {ng.status_websocket = 2 ;});
+					clearTimeout(timeOutWaitingResponseTestConection);
+					clearTimeout(timeOutSendTestConection);
+				break;
+				case 'connection_close':
+					ng.caixa_open.id_ws_dsk = null ;
+					$scope.$apply(function () {ng.status_websocket = 1 ;});
+					clearTimeout(timeOutWaitingResponseTestConection);
+					clearTimeout(timeOutSendTestConection);
 				break; 
 			}			
 		};
 	}
 
-	function enviaTesteConexao(){	
+	function enviaTesteConexao(){
+		clearTimeout(timeOutSendTestConection);	
+		var mg = {
+			from:ng.caixa_open.id_ws_web,
+			to:ng.caixa_open.id_ws_dsk,
+			type:'connection_test_request',
+			message:"Teste de conexão com client desktop"
+		};
 		timeOutSendTestConection = setTimeout(function(){
 			ng.sendMessageWebSocket(mg);
-			var mg = {
-				from:ng.caixa_open.id_ws_web,
-				to:ng.caixa_open.id_ws_dsk,
-				type:'connection_test_request',
-				message:"Teste de conexão"
-			};
-		},3000);
+			 timeOutWaitingResponseTestConection = setTimeout(function() {
+			 	$scope.$apply(function () { ng.status_websocket = 1 ;});
+			 	console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível obter resposta do APP Client para o teste de conexão');
+			 }, TimeWaitingResponseTestConection);
+		},60000);
 	}
 
 	ng.modalListaReenviarSat = function(){
@@ -2752,6 +2797,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					} ;
 			aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers) {
+				$.each(data.itens,function(i,v){
+					data.itens[i].prod.xProd =  removerAcentos(v.prod.xProd) ;
+				});
 				data.pdv = {
 					cod_pdv      : ng.caixa_aberto.id_caixa,
 					cod_operador : ng.caixa_aberto.id_operador,
@@ -2787,7 +2835,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		window.location=page;
 	}
 	ng.sendMessageWebSocket = function(data){
-		console.log('mensagem Enviada: '+JSON.stringify(data));
+		console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - mensagem Enviada: '+JSON.stringify(data));
 		ng.conn.send(JSON.stringify(data));
 	}
 	var dadosWebSocket = {
@@ -2831,6 +2879,45 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 	if(typeof ng.caixa_open == 'object' &&  Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1)
 		ng.newConnWebSocket();
+
+	function closeWindow(){
+		$(window).bind('beforeunload', function(){ 
+			  if(/Firefox[\/\s](\d+)/.test(navigator.userAgent) && new Number(RegExp.$1) >= 4) {
+				if(typeof ng.caixa_open == 'object' &&  Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1){
+					 $.ajax({url: baseUrlApi() + "websocket/update/sessionid",async: false,type:'POST',data:{id_ws_web:'null',id_empreendimento:ng.userLogged.id_empreendimento,pth_local:ng.pth_local},
+					 	success: function(data) {}
+					 });
+				}
+				if(!empty(ng.caixa_open.id_ws_dsk)){
+					 var mg = {
+							from:ng.caixa_open.id_ws_web,
+							to:ng.caixa_open.id_ws_dsk,
+							type:'connection_close',
+							message:null
+						};
+					 ng.sendMessageWebSocket(mg);
+				}
+			  } 
+			  else {
+				if(typeof ng.caixa_open == 'object' &&  Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1){
+					 $.ajax({url: baseUrlApi() + "websocket/update/sessionid",async: false,type:'POST',data:{id_ws_web:'null',id_empreendimento:ng.userLogged.id_empreendimento,pth_local:ng.pth_local},
+					 	success: function(data) {}
+					 });
+					 if(!empty(ng.caixa_open.id_ws_dsk)){
+						 var mg = {
+								from:ng.caixa_open.id_ws_web,
+								to:ng.caixa_open.id_ws_dsk,
+								type:'connection_close',
+								message:null
+							};
+						 ng.sendMessageWebSocket(mg);
+					}
+				}
+			   return;
+			  }
+		});
+	}
+
 	ng.existsCookie();
 	ng.loadConfig();
 	ng.calcTotalCompra();
@@ -2842,13 +2929,13 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadPerfil();
 	ng.loadContas();
 	ng.loadFormasPagamento();
+	closeWindow();
 
 	ng.isNumeric = function(vlr){
 		return $.isNumeric(vlr);
 	}
 
-	ng.resizeScreen(); // by default, set fullscreen
-	//ng.abrirVenda('pdv'); // by default, set 'Modo Loja' mode
+	ng.resizeScreen(); 
 });
 app.directive('bsTooltip', function ($timeout) {
     return {
