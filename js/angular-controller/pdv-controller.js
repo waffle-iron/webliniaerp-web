@@ -60,8 +60,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	 var controla_error_estoque = 0 ;
 
+	 var isFullscreen = false;
 	ng.resizeScreen = function() {
-		if($("#top-nav").css("display") == "block"){
+		if(!isFullscreen){
 			$("#map_canvas").css("height", 700);
 			$("footer").addClass("hide");
 			$("#wrapper").css("min-height", "0px");
@@ -70,6 +71,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			//$("#top-nav").toggle();
 			$("aside").toggle();
 			$("#breadcrumb").toggle();
+			isFullscreen = !isFullscreen;
 		}
 		else {
 			$("#map_canvas").css("height", 600);
@@ -80,6 +82,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			//$("#top-nav").toggle();
 			$("aside").toggle();
 			$("#breadcrumb").toggle();
+			isFullscreen = !isFullscreen;
 		}
 	}
 
@@ -1808,7 +1811,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						ng.formas_pagamento[group] = [] ;
 					x.icon = empty(x.icon) ? 'fa-file-text-o' : x.icon ;
 					ng.formas_pagamento[group].push(x);
-					if(count == 5) {
+					if(count == 3) {
 						count = 0 ;
 						group ++ ;
 					}

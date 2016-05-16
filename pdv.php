@@ -199,10 +199,14 @@
 			<!-- breadcrumb -->
 
 			<div class="padding-md" ng-if="caixa_aberto == false && abrir_pdv ==false && caixa_configurado == true && caixa_other_operador == false && operador_other_caixa == false">
-
 				<div class="panel panel-primary" style="width:500px;margin:0 auto">
 					<div class="panel-heading">
 						<i class="fa fa-desktop"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
+						<div class="btn-group pull-right">
+							<a href="#" class="btn btn-xs btn-primary hidden-xs" ng-click="resizeScreen()">
+								<i class="fa fa-arrows-alt"></i> Tela Inteira
+							</a>
+						</div>
 					</div>
 
 					<div class="panel-body">
@@ -218,10 +222,15 @@
 			</div>
 
 			<div class="padding-md" ng-if="caixa_other_operador == true">
-
 				<div class="panel panel-warning" style="width:500px;margin:0 auto">
 					<div class="panel-heading">
 						<i class="fa fa-desktop"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
+
+						<div class="btn-group pull-right">
+							<a href="#" class="btn btn-xs btn-warning hidden-xs" ng-click="resizeScreen()">
+								<i class="fa fa-arrows-alt"></i> Tela Inteira
+							</a>
+						</div>
 					</div>
 
 					<div class="panel-body">
@@ -236,10 +245,15 @@
 			</div>
 
 			<div class="padding-md" ng-if="operador_other_caixa == true">
-
 				<div class="panel panel-warning" style="width:500px;margin:0 auto">
 					<div class="panel-heading">
 						<i class="fa fa-desktop"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
+
+						<div class="btn-group pull-right">
+							<a href="#" class="btn btn-xs btn-warning hidden-xs" ng-click="resizeScreen()">
+								<i class="fa fa-arrows-alt"></i> Tela Inteira
+							</a>
+						</div>
 					</div>
 
 					<div class="panel-body">
@@ -254,10 +268,14 @@
 			</div>
 
 			<div class="padding-md" ng-if="caixa_configurado == false">
-
 				<div class="panel panel-danger" style="width:500px;margin:0 auto">
 					<div class="panel-heading">
 						<i class="fa fa-desktop"></i> Frente de Caixa
+						<div class="btn-group pull-right">
+							<a href="#" class="btn btn-xs btn-danger hidden-xs" ng-click="resizeScreen()">
+								<i class="fa fa-arrows-alt"></i> Tela Inteira
+							</a>
+						</div>
 					</div>
 
 					<div class="panel-body">
@@ -356,9 +374,9 @@
 					</div>
 
 					<div class="panel-body" ng-if="receber_pagamento">
-							<div class="alert alert-pagamento" style="display:none"></div>
-					    	<div class="row">
-					    		<div class="col-sm-9">
+						<div class="alert alert-pagamento" style="display:none"></div>
+				    	<div class="row">
+				    		<div class="col-sm-7">
 					    		<div class="row">
 					    			<div class="col-sm-12">
 					    				<div class="form-group">
@@ -371,15 +389,21 @@
 											<div style="font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor==0">
 												<span style="color:#000">Saldo Devedor :</span> <span style="color:blue">R$ {{ cliente.vlr_saldo_devedor | numberFormat:2:',':'.' }}</span>
 											</div>
-											</div>
 										</div>
-					    		</div>
+									</div>
+				    			</div>
 
 			    				<div class="row" ng-repeat="(key,formas) in formas_pagamento">
-					    			<div class="col-sm-2" ng-repeat="forma in formas" >
-					    				<a ng-click="selectChange(forma.id)" data-loading-text=" Aguarde..." id="btn-logar" class="bounceIn btn btn-default btn-sm" ng-click="logar()" style="max-width: 95px;word-wrap: break-word;white-space: inherit;padding-left: 5px;padding-right: 5px;"><i class="fa fa-3x {{ forma.icon }}" style=" margin-bottom: 5px; margin-top: 5px; "></i><span style="" class="clearfix">{{ forma.descricao_forma_pagamento }}</span></a>
+					    			<div class="col-sm-3" ng-repeat="forma in formas" >
+					    				<a id="btn-logar" class="bounceIn btn btn-block btn-default btn-sm" data-loading-text=" Aguarde..."
+					    					ng-click="selectChange(forma.id)" ng-click="logar()"
+					    					style="word-wrap: break-word; white-space: inherit; padding-left: 5px; padding-right: 5px; min-height: 92px; margin-bottom: 10px;">
+					    					<i class="fa fa-3x {{ forma.icon }}" style="margin-bottom: 5px; margin-top: 5px; "></i>
+					    					<span style="" class="clearfix">{{ forma.descricao_forma_pagamento }}</span>
+				    					</a>
 					    			</div>
-				    			</div>	
+				    			</div>
+
 						    	<div class="row">
 						    		<!--<div class="col-sm-6" id="pagamento_forma_pagamento">
 						    			<label class="control-label">Forma de Pagamento</label>
@@ -471,6 +495,7 @@
 						    			</div>
 						    		</div>
 						    	</div>
+
 						    	<div class="alert error-cheque" style="display:none"></div>
 									<div class="row" ng-show="pagamento.id_forma_pagamento == 2" ng-repeat="item in cheques">
 										<div class="col-sm-3">
@@ -598,6 +623,7 @@
 										</div>
 
 									</div>
+					    		
 					    		<div class="row">
 					    			<div class="col-sm-12 text-center">
 					    				<label class="control-label">&nbsp</label>
@@ -607,43 +633,40 @@
 						    		</div>
 								</div>
 							</div>
-							<div class="col-sm-3">
-													    		<div class="row">
+							<div class="col-sm-5">
+					    		<div class="row">
 					    			<div class="col-sm-12" id="col-sm-auto-complete-cliente">
-											<div class="form-group">
-												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
-" class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
-												<div class="input-group">
-													<input onKeyPress="return SomenteNumeroLetras(event);" id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event,false)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
-													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
-														<table class="table table-striped itens-outo-complete">
-															<thead>
-																<tr>
-																	<th width="80" >ID</th>
-																	<th class="text-center">Nome</th>
-																	<th class="text-center">Apelido</th>
-																	<th width="140">CPF/CNPJ</th>
-
-																	
-																</tr>
-															</thead>
-															<tbody>
-																<tr ng-repeat="item in clientes_auto_complete" ng-click="addClienteAutoComplete(item)">
-																	<td>{{ item.id }}</td>
-																	<td class="text-center">{{ item.nome    | uppercase }}</td>
-																	<td class="text-center">{{ item.apelido | uppercase }}</td>
-																	<td ng-if="item.tipo_cadastro == 'pf'">{{ item.cpf | maskCpf }}</td>
-																	<td ng-if="item.tipo_cadastro == 'pj'">{{ item.cnpj | maskCnpj }}</td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-													<span class="input-group-btn">
-														<button ng-click="selCliente(0,10)"  type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
-													</span>
+										<div class="form-group">
+											<label class="control-label"><h4>Cliente <span><button style="cursor:auto;height: 18px;padding-top: 0;" class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
+											<div class="input-group">
+												<input onKeyPress="return SomenteNumeroLetras(event);" id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event,false)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
+												<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
+													<table class="table table-striped itens-outo-complete">
+														<thead>
+															<tr>
+																<th width="80" >ID</th>
+																<th class="text-center">Nome</th>
+																<th class="text-center">Apelido</th>
+																<th width="140">CPF/CNPJ</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in clientes_auto_complete" ng-click="addClienteAutoComplete(item)">
+																<td>{{ item.id }}</td>
+																<td class="text-center">{{ item.nome    | uppercase }}</td>
+																<td class="text-center">{{ item.apelido | uppercase }}</td>
+																<td ng-if="item.tipo_cadastro == 'pf'">{{ item.cpf | maskCpf }}</td>
+																<td ng-if="item.tipo_cadastro == 'pj'">{{ item.cnpj | maskCnpj }}</td>
+															</tr>
+														</tbody>
+													</table>
 												</div>
+												<span class="input-group-btn">
+													<button ng-click="selCliente(0,10)"  type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
+												</span>
 											</div>
 										</div>
+									</div>
 					    		</div>
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(clientes.length != 0)">
@@ -1782,7 +1805,7 @@
 						    </div>
 
 						    <div class="modal-footer">
-						    	<a ng-show="!emitirNfe" href="client/launch.jnlp" class="btn btn-md  btn-primary" ng-click="printTermic()">
+						    	<a ng-show="!emitirNfe" class="btn btn-md  btn-primary" ng-click="printTermic()">
 						    		<i class="fa fa-print"></i> Imprimir (via Impressora Térmica)
 						    	</a>
 						    	<button ng-show="!emitirNfe" type="button" data-loading-text=" Aguarde..." id="btn-imprimir"

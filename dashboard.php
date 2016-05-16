@@ -213,6 +213,11 @@
 						<i class="fa fa-users"></i></span>
 					<span class="text">Clientes/Usuários</span>
 				</a>
+				<a href="pedido_transferencia.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-arrows-h"></i></span>
+					<span class="text">Transferências</span>
+				</a>
 				<a href="empreendimento_config.php" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-cog"></i></span>
