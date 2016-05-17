@@ -19,7 +19,77 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 
     ng.editing 	= false;
 
+    var cep_anterior = null;
+	ng.validCep = function(cep){
+		if(cep != cep_anterior){
+			 var exp  = /^[0-9]{8}$/;
+	         var cep = cep;
+	         if(exp.test(cep)){
+	         	cep_anterior = cep ;
+	         	$('#busca-cep').modal({
+				  backdrop: 'static',
+				  keyboard: false
+				});
+				ng.consultaCep();
+	         } 
+		}
+	}
 
+    ng.consultaCep = function(){
+		aj.get("http://api.postmon.com.br/v1/cep/"+ng.empreendimento.num_cep)
+		.success(function(data, status, headers, config) {
+
+			ng.empreendimento.nme_logradouro = data.logradouro;
+			ng.empreendimento.nme_bairro_logradouro = data.bairro;
+			var estado = ng.getEstado(data.estado);
+			ng.empreendimento.cod_estado = estado.id;
+			ng.loadCidadesByEstado(data.cidade);
+			//ng.empreendimento.id_cidade = data.cidade_info.codigo_ibge.substr(0,6);
+			$("#num_logradouro").focus();
+			$('#busca-cep').modal('hide');
+		})
+		.error(function(data, status, headers, config) {
+			$('#busca-cep').modal('hide');
+			alert('CEP inválido');
+		});
+	}
+
+	ng.getEstado = function(uf){
+		var estado = null ;
+		$.each(ng.estados,function(i,x){
+			if(x.uf.toUpperCase() == uf.toUpperCase()){
+			    estado = x;
+				return false;
+			}
+		});
+
+		return estado;
+	}
+
+	ng.empreendimento.cod_cidade = ""  ;
+	ng.cidades = [{id: "" ,nome:"Selecione um estado"}];
+	ng.loadCidadesByEstado = function (nome_cidade) {
+		ng.cidades = [];
+		var id_cidade = angular.copy(ng.empreendimento.cod_cidade);
+		aj.get(baseUrlApi()+"cidades/"+ng.empreendimento.cod_estado)
+		.success(function(data, status, headers, config) {
+			ng.empreendimento.cod_cidade = angular.copy(id_cidade);
+			console.log(ng.empreendimento.cod_cidade);
+			ng.cidades = data;
+			setTimeout(function(){$("select").trigger("chosen:updated");},300);
+			if(nome_cidade != null){
+				$.each(ng.cidades,function(i,x){
+					if(removerAcentos(nome_cidade) == removerAcentos(x.nome)){
+						ng.empreendimento.cod_cidade = angular.copy(x.id);
+						return false ;
+					}
+				});
+			}
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
 
     ng.showBoxNovo = function(onlyShow){
     	//ng.editing = !ng.editing;
@@ -211,19 +281,6 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 		aj.get(baseUrlApi()+"estados")
 		.success(function(data, status, headers, config) {
 			ng.estados = data;
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
-	ng.empreendimento.cod_cidade = ""  ;
-	ng.cidades = [{id: "" ,nome:"Selecione um estado"}];
-	ng.loadCidadesByEstado = function () {
-		ng.cidades = [];
-		aj.get(baseUrlApi()+"cidades_by_id_estado/"+ng.empreendimento.cod_estado)
-		.success(function(data, status, headers, config) {
-			ng.cidades = data;
 		})
 		.error(function(data, status, headers, config) {
 
