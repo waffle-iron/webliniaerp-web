@@ -112,7 +112,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<?php include("menu-bar-buttons.php"); ?>
+					<?php /*include("menu-bar-buttons.php");*/ ?>
 				</div><!-- /size-toggle -->
 				<div class="user-block clearfix">
 					<img src="img/hage.png" alt="User Avatar">
@@ -333,7 +333,7 @@
 											<table class="table table-bordered table-condensed table-striped table-hover">
 												<thead>
 													<tr>
-														<th class="text-center" rowspan="2" style="line-height: 46px;width: 350px">Empreendimento</th>
+														<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
 														<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
 														<th class="text-center" colspan="2">Vlr. Atacado</th>
 														<th class="text-center" colspan="2">Vlr. Intermediário</th>

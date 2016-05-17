@@ -365,7 +365,7 @@
 													Nenhum pedido foi selecionado
 												</td>
 											</tr>
-											<tr ng-repeat="item in entradaEstoque | orderBy: 'nome_produto' : false" ng-class="{'danger': (item.flg_localizado == false)}">
+											<tr ng-repeat="($index, item) in entradaEstoque | orderBy: 'nome_produto' : false" ng-class="{'danger': (item.flg_localizado == false)}">
 												<td style="line-height: 1.5; vertical-align: middle;">{{ item.nome_produto }}</td>
 												<td>{{ item.nome_fabricante }}</td>
 												<td>{{ item.peso }}</td>

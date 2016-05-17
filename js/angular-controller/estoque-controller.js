@@ -542,10 +542,12 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 			if(item == null)
 				ng.entradaEstoque = [];
 
-			$.each(ng.entradaEstoque, function(x, currentItem){
+			ng.entradaEstoque = _.without(ng.entradaEstoque, item);
+
+			/*$.each(ng.entradaEstoque, function(x, currentItem){
 				if(currentItem.id === item.id && currentItem.validade === item.validade)
 					ng.entradaEstoque.splice(x,1);
-			});
+			});*/
 
 			if(!ng.entradaEstoque.length > 0)
 				ng.nota.id_pedido_fornecedor= "";
