@@ -112,7 +112,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<?php /*include("menu-bar-buttons.php");*/ ?>
+					<?php include("menu-bar-buttons.php"); ?>
 				</div><!-- /size-toggle -->
 				<div class="user-block clearfix">
 					<img src="img/hage.png" alt="User Avatar">
@@ -437,7 +437,7 @@
 														<thead>
 															<tr>
 																<th class="text-center">Deposito</th>
-																<th class="text-center">validade</th>
+																<th class="text-center">Validade</th>
 																<th class="text-center" width="100">Quantidade</th>
 															</tr>
 														</thead>
@@ -477,9 +477,9 @@
 														<div class="upload-file">
 															<input  id="foto-produto" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" name="img"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
 															<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
-																<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecione" for="foto-produto">
-																	<span data-title="{{ produto.img }}"></span>
-																</label>
+															<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecione" for="foto-produto">
+																<span data-title="{{ produto.img }}"></span>
+															</label>
 														</div>
 													</div>
 												</div>

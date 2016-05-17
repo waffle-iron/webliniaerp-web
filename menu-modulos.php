@@ -28,6 +28,13 @@
 		</a>
 	</li>
 	<li>
+		<a href="procedimentos.php">
+			<span class="submenu-label">
+				<i class="fa fa-list-alt "></i> Procedimentos
+			</span>
+		</a>
+	</li>
+	<li>
 		<a href="fabricantes.php">
 			<span class="submenu-label">
 				<i class="fa fa-puzzle-piece"></i> Fabricantes
