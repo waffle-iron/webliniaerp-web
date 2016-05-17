@@ -216,7 +216,7 @@
 										</div>
 									</div>
 
-									<div class="col-sm-7">
+									<div class="col-sm-7 well">
 										<div class="row">
 											<div class="col-sm-12">
 												<div class="form-group">
@@ -241,26 +241,28 @@
 												</div>
 											</div>
 										</div>
+
+										<div class="row">
+											<div class="col-sm-12 clearfix">
+												<div class="pull-right">
+													<button type="button" class="btn btn-sm btn-warning" ng-click="editar()" ng-hide="editing" ng-if="currentNode.children.length == 0">
+														<i class="fa fa-edit"></i> Editar
+													</button>
+													<button type="button" class="btn btn-sm btn-danger" ng-click="delete(id_delete)" ng-show="editing">
+														<i class="fa fa-trash-o"></i> Excluir
+													</button>
+													<button type="submit" class="btn btn-danger btn-sm" ng-click="reset();">
+														<i class="fa fa-times-circle"></i> Cancelar
+													</button>
+													<button type="submit" class="btn btn-success btn-sm" ng-click="salvar()">
+														<i class="fa fa-save"></i> Salvar
+													</button>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</form>
-						</div>
-
-						<div class="panel-footer clearfix">
-							<div class="pull-right">
-								<button type="button" class="btn btn-sm btn-warning" ng-click="editar()" ng-hide="editing" ng-if="currentNode.children.length == 0">
-									<i class="fa fa-edit"></i> Editar
-								</button>
-								<button type="button" class="btn btn-sm btn-danger" ng-click="delete(id_delete)" ng-show="editing">
-									<i class="fa fa-trash-o"></i> Excluir
-								</button>
-								<button type="submit" class="btn btn-danger btn-sm" ng-click="reset();">
-									<i class="fa fa-times-circle"></i> Cancelar
-								</button>
-								<button type="submit" class="btn btn-success btn-sm" ng-click="salvar()">
-									<i class="fa fa-save"></i> Salvar
-								</button>
-							</div>
 						</div>
 					</div>
 					<!-- /panel -->
