@@ -758,6 +758,7 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 			button = $(event.target).parent();
 		
 		dlg.result.then(function(btn){
+			ng.pro_out_estoque = [];
 			button.button('loading');
 			aj.get(baseUrlApi()+"pedido_venda/change_status/"+pedido.id+"/"+id_status)
 				.success(function(data, status, headers, config) {
@@ -767,7 +768,13 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 				})
 				.error(function(data, status, headers, config) {
 					button.button('reset');
-					ng.mensagens('alert-danger','<b>Ocorreu um erro ao alterar o pedido</b>','.alert-listagem');				
+					 if(status == 406){
+					 	ng.loadDetalhesPedido(pedido,null,null,true);
+					 	ng.pro_out_estoque  = data.out_estoque ;
+					 }else{
+						button.button('reset');
+					    ng.mensagens('alert-danger','<b>Ocorreu um erro ao alterar o pedido</b>','.alert-listagem');
+					}				
 			});
 		}, undefined);
 	}

@@ -216,6 +216,7 @@
 							<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> Fiscal</a></li>
 							<li><a href="#notificacoes" data-toggle="tab"><i class="fa fa-bell"></i> Notificações</a></li>
 							<li><a href="#mod_clinica" ng-if="userLogged.id_empreendimento == 75" data-toggle="tab"><i class="fa fa-list"></i> Mod. Clinica</a></li>
+							<li><a href="#pedido_personalizado" ng-if="userLogged.id_empreendimento == 51" data-toggle="tab"><i class="fa fa-list"></i> Pedido Per.</a></li>
 							<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
 						</ul>
 					</div>
@@ -365,7 +366,6 @@
 										</select>
 									</div>
 								</div>
-
 							</div>
 							<div class="row">
 								<div class="col-sm-4">
@@ -463,7 +463,7 @@
 											</div>
 										</div>
 							</div>
-									<div class="row">
+								<div class="row">
 										<div class="col-sm-12">
 											<div class="pull-right">
 												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="update($event)" type="submit" class="btn btn-success btn-sm">
@@ -922,6 +922,179 @@
 									</div>
 								</div>
 							</div>
+							<div class="tab-pane fade" id="pedido_personalizado">
+								<div class="alert alert-config-pedido-personalizado" style="display:none"></div>
+								<div class="row">
+									<div class="col-sm-4">
+										<table class="table table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="text-center" colspan="3" >INFANTIL</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th class="text-left" colspan="3" style="background: #f9f9f9">
+														<table class="table table-condensed table-bordered" style="margin-bottom: 0;">
+															<thead>
+																<tr>
+																	<th class="text-left" colspan="2" >TAMANHOS</th>
+																</tr>
+																<tr>
+																	<th class="text-center">DE</th>
+																	<th class="text-center">ATÉ</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<th><input ng-model="valoresChinelos.infantil.tamanhos.de" style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																	<th><input ng-model="valoresChinelos.infantil.tamanhos.ate" style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																</tr>
+															</tbody>
+														</table>
+													</th>
+												</tr>
+												<tr>
+													<th class="text-left" colspan="3"  style="background: #f9f9f9">
+														<table class="table table-condensed table-bordered" style="margin-bottom: 0;">
+															<thead>
+																<tr>
+																	<th class="text-left" colspan="3" >
+																		FAIXAS
+																		<i ng-click="incluirFaixa('infantil')"  style="cursor:pointer;color: #9ad268;float: right;margin-top: 4px;" class="fa fa-plus-circle fa-lg"></i>
+																	</th>
+																</tr>
+																<tr>
+																	<th class="text-center">DE</th>
+																	<th class="text-center">ATÉ</th>
+																	<th class="text-center">VALOR</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr class="tr-hover" ng-repeat="item in valoresChinelos.infantil.faixas">
+																	<th><input ng-model="item.de" style="width: 60px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																	<th><input ng-model="item.ate" style="width: 60px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																	<th>
+																		<input ng-model="item.valor" thousands-formatter style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center">
+																		<i ng-click="excluirFaixa('infantil',item)" style="cursor:pointer;position: absolute;position: absolute;margin-top: -18px;margin-left: 106px;display: none" class="fa fa-trash-o fa-xs text-danger"></i>
+																	</th>
+																</tr>
+																<tr ng-if="valoresChinelos.infantil.faixas.length == 0">
+																	<td colspan="3" class="text-center">Nenhuma faixa incluida</td>
+																</tr>
+															</tbody>
+														</table>
+													</th>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="col-sm-4">
+										<table class="table table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="text-center" colspan="3" >ADULTO</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th class="text-left" colspan="3" style="background: #f9f9f9">
+														<table class="table table-condensed table-bordered" style="margin-bottom: 0;">
+															<thead>
+																<tr>
+																	<th class="text-left" colspan="2" >TAMANHOS</th>
+																</tr>
+																<tr>
+																	<th class="text-center">DE</th>
+																	<th class="text-center">ATÉ</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<th><input ng-model="valoresChinelos.adulto.tamanhos.de" style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																	<th><input ng-model="valoresChinelos.adulto.tamanhos.ate" style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																</tr>
+															</tbody>
+														</table>
+													</th>
+												</tr>
+												<tr>
+													<th class="text-left" colspan="3"  style="background: #f9f9f9">
+														<table class="table table-condensed table-bordered" style="margin-bottom: 0;">
+															<thead>
+																<tr>
+																	<th class="text-left" colspan="3" >
+																		FAIXAS
+																		<i ng-click="incluirFaixa('adulto')"  style="cursor:pointer;color: #9ad268;float: right;margin-top: 4px;" class="fa fa-plus-circle fa-lg"></i>
+																	</th>
+																</tr>
+																<tr>
+																	<th class="text-center">DE</th>
+																	<th class="text-center">ATÉ</th>
+																	<th class="text-center">VALOR</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr class="tr-hover" ng-repeat="item in valoresChinelos.adulto.faixas">
+																	<th><input ng-model="item.de" style="width: 60px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																	<th><input ng-model="item.ate" style="width: 60px;margin: 0 auto;" class="form-control input-xs text-center"></th>
+																	<th>
+																		<input ng-model="item.valor" thousands-formatter style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center">
+																		<i ng-click="excluirFaixa('adulto',item)" style="cursor:pointer;position: absolute;position: absolute;margin-top: -18px;margin-left: 106px;display: none" class="fa fa-trash-o fa-xs text-danger"></i>
+																	</th>
+																</tr>
+																<tr ng-if="valoresChinelos.adulto.faixas.length == 0">
+																	<td colspan="3" class="text-center">Nenhuma faixa incluida</td>
+																</tr>
+															</tbody>
+														</table>
+													</th>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="col-sm-4">
+										<table class="table table-condensed table-bordered">
+											<thead>
+												<tr>
+													<th class="text-center" colspan="3" >VALORES ADICIONAIS</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th class="text-left" colspan="3" style="background: #f9f9f9">
+														<table class="table table-condensed table-bordered" style="margin-bottom: 0;">
+															<tbody>
+																<tr>
+																	<td class="text-left">COR ADICIONAL (P/ PAR)</td>
+																	<td><input ng-model="valoresChinelos.adicionais.cor_adicional" thousands-formatter style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center"></td>
+																</tr>
+																<tr>
+																	<td class="text-left">CHINELO QUADRADO (P/ PAR)</td>
+																	<td><input ng-model="valoresChinelos.adicionais.chinelo_quadrado" thousands-formatter style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center"></td>
+																</tr>
+																<tr>
+																	<td class="text-left">ACIMA DO TAM. 41 (P/ PAR)</td>
+																	<td><input ng-model="valoresChinelos.adicionais.acima_41" thousands-formatter style="width: 80px;margin: 0 auto;" class="form-control input-xs text-center"></td>
+																</tr>
+															</tbody>
+														</table>
+													</th>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button id="btn-pedido-personalizado" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigPedidoPersonalizado(valoresChinelos)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div><!-- /panel -->
@@ -1061,6 +1234,8 @@
 	<!-- Chosen -->
 	<script src='js/chosen.jquery.min.js'></script>
 
+	<!-- UnderscoreJS -->
+	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
@@ -1091,6 +1266,14 @@
 			$(this).parent().find('span').attr('data-title',filename);
 			$(this).parent().find('label').attr('data-title','Trocar foto');
 			$(this).parent().find('label').addClass('selected');
+		});
+
+		$('table').on('mouseenter','.tr-hover', function() {
+			$('.fa-trash-o',this).show();
+		});
+
+		$('table').on('mouseleave','.tr-hover', function() {
+		 	$('.fa-trash-o',this).hide();
 		});
 	</script>
 	<?php include("google_analytics.php"); ?>

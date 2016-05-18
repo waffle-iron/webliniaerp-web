@@ -294,18 +294,22 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 		}
 
 		var itens_devolucao = [] ;
+		var id_deposito ;
 		$.each(itens_validos,function(i,v){
 			var ano       = parseInt(v.dta_devolvida.substring(2,6));
 			var mes       = parseInt(v.dta_devolvida.substring(0,2)) -1;
 			var objDate   = new Date(ano, mes , 1);
-
+			if(empty(id_deposito)) id_deposito = v.id_deposito;
 			itens_devolucao.push({
 				id_produto           : v.id_produto,
 				qtd 				 : v.qtd_devolvida,
 				valor_real_devolucao : v.valor_real_item,
 				dta_validade         : ano+'-'+(mes+1)+'-'+ultimoDiaDoMes(objDate),
 				id_item_venda        : v.id_item,
-				id_deposito          : v.id_deposito
+				id_deposito          : v.id_deposito,
+				vlr_custo             : v.vlr_custo,
+				perc_imposto_compra  : v.perc_imposto_compra,
+				perc_desconto_compra : v.perc_desconto_compra
 			});
 
 		});
@@ -314,8 +318,8 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 			id_empreendimento   : ng.userLogged.id_empreendimento,
 			id_venda			: ng.venda.id,
 			observacao			: '',
-			id_operador         : ng.userLogged.id
-
+			id_operador         : ng.userLogged.id,
+			id_deposito         : id_deposito
 		};
 
 		var post = {
@@ -328,28 +332,32 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 				btn.button('reset');
 				ng.venda 		= null ;
 				ng.itens_venda  = null ;
-				ng.id_venda     = '' ;
-				ng.mensagens('alert-success','<strong>Devolução realizada com sucesso</strong>','.alert-validade');
+				ng.mensagens('alert-success','<strong>Devolução realizada com sucesso</strong>','.alert-devolucao-sucesso');
 				ng.loadDevolucoes(0,10);
+				ng.showBoxNovaDevolucao();
+				$('html,body').animate({scrollTop: 0},'slow');
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
-				alert('error fatal');
+				ng.mensagens('alert-danger','<strong>Ocorreu um erro ao efetuar a devolução</strong>','.alert-erro');
 			});
 	}
 
-	ng.loadDevolucoes = function(offset,limit) {
+	ng.loadDevolucoes = function(offset,limit,divLoadingAjax) {
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
-		ng.devolucoes = [];
+		if(divLoadingAjax == null) ng.devolucoes = [];
+		else $(divLoadingAjax).show();
+
 		aj.get(baseUrlApi()+"devolucoes/"+ng.userLogged.id_empreendimento+"/"+offset+"/"+limit)
 			.success(function(data, status, headers, config) {
+					$(divLoadingAjax).hide();
 					ng.devolucoes           = data.devolucoes; 
 					ng.paginacao_devolucoes = data.paginacao ;
 
 			})
 			.error(function(data, status, headers, config) {
-
+				$(divLoadingAjax).hide();
 			});
 	}
 	
