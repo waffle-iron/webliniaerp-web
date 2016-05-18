@@ -361,19 +361,6 @@
 
 	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
-
-	<!-- Logout confirmation -->
-	<div class="custom-popup width-100" id="logoutConfirm">
-		<div class="padding-md">
-			<h4 class="m-top-none"> Do you want to logout?</h4>
-		</div>
-
-		<div class="text-center">
-			<a class="btn btn-success m-right-sm" href="login.html">Logout</a>
-			<a class="btn btn-danger logoutConfirm_close">Cancel</a>
-		</div>
-	</div>
-
 		<!-- /Modal Clientes-->
 		<div class="modal fade" id="list_clientes" style="display:none">
   			<div class="modal-dialog">
@@ -440,6 +427,9 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+	<!-- Logout confirmation -->
+	<?php include("logoutConfirm.php"); ?>
 
     <!-- Le javascript
     ================================================== -->

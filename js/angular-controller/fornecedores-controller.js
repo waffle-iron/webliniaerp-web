@@ -10,6 +10,54 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 
     ng.editing = false;
 
+    var cep_anterior = null;
+	ng.validCep = function(cep){
+		if(cep != cep_anterior){
+			 var exp  = /^[0-9]{8}$/;
+	         var cep = cep;
+	         if(exp.test(cep)){
+	         	cep_anterior = cep ;
+	         	$('#busca-cep').modal({
+				  backdrop: 'static',
+				  keyboard: false
+				});
+				ng.consultaCep();
+	         } 
+		}
+	}
+
+    ng.consultaCep = function(){
+		aj.get("http://api.postmon.com.br/v1/cep/"+ng.fornecedor.num_cep)
+		.success(function(data, status, headers, config) {
+
+			ng.fornecedor.nme_endereco = data.logradouro;
+			ng.fornecedor.nme_bairro = data.bairro;
+			var estado = ng.getEstado(data.estado);
+			ng.fornecedor.cod_estado = estado.id;
+			ng.loadCidadesByEstado(data.cidade);
+			//ng.fornecedor.id_cidade = data.cidade_info.codigo_ibge.substr(0,6);
+			$("#num_logradouro").focus();
+			$('#busca-cep').modal('hide');
+		})
+		.error(function(data, status, headers, config) {
+			$('#busca-cep').modal('hide');
+			alert('CEP inválido');
+		});
+	}
+
+	ng.getEstado = function(uf){
+		var estado = null ;
+		var estados = angular.copy(ng.chosen_estado);
+		$.each(estados,function(i,x){
+			if(x.uf.toUpperCase() == uf.toUpperCase()){
+			    estado = x;
+				return false;
+			}
+		});
+
+		return estado;
+	}
+
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
 
@@ -138,7 +186,7 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 			});
 	}
 
-	ng.chosen_estado  = [{id:'',nome:'--- Selecione ---'}] ;
+	ng.chosen_estado  = [{id:'',nome:'--- Selecione ---', uf: ''}] ;
     ng.loadEstados = function () {
 		aj.get(baseUrlApi()+"estados")
 		.success(function(data, status, headers, config) {
@@ -155,14 +203,23 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 	ng.loadEstados();
 
 	ng.chosen_cidade = [{id: "" ,nome:"Selecione um estado"}];
-	ng.loadCidadesByEstado = function () {
+	ng.loadCidadesByEstado = function (nome_cidade) {
 		ng.chosen_cidade = [];
-		aj.get(baseUrlApi()+"cidades_by_id_estado/"+ng.fornecedor.cod_estado)
+		var id_cidade = angular.copy(ng.fornecedor.cod_cidade);
+		aj.get(baseUrlApi()+"cidades/"+ng.fornecedor.cod_estado)
 		.success(function(data, status, headers, config) {
+			ng.fornecedor.cod_cidade = angular.copy(id_cidade);
+			console.log(ng.fornecedor.cod_cidade);
 			ng.chosen_cidade = data;
-			setTimeout(function(){
-			 	$("select").trigger("chosen:updated")
-			 }, 500);
+			setTimeout(function(){$("select").trigger("chosen:updated");},300);
+			if(nome_cidade != null){
+				$.each(ng.chosen_cidade,function(i,x){
+					if(removerAcentos(nome_cidade) == removerAcentos(x.nome)){
+						ng.fornecedor.cod_cidade = angular.copy(x.id);
+						return false ;
+					}
+				});
+			}
 		})
 		.error(function(data, status, headers, config) {
 

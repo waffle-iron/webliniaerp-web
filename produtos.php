@@ -333,7 +333,7 @@
 											<table class="table table-bordered table-condensed table-striped table-hover">
 												<thead>
 													<tr>
-														<th class="text-center" rowspan="2" style="line-height: 46px;width: 350px">Empreendimento</th>
+														<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
 														<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
 														<th class="text-center" colspan="2">Vlr. Atacado</th>
 														<th class="text-center" colspan="2">Vlr. Intermediário</th>
@@ -437,7 +437,7 @@
 														<thead>
 															<tr>
 																<th class="text-center">Deposito</th>
-																<th class="text-center">validade</th>
+																<th class="text-center">Validade</th>
 																<th class="text-center" width="100">Quantidade</th>
 															</tr>
 														</thead>
@@ -477,9 +477,9 @@
 														<div class="upload-file">
 															<input  id="foto-produto" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" name="img"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
 															<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
-																<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecione" for="foto-produto">
-																	<span data-title="{{ produto.img }}"></span>
-																</label>
+															<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecione" for="foto-produto">
+																<span data-title="{{ produto.img }}"></span>
+															</label>
 														</div>
 													</div>
 												</div>

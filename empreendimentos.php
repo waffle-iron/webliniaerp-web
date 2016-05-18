@@ -237,7 +237,8 @@
 								<div class="col-sm-2">
 									<div id="cep" class="form-group">
 										<label class="control-label">CEP  </label>
-										<input type="text" class="form-control" ui-mask="99999-999" ng-model="empreendimento.num_cep">
+										<input type="text" class="form-control" ui-mask="99999-999" 
+											ng-model="empreendimento.num_cep" ng-keyUp="validCep(empreendimento.num_cep)" ng-blur="validCep(empreendimento.num_cep)">
 									</div>
 								</div>
 
@@ -251,7 +252,7 @@
 								<div class="col-sm-1">
 									<div id="numero" class="form-group">
 										<label class="control-label">N°. </label>
-										<input id="num_logradouro" type="text" class="form-control" ng-model="empreendimento.num_logradouro" ng-blur="consultaLatLog()">
+										<input id="num_logradouro" type="text" class="form-control" ng-model="empreendimento.num_logradouro">
 									</div>
 								</div>
 							</div>
@@ -523,6 +524,22 @@
 				</div> -->
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal load CEP-->
+		<div class="modal fade" id="busca-cep" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+    				<div class="modal-header">
+						<h4>Aguarde!</h4>
+      				</div>
+
+				    <div class="modal-body">
+				   		<strong>Buscando CEP...</strong>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- /Modal empreendimento-->
 		<div class="modal fade" id="list-regime-especial" style="display:none">

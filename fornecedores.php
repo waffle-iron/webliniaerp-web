@@ -241,7 +241,9 @@
 								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">CEP</label>
-										<input id="num_cep" type="text" class="form-control input-sm" ng-enter="salvar()" ng-model="fornecedor.num_cep">
+										<input type="text" class="form-control input-sm" ui-mask="99999-999" 
+											ng-model="fornecedor.num_cep" ng-enter="salvar()"
+											ng-keyUp="validCep(fornecedor.num_cep)" ng-blur="validCep(fornecedor.num_cep)">
 									</div>
 								</div>
 								<div class="col-sm-5">
@@ -347,6 +349,22 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal load CEP-->
+		<div class="modal fade" id="busca-cep" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+    				<div class="modal-header">
+						<h4>Aguarde!</h4>
+      				</div>
+
+				    <div class="modal-body">
+				   		<strong>Buscando CEP...</strong>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->

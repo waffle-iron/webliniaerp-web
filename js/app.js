@@ -70,7 +70,10 @@ angular.module('filters', [])
 	    };
 	}).filter('Utf8Decode', function () {
 		return function (inputFormat) {
-			return Utf8Decode(inputFormat);
+			if(inputFormat != undefined)
+				return Utf8Decode(inputFormat);
+			else
+				return null;
 		}
 	})
 	.filter('dateFormat', function () {

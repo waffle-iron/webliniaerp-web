@@ -28,6 +28,13 @@
 		</a>
 	</li>
 	<li>
+		<a href="procedimentos.php">
+			<span class="submenu-label">
+				<i class="fa fa-list-alt "></i> Procedimentos
+			</span>
+		</a>
+	</li>
+	<li>
 		<a href="fabricantes.php">
 			<span class="submenu-label">
 				<i class="fa fa-puzzle-piece"></i> Fabricantes
@@ -194,13 +201,6 @@
 		<a href="caixas.php">
 			<span class="submenu-label">
 				<i class="fa fa-desktop"></i> Caixas (PDV)
-			</span>
-		</a>
-	</li>
-	<li>
-		<a href="agendamento-consulta.php">
-			<span class="submenu-label">
-				<i class="fa fa-list"></i> Contr. Atendimento
 			</span>
 		</a>
 	</li>

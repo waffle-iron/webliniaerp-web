@@ -42,28 +42,6 @@
 			</span>
 		</a>
 	</li>
-
-	<li>
-		<a href="rel_total_vendas_cliente.php">
-			<span class="submenu-label">
-				<i class="fa fa-file-text-o"></i> Vendas p/ Cliente
-			</span>
-		</a>
-	</li>
-	<li>
-		<a href="rel_total_vendas_vendedor.php">
-			<span class="submenu-label">
-				<i class="fa fa-file-text-o"></i> Vendas p/ Vendedor
-			</span>
-		</a>
-	</li>
-	<li>
-		<a href="rel_fechamento_mensal.php">
-			<span class="submenu-label">
-				<i class="fa fa-file-text-o"></i> Fechamento Mensal
-			</span>
-		</a>
-	</li>
 	<li>
 		<a href="rel_pagamentos.php">
 			<span class="submenu-label">
@@ -93,13 +71,6 @@
 		</a>
 	</li>
 <?php }else{ ?>
-	<li>
-		<a href="relatorio-diario-clinica.php">
-			<span class="submenu-label">
-				<i class="fa fa-file-text-o"></i> Rel. Diário Atendimento
-			</span>
-		</a>
-	</li>
 	<li>
 		<a href="rel_analitico_estoque.php">
 			<span class="submenu-label">
@@ -133,6 +104,13 @@
 		<a href="rel_produtos_estoque_minimo.php">
 			<span class="submenu-label">
 				<i class="fa fa-file-text-o"></i> Produtos c/ Estoque Mín.
+			</span>
+		</a>
+	</li>
+	<li>
+		<a href="rel-vendas-categoria.php">
+			<span class="submenu-label">
+				<i class="fa fa-file-text-o"></i> Vendas p/ Categoria
 			</span>
 		</a>
 	</li>
