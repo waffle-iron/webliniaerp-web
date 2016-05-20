@@ -307,7 +307,36 @@
 
 							<fieldset id="fieldset-item-pedido">
 								<legend>Itens do Pedido</legend>
+								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Tipo Base?</label> 
+									<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3" style="margin-top: 5px;">
+										<label class="label-radio inline">
+											<input ng-model="pedido.tipo_base" ng-change="setTipoBase()" value="quadrada" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Quadrada</span>
+										</label>
 
+										<label class="label-radio inline">
+											<input ng-model="pedido.tipo_base" ng-change="setTipoBase()" value="redonda" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Redonda</span>
+										</label>
+									</div>
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2  control-label">Modelo Base?</label> 
+									<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4" style="margin-top: 5px;">
+										<label class="label-radio inline" >
+											<input ng-model="pedido.modelo_base" ng-change="setTipoBase()" value="linha_lika_shoes" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Linha Lika Shoes</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="pedido.modelo_base" ng-change="setTipoBase()" value="linha_personalizada" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Linha Personalizada</span>
+										</label>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Cor das Bases:</label> 
 									<div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
@@ -342,6 +371,17 @@
 								</div>
 
 								<div class="form-group">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label" >Modelo da Estampa:</label> 
+									<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+										<div class="input-group">
+											<input ng-click="openModalModelosEstampas()" ng-model="pedido.modeloEstampa.nome_produto" type="text" class="form-control"  readonly="readonly" style="cursor: pointer;" />
+											<span class="input-group-btn">
+												<button ng-click="openModalModelosEstampas()"  type="button" class="btn"><i class="fa fa-search"></i></button>
+											</span>
+										</div>
+									</div>
+
+
 									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">Cores da Estampa:</label> 
 									<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
 										<table class="table table-bordered table-hover table-striped table-condensed">
@@ -412,11 +452,11 @@
 														<input ng-model="item.fem_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" type="text" ng-disabled="!item.fem_valid" class="form-control input-xs text-center">
 													</td>
 													<td class="text-center text-middle danger" width="70">
-														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosFemininos,$event,$index,'feminino-infantil')" data-popover-visible="0" id="popover-acessorio-feminino-infantil-{{ $index }}">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid"  ng-click="popoverAcessorios(item.acessoriosFemininos,$event,$index,'feminino-infantil')" data-popover-visible="0" id="popover-acessorio-feminino-infantil-{{ $index }}">
 														<i class="fa fa-tags"></i>
                                                         <span ng-if="item.acessoriosFemininos != null && item.acessoriosFemininos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosFemininos) }}</span>
 														</button>
-														<button ng-click="openModalAcessorios(item,'feminino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid   && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+														<button ng-click="openModalAcessorios(item,'feminino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
 															<i class="fa fa-plus-square"></i>
 														</button>
 													</td>
@@ -424,11 +464,11 @@
 														<input ng-model="item.mas_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" type="text" ng-disabled="!item.mas_valid" class="form-control input-xs text-center">
 													</td>
 													<td class="text-center text-middle info" width="70">
-														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosMasculinos,$event,$index,'masculino-infantil')" data-popover-visible="0" id="popover-acessorio-masculino-infantil-{{ $index }}">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosMasculinos,$event,$index,'masculino-infantil')" data-popover-visible="0" id="popover-acessorio-masculino-infantil-{{ $index }}">
 														<i class="fa fa-tags"></i>
                                                         <span ng-if="item.acessoriosMasculinos != null && item.acessoriosMasculinos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosMasculinos) }}</span>
 														</button>
-														<button ng-click="openModalAcessorios(item, 'masculino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid   && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+														<button ng-click="openModalAcessorios(item, 'masculino')" class="btn btn-xs btn-success" ng-disabled="!item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
 															<i class="fa fa-plus-square"></i>
 														</button>
 													</td>
@@ -452,11 +492,11 @@
 														<input type="text" ng-model="item.fem_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" ng-disabled="!item.fem_valid" class="form-control input-xs text-center">
 													</td>
 													<td class="text-center text-middle danger" width="70">
-														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosFemininos,$event,$index,'feminino-adulto')" data-popover-visible="0" id="popover-acessorio-feminino-adulto-{{ $index }}">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid"  ng-click="popoverAcessorios(item.acessoriosFemininos,$event,$index,'feminino-adulto')" data-popover-visible="0" id="popover-acessorio-feminino-adulto-{{ $index }}">
 															<i class="fa fa-tags"></i>
                                                             <span ng-if="item.acessoriosFemininos != null && item.acessoriosFemininos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosFemininos) }}</span>
 														</button>
-														<button ng-click="openModalAcessorios(item,'feminino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+														<button ng-click="openModalAcessorios(item,'feminino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
 															<i class="fa fa-plus-square"></i>
 														</button>
 													</td>
@@ -464,11 +504,11 @@
 														<input type="text"  ng-model="item.mas_qtd" onKeyPress="return SomenteNumero(event);" ng-focus="hidePopOver()" ng-disabled="!item.mas_valid" class="form-control input-xs text-center">
 													</td>
 													<td class="text-center text-middle info" width="70">
-														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.fem_valid && !item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosMasculinos,$event,$index,'masculino-adulto')" data-popover-visible="0" id="popover-acessorio-masculino-adulto-{{ $index }}">
+														<button class="btn btn-xs btn-default" role="button" ng-disabled="!item.mas_valid"  ng-click="popoverAcessorios(item.acessoriosMasculinos,$event,$index,'masculino-adulto')" data-popover-visible="0" id="popover-acessorio-masculino-adulto-{{ $index }}">
 														<i class="fa fa-tags"></i>
                                                         <span ng-if="item.acessoriosMasculinos != null && item.acessoriosMasculinos.length > 0" class="notification-label-acessorios">{{ qtdtotalAcessorios(item.acessoriosMasculinos) }}</span>
 														</button>
-														<button ng-click="openModalAcessorios(item,'masculino')" class="btn btn-xs btn-success" ng-disabled="!item.fem_valid   && !item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
+														<button ng-click="openModalAcessorios(item,'masculino')" class="btn btn-xs btn-success" ng-disabled="!item.mas_valid" data-toggle="tooltip" title="Incluir Acessório" ng-click="openModal('list_produtos')">
 															<i class="fa fa-plus-square"></i>
 														</button>
 													</td>
@@ -577,7 +617,8 @@
                                                     </td>
 												</tr>
 												<tr ng-show="length(carrinhoPedido) > 0">
-													<td style="border: none;" colspan="3" class="text-right">
+													<td class="text-center" >{{ qtdtotalItensPedido() }}</td>
+													<td style="border: none;" colspan="2" class="text-right">
 														Total do Pedido
 													</td>
 													<td style="border: none;" ng-bind-html="totalPedido()" class="text-right"></td>
@@ -934,7 +975,7 @@
 			</div>
 		</div>
 		<!-- /main-container -->
-		
+
         <!-- /Modal Cores de Estampa-->
         <div class="modal fade" id="modal-cor-estampa" style="display:none">
             <div class="modal-dialog modal-md">
@@ -1218,6 +1259,87 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+		  <!-- /Modal Cores de Estampa-->
+        <div class="modal fade" id="modal-modelos-estampas" style="display:none">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4>Modelo de Estampas</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input ng-model="busca.modeloEstampa" ng-enter="loadModeloEstampas(0,10)" type="text" class="form-control input-sm">
+
+                                    <div class="input-group-btn">
+                                        <button tabindex="-1" class="btn btn-sm btn-primary" type="button"
+                                            ng-click="loadModeloEstampas(0,10)">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div> <!-- /input-group-btn -->
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+
+                        <br>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <thead ng-show="(modeloEstampas.itens.length != 0)">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nome</th>
+                                            <th width="80"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-show="(modeloEstampas.itens.length == 0)">
+                                            <td colspan="3" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
+                                        </tr>
+                                        <tr ng-show="(modeloEstampas.itens == null)">
+                                            <td colspan="3">Não a resultados para a busca</td>
+                                        </tr>
+                                        <tr ng-repeat="item in modeloEstampas.itens">
+                                            <td>{{ item.id_produto }}</td>
+                                            <td>
+	                                        	  <a href="" init-popover container="#modal-modelos-estampas" content='<img width="100" src="{{ item.img }}"><img>"'>
+	                                        	  	{{ item.nome_produto }}
+	                                        	  </a>
+                                            </td>
+                                            <td>
+                                            <button ng-show="item.id_produto != pedido.id_modelo_estampa"  ng-click="addModeloEstampa(item)"  class="btn btn-success btn-xs" type="button">
+                                                <i class="fa fa-check-square-o"></i> Selecionar
+                                            </button>
+                                            <button ng-show="item.id_produto == pedido.id_modelo_estampa" ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                                <i class="fa fa-check-circle-o"></i> Selecionado
+                                            </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group pull-right">
+                                     <ul class="pagination pagination-xs m-top-none" ng-show="modeloEstampa.paginacao.length > 1">
+                                        <li ng-repeat="item in modeloEstampa.paginacao" ng-class="{'active': item.current}">
+                                            <a href="" ng-click="loadModeloEstampas(item.offset,item.limit)">{{ item.index }}</a>
+                                        </li>
+                                    </ul>
+                                </div> <!-- /input-group -->
+                            </div><!-- /.col -->
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
 
 		<!-- /Modal Processando Venda-->
 		<div class="modal fade" id="modal-bases-tiras" style="display:none">

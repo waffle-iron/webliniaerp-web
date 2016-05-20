@@ -18,6 +18,11 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
     ng.lista_serie_documento_fiscal = []; 
     ng.edit_serie_documento_fiscal = false ;
     ng.notEmails = [] ;
+    ng.valoresChinelos = { 
+    	infantil: { tamanhos: { de: null , ate:null }, faixas: [/*{ de:null,ate:null,valor:null }*/] }, 
+    	adulto: { tamanhos: { de: null , ate:null }, faixas: [/*{ de:null,ate:null,valor:null }*/] },
+    	adicionais:{cor_adicional:null,chinelo_quadrado:null,acima_41:null}
+    }
 
 	ng.loadPlanoContasSelect = function() {
 	 	ng.currentNode 	= null;
@@ -144,6 +149,10 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				ng.configuracoes = data;
 				ng.configuracoes.id_plano_conta_pagamento_profissional = ""+ng.configuracoes.id_plano_conta_pagamento_profissional ;
 				ng.notEmails = emails;
+
+				if(!empty(data.valores_chinelos) && typeof parseJSON(data.valores_chinelos) == 'object' ){
+					ng.valoresChinelos = parseJSON(data.valores_chinelos);
+				}
 				
 				if(data.id_plano_caixa == undefined){
 					$('#id_plano_caixa').addClass('has-error');
@@ -643,6 +652,39 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 
 				});
 			});
+	}
+	ng.incluirFaixa = function(tipo){
+		ng.valoresChinelos[tipo].faixas.push({de:null,ate:null,valor:null });
+	}
+
+	ng.excluirFaixa = function(tipo,obj){
+		ng.valoresChinelos[tipo].faixas = _.without(ng.valoresChinelos[tipo].faixas,obj);
+	}
+
+	ng.salvarConfigPedidoPersonalizado = function(valoresChinelos){
+		var btn = $('#btn-pedido-personalizado');
+		btn.button('loading');
+		valoresChinelos = angular.copy(valoresChinelos);
+		var json = JSON.stringify(valoresChinelos);
+		var chaves = [];
+		var item = {
+			nome 				:'valores_chinelos',
+			valor 				: json , 
+			id_empreendimento	:ng.userLogged.id_empreendimento
+		}
+		chaves.push(item);
+		
+		aj.post(baseUrlApi()+"configuracao/save/",{chaves:chaves} )
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-pedido-personalizado');
+				ng.loadConfig();
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+			});
+
+		console.log(json);
 	}
 
 

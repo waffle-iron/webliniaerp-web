@@ -1795,7 +1795,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		aj.get(baseUrlApi()+"formas_pagamento")
 			.success(function(data, status, headers, config) {
-				var aux = typeof parseJSON(ng.config.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.config.formas_pagamento_pdv) : [] ;
+				ng.formas_pagamento = data ;
+				/*var aux = typeof parseJSON(ng.config.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.config.formas_pagamento_pdv) : [] ;
 				var count = 0 ;
 				var group = 0 ;
 				$.each(data,function(i,x){ 
@@ -1817,7 +1818,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					}
 					else count ++ ;
 				}	
-				});
+				});*/
 			});
 	}
 
@@ -2875,6 +2876,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			});
 			ng.descontoAllItens.valor = 0 ;
 		}
+		$('#pop-over-desconto-venda').popover('hide');
 	}
 	if(typeof ng.caixa_open == 'object' &&  Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1)
 		ng.newConnWebSocket();

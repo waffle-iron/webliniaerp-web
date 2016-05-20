@@ -212,7 +212,7 @@
 						<br/>
 						<div class="row">
 							<div class="col-sm-12" >
-								<div style="display:none" class="alert alert-validade"></div>
+								<div style="display:none" class="alert alert-erro"></div>
 							</div>
 						</div>
 						<div class="row">
@@ -413,7 +413,8 @@
 					</div>
 					<div class="panel-footer clearfix" ng-if="view.cadastar_cliente == false">
 						<div style="text-align:center">
-							<button ng-click="lancarDevolucao()" type="submit" data-loading-text=" Aguarde..." id="btn-lancar-devolucao"  class="btn btn-success btn-md" ng-disabled="itens_venda.length == 0 || itens_venda == null">
+							<button ng-click="lancarDevolucao()" type="submit" data-loading-text=" Aguarde..." id="btn-lancar-devolucao"  class="btn btn-success btn-md" 
+							 ng-disabled="itens_venda == null || itens_venda.length == 0">
 								<i class="fa fa-save"></i> Lançar Devolução
 							</button>
 						</div>
@@ -423,7 +424,9 @@
 				<div class="panel panel-default">
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Lista de Devoluções</div>
 					<div class="panel-body">
+						<div style="display:none" class="alert alert-devolucao-sucesso"></div>
 						<table class="table table-bordered table-condensed table-striped table-hover">
+						<div class="loading-ajax" id="loading-ajax-lista-detalhes"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
 							<tr ng-show="(devolucoes.length == 0)">
 								<td colspan="4">Não há devoluçãoes cadastradas</td>
 							<tr>
@@ -457,7 +460,7 @@
 			    		<div class="col-sm-12">
 			    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_devolucoes.length > 1">
 								<li ng-repeat="item in paginacao_devolucoes" ng-class="{'active': item.current}">
-									<a href="" h ng-click="loadDevolucoes(item.offset,item.limit)">{{ item.index }}</a>
+									<a href="" h ng-click="loadDevolucoes(item.offset,item.limit,'#loading-ajax-lista-detalhes')">{{ item.index }}</a>
 								</li>
 							</ul>
 			    		</div>

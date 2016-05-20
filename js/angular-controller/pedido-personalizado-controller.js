@@ -1,10 +1,11 @@
-app.controller('PedidoPersonalizadoController', function($scope,$compile, $http, $window, $dialogs, UserService){
+app.controller('PedidoPersonalizadoController', function($scope,$compile, $http, $window, $dialogs, UserService,ConfigService){
 
 	var ng = $scope
 		aj = $http;
-
+	ng.teste = 'merda';
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	 = UserService.getUserLogado();
+	ng.configuracoes = ConfigService.getConfig(ng.userLogged.id_empreendimento);
     ng.busca 		 = {produtos:"",depositos:"",empreendimento:"",clientes:"",acessorios:"",coresEstmapa:""};
     ng.pedido 		 = {id_cor_base: null,id_cor_tira_feminina: null,id_cor_tira_masculina: null,canal_venda:'Loja',observacao:"",flg_brinde:0}
     ng.editing 		 = false;
@@ -15,22 +16,6 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
     ng.tela          = 'pedido';
     ng.cliente       = {indicacao:0,acao_cliente:null};
     var params      = getUrlVars();
-  	ng.chinelosInfantis = {
-							tamanhos:['23/24','31/32'],
-							precos:{
-								'30': 4.00
-							}
-
-    					  };
-    ng.chinelosAdultos  = {
-    						tamanhos:['33/34'],
-    						precos:{
-								'1-49'  : 13.50,
-								'50-99' : 6.99,
-								'100-149': 5.99,
-								'150'    : 5.50
-							}
-    					  };
     ng.carrinhoPedido = {} ;
     ng.gradesAnteriores = {} ;
    
@@ -72,18 +57,40 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 	ng.montarGradePedido = function(){
 		ng.gradeInfantil = [] ;
 		ng.gradeAdulto   = [] ;
-		if(!empty(ng.pedido.id_cor_base) && !empty(ng.pedido.id_cor_tira_feminina) && !empty(ng.pedido.id_cor_tira_masculina)){
+		var flg_base ;
+		if( ng.pedido.tipo_base == 'quadrada' && ng.pedido.modelo_base =='linha_lika_shoes') flg_base = 'flg_base' ;
+		else if( ng.pedido.tipo_base == 'redonda' && ng.pedido.modelo_base =='linha_lika_shoes') flg_base = 'flg_base_linha_redonda' ;
+		else if( ng.pedido.tipo_base == 'quadrada' && ng.pedido.modelo_base =='linha_personalizada') flg_base = 'flg_base_personalizada_quadrada' ;
+		else if( ng.pedido.tipo_base == 'redonda' && ng.pedido.modelo_base =='linha_personalizada') flg_base = 'flg_base_personalizada' ;
+
+		if( ( !empty(ng.pedido.id_cor_base) && !empty(ng.pedido.id_cor_tira_feminina) ) || ( !empty(ng.pedido.id_cor_base) && !empty(ng.pedido.id_cor_tira_masculina) ) ){
 			$('[data-popover-visible="1"]').popover('hide').attr('data-popover-visible','0');
 			$('#modal-bases-tiras').modal({ backdrop: 'static',keyboard: false});
-			ng.loadBaseSANDTiras();
+			ng.loadBaseSANDTiras(flg_base);
 		}
 	}
 
-	ng.loadBaseSANDTiras = function(){
-		aj.get(baseUrlApi()+"pedido_personalizado/bases_tiras/"+ng.userLogged.id_empreendimento+"/"+ng.pedido.id_cor_base+"/"+ng.pedido.id_cor_tira_feminina+"/"+ng.pedido.id_cor_tira_masculina)
+	ng.loadBaseSANDTiras = function(flg_base){
+		var id_cor_tira_feminina = empty(ng.pedido.id_cor_tira_feminina)   ?  0 : angular.copy(ng.pedido.id_cor_tira_feminina) ; 
+		var id_cor_tira_masculina = empty(ng.pedido.id_cor_tira_masculina) ?  0 : angular.copy(ng.pedido.id_cor_tira_masculina) ; 
+		aj.get(baseUrlApi()+"pedido_personalizado/bases_tiras/"+ng.userLogged.id_empreendimento+"/"+flg_base+"/"+ng.pedido.id_cor_base+"/"+id_cor_tira_feminina+"/"+id_cor_tira_masculina)
 			.success(function(data, status, headers, config) {
 				var base, tira , indexMas, indexFem ;
 				$.each(data,function(i,v){
+					$.each(v.fem_itens,function(a,b){
+						if(b.tipo == 'base'){
+							v.fem_itens[a].tipo_base   = ng.pedido.tipo_base ;
+							v.fem_itens[a].modelo_base = ng.pedido.modelo_base;
+
+						}
+					});
+					$.each(v.mas_itens,function(a,b){
+						if(b.tipo == 'base'){
+							v.mas_itens[a].tipo_base   = ng.pedido.tipo_base ;
+							v.mas_itens[a].modelo_base = ng.pedido.modelo_base;
+
+						}
+					});
 					base  = ng.getbase(v.fem_itens); 
 					tira  = ng.getTira(v.fem_itens,'tira_feminina');
 					indexFem = "fem-"+v.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor ;
@@ -107,6 +114,8 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 							ng.gradeAdulto.push(v);
 					}
 				});
+					console.log(ng.gradeInfantil);
+					console.log(ng.gradeAdulto);
 				$('#modal-bases-tiras').modal('hide');
 			})
 			.error(function(data, status, headers, config) {
@@ -188,11 +197,12 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		var qtd_adultos  = 0 ;
 		var qtd_infantis = 0 ;
 		var indexGraAnt  = Number(ng.pedido.flg_brinde) ? "brinde-" : "" ;
-		indexGraAnt +=  ng.pedido.id_cor_base+'-'+ng.pedido.id_cor_tira_feminina+'-'+ng.pedido.id_cor_tira_masculina ;
+		indexGraAnt +=  ng.pedido.id_cor_base+'-'+ng.pedido.id_cor_tira_feminina+'-'+ng.pedido.id_cor_tira_masculina+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base;
 		
 		//Chinelos Adulto
 		if(ng.gradeAdulto != null && ng.gradeAdulto.length >0){
 			$.each(ng.gradeAdulto,function(i,v){
+
 				var fem_qtd = $.isNumeric(v.fem_qtd) ? Number(v.fem_qtd) : 0 ;
 				var mas_qtd = $.isNumeric(v.mas_qtd) ? Number(v.mas_qtd) : 0 ;
 				var base ; 
@@ -204,25 +214,32 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					base       = ng.getbase(v.fem_itens); 
 					tira 	   = ng.getTira(v.fem_itens,'tira_feminina');
 					insumos    = [base,tira] ;
+					if(!empty(ng.pedido.modeloEstampa) && $.isNumeric(ng.pedido.modeloEstampa.id_produto))
+						insumos = insumos.concat(ng.pedido.modeloEstampa);
 					if(v.acessoriosFemininos != undefined && v.acessoriosFemininos.length > 0)
 						insumos = insumos.concat(v.acessoriosFemininos);
-					nome_chinelo = "Chinelo Personalizado Feminino Base "+base.nome_tamanho+" "+base.nome_cor+" Tira "+tira.nome_cor;
+					var modelo = ng.pedido.modelo_base == 'linha_lika_shoes' ? 'LINHA LIKA SHOES' : 'LINHA PERSONALIZADA' ;
+					var tipo = ng.pedido.tipo_base == 'quadrada' ? 'QUAD.' : 'RED.' ;
+					nome_chinelo = "CHINELO PER. FEM. BASE "+modelo+" "+tipo+" "+base.nome_tamanho+" "+base.nome_cor.toUpperCase()+" TIRA "+tira.nome_cor.toUpperCase();
 					var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ; 
-					chinelosAdultos['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde] = {
+					chinelosAdultos['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base] = {
 						nome:nome_chinelo ,
 						qtd :fem_qtd,
 						insumos :insumos,
 						indexGrad : indexGraAnt,
 						valor_desconto : 0,
 						tipo : 'adulto',
-						flg_brinde : Number(ng.pedido.flg_brinde)
+						flg_brinde : Number(ng.pedido.flg_brinde),
+						nome_tamanho : base.nome_tamanho
 					};
 				}else if(v.fem_valid){
 					base       = ng.getbase(v.fem_itens); 
 					tira 	   = ng.getTira(v.fem_itens,'tira_feminina');
-					if(!(ng.carrinhoPedido['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor] == undefined)){
-						var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
-						delete ng.carrinhoPedido['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde] ;
+					var brinde = '';
+					brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
+					var index_aux = 'fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base;
+					if(!(ng.carrinhoPedido[index_aux] == undefined)){
+						delete ng.carrinhoPedido[index_aux] ;
 					}
 				}
 				if(mas_qtd > 0){
@@ -230,25 +247,33 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					base       = ng.getbase(v.mas_itens); 
 					tira 	   = ng.getTira(v.mas_itens,'tira_masculina');
 					insumos    = [base,tira] ;
+					if(!empty(ng.pedido.modeloEstampa) && $.isNumeric(ng.pedido.modeloEstampa.id_produto))
+						insumos = insumos.concat(ng.pedido.modeloEstampa);
 					if(v.acessoriosMasculinos != undefined && v.acessoriosMasculinos.length > 0)
 						insumos = insumos.concat(v.acessoriosMasculinos);
-					nome_chinelo = "Chinelo Personalizado Masculino Base "+base.nome_tamanho+" "+base.nome_cor+" Tira "+tira.nome_cor; 
-					var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
-					chinelosAdultos['mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde] = {
+					var modelo = ng.pedido.modelo_base == 'linha_lika_shoes' ? 'LINHA LIKA SHOES' : 'LINHA PERSONALIZADA' ;
+					var tipo = ng.pedido.tipo_base == 'quadrada' ? 'QUAD.' : 'RED.' ;
+					nome_chinelo = "CHINELO PER. MAS. BASE "+modelo+" "+tipo+" "+base.nome_tamanho+" "+base.nome_cor.toUpperCase()+" TIRA "+tira.nome_cor.toUpperCase();
+					var brinde = '';
+					brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
+					chinelosAdultos['mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base] = {
 						nome:nome_chinelo ,
 						qtd :mas_qtd,
 						insumos :insumos,
 						indexGrad : indexGraAnt,
 						valor_desconto : 0,
 						tipo : 'adulto',
-						flg_brinde : Number(ng.pedido.flg_brinde)
+						flg_brinde : Number(ng.pedido.flg_brinde),
+						nome_tamanho : base.nome_tamanho
 					};
 				}else if(v.mas_valid){
 					base       = ng.getbase(v.mas_itens); 
 					tira 	   = ng.getTira(v.mas_itens,'tira_masculina');
-					if(!(ng.carrinhoPedido['mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor] == undefined)){
-						var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
-						delete ng.carrinhoPedido['mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde] ;
+					var brinde = '';
+					brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
+					var index_aux =  'mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base;
+					if(!(ng.carrinhoPedido[index_aux] == undefined)){
+						delete ng.carrinhoPedido[index_aux] ;
 					}
 				}
 			});
@@ -260,7 +285,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 			var vlr_custo = 0 ;
 			var vlr_uni_adulto = 0;
 			var ex = 0 ;
-			vlr_uni_adulto = vlr_uni_adulto_base;
+			vlr_uni_adulto = vlr_uni_adulto_base+ng.getValorAdd(v.nome_tamanho);
 		    $.each(v.insumos,function(x,y){
 		    	if(y.tipo == undefined || y.tipo == 'acessorio'){
 		    		vlr_custo += Number(y.qtd) * Number(y.vlr_custo_real) ;
@@ -292,11 +317,16 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					base       = ng.getbase(v.fem_itens); 
 					tira 	   = ng.getTira(v.fem_itens,'tira_feminina');
 					insumos    = [base,tira] ;
+					if(!empty(ng.pedido.modeloEstampa) && $.isNumeric(ng.pedido.modeloEstampa.id_produto))
+						insumos = insumos.concat(ng.pedido.modeloEstampa);
 					if(v.acessoriosFemininos != undefined && v.acessoriosFemininos.length > 0)
 						insumos = insumos.concat(v.acessoriosFemininos);
-					nome_chinelo = "Chinelo Personalizado Feminino Base "+base.nome_tamanho+" "+base.nome_cor+" Tira "+tira.nome_cor; 
-					var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
-					chinelosInfantis['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde] = {
+					var modelo = ng.pedido.modelo_base == 'linha_lika_shoes' ? 'LINHA LIKA SHOES' : 'LINHA PERSONALIZADA' ;
+					var tipo = ng.pedido.tipo_base == 'quadrada' ? 'QUAD.' : 'RED.' ;
+					nome_chinelo = "CHINELO PER. FEM. BASE "+modelo+" "+tipo+" "+base.nome_tamanho+" "+base.nome_cor.toUpperCase()+" TIRA "+tira.nome_cor.toUpperCase();
+					var brinde = '';
+					brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
+					chinelosInfantis['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base] = {
 						nome:nome_chinelo ,
 						qtd :fem_qtd,
 						insumos :insumos,
@@ -308,9 +338,11 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 				}else if(v.fem_valid){
 					base       = ng.getbase(v.fem_itens); 
 					tira 	   = ng.getTira(v.fem_itens,'tira_feminina');
-					if(!(ng.carrinhoPedido['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor] == undefined)){
-						var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
-						delete ng.carrinhoPedido['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde] ;
+					var brinde = '';
+					brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
+					var index_aux = 'fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base ;
+					if(!(ng.carrinhoPedido[index_aux] == undefined)){
+						delete ng.carrinhoPedido[index_aux] ;
 					}
 				}
 				if(v.mas_qtd > 0){
@@ -318,11 +350,15 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					base       = ng.getbase(v.mas_itens); 
 					tira 	   = ng.getTira(v.mas_itens,'tira_masculina');
 					insumos    = [base,tira] ;
+					if(!empty(ng.pedido.modeloEstampa) && $.isNumeric(ng.pedido.modeloEstampa.id_produto))
+						insumos = insumos.concat(ng.pedido.modeloEstampa);
 					if(v.acessoriosMasculinos != undefined && v.acessoriosMasculinos.length > 0)
 						insumos = insumos.concat(v.acessoriosMasculinos);
-					nome_chinelo = "Chinelo Personalizado Masculino Base "+base.nome_tamanho+" "+base.nome_cor+" Tira "+tira.nome_cor; 
+					var modelo = ng.pedido.modelo_base == 'linha_lika_shoes' ? 'LINHA LIKA SHOES' : 'LINHA PERSONALIZADA' ;
+					var tipo = ng.pedido.tipo_base == 'quadrada' ? 'QUAD.' : 'RED.' ;
+					nome_chinelo = "CHINELO PER. MAS. BASE "+modelo+" "+tipo+" "+base.nome_tamanho+" "+base.nome_cor.toUpperCase()+" TIRA "+tira.nome_cor.toUpperCase(); 
 					var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
-					chinelosInfantis["mas-"+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde]={
+					chinelosInfantis["mas-"+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base]={
 						nome:nome_chinelo ,
 						qtd :mas_qtd,
 						insumos :insumos,
@@ -334,9 +370,11 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 				}else if(v.mas_valid){
 					base       = ng.getbase(v.mas_itens); 
 					tira 	   = ng.getTira(v.mas_itens,'tira_masculina');
-					if(!(ng.carrinhoPedido['mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor] == undefined)){
-						var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
-						delete ng.carrinhoPedido['mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde] ;
+					var brinde = '';
+					brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ;
+					var index_aux = 'mas-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base;
+					if(!(ng.carrinhoPedido[index_aux] == undefined)){
+						delete ng.carrinhoPedido[index_aux] ;
 					}
 				}
 			});
@@ -347,7 +385,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 			var vlr_custo = 0  ;
 			var vlr_uni_infantil = 0
 			var ex = 0 ;
-			vlr_uni_infantil = vlr_uni_infantil_base ;
+			vlr_uni_infantil = vlr_uni_infantil_base+ng.getValorAdd(v.nome_tamanho);
 		    $.each(v.insumos,function(x,y){
 		    	if(y.tipo == undefined || y.tipo == 'acessorio'){
 		    		vlr_custo 		 += Number(y.qtd) * Number(y.vlr_custo_real) ;
@@ -371,10 +409,13 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		//console.log(chinelosInfantis);
 
 		ng.gradesAnteriores[indexGraAnt] = {
-			gradeInfantil : angular.copy(ng.gradeInfantil),
-			gradeAdulto   : angular.copy(ng.gradeAdulto),
-			coresEstampa  : angular.copy(ng.pedido.coresEstampa),
-			flg_brinde    : angular.copy(ng.pedido.flg_brinde)
+			gradeInfantil 		: angular.copy(ng.gradeInfantil),
+			gradeAdulto   		: angular.copy(ng.gradeAdulto),
+			coresEstampa  		: angular.copy(ng.pedido.coresEstampa),
+			flg_brinde    		: angular.copy(ng.pedido.flg_brinde),
+			modeloEstampa 	    : angular.copy(ng.pedido.modeloEstampa),
+			tipo_base			: angular.copy(ng.pedido.tipo_base),
+			modelo_base			: angular.copy(ng.pedido.modelo_base)
 		}
 
 		//console.log("---------------- Grades Anteriores ----------------");
@@ -385,8 +426,20 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 			ng.carrinhoPedido[i] = x;
 		});
 		//console.log(ng.gradesAnteriores);
-		//console.log("---------------- pedido ----------------");
-		//console.log(ng.carrinhoPedido);
+		console.log("---------------- pedido ----------------");
+		console.log(ng.carrinhoPedido);
+
+		ng.pedido.modeloEstampa = {};
+		ng.pedido.coresEstampa = [] ;
+		ng.pedido.flg_brinde = 0 ;
+		ng.pedido.id_cor_base = null ;
+		ng.pedido.id_cor_tira_feminina = null ;
+		ng.pedido.id_cor_tira_masculina = null ;
+		ng.gradeInfantil = [] ;
+		ng.gradeAdulto   = [] ;
+		ng.pedido.tipo_base = null ;
+		ng.pedido.modelo_base = null ;
+
 		btn.button('reset');
 		if(!pedido_edit){
 			$('html,body').animate({scrollTop: $('#fieldset-resumo-pedido').offset().top - 50},'slow');
@@ -416,11 +469,15 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		ng.gradeAdulto   = angular.copy(grade.gradeAdulto) ;
 		ng.pedido.coresEstampa = angular.copy(grade.coresEstampa) ;
 		ng.pedido.flg_brinde  = angular.copy(grade.flg_brinde);
+		ng.pedido.tipo_base  = angular.copy(grade.tipo_base);
+		ng.pedido.modelo_base  = angular.copy(grade.modelo_base);
 		flg_brinde_ant = ng.pedido.flg_brinde ;
+		ng.pedido.modeloEstampa = angular.copy(grade.modeloEstampa) ;
+		ng.setTipoBaseEdit();
 		$('html,body').animate({scrollTop: $('#fieldset-item-pedido').offset().top - 50},'slow');
 	}
 
-	 ng.getPrecoChinelo = function(tipo,qtd){
+	ng.getPrecoChinelo = function(tipo,qtd){
     	var qtd_i = 0 ;
     	var qtd_f = 0 ;
     	var qtd_arr = [] ;
@@ -471,6 +528,16 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 
 
     	return vlr_chinelo ;
+    }
+
+    ng.getValorAdd = function(nome_tamanho){
+    	var vlrAdd = 0;
+    	if(ng.pedido.tipo_base == 'quadrada') vlrAdd += ng.valoresAdicionais.chinelo_quadrado ;
+		var qtd_cores_estampa =  _.groupBy(ng.pedido.coresEstampa,'id_cor') ;
+		qtd_cores_estampa = (Object.keys(qtd_cores_estampa).length) - 1 ;
+		if(qtd_cores_estampa > 0)  vlrAdd += (ng.valoresAdicionais.cor_adicional*qtd_cores_estampa) ;
+		if(nome_tamanho > '40/40') vlrAdd += ng.valoresAdicionais.acima_41 ; 
+		return vlrAdd ;
     }
 
 
@@ -601,7 +668,9 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					valor_real_item: z.vlr_venda_atacado,
 					vlr_custo: z.vlr_custo_real,
 					config_grad : x.indexGrad.replace("brinde-",""),
-					flg_brinde  : Number(x.flg_brinde)
+					flg_brinde  : Number(x.flg_brinde),
+					tipo_base : ( empty(z.tipo_base) ? null : z.tipo_base ),
+					modelo_base : ( empty(z.modelo_base) ? null : z.modelo_base )
 				});
 			});
 			itens.push(aux);
@@ -763,12 +832,40 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		return real == null ? numberFormat(total,2,',','.') : total ;
 	}
 
+	ng.qtdtotalItensPedido = function(real){
+		var total = 0;
+		$.each(ng.carrinhoPedido,function(i,x){
+			total += x.qtd  ;
+		});
+		return total ;
+	}
+
 
 	ng.chosen_cor_base  = [] ;
-	ng.loadCoresBase = function(){
-		ng.chosen_cor_base  = [{id:null,nome_cor:'--- Selecione ---'}] ;
-		aj.get(baseUrlApi()+"pedido_personalizado/cores_base?cplSql=tpe.id_empreendimento="+ng.userLogged.id_empreendimento+" AND tcep.nome_campo = 'flg_base_personalizada' AND tvcep.valor_campo = 1 GROUP BY tcp.id ORDER BY tcp.nome_cor ASC")
+	ng.loadCoresBase = function(flg){
+		ng.pedido.id_cor_base = 0 ;
+		ng.chosen_cor_base  = [{id:0,nome_cor:'Carregando ...'}] ;
+		aj.get(baseUrlApi()+"pedido_personalizado/cores_base?cplSql=tpe.id_empreendimento="+ng.userLogged.id_empreendimento+" AND tcep.nome_campo = '"+flg+"' AND tvcep.valor_campo = 1 GROUP BY tcp.id ORDER BY tcp.nome_cor ASC")
 			.success(function(data, status, headers, config) {
+				ng.pedido.id_cor_base = null ;
+				ng.chosen_cor_base  = [{id:null,nome_cor:'Selecione'}] ;
+				ng.chosen_cor_base = ng.chosen_cor_base.concat(data);
+				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 300);
+				//;
+			})
+			.error(function(data, status, headers, config) {
+				
+			});
+	}
+
+	ng.loadCoresBaseEdit = function(flg){
+		var id_cor_base = angular.copy(ng.pedido.id_cor_base);
+		ng.pedido.id_cor_base = 0 ;
+		ng.chosen_cor_base  = [{id:0,nome_cor:'Carregando ...'}] ;
+		aj.get(baseUrlApi()+"pedido_personalizado/cores_base?cplSql=tpe.id_empreendimento="+ng.userLogged.id_empreendimento+" AND tcep.nome_campo = '"+flg+"' AND tvcep.valor_campo = 1 GROUP BY tcp.id ORDER BY tcp.nome_cor ASC")
+			.success(function(data, status, headers, config) {
+				ng.pedido.id_cor_base = id_cor_base ;
+				ng.chosen_cor_base  = [{id:null,nome_cor:'Selecione'}] ;
 				ng.chosen_cor_base = ng.chosen_cor_base.concat(data);
 				setTimeout(function(){ $("select").trigger("chosen:updated"); }, 300);
 				//;
@@ -780,7 +877,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 
 	ng.chosen_cor_tira  = [] ;
 	ng.loadCoresTira = function(){
-		ng.chosen_cor_tira  = [{id:null,nome_cor:'--- Selecione ---'}] ;
+		ng.chosen_cor_tira  = [{id:null,nome_cor:'Selecione'}] ;
 		aj.get(baseUrlApi()+"pedido_personalizado/cores_base?cplSql=tpe.id_empreendimento="+ng.userLogged.id_empreendimento+" AND (tcep.nome_campo IN ('flg_tira_personalizada_masculina','flg_tira_personalizada_feminina') ) AND tvcep.valor_campo = 1 GROUP BY tcp.id ORDER BY tcp.nome_cor ASC")
 			.success(function(data, status, headers, config) {
 				ng.chosen_cor_tira = ng.chosen_cor_tira.concat(data);
@@ -802,7 +899,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		});
 	}
 
-	ng.configuracoes = {} ;
+	/*ng.configuracoes = {} ;
 	ng.loadConfig = function(){
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
@@ -815,7 +912,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					ng.caixa_configurado = false ;
 				}
 			});
-	}
+	}*/
 
 	ng.loadMaquinetas = function() {
 		ng.maquinetas = [];
@@ -1730,6 +1827,9 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					ng.pedido.coresEstampa = [] ;
 					var base, tira , indexMas, indexFem ;
 					$.each(grade,function(x,item){
+						if(!empty(item.tipo_base)) ng.pedido.tipo_base = item.tipo_base  ;
+						if(!empty(item.modelo_base)) ng.pedido.modelo_base = item.modelo_base ;
+						if(!empty(item.modeloEstampa)) ng.pedido.modeloEstampa = item.modeloEstampa ;
 						if( ng.pedido.coresEstampa.length == 0 ) ng.pedido.coresEstampa = item.coresEstampa == undefined ? [] :  item.coresEstampa ;
 						base  = ng.getbase(item.fem_itens); 
 						tira  = ng.getTira(item.fem_itens,'tira_feminina');
@@ -1788,22 +1888,106 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 				ng.carrinhoPedido[i].valor_real_item =  numberFormat(ng.carrinhoPedido[i].vlr_init - (ng.carrinhoPedido[i].vlr_init * ng.carrinhoPedido[i].valor_desconto),2,'.',',') ;
 			});		
 	}
-				
+
+	ng.openModalModelosEstampas = function(){
+		ng.modal('show','modal-modelos-estampas');
+		ng.busca.modeosEstampas = "" ;
+		ng.loadModeloEstampas(0,10);
+	}
+
+	ng.modeloEstampas = {itens:[]} ;
+	ng.loadModeloEstampas = function(offset,limit) {
+		ng.modeloEstampas = {itens:[]} ;
+		offset = offset == null ? 0  : offset ;
+		limit  = limit  == null ? 10 : limit ;
+		var query_string = "";
+		query_string += empty(ng.busca.modeloEstampa) ? '' : "?"+$.param({'(tp->mome':{exp:"LIKE '%"+ng.busca.modeloEstampa+"%'"}})+" OR tp.id = '"+ng.busca.modeloEstampa+"')";
+		aj.get(baseUrlApi()+"pedido_personalizado/getEstampas/"+ng.userLogged.id_empreendimento+"/"+offset+"/"+limit+query_string)
+			.success(function(data, status, headers, config) {
+				ng.modeloEstampas.itens = data.estampas;
+				ng.modeloEstampas.paginacao = data.paginacao ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.modeloEstampas.itens = null;
+				ng.modeloEstampas.paginacao = null ;
+			});
+	}	
+	ng.addModeloEstampa = function(item){
+		ng.pedido.modeloEstampa = angular.copy(item);
+		ng.pedido.modeloEstampa.qtd = 1 ;
+		ng.pedido.modeloEstampa.tipo = 'modelo_estampa' ;
+		ng.modal('hide','modal-modelos-estampas');
+
+	}
+
+	ng.setTipoBase = function(){
+		ng.gradeAdulto = [];
+		ng.gradeInfantil = [] ;
+		ng.pedido.id_cor_tira_feminina = null;
+		ng.pedido.id_cor_tira_masculina = null ;
+		if( ng.pedido.tipo_base == 'quadrada' && ng.pedido.modelo_base =='linha_lika_shoes') ng.loadCoresBase('flg_base') ;
+		else if( ng.pedido.tipo_base == 'redonda' && ng.pedido.modelo_base =='linha_lika_shoes') ng.loadCoresBase('flg_base_linha_redonda') ;
+		else if( ng.pedido.tipo_base == 'quadrada' && ng.pedido.modelo_base =='linha_personalizada') ng.loadCoresBase('flg_base_personalizada_quadrada') ;
+		else if( ng.pedido.tipo_base == 'redonda' && ng.pedido.modelo_base =='linha_personalizada') ng.loadCoresBase('flg_base_personalizada') ;
+	}
+
+	ng.setTipoBaseEdit = function(){
+		if( ng.pedido.tipo_base == 'quadrada' && ng.pedido.modelo_base =='linha_lika_shoes') ng.loadCoresBaseEdit('flg_base') ;
+		else if( ng.pedido.tipo_base == 'redonda' && ng.pedido.modelo_base =='linha_lika_shoes') ng.loadCoresBaseEdit('flg_base_linha_redonda') ;
+		else if( ng.pedido.tipo_base == 'quadrada' && ng.pedido.modelo_base =='linha_personalizada') ng.loadCoresBaseEdit('flg_base_personalizada_quadrada') ;
+		else if( ng.pedido.tipo_base == 'redonda' && ng.pedido.modelo_base =='linha_personalizada') ng.loadCoresBaseEdit('flg_base_personalizada') ;
+	}
+
+	ng.formatPreco = function(){
+		if(!empty(ng.configuracoes.valores_chinelos) && typeof parseJSON(ng.configuracoes.valores_chinelos) == 'object' ){
+			var valoresChinelos = parseJSON(ng.configuracoes.valores_chinelos);
+			 ng.chinelosInfantis = {tamanhos:[],precos:{}};
+			 ng.chinelosAdultos = {tamanhos:[],precos:{}};
+			 ng.valoresAdicionais = {} ;
+			$.each(valoresChinelos,function(i,v){
+				if(i == 'adulto'){
+					if(!empty(v.tamanhos.de)) ng.chinelosAdultos.tamanhos[0] = v.tamanhos.de;
+					if(!empty(v.tamanhos.ate)) ng.chinelosAdultos.tamanhos[1] = v.tamanhos.ate;
+					$.each(v.faixas,function(a,b){
+						var index ;
+						if(!empty(b.de)) index = ""+b.de;
+						if(!empty(b.ate)) index += "-"+b.ate;
+						ng.chinelosAdultos.precos[index] = Number(b.valor);
+					});
+				}
+				else if(i == 'infantil'){
+					if(!empty(v.tamanhos.de)) ng.chinelosInfantis.tamanhos[0] = v.tamanhos.de;
+					if(!empty(v.tamanhos.ate)) ng.chinelosInfantis.tamanhos[1] = v.tamanhos.ate;
+					$.each(v.faixas,function(a,b){
+						var index ;
+						if(!empty(b.de)) index = ""+b.de;
+						if(!empty(b.ate)) index += "-"+b.ate;
+						ng.chinelosInfantis.precos[index] = Number(b.valor);
+					});
+				}
+				else if(i=='adicionais'){
+					$.each(v,function(y,z){
+						ng.valoresAdicionais[y] = Number(z);
+					});
+				}
+
+			});
+		}else ng.valoresChinelos = false ;
+	}
+		
 
 	if( !(params.id_pedido == undefined) )
 		ng.loadPedidoEdit(params.id_pedido);
 
-	ng.loadCoresBase();
 	ng.loadCoresTira();
-	ng.loadConfig();
+	//ng.loadConfig();
 	ng.loadMaquinetas();
 	ng.loadBancos();
 	ng.loadContas();
 	ng.loadComoEncontrou();
-
-
-	
-
+	ng.formatPreco();
+	if(empty(ng.configuracoes)) ng.caixa_configurado = false ;
+	else ng.abrirCaixa();
 });
 
 app.directive('bsTooltip', function ($timeout) {
