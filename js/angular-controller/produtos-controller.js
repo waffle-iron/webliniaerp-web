@@ -951,7 +951,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.valor_campo_extra = {};
 	ng.chosen_campo_extra = [{nome_campo:'',label:'--- Selecione ---'}];
 	ng.getCamposExtras = function(){
-		aj.get(baseUrlApi()+"campo_extra_prododuto_empreendimento?tcep->id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"campo_extra_prododuto_empreendimento?tcep->id_empreendimento="+ng.userLogged.id_empreendimento+"&cplSql=ORDER BY label")
 		.success(function(data, status, headers, config) {
 			ng.chosen_campo_extra = ng.chosen_campo_extra.concat(data);
 			$.each(data,function(i,v){

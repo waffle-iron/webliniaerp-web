@@ -221,6 +221,7 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 					var modelo = ng.pedido.modelo_base == 'linha_lika_shoes' ? 'LINHA LIKA SHOES' : 'LINHA PERSONALIZADA' ;
 					var tipo = ng.pedido.tipo_base == 'quadrada' ? 'QUAD.' : 'RED.' ;
 					nome_chinelo = "CHINELO PER. FEM. BASE "+modelo+" "+tipo+" "+base.nome_tamanho+" "+base.nome_cor.toUpperCase()+" TIRA "+tira.nome_cor.toUpperCase();
+					var brinde = '';
 					var brinde  = Number(ng.pedido.flg_brinde) ? "-brinde" : "" ; 
 					chinelosAdultos['fem-'+base.id_tamanho+"-"+base.id_cor+"-"+tira.id_cor+brinde+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base] = {
 						nome:nome_chinelo ,
@@ -691,7 +692,8 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 			canal_venda : ng.pedido.canal_venda,
 			dta_venda : dtaVenda,
 			dta_entrega : dtaEntrega,
-			observacao : ng.pedido.observacao
+			observacao : ng.pedido.observacao,
+			dta_lancamento : moment().format('YYYY-MM-DD HH:mm:ss') 
 		}
 		var pagamentos   = [] ;
 

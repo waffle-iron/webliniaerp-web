@@ -279,7 +279,7 @@
 									<thead>
 										<tr>
 											<th class="text-center" width="160">ID</th>
-											<th class="text-center" width="160">Data</th>
+											<th class="text-center" width="160">Data Lan.</th>
 											<th class="text-center">Vendedor</th>
 											<th class="text-center">Cliente</th>
 											<th class="text-center" width="160">status</th>
@@ -295,7 +295,7 @@
 										</tr>
 										<tr ng-repeat="item in vendas" bs-tooltip>
 											<td class="text-center">{{ item.id }}</td>
-											<td class="text-center">{{ item.dta_venda }}</td>
+											<td class="text-center">{{ item.dta_lancamento | dateFormat }}</td>
 											<td>{{ item.nme_vendedor }}</td>
 											<td>{{ item.nme_cliente }}</td>
 											<td class="text-center">

@@ -760,7 +760,7 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 		dlg.result.then(function(btn){
 			ng.pro_out_estoque = [];
 			button.button('loading');
-			aj.get(baseUrlApi()+"pedido_venda/change_status/"+pedido.id+"/"+id_status)
+			aj.get(baseUrlApi()+"pedido_venda/change_status/"+pedido.id+"/"+id_status+( Number(id_status == 2) ? "/"+ng.caixa_aberto.id_deposito : '' ) )
 				.success(function(data, status, headers, config) {
 					button.button('reset');
 					ng.mensagens('alert-success','<b>Pedido alterado com sucesso</b>','.alert-listagem');

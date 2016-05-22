@@ -85,6 +85,9 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 	ng.loadDepositos = function() {
 		aj.get(baseUrlApi()+"depositos?id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+				$.each(data.depositos,function(i,x){
+					data.depositos[i].id = Number(x.id);
+				});
 				ng.depositos = data.depositos;
 			})
 			.error(function(data, status, headers, config) {

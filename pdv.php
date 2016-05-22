@@ -393,7 +393,7 @@
 									</div>
 				    			</div>
 
-			    				<div class="row" ng-repeat="(key,formas) in formas_pagamento">
+			    				<!--<div class="row" ng-repeat="(key,formas) in formas_pagamento">
 					    			<div class="col-sm-3" ng-repeat="forma in formas" >
 					    				<a id="btn-logar" class="bounceIn btn btn-block btn-default btn-sm" data-loading-text=" Aguarde..."
 					    					ng-click="selectChange(forma.id)" ng-click="logar()"
@@ -402,7 +402,7 @@
 					    					<span style="" class="clearfix">{{ forma.descricao_forma_pagamento }}</span>
 				    					</a>
 					    			</div>
-				    			</div>
+				    			</div>-->
 
 						    	<div class="row">
 						    		<div class="col-sm-6" id="pagamento_forma_pagamento">

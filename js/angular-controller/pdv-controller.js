@@ -28,6 +28,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.modal_senha_vendedor = {id_empreendimento:ng.userLogged.id_empreendimento, id_vendedor:null,nome_vendedor:null,senha_vendedor:null,show:false}
 	var params      = getUrlVars();
 	ng.emitirNfe = false ;
+	ng.id_venda_ignore  = null ;
 
 
 	ng.reforco             = {} ;
@@ -482,6 +483,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.salvar = function(){
+		if(ng.finalizarOrcamento) ng.id_venda_ignore = params.id_orcamento ;
 		$("#input_auto_complete_cliente").parent().tooltip('destroy');
 		$("#input_auto_complete_cliente").parents('.form-group').removeClass("has-error");
 		ng.cod_nota_fiscal_reenviar_sat = null ;
