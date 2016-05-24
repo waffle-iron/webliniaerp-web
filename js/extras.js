@@ -505,3 +505,30 @@ function Utf8Encode(strUni) {
 function round(vlr,dec){
     return Number(accounting.toFixed(vlr,dec));
 }
+
+function _in(str_compare,str_values){
+    str_compare = str_compare+"";
+    var  arr =  str_values.split(',');
+    var ret = false ;
+    $.each(arr,function(i,x){
+        x = x+"";
+        if(x == str_compare){
+            ret = true ;
+            return ;
+        }
+    });  
+    return ret ;       
+}
+function not_in(str_compare,str_values){
+    str_compare = str_compare+"";
+    var  arr =  str_values.split(',');
+    var ret = true ;
+    $.each(arr,function(i,x){
+        x = x+"";
+        if(x == str_compare){
+            ret = false ;
+            return ;
+        }
+    });  
+    return ret ;       
+}

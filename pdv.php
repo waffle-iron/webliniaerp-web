@@ -357,12 +357,8 @@
 								<i class="fa fa-chevron-down"></i> Mais Opções
 							</button>
 							<ul class="dropdown-menu slidedown">
-								<!--
-								<li><a ng-if="modo_venda == 'est'" href="#" ng-click="abrirVenda('pdv')"><i class="fa fa-desktop"></i> Nova Venda (Modo Loja)</a></li>
-								<li><a ng-if="modo_venda == 'pdv'" href="#" ng-click="abrirVenda('est')"><i class="fa fa-desktop"></i> Nova Venda (Modo Depósito)</a></li>
-								-->
-								<li ng-if="caixa_aberto.flg_imprimir_sat_cfe == 1"><a href="#" ng-click="modalListaReenviarSat()"><i class="fa fa-file-text-o"></i> Reprocessar Cupom SAT</a></li>
-								<li ng-if="finalizarOrcamento == false"><a href="#" ng-click="pagamentoFulso()"><i class="fa fa-money"></i> Pagamento</a></li>
+								<li ng-show="caixa_aberto.flg_imprimir_sat_cfe == 1"><a href="#" ng-click="modalListaReenviarSat()"><i class="fa fa-file-text-o"></i> Reprocessar Cupom SAT</a></li>
+								<li ng-show="finalizarOrcamento == false"><a href="#" ng-click="pagamentoFulso()"><i class="fa fa-money"></i> Pagamento</a></li>
 								<li class="hidden-lg"><a href="#" ng-click="resizeScreen()"><i class="fa fa-arrows-alt"></i>Tela Inteira</a></li>
 								<li class="hidden-lg"><a href="#" ng-click="selVendedor()"><i class="fa fa-retweet fa-lg"></i>  Trocar Vendedor</a></li>
 								<li ><a href="#" ng-click="showCadastroRapido()"><i class="fa fa-users"></i> Novo Cliente</a></li>
@@ -448,7 +444,7 @@
 						    		<div class="col-sm-6" id="pagamento_valor" ng-if="pagamento.id_forma_pagamento != 7 && pagamento.id_forma_pagamento != 8">
 						    			<label class="control-label">Valor</label>
 						    			<div class="form-group ">
-						    					<input ng-disabled="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 4" ng-model="pagamento.valor" thousands-formatter type="text" class="form-control input-sm" />
+						    					<input ng-disabled="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 4 || pagamento.id_forma_pagamento == 9" ng-model="pagamento.valor" thousands-formatter type="text" class="form-control input-sm" />
 						    			</div>
 						    		</div>
 						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 9 || pagamento.id_forma_pagamento == 4">
@@ -493,132 +489,153 @@
 						    	</div>
 
 						    	<div class="alert error-cheque" style="display:none"></div>
-									<div class="row" ng-show="pagamento.id_forma_pagamento == 2" ng-repeat="item in cheques">
-										<div class="col-sm-3">
-											<div class="form-group cheque_data">
-												<label class="control-label">Data :</label>
-												<div class="input-group">
-													<input  ng-model="item.data_pagamento" date-picker style="background:#FFF;cursor:pointer"  type="text" id="pagamentoData" class=" form-control chequeData input-cheque-date-{{$index}}">
-													<span class="input-group-addon" class="cld_pagameto" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group cheque_valor">
-												<label class="control-label">valor</label>
-												<div class="form-group ">
-						    						<input ng-blur="pushCheques()" ng-keyUp="calTotalCheque()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
-						    					</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group cheque_banco" >
-												<label class="control-label">Banco</label>
-												<select ng-model="item.id_banco" class="form-control">
-													<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
-												</select>
-											</div>
-										</div>
 
-										<div class="col-sm-2">
-											<div class="form-group cheque_cc">
-												<label class="control-label">Núm. C/C</label>
-												<input ng-model="item.num_conta_corrente" type="text" class="form-control">
+								<div class="row" ng-show="pagamento.id_forma_pagamento == 2" ng-repeat="item in cheques">
+									<div class="col-sm-3">
+										<div class="form-group cheque_data">
+											<label class="control-label">Data :</label>
+											<div class="input-group">
+												<input  ng-model="item.data_pagamento" date-picker style="background:#FFF;cursor:pointer"  type="text" id="pagamentoData" class=" form-control chequeData input-cheque-date-{{$index}}">
+												<span class="input-group-addon" class="cld_pagameto" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
 											</div>
 										</div>
-
-										<div class="col-sm-2">
-											<div class="form-group cheque_num">
-												<label class="control-label">Núm. Cheque</label>
-												<input ng-model="item.num_cheque" type="text" class="form-control">
-											</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group cheque_valor">
+											<label class="control-label">valor</label>
+											<div class="form-group ">
+					    						<input ng-blur="pushCheques()" ng-keyUp="calTotalCheque()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
+					    					</div>
 										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group cheque_banco" >
+											<label class="control-label">Banco</label>
+											<select ng-model="item.id_banco" class="form-control">
+												<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
+											</select>
+										</div>
+									</div>
 
-										<div class="col-sm-1">
-											<div class="row">
-					    						<div class="col-sm-6">
+									<div class="col-sm-2">
+										<div class="form-group cheque_cc">
+											<label class="control-label">Núm. C/C</label>
+											<input ng-model="item.num_conta_corrente" type="text" class="form-control">
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group cheque_num">
+											<label class="control-label">Núm. Cheque</label>
+											<input ng-model="item.num_cheque" type="text" class="form-control">
+										</div>
+									</div>
+
+									<div class="col-sm-1">
+										<div class="row">
+				    						<div class="col-sm-6">
+												<label class="control-label"><br></label>
+												<label class="label-checkbox">
+													<input ng-model="item.flg_cheque_predatado" value="1" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0">
+													<span class="custom-checkbox"></span>
+													Pré?
+												</label>
+											</div>
+											<div class="col-sm-6" ng-if="cheques.length > 1">
+												<div class="form-group">
 													<label class="control-label"><br></label>
-													<label class="label-checkbox">
-														<input ng-model="item.flg_cheque_predatado" value="1" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0">
-														<span class="custom-checkbox"></span>
-														Pré?
+													<label class="control-label">
+														<i ng-click="delItemCheque($index)" class="fa fa-times-circle-o fa-lg" style="color: red;cursor:pointer"></i>
 													</label>
 												</div>
-												<div class="col-sm-6" ng-if="cheques.length > 1">
-													<div class="form-group">
-														<label class="control-label"><br></label>
-														<label class="control-label">
-															<i ng-click="delItemCheque($index)" class="fa fa-times-circle-o fa-lg" style="color: red;cursor:pointer"></i>
-														</label>
-													</div>
-												</div>
 											</div>
 										</div>
-
 									</div>
-									<div class="row" ng-show="pagamento.id_forma_pagamento == 4" ng-repeat="item in boletos">
-										<div class="col-sm-3">
-											<div class="form-group boleto_data">
-												<label class="control-label">Data</label>
-												<div class="input-group">
-													<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="pagamento.data" type="text" id="pagamentoData" class="datepicker form-control boletoData">
-													<span class="input-group-addon" class="cld_pagameto" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group boleto_valor">
-												<label class="control-label">valor</label>
-												<div class="form-group ">
-						    						<input ng-blur="pushCheques()" ng-keyUp="calTotalBoleto()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
-						    					</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group boleto_banco" >
-												<label class="control-label">Banco</label>
-												<select ng-model="item.id_banco" class="form-control">
-													<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
-												</select>
-											</div>
-										</div>
 
-										<div class="col-sm-2">
-											<div class="form-group boleto_doc">
-												<label class="control-label">Doc. Boleto</label>
-												<input ng-model="item.doc_boleto" type="text" class="form-control">
+								</div>
+								<div class="row" ng-show="pagamento.id_forma_pagamento == 4" ng-repeat="item in boletos">
+									<div class="col-sm-3">
+										<div class="form-group boleto_data">
+											<label class="control-label">Data</label>
+											<div class="input-group">
+												<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="pagamento.data" type="text" id="pagamentoData" class="datepicker form-control boletoData">
+												<span class="input-group-addon" class="cld_pagameto" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
 											</div>
 										</div>
-
-										<div class="col-sm-2">
-											<div class="form-group boleto_num">
-												<label class="control-label">Núm. Boleto</label>
-												<input ng-model="item.num_boleto" type="text" class="form-control">
-											</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group boleto_valor">
+											<label class="control-label">valor</label>
+											<div class="form-group ">
+					    						<input ng-blur="pushCheques()" ng-keyUp="calTotalBoleto()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
+					    					</div>
 										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group boleto_banco" >
+											<label class="control-label">Banco</label>
+											<select ng-model="item.id_banco" class="form-control">
+												<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
+											</select>
+										</div>
+									</div>
 
-										<div class="col-sm-1">
-											<div class="row">
-					    						<div class="col-sm-6">
+									<div class="col-sm-2">
+										<div class="form-group boleto_doc">
+											<label class="control-label">Doc. Boleto</label>
+											<input ng-model="item.doc_boleto" type="text" class="form-control">
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group boleto_num">
+											<label class="control-label">Núm. Boleto</label>
+											<input ng-model="item.num_boleto" type="text" class="form-control">
+										</div>
+									</div>
+
+									<div class="col-sm-1">
+										<div class="row">
+				    						<div class="col-sm-6">
+												<label class="control-label"><br></label>
+												<label class="label-checkbox">
+													<input ng-model="item.status_pagamento" value="1" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0">
+													<span class="custom-checkbox"></span>
+													Pago?
+												</label>
+											</div>
+											<div class="col-sm-6" ng-if="boletos.length > 1">
+												<div class="form-group">
 													<label class="control-label"><br></label>
-													<label class="label-checkbox">
-														<input ng-model="item.status_pagamento" value="1" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0">
-														<span class="custom-checkbox"></span>
-														Pago?
+													<label class="control-label">
+														<i ng-click="delItemBoleto($index)" class="fa fa-times-circle-o fa-lg" style="color: red;cursor:pointer"></i>
 													</label>
 												</div>
-												<div class="col-sm-6" ng-if="boletos.length > 1">
-													<div class="form-group">
-														<label class="control-label"><br></label>
-														<label class="control-label">
-															<i ng-click="delItemBoleto($index)" class="fa fa-times-circle-o fa-lg" style="color: red;cursor:pointer"></i>
-														</label>
-													</div>
-												</div>
 											</div>
 										</div>
-
 									</div>
+
+								</div>
+
+								<div class="row" ng-show="pagamento.id_forma_pagamento == 9" ng-repeat="item in promessas_pagamento">
+									<div class="col-sm-3">
+										<div class="form-group cheque_data">
+											<label class="control-label">Data :</label>
+											<div class="input-group">
+												<input  ng-model="item.data_pagamento" date-picker style="background:#FFF;cursor:pointer"  type="text" class=" form-control">
+												<span class="input-group-addon" class="" ng-click="focusData($index)"><i class="fa fa-calendar"></i></span>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-2">
+										<div class="form-group cheque_valor">
+											<label class="control-label">valor</label>
+											<div class="form-group ">
+					    						<input  ng-keyUp="calTotalPromessa()" thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
+					    					</div>
+										</div>
+									</div>
+								</div>
 					    		
 					    		<div class="row">
 					    			<div class="col-sm-12 text-center">
@@ -675,9 +692,10 @@
 											<td colspan="2">Não há nenhum pagamento recebido</td>
 										</tr>
 										<tr ng-repeat="item in recebidos">
-											<td ng-if="item.id_forma_pagamento != 6 && item.id_forma_pagamento != 2 ">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+											<td ng-if="not_in(item.id_forma_pagamento,'6,2,9')">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
 											<td ng-if="item.id_forma_pagamento == 6">C/C em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
 											<td ng-if="item.id_forma_pagamento == 2">Cheque em {{ cheques.length }}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+											<td ng-if="item.id_forma_pagamento == 9">Promessa pag. em {{ item.parcelas }}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
 											<td width="50" align="center">
 												<button type="button" class="btn btn-xs btn-danger" ng-click="deleteRecebidos($index)">
 													<i class="fa fa-times"></i>
@@ -1150,8 +1168,8 @@
 											<td colspan="2">Não há nenhum pagamento recebido</td>
 										</tr>
 										<tr ng-repeat="item in recebidos">
-											<td ng-if="item.id_forma_pagamento != 6">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-											<td ng-if="item.id_forma_pagamento == 6">{{ item.forma_pagamento  }} em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+											<td ng-if="not_in(item.id_forma_pagamento,'6,9,4,2')">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+											<td ng-if="_in(item.id_forma_pagamento,'6,9,4,2')">{{ item.forma_pagamento  }} em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
 											<td width="50" align="center">
 												<button type="button" class="btn btn-xs btn-danger" ng-click="deleteRecebidos($index)">
 													<i class="fa fa-times"></i>

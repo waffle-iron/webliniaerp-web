@@ -45,8 +45,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.venda_aberta = false;
 	ng.id_venda     = null ;
 
-	ng.cheques					=[{id_banco:null,valor:0,num_conta_corrente:null,num_cheque:null,flg_cheque_predatado:0}];
+	ng.cheques					= [{id_banco:null,valor:0,num_conta_corrente:null,num_cheque:null,flg_cheque_predatado:0}];
 	ng.boletos					= [{id_banco:null,num_conta_corrente:null,num_cheque:null,status_pagamento:0}];
+	ng.promessas_pagamento      = [{status_pagamento:0,data_pagamento:null,valor_pagamento:0}] ;
+	ng.dsc_formas_pagamento     = [] ;
 
 
 	ng.formas_pagamento = [
@@ -375,6 +377,14 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					v.doc_boleto            = v_boleto.doc_boleto ;
 					v.num_boleto            = v_boleto.num_boleto ;
 					v.status_pagamento      = v_boleto.status_pagamento ;
+					v_push = angular.copy(v);
+					pagamentos.push(v_push);
+				});
+			}else if(Number(v.id_forma_pagamento) == 9){
+				$.each(ng.pg_promessas,function(i_promessa, v_promessa){
+					v.data_pagamento 		= v_promessa.data_pagamento ;
+					v.valor_pagamento 		= v_promessa.valor_pagamento ;
+					v.status_pagamento      = 0 ;
 					v_push = angular.copy(v);
 					pagamentos.push(v_push);
 				});
@@ -1728,9 +1738,19 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.pg_boletos.push(value);
 				count ++ ;
 			});
+		}else if(ng.pagamento.id_forma_pagamento == 9){
+			$.each(ng.recebidos,function(y,x){
+				if(x.id_forma_pagamento == 9){
+					ng.recebidos.splice(y,1);
+				}
+			});
+			ng.pg_promessas = [] ;
+			$.each(ng.promessas_pagamento,function(i,x){
+				x.id_forma_pagamento  	= ng.pagamento.id_forma_pagamento;
+				ng.pg_promessas.push(x);
+			});
 		}
 
-		console.log(ng.pg_boletos);
 
 		if(ng.pagamento.id_forma_pagamento == 3){
 			$.each(ng.recebidos,function(x,y){
@@ -1765,12 +1785,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						   };
 			}
 
-			$.each(ng.formas_pagamento,function(i,v){
-				if(v.id == ng.pagamento.id_forma_pagamento){
-					item.forma_pagamento = v.descricao_forma_pagamento ;
-					return;
-				}
-			});
+			item.forma_pagamento = ng.dsc_formas_pagamento[ng.pagamento.id_forma_pagamento] ;
 			ng.recebidos.push(item);
 		}
 		ng.totalPagamento();
@@ -1809,6 +1824,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				var count = 0 ;
 				var group = 0 ;
 				$.each(data,function(i,x){ 
+					ng.dsc_formas_pagamento[x.id] = x.descricao_forma_pagamento ;
 					var exists = false ;
 					$.each(aux,function(y,z){ 
 						if(x.id == z.id && Number(z.value) == 1){
@@ -2115,6 +2131,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	var nParcelasAntCheque = 1 ;
 	var nParcelasAntBoleto = 1 ;
+	var nParcelasAntPromessa = 1 ;
 	ng.pagamento.parcelas  = 1 ;
 
 	ng.pushCheques = function(){
@@ -2160,6 +2177,26 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			nParcelasAntBoleto = ng.pagamento.parcelas;
 			ng.calTotalBoleto();
 			setTimeout(function(){ ng.loadDatapicker();}, 1000);
+		}if(ng.pagamento.id_forma_pagamento == 9){
+			ng.pagamento.parcelas = empty(ng.pagamento.parcelas) ? 1 : ng.pagamento.parcelas ;
+			ng.pagamento.parcelas = ng.pagamento.parcelas == "" ?  1 : ng.pagamento.parcelas ;
+			if(ng.pagamento.parcelas > nParcelasAntPromessa){
+				var repeat = parseInt(ng.pagamento.parcelas) - parseInt(nParcelasAntPromessa) ;
+				while(repeat > 0){
+					var item = {status_pagamento:0,data_pagamento:null,valor_pagamento:0};
+					ng.promessas_pagamento.push(item);
+					repeat -- ;
+				}
+			}else if(ng.pagamento.parcelas < nParcelasAntPromessa){
+				var repeat = parseInt(nParcelasAntPromessa) - parseInt(ng.pagamento.parcelas) ;
+				while(repeat > 0){
+					var index = ng.promessas_pagamento.length - 1;
+					ng.promessas_pagamento.splice(index,1);
+					repeat -- ;
+				}
+			}
+			nParcelasAntPromessa = ng.pagamento.parcelas;
+			ng.calTotalPromessa();
 		}
 	}
 
@@ -2184,6 +2221,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.selectChange = function(id){
 		ng.pagamento.id_forma_pagamento = Number(id);
+		if(ng.maquinetas.length == 1) ng.pagamento.id_maquineta = ng.maquinetas[0].id_maquineta ;
 		if(ng.pagamento.id_forma_pagamento == 2){
 			ng.pagamento.valor = 0 ;
 			ng.pagamento.parcelas = ng.cheques.length  > 0 ? ng.cheques.length : 1 ;
@@ -2237,7 +2275,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		});
 
 		ng.pagamento.valor = valor;
-
 	}
 
 	ng.calTotalBoleto = function(){
@@ -2247,20 +2284,27 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		});
 
 		ng.pagamento.valor = valor;
+	}
+
+	ng.calTotalPromessa = function(){
+		var valor = 0 ;
+		$.each(ng.promessas_pagamento,function(i,v){
+			valor = round((valor + Number(v.valor_pagamento)),2);
+		});
+
+		ng.pagamento.valor = valor;
 
 	}
 
 	ng.qtdCheque = function(){
 		if(ng.pagamento.id_forma_pagamento == 2){
-			ng.pagamento.parcelas = ng.cheques.length  > 0 ? ng.cheques.length : 1 ;
+			ng.pagamento.parcelas = ng.promessas_pagamento.length  > 0 ? ng.promessas_pagamento.length : 1 ;
 		}
 
 	}
 
 	ng.pagamentoFulso = function (){
-		ng.receber_pagamento = true ;
-		ng.venda_aberta 	 = true ;
-		ng.pagamento_fulso   = true ;
+		ng.resetPdv('pagamento');
 	}
 
 	ng.showVlrReal = function(){
@@ -2948,12 +2992,21 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}else if(tela == 'venda'){
 			ng.receber_pagamento = false;
 			ng.abrirVenda(ng.modo_venda);
+		}else if(tela=='pagamento'){
+			ng.receber_pagamento = true ;
+			ng.venda_aberta 	 = true ;
+			ng.pagamento_fulso   = true ;
+			ng.modo_venda        = null ;
 		}
 		$('html,body').animate({scrollTop: 0},'slow');
+		ng.carrinho = [] ;
 		ng.recebidos = [];
+		ng.cheques					= [{id_banco:null,valor:0,num_conta_corrente:null,num_cheque:null,flg_cheque_predatado:0}];
+		ng.boletos					= [{id_banco:null,num_conta_corrente:null,num_cheque:null,status_pagamento:0}];
+		ng.promessas_pagamento      = [{status_pagamento:0,data_pagamento:null,valor_pagamento:0}] ;
 		ng.totalPagamento();
 		ng.calculaTroco();
-		ng.carrinho = [] ;
+		ng.calcTotalCompra();
 		ng.vezes_valor = null
 		ng.imgProduto = 'img/imagem_padrao_produto.gif';
 		ng.cliente  = {id:""};
@@ -2975,6 +3028,14 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.isNumeric = function(vlr){
 		return $.isNumeric(vlr);
+	}
+
+	ng._in = function(z,y){
+		return _in(z,y);
+	}
+
+	ng.not_in = function(z,y){
+		return not_in(z,y);
 	}
 
 	ng.resizeScreen(); 
