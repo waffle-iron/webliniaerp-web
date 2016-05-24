@@ -902,11 +902,35 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.loadFormasPagamento = function() {
 		ng.formas_pagamento = [];
-
 		aj.get(baseUrlApi()+"formas_pagamento")
 			.success(function(data, status, headers, config) {
-				ng.formas_pagamento = data;
+				//ng.formas_pagamento = data;
+				var aux = typeof parseJSON(ng.config.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.config.formas_pagamento_pdv) : [] ;
+				var count = 0 ;
+				var group = 0 ;
+				$.each(data,function(i,x){ 
+					var exists = false ;
+					$.each(aux,function(y,z){ 
+						if(x.id == z.id && Number(z.value) == 1){
+							exists = true
+							return ;
+						}
+					});
+				if(exists){
+					if(ng.formas_pagamento[group] == undefined)
+						ng.formas_pagamento[group] = [] ;
+					x.icon = empty(x.icon) ? 'fa-file-text-o' : x.icon ;
+					ng.formas_pagamento[group].push(x);
+					if(count == 3) {
+						count = 0 ;
+						group ++ ;
+					}
+					else count ++ ;
+				}	
+				});
+				ng.console.log(ng.formas_pagamento);
 			});
+
 	}
 
 	ng.modalFechar = function(){

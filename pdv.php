@@ -393,25 +393,25 @@
 									</div>
 				    			</div>
 
-			    				<!--<div class="row" ng-repeat="(key,formas) in formas_pagamento">
+			    				<div class="row" ng-repeat="(key,formas) in formas_pagamento">
 					    			<div class="col-sm-3" ng-repeat="forma in formas" >
-					    				<a id="btn-logar" class="bounceIn btn btn-block btn-default btn-sm" data-loading-text=" Aguarde..."
-					    					ng-click="selectChange(forma.id)" ng-click="logar()"
+					    				<a id="btn-logar" class="bounceIn btn btn-block btn-default btn-sm" ng-class="{'active':frmPagIsSel(forma.id)}"  data-loading-text=" Aguarde..."
+					    					ng-click="selectChange(forma.id)"
 					    					style="word-wrap: break-word; white-space: inherit; padding-left: 5px; padding-right: 5px; min-height: 92px; margin-bottom: 10px;">
 					    					<i class="fa fa-3x {{ forma.icon }}" style="margin-bottom: 5px; margin-top: 5px; "></i>
 					    					<span style="" class="clearfix">{{ forma.descricao_forma_pagamento }}</span>
 				    					</a>
 					    			</div>
-				    			</div>-->
+				    			</div>
 
 						    	<div class="row">
-						    		<div class="col-sm-6" id="pagamento_forma_pagamento">
+						    		<!--<div class="col-sm-6" id="pagamento_forma_pagamento">
 						    			<label class="control-label">Forma de Pagamento</label>
 										<select ng-model="pagamento.id_forma_pagamento" ng-change="selectChange()" class="form-control input-sm">
 											<option ng-if="pagamento.id_forma_pagamento != null" value=""></option>
 											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.descricao_forma_pagamento }}</option>
 										</select>
-									</div>
+									</div>-->
 									<div class="col-sm-6" id="pagamento_valor" ng-if="pagamento.id_forma_pagamento == 7" >
 										<label class="control-label">Vale troca</label>
 										<div class="input-group">
@@ -451,16 +451,12 @@
 						    					<input ng-disabled="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 4" ng-model="pagamento.valor" thousands-formatter type="text" class="form-control input-sm" />
 						    			</div>
 						    		</div>
-
-					    			<div class="col-sm-3" ng-show="pagamento.id_forma_pagamento == 9">
-										<div class="form-group cheque_data">
-											<label class="control-label">Data</label>
-											<div class="input-group">
-												<input ui-mask="99/99/9999" readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="pagamento.data" type="text" id="pagamentoData" class="datepicker form-control chequeData">
-												<span class="input-group-addon" class="data_pagamento"><i class="fa fa-calendar"></i></span>
-											</div>
-										</div>
-									</div>
+						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 9 || pagamento.id_forma_pagamento == 4">
+						    			<label class="control-label">parcelas</label>
+						    			<div class="form-group ">
+						    					<input ng-blur="pushCheques()" ng-focus="qtdCheque()" ng-model="pagamento.parcelas" type="text" class="form-control input-sm" >
+						    			</div>
+						    		</div>
 						    	</div>
 
 						    	<div class="row">
@@ -470,7 +466,7 @@
 											<option ng-repeat="item in maquinetas" value="{{ item.id_maquineta }}">#{{ item.id_maquineta }} - {{ item.dsc_conta_bancaria }}</option>
 										</select>
 									</div>
-						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 6 || pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 4">
+						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 6">
 						    			<label class="control-label">parcelas</label>
 						    			<div class="form-group ">
 						    					<input ng-blur="pushCheques()" ng-focus="qtdCheque()" ng-model="pagamento.parcelas" type="text" class="form-control input-sm" >

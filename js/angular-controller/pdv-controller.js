@@ -1790,7 +1790,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		aj.get(baseUrlApi()+"maquinetas/?maq->id_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
-				ng.maquinetas 			= data.maquinetas;
+				ng.maquinetas = data.maquinetas;
+				if(ng.maquinetas.length == 1) ng.pagamento.id_maquineta = ng.maquinetas[0].id_maquineta ;
 				ng.paginacao.maquinetas = [] ;
 			})
 			.error(function(data, status, headers, config) {
@@ -1803,8 +1804,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		aj.get(baseUrlApi()+"formas_pagamento")
 			.success(function(data, status, headers, config) {
-				ng.formas_pagamento = data ;
-				/*var aux = typeof parseJSON(ng.config.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.config.formas_pagamento_pdv) : [] ;
+				//ng.formas_pagamento = data ;
+				var aux = typeof parseJSON(ng.config.formas_pagamento_pdv) == 'object' ?  parseJSON(ng.config.formas_pagamento_pdv) : [] ;
 				var count = 0 ;
 				var group = 0 ;
 				$.each(data,function(i,x){ 
@@ -1826,7 +1827,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					}
 					else count ++ ;
 				}	
-				});*/
+				});
 			});
 	}
 
@@ -2173,7 +2174,16 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
 	}
 
-	ng.selectChange = function(){
+	ng.frmPagIsSel= function(id){
+		if( $.isNumeric(ng.pagamento.id_forma_pagamento) ){
+			if(Number(ng.pagamento.id_forma_pagamento) == Number(id))
+				return true ;
+		}
+		return false ;
+	}
+
+	ng.selectChange = function(id){
+		ng.pagamento.id_forma_pagamento = Number(id);
 		if(ng.pagamento.id_forma_pagamento == 2){
 			ng.pagamento.valor = 0 ;
 			ng.pagamento.parcelas = ng.cheques.length  > 0 ? ng.cheques.length : 1 ;
