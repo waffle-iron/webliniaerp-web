@@ -330,13 +330,24 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 			if(Number(v.id_forma_pagamento) == 6){
 
-				var valor_parcelas 	 = v.valor/parcelas ;
+				var resto            = round((round((v.valor*100),2)%parcelas)/100,2);
+				if(resto >0)
+					var valor_parcelas 	 = round((round((v.valor-resto),2) / parcelas),2);
+				else
+					var valor_parcelas   = round((v.valor/parcelas),2);
 				var next_date		 = somadias(data_atual,30);
 				var itens_prc        = [] ;
 
 				for(var count = 0 ; count < parcelas ; count ++){
+					
+					if(resto > 0){
+						valor_parcelas_item = round((valor_parcelas + 0.01),2) ;
+						resto = round((resto - 0.01),2);
+					}else
+						valor_parcelas_item = valor_parcelas ;
+					
 					var item 			 = angular.copy(v);
-					item.valor_pagamento = valor_parcelas ;
+					item.valor_pagamento = valor_parcelas_item ;
 					item.data_pagamento  = formatDate(next_date) ;
 					next_date			 = somadias(next_date,30);
 
@@ -460,11 +471,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.venda 				  = venda ;
 		ng.produtos_enviar 		  = produtos_enviar ;
 		ng.pagamentos_enviar      = pagamentos;
-
-		console.log(produtos_enviar);
-//		btn.button('reset');
-//		return ;
-
 
 		if(ng.pagamento_fulso){
 			ng.id_venda = '';
@@ -950,7 +956,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.cancelar = function(){
-		window.location = "pdv.php";
+		ng.resetPdv('venda');
 	}
 
 	ng.produtos = [] ;
@@ -1884,7 +1890,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.cancelarPagamento = function(){
 		if(ng.pagamento_fulso == true){
-			window.location = "pdv.php";
+			ng.resetPdv('inicial');
+			//window.location = "pdv.php";
 		}else{
 			ng.receber_pagamento = false;
 			ng.recebidos = [];
@@ -2627,10 +2634,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
 			 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
 						.success(function(data, status, headers, config) {
-							window.location = 'pdv.php';
+							ng.resetPdv('venda');
 						})
 						.error(function(data, status, headers, config) {
-							window.location = 'pdv.php';
+							ng.resetPdv('venda');
 						});
 					break;
 				case 'satcfe_error':
@@ -2919,6 +2926,28 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			   return;
 			  }
 		});
+	}
+
+	ng.resetPdv = function(tela){
+		$('.modal').modal('hide');
+		//ng.receber_pagamento = false;
+		if(tela == null || tela == 'inicial'){
+			ng.receber_pagamento = false ;
+			ng.venda_aberta 	 = false ;
+			ng.pagamento_fulso   = false ;
+		}else if(tela == 'venda'){
+			ng.receber_pagamento = false;
+			ng.abrirVenda(ng.modo_venda);
+		}
+		$('html,body').animate({scrollTop: 0},'slow');
+		ng.recebidos = [];
+		ng.totalPagamento();
+		ng.calculaTroco();
+		ng.carrinho = [] ;
+		ng.vezes_valor = null
+		ng.imgProduto = 'img/imagem_padrao_produto.gif';
+		ng.cliente  = {id:""};
+		ng.nome_ultimo_produto = null ;
 	}
 
 	ng.existsCookie();

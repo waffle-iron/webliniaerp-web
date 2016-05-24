@@ -198,7 +198,7 @@
 			</div>
 			<!-- breadcrumb -->
 
-			<div class="padding-md" ng-if="caixa_aberto == false && abrir_pdv ==false && caixa_configurado == true && caixa_other_operador == false && operador_other_caixa == false">
+			<div class="padding-md" ng-show="caixa_aberto == false && abrir_pdv ==false && caixa_configurado == true && caixa_other_operador == false && operador_other_caixa == false">
 				<div class="panel panel-primary" style="width:500px;margin:0 auto">
 					<div class="panel-heading">
 						<i class="fa fa-desktop"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
@@ -339,7 +339,7 @@
 				</div>
 			</div>
 
-			<div class="padding-md" id="content-pdv" ng-if="caixa_aberto && abrir_pdv == false && caixa_configurado == true" style="padding-bottom: 0px !important;">
+			<div class="padding-md" id="content-pdv" ng-show="caixa_aberto && abrir_pdv == false && caixa_configurado == true" style="padding-bottom: 0px !important;">
 				<div class="panel panel-primary" style="margin-bottom: 0px !important;">
 					<div class="panel-heading">
 						<i style="cursor: pointer" id="dados-websocket" class="fa fa-desktop" ng-class="{'text-danger': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 0, 'text-warning': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 1,'text-success': caixa_aberto.flg_imprimir_sat_cfe == 1 && status_websocket == 2 }"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
@@ -637,7 +637,7 @@
 					    		<div class="row">
 					    			<div class="col-sm-12" id="col-sm-auto-complete-cliente">
 										<div class="form-group">
-											<label class="control-label"><h4>Cliente <span><button style="cursor:auto;height: 18px;padding-top: 0;" class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
+											<label class="control-label"><h4>Cliente <span><button style="cursor:auto;height: 18px;padding-top: 0;" class="btn btn-xs btn-success" type="button" ng-if="isNumeric(cliente.id) && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 											<div class="input-group">
 												<input onKeyPress="return SomenteNumeroLetras(event);" id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event,false)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
 												<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
@@ -818,7 +818,7 @@
 										<div class="col-sm-10" id="col-sm-auto-complete-cliente">
 											<div class="form-group">
 												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
-" class="btn btn-xs btn-success" type="button" ng-if="cliente.id != '' && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
+" class="btn btn-xs btn-success" type="button" ng-if="isNumeric(cliente.id) && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 												<div class="input-group">
 													<input id="input_auto_complete_cliente" onKeyPress="return SomenteNumeroLetras(event);" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
 													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
@@ -1731,12 +1731,12 @@
 						    		<div class="col-sm-12" id="valor_pagamento">
 						    			<strong style="font-size:14px;margin-bottom:5px">Vendedor : {{ vendedor.nome_vendedor }}</strong>
 						    			<br>
-						    			<strong style="font-size:14px" ng-if="cliente.id != undefined && cliente.id != ''">Cliente : {{ cliente.nome }}</strong>
+						    			<strong style="font-size:14px" ng-if="isNumeric(cliente.id)">Cliente : {{ cliente.nome }}</strong>
 						    			<br>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="vlr_saldo_devedor >= 0 && (cliente.id != undefined && cliente.id != '') && (orcamento == false)">Saldo : R${{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="vlr_saldo_devedor < 0 && (cliente.id != undefined && cliente.id != '') && (orcamento == false)">Saldo : R$ {{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="(cliente.id != undefined && cliente.id != '' && cliente.vlr_saldo_devedor >= 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="(cliente.id != undefined && cliente.id != '' && cliente.vlr_saldo_devedor < 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+						    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="vlr_saldo_devedor >= 0 && isNumeric(cliente.id) && (orcamento == false)">Saldo : R${{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+						    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="vlr_saldo_devedor < 0 && isNumeric(cliente.id) && (orcamento == false)">Saldo : R$ {{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+						    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="(isNumeric(cliente.id) && cliente.vlr_saldo_devedor >= 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+						    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="(isNumeric(cliente.id) && cliente.vlr_saldo_devedor < 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
 						    			<br>
 						    			<br>
 						    			<table class="table table-bordered" ng-if="pagamento_fulso != true">

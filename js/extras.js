@@ -2,53 +2,53 @@
 document.write(unescape("%3Cscript src='js/constants.js' type='text/javascript'%3E%3C/script%3E"));
 
 function printDiv(id, pg) {
-	var contentToPrint, printWindow;
+    var contentToPrint, printWindow;
 
-	contentToPrint = window.document.getElementById(id).innerHTML;
-	printWindow = window.open(pg);
+    contentToPrint = window.document.getElementById(id).innerHTML;
+    printWindow = window.open(pg);
 
     printWindow.document.write("<link href='bootstrap/css/bootstrap.min.css' rel='stylesheet'>");
-	printWindow.document.write("<link href='css/font-awesome.min.css' rel='stylesheet'>");
-	printWindow.document.write("<link href='css/pace.css' rel='stylesheet'>");
-	printWindow.document.write("<link href='css/endless.min.css' rel='stylesheet'>");
-	printWindow.document.write("<link href='css/endless-skin.css' rel='stylesheet'>");
+    printWindow.document.write("<link href='css/font-awesome.min.css' rel='stylesheet'>");
+    printWindow.document.write("<link href='css/pace.css' rel='stylesheet'>");
+    printWindow.document.write("<link href='css/endless.min.css' rel='stylesheet'>");
+    printWindow.document.write("<link href='css/endless-skin.css' rel='stylesheet'>");
 
-	printWindow.document.write("<style type='text/css' media='print'>@page { size: portrait; } th, td { font-size: 8pt; } </style>");
+    printWindow.document.write("<style type='text/css' media='print'>@page { size: portrait; } th, td { font-size: 8pt; } </style>");
 
-	printWindow.document.write(contentToPrint);
+    printWindow.document.write(contentToPrint);
 
-	printWindow.window.print();
-	printWindow.document.close();
-	printWindow.focus();
+    printWindow.window.print();
+    printWindow.document.close();
+    printWindow.focus();
 }
 
 function formatDate(dta) {
-	var arr_date_first = dta.split('/');
-	if(arr_date_first.length == 1)
-		var arr_date_first = dta.split('-');
+    var arr_date_first = dta.split('/');
+    if(arr_date_first.length == 1)
+        var arr_date_first = dta.split('-');
 
-	var date= arr_date_first[2]+'-'+arr_date_first[1]+'-'+arr_date_first[0];
+    var date= arr_date_first[2]+'-'+arr_date_first[1]+'-'+arr_date_first[0];
 
-	return date;
+    return date;
 }
 
 function uiDateFormat(dta,format){
-	dta   = dta.replace(/\//g,'');
-	if(format == '99-99-999')
-		return dta.substring(4)+"-"+dta.substring(2,4)+"-"+dta.substring(0,2);
-	else if(format == '99/99/999'){
-		console.log(dta.substring(0,2)+"-"+dta.substring(2,4)+"-"+dta.substring(4));
-		return dta.substring(0,2)+"/"+dta.substring(2,4)+"/"+dta.substring(4);
-	}
+    dta   = dta.replace(/\//g,'');
+    if(format == '99-99-999')
+        return dta.substring(4)+"-"+dta.substring(2,4)+"-"+dta.substring(0,2);
+    else if(format == '99/99/999'){
+        console.log(dta.substring(0,2)+"-"+dta.substring(2,4)+"-"+dta.substring(4));
+        return dta.substring(0,2)+"/"+dta.substring(2,4)+"/"+dta.substring(4);
+    }
 }
 
 function formatDateBR(dta) {
-	var arr_date_first = dta.split(' ');
-	arr_date_first = arr_date_first[0];
-	arr_date_first = arr_date_first.split('-');
-	var date= arr_date_first[2]+'/'+arr_date_first[1]+'/'+arr_date_first[0];
+    var arr_date_first = dta.split(' ');
+    arr_date_first = arr_date_first[0];
+    arr_date_first = arr_date_first.split('-');
+    var date= arr_date_first[2]+'/'+arr_date_first[1]+'/'+arr_date_first[0];
 
-	return date;
+    return date;
 }
 
 function numdias(mes,ano) {
@@ -79,32 +79,32 @@ function somadias(data, dias) {
 }
 
 function subtraiData(dataAtual, dias) {
-	var myDate = new Date(dataAtual);
-	var dayOfMonth = myDate.getDate();
-	myDate.setDate(dayOfMonth - dias);
+    var myDate = new Date(dataAtual);
+    var dayOfMonth = myDate.getDate();
+    myDate.setDate(dayOfMonth - dias);
 
-	return(myDate.toISOString().substr(0,10));
+    return(myDate.toISOString().substr(0,10));
 }
 
 function getDate(op,day,format){
-	var dataAtual = new Date();
-	var dayOfMonth = dataAtual.getDate();
+    var dataAtual = new Date();
+    var dayOfMonth = dataAtual.getDate();
 
-	if(op == '-')
-		dataAtual.setDate(dayOfMonth - day);
-	else if(op == '+')
-		dataAtual.setDate(dayOfMonth + day);
+    if(op == '-')
+        dataAtual.setDate(dayOfMonth - day);
+    else if(op == '+')
+        dataAtual.setDate(dayOfMonth + day);
 
     if(dataAtual.getDate() < 10 ){
-    	var dia =  '0' + dataAtual.getDate();
+        var dia =  '0' + dataAtual.getDate();
     }else{
-    	var dia = dataAtual.getDate();
+        var dia = dataAtual.getDate();
     }
 
     if((dataAtual.getMonth()+1) < 10){
-    	var mes = '0' + (dataAtual.getMonth()+1);
+        var mes = '0' + (dataAtual.getMonth()+1);
     }else{
-    	var mes =  dataAtual.getMonth()+1;
+        var mes =  dataAtual.getMonth()+1;
     }
 
     var ano = dataAtual.getFullYear();
@@ -113,65 +113,65 @@ function getDate(op,day,format){
     var segundo = dataAtual.getSeconds();
 
     if(format == null)
-   		 var data = ano+'-'+mes+'-'+dia;
-	else if(format = 'pt')
-		 var data = dia+'/'+mes+"/"+ano;
+         var data = ano+'-'+mes+'-'+dia;
+    else if(format = 'pt')
+         var data = dia+'/'+mes+"/"+ano;
 
     return data ;
 }
 
 function cloneArray(arr,arr_exceto){
-	var arr_saida = {} ;
-	$.each(arr,function(a,val){
-		if(!in_array(a,arr_exceto))
-			arr_saida[a] = val;
-	});
+    var arr_saida = {} ;
+    $.each(arr,function(a,val){
+        if(!in_array(a,arr_exceto))
+            arr_saida[a] = val;
+    });
 
-	return arr_saida;
+    return arr_saida;
 
 }
 
 function in_array(val,arr){
-	var b = false ;
-	$.each(arr,function(a,value){
-		if(val == value){
-			b = true
-		}
-	});
-	return b ;
+    var b = false ;
+    $.each(arr,function(a,value){
+        if(val == value){
+            b = true
+        }
+    });
+    return b ;
 }
 
 function ultimoDiaDoMes(ObjetoDate){
- 	return (new Date(ObjetoDate.getFullYear(), ObjetoDate.getMonth() + 1, 0) ).getDate();
+    return (new Date(ObjetoDate.getFullYear(), ObjetoDate.getMonth() + 1, 0) ).getDate();
 }
 
 
 function numberFormat(number, decimals, dec_point, thousands_sep) {
-	number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
-	var n = !isFinite(+number) ? 0 : +number,
-		prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-		sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-		dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
-		s = '',
-		toFixedFix = function(n, prec) {
-			var k = Math.pow(10, prec);
-			return '' + (Math.round(n * k) / k).toFixed(prec);
-		};
+    number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+    var n = !isFinite(+number) ? 0 : +number,
+        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+        s = '',
+        toFixedFix = function(n, prec) {
+            var k = Math.pow(10, prec);
+            return '' + (Math.round(n * k) / k).toFixed(prec);
+        };
 
-		// Fix for IE parseFloat(0.55).toFixed(0) = 0;
-		s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
 
-		if (s[0].length > 3) {
-			s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-		}
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
 
-		if ((s[1] || '').length < prec) {
-			s[1] = s[1] || '';
-			s[1] += new Array(prec - s[1].length + 1).join('0');
-		}
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
 
-		var vlr = s.join(dec);
-		return $.isNumeric(vlr) ? Number(vlr) : vlr ;
+        var vlr = s.join(dec);
+        return $.isNumeric(vlr) ? Number(vlr) : vlr ;
 }
 
 // function getUrlVars()
@@ -179,10 +179,10 @@ function numberFormat(number, decimals, dec_point, thousands_sep) {
 //     var vars = [], hash;
 
 //     var url =  window.location.href.split("#");
-//    	if(url.length > 1)
-//    		var hashes = url[0].slice(window.location.href.indexOf('?') + 1).split('&');
-//    	else
-//     	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+//      if(url.length > 1)
+//          var hashes = url[0].slice(window.location.href.indexOf('?') + 1).split('&');
+//      else
+//      var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 //     for(var i = 0; i < hashes.length; i++)
 //     {
 //         hash = hashes[i].split('=');
@@ -207,119 +207,119 @@ function getUrlVars()
 }
 
 function empty(vlr,zero){
-	zero = zero == null ? true : false ;
-	if((vlr == undefined || vlr == null || vlr == '' || vlr == 0) && (zero) )
-		return true;
-	else if(isNaN(Number(vlr))){
-		if(vlr == undefined || vlr == null || vlr == '')
-			return true;
-		else
-			return false;
-	}
-	else
-		return false;
+    zero = zero == null ? true : false ;
+    if((vlr == undefined || vlr == null || vlr == '' || vlr == 0) && (zero) )
+        return true;
+    else if(isNaN(Number(vlr))){
+        if(vlr == undefined || vlr == null || vlr == '')
+            return true;
+        else
+            return false;
+    }
+    else
+        return false;
 }
 
 function SomenteNumero(e){
     var tecla=(window.event)?event.keyCode:e.which;
     if((tecla>47 && tecla<58)) return true;
     else{
-    	if (tecla==8 || tecla==0) return true;
-	else  return false;
+        if (tecla==8 || tecla==0) return true;
+    else  return false;
     }
 }
 
 function SomenteNumeroLetras(e){
-	 var tecla=(window.event)?event.keyCode:e.which;
-	var value = String.fromCharCode(tecla);
-	var caracteresIlegais = /[\W_]/; 
-	if(caracteresIlegais.test(value) && value != ' ') return false ;
-	else return true ;
+     var tecla=(window.event)?event.keyCode:e.which;
+    var value = String.fromCharCode(tecla);
+    var caracteresIlegais = /[\W_]/; 
+    if(caracteresIlegais.test(value) && value != ' ') return false ;
+    else return true ;
 }
 
 function getFirstDateOfMonthString() {
-	var dtaAtual = new Date();
-	var actualMonth = parseInt(dtaAtual.getMonth() + 1);
-	if(actualMonth < 10)
-		actualMonth = "0" + actualMonth;
-	var actualYear = dtaAtual.getFullYear();
+    var dtaAtual = new Date();
+    var actualMonth = parseInt(dtaAtual.getMonth() + 1);
+    if(actualMonth < 10)
+        actualMonth = "0" + actualMonth;
+    var actualYear = dtaAtual.getFullYear();
 
-	return "01/" + actualMonth + "/" + actualYear;
+    return "01/" + actualMonth + "/" + actualYear;
 }
 
 function getLastDateOfMonthString() {
-	var dtaAtual = new Date();
-	var actualMonth = parseInt(dtaAtual.getMonth() + 1);
-	if(actualMonth < 10)
-		actualMonth = "0" + actualMonth;
-	var actualYear = dtaAtual.getFullYear();
-	var lastDay = parseInt(ultimoDiaDoMes(new Date()));
-	if(lastDay < 10)
-		lastDay = "0" + lastDay;
+    var dtaAtual = new Date();
+    var actualMonth = parseInt(dtaAtual.getMonth() + 1);
+    if(actualMonth < 10)
+        actualMonth = "0" + actualMonth;
+    var actualYear = dtaAtual.getFullYear();
+    var lastDay = parseInt(ultimoDiaDoMes(new Date()));
+    if(lastDay < 10)
+        lastDay = "0" + lastDay;
 
-	return lastDay + "/" + actualMonth + "/" + actualYear;
+    return lastDay + "/" + actualMonth + "/" + actualYear;
 }
 
 function getFirstDateOfMonth() {
-	var dtaAtual = new Date();
-	var actualMonth = parseInt(dtaAtual.getMonth() + 1);
-	if(actualMonth < 10)
-		actualMonth = "0" + actualMonth;
-	var actualYear = dtaAtual.getFullYear();
+    var dtaAtual = new Date();
+    var actualMonth = parseInt(dtaAtual.getMonth() + 1);
+    if(actualMonth < 10)
+        actualMonth = "0" + actualMonth;
+    var actualYear = dtaAtual.getFullYear();
 
-	return new Date(actualYear + "/" + actualMonth + "/01");
+    return new Date(actualYear + "/" + actualMonth + "/01");
 }
 
 function getLastDateOfMonth() {
-	var dtaAtual = new Date();
-	var actualMonth = parseInt(dtaAtual.getMonth() + 1);
-	if(actualMonth < 10)
-		actualMonth = "0" + actualMonth;
-	var actualYear = dtaAtual.getFullYear();
-	var lastDay = parseInt(ultimoDiaDoMes(new Date()));
-	if(lastDay < 10)
-		lastDay = "0" + lastDay;
+    var dtaAtual = new Date();
+    var actualMonth = parseInt(dtaAtual.getMonth() + 1);
+    if(actualMonth < 10)
+        actualMonth = "0" + actualMonth;
+    var actualYear = dtaAtual.getFullYear();
+    var lastDay = parseInt(ultimoDiaDoMes(new Date()));
+    if(lastDay < 10)
+        lastDay = "0" + lastDay;
 
-	return new Date(actualYear + "/" + actualMonth + lastDay);
+    return new Date(actualYear + "/" + actualMonth + lastDay);
 }
 
 function NOW(format){
-	format = format == null ? 'pt-br' : 'en' ;
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; 
-	var yyyy = today.getFullYear();
+    format = format == null ? 'pt-br' : 'en' ;
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
 
-	if(dd<10) {
-	    dd='0'+dd;
-	} 
+    if(dd<10) {
+        dd='0'+dd;
+    } 
 
-	if(mm<10) {
-	    mm='0'+mm;
-	} 
+    if(mm<10) {
+        mm='0'+mm;
+    } 
 
-	today = format == 'pt-br' ? dd+'/'+mm+'/'+yyyy : yyyy+'-'+mm+'-'+dd;
-	return today;
+    today = format == 'pt-br' ? dd+'/'+mm+'/'+yyyy : yyyy+'-'+mm+'-'+dd;
+    return today;
 }
 
 String.prototype.trim = function () {
-	return this.replace(/^\s+|\s+$/g,"");
+    return this.replace(/^\s+|\s+$/g,"");
 }
 
 //left trim
 String.prototype.ltrim = function () {
-	return this.replace(/^\s+/,"");
+    return this.replace(/^\s+/,"");
 }
 
 //right trim
 String.prototype.rtrim = function () {
-	return this.replace(/\s+$/,"");
+    return this.replace(/\s+$/,"");
 }
 
 $(function(){
-	$('#invoicePrint').on("click", function() {
-		printDiv("main-container", "");
-	});
+    $('#invoicePrint').on("click", function() {
+        printDiv("main-container", "");
+    });
 });
 
  function FormatMilhar(value,groupSeparator){
@@ -328,7 +328,7 @@ $(function(){
         if(num.length > 3){
              return  num.substr(0, num.length - 3) + groupSeparator + num.substr(num.length - 3);
         }else{
-        	return num ;
+            return num ;
         }
  }
 
@@ -340,22 +340,22 @@ $(function(){
 
  function removerAcentos( newStringComAcento ) {
   var string = newStringComAcento.toLowerCase();
-	var mapaAcentosHex 	= {
-		a : /[\xE0-\xE6]/g,
-		e : /[\xE8-\xEB]/g,
-		i : /[\xEC-\xEF]/g,
-		o : /[\xF2-\xF6]/g,
-		u : /[\xF9-\xFC]/g,
-		c : /\xE7/g,
-		n : /\xF1/g
-	};
+    var mapaAcentosHex  = {
+        a : /[\xE0-\xE6]/g,
+        e : /[\xE8-\xEB]/g,
+        i : /[\xEC-\xEF]/g,
+        o : /[\xF2-\xF6]/g,
+        u : /[\xF9-\xFC]/g,
+        c : /\xE7/g,
+        n : /\xF1/g
+    };
  
-	for ( var letra in mapaAcentosHex ) {
-		var expressaoRegular = mapaAcentosHex[letra];
-		string = string.replace( expressaoRegular, letra );
-	}
+    for ( var letra in mapaAcentosHex ) {
+        var expressaoRegular = mapaAcentosHex[letra];
+        string = string.replace( expressaoRegular, letra );
+    }
  
-	return string.replace( /\s/g, '' ).toUpperCase();
+    return string.replace( /\s/g, '' ).toUpperCase();
 }
 
  function removerAcentosSAT(newStringComAcento) {
@@ -500,4 +500,8 @@ function Utf8Encode(strUni) {
     }else
         return strUni;
 
+}
+
+function round(vlr,dec){
+    return Number(accounting.toFixed(vlr,dec));
 }
