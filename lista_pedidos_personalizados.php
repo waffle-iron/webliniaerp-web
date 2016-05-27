@@ -299,14 +299,14 @@
 											<td>{{ item.nme_vendedor }}</td>
 											<td>{{ item.nme_cliente }}</td>
 											<td class="text-center">
-												{{ item.pedido_finalizado == 1 &&  'Pedido Finalizado' || item.dsc_status }}
+												{{  item.dsc_status }}
 											</td>
 											<td class="text-right">R$ {{ item.vlr_total_venda | numberFormat : '2' : ',' : '.'}}</td>
 											<td class="text-center">
 												<button type="button" ng-click="loadDetalhesPedido(item)" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-primary"  data-toggle="tooltip" title="Detalhes">
 													<i class="fa fa-tasks"></i>
 												</button>
-												<a  href="pedido-personalizado.php?id_pedido={{ item.id }}" data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button"  ng-if="item.pedido_finalizado == 0"  tooltip="Editar pedido" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Editar pedido">
+												<a  href="pedido-personalizado.php?id_pedido={{ item.id }}" data-loading-text="<i class='fa fa-refresh fa-spin'>" type="button"  ng-if="item.id_status_pedido == 1"  tooltip="Editar pedido" data-toggle="tooltip" class="btn btn-xs btn-warning"  data-toggle="tooltip" title="Editar pedido">
 													<i class="fa fa-edit"></i>
 												</a>
 												<button ng-click="imprimirRomaneio(item)"   type="button" tooltip="Imprimir Via Fábrica" data-toggle="tooltip" class="btn btn-xs"  data-toggle="tooltip" title="Imprimir Via Fábrica">

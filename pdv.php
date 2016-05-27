@@ -1297,7 +1297,7 @@
 			    					<i class="fa fa-lock"></i> Fechar PDV
 			    				</button>
 
-			    				<button type="button" data-loading-text=" Aguarde..." ng-click="cancelarModal('modal-fechamento')" id="btn-fechar-caixa"
+			    				<button type="button" data-loading-ftext=" Aguarde..." ng-click="cancelarModal('modal-fechamento')" id="btn-fechar-caixa"
 			    					class="btn btn-md btn-default btn-block fechar-modal">
 			    					<i class="fa fa-times-circle"></i> Cancelar
 			    				</button>
@@ -1819,7 +1819,7 @@
 						    </div>
 
 						    <div class="modal-footer">
-						    	<a ng-show="!emitirNfe" class="btn btn-md  btn-primary" ng-click="printTermic()">
+						    	<a ng-show="!emitirNfe" id="printTermic" class="btn btn-md  btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="printTermic()" >
 						    		<i class="fa fa-print"></i> Imprimir (via Impressora Térmica)
 						    	</a>
 						    	<button ng-show="!emitirNfe" type="button" data-loading-text=" Aguarde..." id="btn-imprimir"
@@ -2200,7 +2200,7 @@
 					    </div>
 					     <div class="modal-footer">
 				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
+				    		class="btn btn-md btn-default" ng-click="resetPdv('venda')">
 				    		 OK
 				    	</button>
 				    </div>

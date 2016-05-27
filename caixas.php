@@ -214,13 +214,16 @@
 									</div>
 								</div>
 								<div class="col-sm-4">
-									<div class="form-group" id="id_deposito">
-										<label class="control-label">Depósito</label>
-										<select class="form-control" ng-model="conta.id_deposito">
-											<option value="" ng-if="conta.id_deposito != null"></option>
-											<option ng-repeat="item in depositos" value="{{ item.id }}">{{ item.nme_deposito }}</option>
-										</select>
-									</div>
+								<div class="form-group" id="cod_especializacao_ncm">
+									<label class="control-label">Depósito</label> 
+									<select ng-model="conta.id_deposito" chosen
+								    option="depositos"
+								    ng-model="produto.cod_especializacao_ncm"
+								    allow-single-deselect="true"
+								    ng-options="item.id as item.nme_deposito for item in depositos">
+									</select>
+								</div>
+								
 								</div>
 							</div>
 							<div class="row">
@@ -249,6 +252,16 @@
 									    option="lista_operacao"
 									    ng-model="conta.cod_operacao_padrao_sat_cfe"
 									    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3" >
+									<div class="form-group">
+										<label class="control-label">Impressora</label> 
+										<select chosen
+									    option="impressoras"
+									    ng-model="conta.mod_impressora"
+									    ng-options="item.value as item.dsc for item in impressoras">
 										</select>
 									</div>
 								</div>

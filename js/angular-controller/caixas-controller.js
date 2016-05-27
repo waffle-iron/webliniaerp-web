@@ -9,6 +9,7 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
     ng.paginacao           			= {conta:null} ;
     ng.busca               			= {empreendimento:""} ;
     ng.conta                        = {} ;
+    ng.impressoras                  = [{ value:null, dsc:'Selecione' },{ value:'bematech_mp_4200_th', dsc:'BEMATECH MP 4200 ' },{ value:'epson_tm_t20', dsc:'EPSON TM T20' }];
 
     ng.editing = false;
 
@@ -85,10 +86,14 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 	ng.loadDepositos = function() {
 		aj.get(baseUrlApi()+"depositos?id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+				ng.depositos = [{id:null,nme_deposito:'Selecione'}];
 				$.each(data.depositos,function(i,x){
 					data.depositos[i].id = Number(x.id);
 				});
-				ng.depositos = data.depositos;
+				ng.depositos = ng.depositos.concat(data.depositos);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)

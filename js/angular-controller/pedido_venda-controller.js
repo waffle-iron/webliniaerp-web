@@ -764,7 +764,8 @@ app.controller('PedidoVendaController', function($scope, $http, $window, $dialog
 				.success(function(data, status, headers, config) {
 					button.button('reset');
 					ng.mensagens('alert-success','<b>Pedido alterado com sucesso</b>','.alert-listagem');
-					pedido.id_status_pedido = id_status ;
+					pedido.id_status_pedido = data.id ;
+					pedido.dsc_status = data.dsc_status ;
 				})
 				.error(function(data, status, headers, config) {
 					button.button('reset');

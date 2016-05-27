@@ -197,7 +197,9 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		var qtd_adultos  = 0 ;
 		var qtd_infantis = 0 ;
 		var indexGraAnt  = Number(ng.pedido.flg_brinde) ? "brinde-" : "" ;
-		indexGraAnt +=  ng.pedido.id_cor_base+'-'+ng.pedido.id_cor_tira_feminina+'-'+ng.pedido.id_cor_tira_masculina+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base;
+	    var aux_pedido_id_cor_tira_feminina = $.isNumeric(ng.pedido.id_cor_tira_feminina) ? ng.pedido.id_cor_tira_feminina : '0'  ;
+	    var aux_pedido_id_cor_tira_masculina = $.isNumeric(ng.pedido.id_cor_tira_masculina) ? ng.pedido.id_cor_tira_masculina :'0'  ;
+		indexGraAnt +=  ng.pedido.id_cor_base+'-'+aux_pedido_id_cor_tira_feminina+'-'+aux_pedido_id_cor_tira_masculina+'-base_'+ng.pedido.modelo_base+'_'+ng.pedido.tipo_base;
 		
 		//Chinelos Adulto
 		if(ng.gradeAdulto != null && ng.gradeAdulto.length >0){
@@ -642,16 +644,25 @@ app.controller('PedidoPersonalizadoController', function($scope,$compile, $http,
 		});
 
 		$.each(ng.carrinhoPedido,function(i,x) {
+			var valor_desconto ;
+			var valor_real_item ;
+			if(Number(x.flg_brinde) == 1){
+				valor_desconto = 1 ;
+				valor_real_item = 0 ;
+			}else{
+				valor_desconto = (empty(x.valor_desconto) ? 0 : x.valor_desconto);
+				valor_real_item = x.valor_real_item ;
+			}
 			chinelos_gerados.push({
 				nome 					: x.nome,
 				qtd 					: Number(x.qtd),
 				tipo 					: x.tipo,
-				valor_real_item 		: x.valor_real_item,
+				valor_real_item 		: valor_real_item,
 				vlr_custo 				: x.vlr_custo,
 				perc_margem_aplicada    : x.perc_margem_aplicada,
-				desconto_aplicado       : (x.valor_desconto > 0 ? 1 : 0),
+				desconto_aplicado       : (valor_desconto > 0 ? 1 : 0),
 				flg_brinde              : Number(x.flg_brinde),
-				valor_desconto          : (empty(x.valor_desconto) ? 0 : x.valor_desconto),
+				valor_desconto          : valor_desconto,
 			});
 			var base = ng.getbase(x.insumos);
 			var aux  = [] ;

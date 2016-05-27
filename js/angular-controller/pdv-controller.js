@@ -2100,8 +2100,30 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.printTermic = function() {
-		alert("Ao abrir o aplicativo, informe o ID da venda: "+ ng.id_venda);
-		ng.cancelar();
+		var btn = $('#printTermic');
+		btn.button('loading');
+		aj.get(baseUrlApi()+"dados_venda_cnf/"+ng.id_venda+"/"+ng.caixa_open.id_caixa)
+		.success(function(data, status, headers, config) {
+			if( ng.status_websocket == 2 ){
+				btn.button('reset');
+				var mg = {
+					from:ng.caixa_open.id_ws_web,
+					to:ng.caixa_open.id_ws_dsk,
+					type:'cnf_print',
+					message:JSON.stringify(data)
+				};
+				ng.sendMessageWebSocket(mg);
+				ng.resetPdv('venda');
+			}else{
+				btn.button('reset');
+				alert('Não foi possível emitir o cupom pois não existe conexão com o aplicativo cliente (WebliniaERP Client)');
+			}
+		})
+		.error(function(data, status, headers, config) {
+			alert('Ocorreu um erro ao processar os dados')
+		});
+		//alert("Ao abrir o aplicativo, informe o ID da venda: "+ ng.id_venda);
+		//ng.cancelar();
 	}
 
 	ng.printDiv = function(id,pg) {
@@ -2921,27 +2943,59 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			});
 			ng.descontoAllItens.porcentagem = 0 ;
 		}else if(tipo == 'vlr'){
-			var cnt = 1 ;
 			var tm = ng.carrinho.length ;
-			var res = vlr%tm;
-			var div = vlr - res ;
-			var vlr_div = div/tm;
+			var aux_tm = tm ;
+			var aux_div = round((round(vlr,2)/tm),2);
+			var indexs_desconto = [] ;
+			var repeat = true ;
+			var count_repeat = 1;
+			while(repeat){
+				indexs_desconto = [] ;
+				$.each(ng.carrinho,function(i,item){
+					if(item.vlr_real >= aux_div){
+						indexs_desconto.push(i);
+					}
+				});
+
+				if(indexs_desconto.length == aux_tm || count_repeat >= tm)
+					repeat = false;
+				else{
+					aux_tm = indexs_desconto.length ;
+					aux_div = round((round(vlr,2)/aux_tm),2);
+				}
+				count_repeat ++ ;
+			}
+			var cnt = 1 ;
+			tm = indexs_desconto.length ;
+			var res = round( (((vlr*100)%tm)/100) ,2);
+			var div = round((vlr - res),2) ;
+			var vlr_div = round(div/tm,2);
+
 			$.each(ng.carrinho,function(i,item){
-				item.flg_desconto = 1 ;
-				if(cnt == tm)
-					item.valor_desconto_real = vlr_div+res ;
-				else
-					item.valor_desconto_real = vlr_div ;
-				ng.aplicarDesconto(i,null,false,true);
-				if(vlr <= 0)
+				if(indexs_desconto.indexOf(i)>=0){
+					item.flg_desconto = 1 ;
+
+					var vlr_desc = vlr_div;
+					if(res > 0){
+						vlr_desc = round((vlr_desc+0.01),2);
+						res = round((res - 0.01),2);
+					}
+					item.valor_desconto_real = vlr_desc ;
+					ng.aplicarDesconto(i,null,false,true);
+					if(vlr <= 0)
+						item.flg_desconto = 0 ;
+				}else{
 					item.flg_desconto = 0 ;
-				cnt ++ ;
+					item.valor_desconto_real = 0 ;
+					ng.aplicarDesconto(i,null,false,true);
+				}
 			});
 			ng.descontoAllItens.valor = 0 ;
+
 		}
 		$('#pop-over-desconto-venda').popover('hide');
 	}
-	if(typeof ng.caixa_open == 'object' &&  Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1)
+	if(typeof ng.caixa_open == 'object' &&  (Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1 || !empty(ng.config.patch_socket_sat)) )
 		ng.newConnWebSocket();
 
 	function closeWindow(){
