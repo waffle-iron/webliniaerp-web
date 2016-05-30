@@ -321,3 +321,7 @@ overflow-x: hidden;
 .upload-file label {
 	cursor: pointer;
 }
+
+button:focus{
+	outline: none !important ;
+}
