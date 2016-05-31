@@ -194,9 +194,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.addInsumo = function(item){
-		var insumo = {id:item.id,nome:item.nome,qtd:item.qtd,vlr_custo_real:item.vlr_custo_real};
+		var insumo = {id:item.id,nome:item.nome,qtd:(empty(item.qtd)? 1 : item.qtd ),vlr_custo_real:item.vlr_custo_real};
 		ng.insumos.push(insumo);
 		ng.calVlrCustoInsumos();
+		item.qtd = null ;
 		//$('#list_fornecedores').modal('hide');
 	}
 
@@ -211,7 +212,21 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			qtd      = empty(v.qtd) ? 1 : Number(v.qtd) ;
 			totalVlrCustoInsumos += vlrCusto * qtd ;
 		});
-		ng.produto.preco.vlr_custo = totalVlrCustoInsumos ;
+		totalVlrCustoInsumos ;
+		$.each(ng.produto.precos,function(i,preco){
+			ng.produto.precos[i].vlr_custo = totalVlrCustoInsumos ;
+		});
+	}
+
+	ng.existsInsumo = function(id_produto){
+		var r = false ;
+		$.each(ng.insumos,function(i,x){
+			if(Number(x.id) == Number(id_produto)){
+				r = true ;
+				return;
+			}
+		});
+		return r ;
 	}
 
 	ng.delInsumo = function(index){
@@ -879,8 +894,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			perc_venda_intermediario: 0,
 			perc_venda_varejo: 0
 		});
-
 		ng.empreendimentosAssociados.push(empreendimento);
+		if(Number(ng.produto.flg_produto_composto) == 1){
+			ng.calVlrCustoInsumos();
+		}
 	}
 
 	ng.empreendimentoSelected = function(item){
