@@ -81,8 +81,9 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 
     	var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento;
 
-    	if(ng.busca.categorias != ""){
-    		query_string += "&("+$.param({'descricao_categoria':{exp:"like'%"+ng.busca.categorias+"%'"}})+")";
+    	if(!empty(ng.busca.categorias)){
+    		var busca = ng.busca.categorias.replace(/\s/g, '%');
+    		query_string += "&("+$.param({'descricao_categoria':{exp:"like'%"+busca+"%'"}})+")";
     	}
 
 		ng.categorias = [];
