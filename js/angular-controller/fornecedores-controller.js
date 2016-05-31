@@ -5,8 +5,9 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
-	ng.fornecedor 	= {};
+	ng.fornecedor 	= {'tipo_cadastro':'pj',telefones:[{tbl_referencia:'tbl_fornecedores',id_referencia:null,num_telefone:null},{tbl_referencia:'tbl_fornecedores',id_referencia:null,num_telefone:null}]};
     ng.fornecedores	= [];
+    ng.busca        = {} ;
 
     ng.editing = false;
 
@@ -86,27 +87,44 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 
 	ng.reset = function() {
 		
-		ng.fornecedor = {};
+		ng.fornecedor = ng.fornecedor 	= {'tipo_cadastro':'pj'};;
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
 	}
-	ng.fornecedores
+	ng.fornecedores = [] ;
 	ng.load = function(offset,limit) {
 		offset = offset == null ? 0  : offset ;
 		limit = limit   == null ? 10 : limit ;  
-		ng.fornecedores = [] ;
-		var url = "fornecedores/"+offset+"/"+limit+"?id_empreendimento="+ng.userLogged.id_empreendimento;
-		aj.get(baseUrlApi()+url)
+		ng.fornecedores.fornecedores = null ;
+		var url = "fornecedores/"+offset+"/"+limit+"?id_empreendimento="+ng.userLogged.id_empreendimento+'&cplSql= ORDER BY frn.nome_fornecedor ASC';
+
+		var query_string = "" ;
+		if(!empty(ng.busca.fornecedor)){
+			var buscaCpf  = ng.busca.fornecedor.replace(/\./g, '').replace(/\-/g, '');
+			var buscaCnpj = ng.busca.fornecedor.replace(/\./g, '').replace(/\-/g, '').replace(/\//g,'');
+			var busca = ng.busca.fornecedor.replace(/\s/g, '%');
+			query_string += "&"+$.param({"(frn->nome_fornecedor":{exp:"like'%"+busca+"%' OR frn.nme_fantasia like '%"+busca+"%' OR frn.num_cnpj like '%"+buscaCnpj+"%' OR frn.num_cpf like '%"+buscaCpf+"%')"}})+"";
+		}
+
+		aj.get(baseUrlApi()+url+query_string)
 			.success(function(data, status, headers, config) {
+				$.each(data.fornecedores,function(i,x){
+					if($.isNumeric(x.id_banco))
+					data.fornecedores[i].id_banco = ""+x.id_banco ; 
+				});
 				ng.fornecedores = data;
 			})
 			.error(function(data, status, headers, config) {
-				ng.fornecedores = [];
+				ng.fornecedores.fornecedores = [];
 			});
 	}
 
 	ng.salvar = function() {
+		var btn = $('#btn-salvar-fornecedor');
+		btn.button('loading');
+		$($(".has-error").find(".form-control")).tooltip('destroy');
+		$(".has-error").removeClass("has-error");
 		var url = 'fornecedor';
 		var itemPost = {};
 
@@ -115,38 +133,37 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 			url += '/update';
 		}
 
+		itemPost = angular.copy(ng.fornecedor);
 		itemPost.id_empreendimento 		= ng.userLogged.id_empreendimento;
-		itemPost.nome_fornecedor 		= ng.fornecedor.nome_fornecedor; // razão social
-		itemPost.nme_fantasia 			= ng.fornecedor.nme_fantasia;
-		itemPost.num_cnpj 				= ng.fornecedor.num_cnpj;
-		itemPost.num_inscricao_estadual = ng.fornecedor.num_inscricao_estadual;
-		itemPost.num_cep 				= ng.fornecedor.num_cep;
-		itemPost.nme_endereco 			= ng.fornecedor.nme_endereco;
-		itemPost.num_logradouro 		= ng.fornecedor.num_logradouro;
-		itemPost.nme_bairro 			= ng.fornecedor.nme_bairro;
-		itemPost.cod_estado 			= ng.fornecedor.cod_estado;
-		itemPost.cod_cidade 			= ng.fornecedor.cod_cidade;
 
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				$('html,body').animate({scrollTop: 0},'slow');
 				ng.mensagens('alert-success','<strong>Fornecedores salvo com sucesso!</strong>');
 				ng.showBoxNovo();
 				ng.reset();
 				ng.load();
 			})
 			.error(function(data, status, headers, config) {
+				btn.button('reset');
 				if(status == 406) {
 					var errors = data;
-
+					var cont  = 0 ;
 					$.each(errors, function(i, item) {
 						$("#"+i).closest(".form-group").addClass("has-error");
-
-						var formControl = $($("#"+i).closest(".form-group").find(".form-control")[0])
-							.attr("data-toggle", "tooltip")
+						var formControl = $($("#"+i).closest(".form-group"))
+						formControl.attr("data-toggle", "tooltip")
 							.attr("data-placement", "bottom")
 							.attr("title", item)
 							.attr("data-original-title", item);
 						formControl.tooltip();
+
+						if(cont == 0){
+							$('html,body').animate({scrollTop: $("#"+i).parents('.row').offset().top - 50},'slow');
+							formControl.tooltip('show');
+						}
+						cont ++ ;
 					});
 				}
 			});
@@ -156,6 +173,7 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 		ng.fornecedor = angular.copy(item);
 		ng.loadCidadesByEstado();
 		ng.showBoxNovo(true);
+		$('html,body').animate({scrollTop: 0},'slow');
 	}
 
 	ng.delete = function(item){
@@ -230,6 +248,20 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
 
+	ng.loadBancos = function () {
+		ng.bancos = [];
+
+		aj.get(baseUrlApi()+"bancos")
+		.success(function(data, status, headers, config) {
+			ng.bancos = [{id:null,nome:'Selecione',codigo:null}];
+			ng.bancos = ng.bancos.concat(data.bancos);
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
 	ng.load();
 	ng.loadConfig();
+	ng.loadBancos();
 });
