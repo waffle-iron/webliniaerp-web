@@ -206,9 +206,9 @@
 						<form role="form">
 							<div class="row">
 								<div class="col-sm-2">
-									<div class="form-group">
+									<div class="form-group" id="dta_contagem">
 										<label class="control-label">Data da Contagem</label>
-										<div class="input-group">
+										<div class="input-group" >
 											<input readonly="readonly" ng-model="pagamento.data" type="text" id="inventarioData" class="datepicker form-control input-sm" style="background-color: #FFF;cursor:pointer">
 											<span  class="input-group-addon" id="cld_pagameto"><i class="fa fa-calendar"></i></span>
 										</div>
@@ -372,7 +372,8 @@
 									<td>{{ item.peso }}</td>
 									<td>{{ item.nome_fabricante }}</td>
 									<td>{{ item.qtd_contagem }}</td>
-									<td>{{ item.dta_validade | dateFormat:'date'}}</td>
+									<td ng-if="item.dta_validade == '2099-12-31'"></td>
+									<td ng-if="item.dta_validade != '2099-12-31'">{{ item.dta_validade | dateFormat:'date'}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -407,14 +408,14 @@
 				    			<form role="form">
 									<div class="row">
 										<div class="col-sm-4">
-											<div class="form-group" id="nme_fornecedor">
+											<div class="form-group" id="item-validade-add">
 												<label class="control-label">Validade (Mês/Ano)</label>
 												<input type="text" class="form-control" ui-mask="99/9999" ng-model="itemValidade.validade" ng-blur="validarDataValidade(itemValidade.validade)">
 											</div>
 										</div>
 
 										<div class="col-sm-3">
-											<div class="form-group" id="id_pedido_fornecedor">
+											<div class="form-group" id="item-qtd-add">
 												<label class="control-label">Quantidade</label>
 												<input type="text" class="form-control"  ng-model="itemValidade.qtd" ng-enter="addValidadeItem()">
 											</div>
@@ -437,13 +438,14 @@
 									<thead>
 										<tr>
 											<th>Validade</th>
-											<th>Data</th>
+											<th>Qtd.</th>
 											<th style="width:80px;">Ações</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr ng-repeat="item in produto.validades">
-											<td>{{ item.validade }}</td>
+											<td ng-if="item.validade == '122099'"></td>
+											<td ng-if="item.validade != '122099'">{{ formatDate(item.validade) }}</td>
 											<td>{{ item.qtd }}</td>
 											<td align="center">
 												<button type="button" class="btn btn-xs btn-danger" ng-click="deleteValidadeItem($index)"><i class="fa fa-trash-o"></i></button>

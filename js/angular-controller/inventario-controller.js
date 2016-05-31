@@ -15,6 +15,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
     ng.busca               = {fornecedores:"",pedidos:""} ;
 
     ng.produto = {};
+    ng.itemValidade = {} ;
 
      /* inicio - Ações de inventario */
      ng.inventario = {id_usuario_responsavel:ng.userLogged.id,nome_usuario:ng.userLogged.nme_usuario,qtd_total:0,itens:[]} ;
@@ -133,7 +134,46 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 	}
 
 	ng.addValidadeItem = function() {
-		ng.produto.validades.push(ng.itemValidade);
+		$($(".has-error").find(".form-control")).tooltip('destroy');
+		$(".has-error").removeClass("has-error");
+		var error = 0 ;
+		var item = angular.copy(ng.itemValidade);
+		if(empty(ng.itemValidade.validade))
+			item.validade = '122099';
+
+		if(typeof ng.produto.validades == 'object'){
+			$.each(ng.produto.validades,function(i,x){
+				if(x.validade == item.validade){
+					$("#item-validade-add").addClass("has-error");
+					var formControl = $("#item-validade-add")
+						.attr("data-toggle", "tooltip")
+						.attr("data-placement", "bottom")
+						.attr("title", 'Validade ja inserida')
+						.attr("data-original-title", 'Validade ja inserida');
+					formControl.tooltip();
+					if(error == 0) formControl.tooltip('show');
+					error ++ ;
+					return ;
+				}
+			});
+		}
+
+		if(empty(ng.itemValidade.qtd)){
+			$("#item-qtd-add").addClass("has-error");
+			var formControl = $("#item-qtd-add")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'A Quantidade é Obrigatória')
+				.attr("data-original-title", 'A Quantidade é Obrigatória');
+			formControl.tooltip();
+			if(error == 0) formControl.tooltip('show');
+			error ++ ;
+		}
+		
+		if(error > 0)
+			return ;
+
+		ng.produto.validades.push(item);
 		ng.itemValidade = {};
 		ng.atualizaQtdValidadeItens();
 	}
@@ -192,27 +232,29 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 	}
 
 	ng.validarDataValidade = function(mes_ano,index) {
-		var mes = parseInt(mes_ano.substr(0,2),10);
-		var ano = parseInt(mes_ano.substr(2,4),10);
+		if(!empty(mes_ano)){
+			var mes = parseInt(mes_ano.substr(0,2),10);
+			var ano = parseInt(mes_ano.substr(2,4),10);
 
-		var valid = true;
+			var valid = true;
 
-		var dtaAtual = new Date();
-		var mesAtual = dtaAtual.getMonth() + 1;
-		var anoAtual = dtaAtual.getFullYear();
+			var dtaAtual = new Date();
+			var mesAtual = dtaAtual.getMonth() + 1;
+			var anoAtual = dtaAtual.getFullYear();
 
-		if(mes > 12)
-			valid = false;
+			if(mes > 12)
+				valid = false;
 
-		if(ano < anoAtual)
-			valid = false;
+			if(ano < anoAtual)
+				valid = false;
 
-		if(ano < 1900 || ano > 2100)
-			valid = false;
+			if(ano < 1900 || ano > 2100)
+				valid = false;
 
-		if(!valid) {
-			ng.mensagens('alert-danger','<strong>A data informada é inválida</strong>','.alert-itens');
-			ng.itemValidade.validade = "";
+			if(!valid) {
+				ng.mensagens('alert-danger','<strong>A data informada é inválida</strong>','.alert-itens');
+				ng.itemValidade.validade = "";
+		}
 		}
 	}
 
@@ -425,6 +467,10 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 				}
 			});
 		}
+	}
+
+	ng.formatDate = function(date){
+		return date.substring(0,2)+'/'+date.substring(2,6) ;
 	}
 
 	ng.mensagens = function(classe , msg, alertClass){
