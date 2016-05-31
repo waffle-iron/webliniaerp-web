@@ -41,7 +41,8 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 
     ng.pagamento_edit = {} ;
     ng.modalChangeStatusPagamento = function(item){
-    	ng.pagamento_edit = item ;
+    	ng.pagamento_edit = angular.copy(item) ;
+    	ng.pagamento_edit.id_conta_bancaria = Number(ng.pagamento_edit.id_conta_bancaria);
     	$("#dta_change_pagamento").val(formatDateBR(item.data_pagamento));
     	$("#modal_change_date_pagamento").modal('show');
     }
@@ -50,6 +51,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
     		idLancamento 	: item.id,
     		newStatus 		: (item.status_pagamento == 1) ? 0 : 1,
     		flgTipo 		: item.flg_tipo_lancamento,
+    		id_conta_bancaria : item.id_conta_bancaria,
     		data_pagamento  : formatDate($("#dta_change_pagamento").val())
     	};
 
@@ -291,6 +293,10 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 
 	ng.addCliente = function(item){
     	ng.cliente = item;
+    	ng.pagamento.id_banco = ""+angular.copy(item.id_banco);
+    	ng.pagamento.agencia_transferencia = angular.copy(item.agencia);
+    	ng.pagamento.conta_transferencia = angular.copy(item.conta);
+    	ng.pagamento.proprietario_conta_transferencia = angular.copy(item.nome);
     	ng.loadSaldoDevedorCliente();
     	ng.pagamento.id_cliente = item.id;
     	$("#list_clientes").modal("hide");
@@ -352,9 +358,15 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
     	limit  = limit  == null ? 10 : limit;
 		ng.fornecedores = [];
 		var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento ;
-		if(ng.busca.fornecedores != ""){
-			query_string += "&"+$.param({'frn->nome_fornecedor':{exp:"like'%"+ng.busca.fornecedores+"%'"}});
+		if(!empty(ng.busca.fornecedores)){
+			var buscaCpf  = ng.busca.fornecedores.replace(/\./g, '').replace(/\-/g, '');
+			var buscaCnpj = ng.busca.fornecedores.replace(/\./g, '').replace(/\-/g, '').replace(/\//g,'');
+			var busca = ng.busca.fornecedores.replace(/\s/g, '%');
+			query_string += "&"+$.param({"(frn->nome_fornecedor":{exp:"like'%"+busca+"%' OR frn.nme_fantasia like '%"+busca+"%' OR frn.num_cnpj like '%"+buscaCnpj+"%' OR frn.num_cpf like '%"+buscaCpf+"%')"}})+"";
 		}
+
+		query_string += "&cplSql= ORDER BY frn.nome_fornecedor ASC";
+
 
 		aj.get(baseUrlApi()+"fornecedores/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {

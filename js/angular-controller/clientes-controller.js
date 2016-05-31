@@ -212,6 +212,9 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 
 		aj.get(baseUrlApi()+"bancos")
 		.success(function(data, status, headers, config) {
+			$.each(data.bancos,function(i,x){
+				data.bancos[i].id = Number(data.bancos[i].id);
+			});
 			ng.bancos = data.bancos;
 		})
 		.error(function(data, status, headers, config) {
