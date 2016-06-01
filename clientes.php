@@ -824,9 +824,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
-				</div><!-- /panel -->
-
+				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<i class="fa fa-tasks"></i> Clientes Cadastrados
