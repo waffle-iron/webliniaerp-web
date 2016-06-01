@@ -412,6 +412,17 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 	});
 	}
 
+	function openAbasValidade(errors){
+		var campos_abas = {informacoes_basicas:'nome,tel_fixo,endereco,numero,bairro,cep,id_estado,id_cidade',dados_acesso:'id_perfil'};
+		$.each(errors,function(i,x){
+			if(_in(i,campos_abas.informacoes_basicas)){
+				$('#tab-cliente').find('li.active').removeClass('active');
+				$('#tab-cliente-body').find('.active').removeClass('active');
+				
+			}
+		});
+	}
+
 	/*ng.buscarLatLog = function (){
 		var address = ng.cliente.endereco + ", " + ng.cliente.numero + ", " + ng.cliente.cep.substr(0,5) + "-" + ng.cliente.cep.substr(5,ng.cliente.cep.length);
 		aj.get('https://maps.googleapis.com/maps/api/geocode/json?address='+address)

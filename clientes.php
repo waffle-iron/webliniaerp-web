@@ -214,7 +214,7 @@
 							<li><a href="#pagamentos" ng-if="userLogged.id_empreendimento == 75" ng-click="loadPagamentosPaciente()" data-toggle="tab"><i class="fa fa-list-alt"></i> Pagamentos</a></li>
 						</ul>
 					</div>
-					<div class="panel-body">
+					<div class="panel-body" id="tab-cliente-body">
 						<form role="form">
 							<div class="tab-content">
 								<div class="tab-pane fade in active" id="informacoes_basicas">

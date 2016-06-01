@@ -562,7 +562,7 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 					ng.estoqueDepositos = data;
 
 					$.each(data, function(i, item) {
-						ng.total.vlrCustoTotalEstoque += item.vlr_custo_total;
+						ng.total.vlrCustoTotalEstoque += item.qtd_item * item.vlr_custo_total;
 					});
 				})
 				.error(function(data, status, headers, config) {
@@ -577,6 +577,17 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 						// 	class_name: 'gritter-warning'
 						// });
 					}
+				});
+		}
+
+		ng.loadCustoTotalEstoque = function() {
+			aj.get(baseUrlApi()+"custoTotalEstoque/dashboard/"+ng.userLogged.id_empreendimento)
+				.success(function(data, status, headers, config) {
+					ng.total.vlrCustoTotalEstoque = data.vlrCustoTotalEstoque;
+
+				})
+				.error(function(data, status, headers, config) {
+					
 				});
 		}
 
@@ -606,6 +617,7 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 		ng.loadConsolidadoEstoque();
 		ng.loadVendasTop10ProdutosEstoqueMinimo();
 		ng.loadCountClientes();
+		ng.loadCustoTotalEstoque();
 
 
 

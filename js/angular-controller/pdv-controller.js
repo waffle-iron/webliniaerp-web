@@ -95,41 +95,44 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.finalizarOrcamento = true ;
 		var id_orcamento = params.id_orcamento;
 		if(!isNaN(Number(id_orcamento)) && !empty(id_orcamento)){
-			aj.get(baseUrlApi()+"venda/orcamento/"+id_orcamento)
-				.success(function(data, status, headers, config) {
-					var orcamento = data.orcamento;
-					ng.id_orcamento = orcamento.id ;
-					if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa))
-						ng.cliente = data.cliente;
-					$.each(orcamento.itens,function(i,v){
-						v.valor_desconto_real = Number(v.valor_desconto)/100;
-						v.flg_desconto        = Number(v.desconto_aplicado);
-						v.nome_produto        = v.nome ;
-						ng.incluirCarrinho(v);
-						/*v.qtd_total = v.qtd;
-						v.vlr_unitario    	 = v.valor_real_item;
-						v.vlr_real        	 = v.vlr_produto;
-						v.valor_desconto     = v.valor_desconto * 100 ;
-						v.flg_desconto = v.desconto_aplicado;
-						ng.carrinho.push(v);*/
-					});
-					$.each(ng.carrinho,function(i,item){
-						ng.aplicarDesconto(i,null,false,false);
-					});
-					ng.calcTotalCompra();
-					ng.totalPagamento();
-					ng.calculaTroco();
-					
-				})
-				.error(function(data, status, headers, config) {
-					alert('O ID do orçamento é invalido');
-					window.location = "pdv.php";
+			dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Deseja trabalhar com os valores de venda dos itens do momento do orçamento?</strong>');
+			dlg.result.then(function(btn){
+				ng.loadOrcamento('old');	
+			}, function(){
+				ng.loadOrcamento('new');
 			});
-			}else{
-				ng.finalizarOrcamento = false ;
-				alert('O ID do orçamento é invalido');
-				window.location = "pdv.php";
-			}
+		}else{
+			ng.finalizarOrcamento = false ;
+			alert('O ID do orçamento é invalido');
+			window.location = "pdv.php";
+		}
+	}
+
+	ng.loadOrcamento = function(tipo_valor){
+		aj.get(baseUrlApi()+"venda/orcamento/"+id_orcamento+'/'+tipo_valor)
+		.success(function(data, status, headers, config) {
+			var orcamento = data.orcamento;
+			ng.id_orcamento = orcamento.id ;
+			if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa))
+				ng.cliente = data.cliente;
+			$.each(orcamento.itens,function(i,v){
+				v.valor_desconto_real = Number(v.valor_desconto)/100;
+				v.flg_desconto        = Number(v.desconto_aplicado);
+				v.nome_produto        = v.nome ;
+				ng.incluirCarrinho(v);
+			});
+			$.each(ng.carrinho,function(i,item){
+				ng.aplicarDesconto(i,null,false,false);
+			});
+			ng.calcTotalCompra();
+			ng.totalPagamento();
+			ng.calculaTroco();
+			
+		})
+		.error(function(data, status, headers, config) {
+			alert('O ID do orçamento é invalido');
+			window.location = "pdv.php";
+		});
 	}
 
 	ng.total_itens = 0 ;
