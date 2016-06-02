@@ -2488,9 +2488,15 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			});
 	}
 	ng.modalSenhaVendedor = function(item){
-		ng.modal_senha_vendedor.show = true ;
-		ng.modal_senha_vendedor.nome_vendedor = item.nome ;
-		ng.modal_senha_vendedor.id_vendedor   = item.id ;
+		if(Number(item.id_perfil) == 5){
+			ng.vendedor.id_vendedor   = item.id;
+			ng.vendedor.nome_vendedor = item.nome;
+			$("#list-vendedor").modal("hide");
+		}else{
+			ng.modal_senha_vendedor.show = true ;
+			ng.modal_senha_vendedor.nome_vendedor = item.nome ;
+			ng.modal_senha_vendedor.id_vendedor   = item.id ;
+		}
 	}
 
 	ng.mudarVendedor =function (){
