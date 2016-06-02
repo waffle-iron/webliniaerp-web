@@ -61,8 +61,11 @@ app.controller('relCaixasController', function($scope, $http, $window, $dialogs,
 		ng.contas = [] ;
 
 		var query_string = "";
+		if(ng.userLogged.id_perfil != 1)
+		    query_string += "&id_operador="+ng.userLogged.id;
+
 		if(!empty(ng.busca.caixas_string)){
-			query_string = "&("+$.param({'cnt_bancaria->dsc_conta_bancaria':
+			query_string += "&("+$.param({'cnt_bancaria->dsc_conta_bancaria':
 											{exp:"LIKE '%"+ng.busca.caixas_string+"%' OR usu.nome LIKE '%"+ng.busca.caixas_string+"%')"
 											}
 										})+"";
