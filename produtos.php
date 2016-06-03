@@ -305,7 +305,7 @@
 																		<td>{{ item.peso }}</td>
 																		<td>{{ item.sabor }}</td>
 																		<td class="text-right">R$ {{ item.vlr_custo_real | numberFormat:2:',':'.' }}</td>
-																		<td  width="50"><input  ng-model="item.qtd" ng-keyup="calVlrCustoInsumos()" type="text" class="form-control input-xs" /></td>
+																		<td  width="50"><input  ng-model="item.qtd" onKeyPress="return SomenteNumero(event);" ng-keyup="calVlrCustoInsumos()" type="text" class="form-control input-xs" /></td>
 																		<td align="center">
 																			<button class="btn btn-xs btn-danger" ng-click="delInsumo($index,item)"><i class="fa fa-trash-o"></i></button>
 																		</td>
@@ -846,6 +846,7 @@
 							</ul>
 						</div>
 					</div>
+					
 				</div>
 			</div>
 		</div><!-- /main-container -->
@@ -1038,11 +1039,14 @@
 											<td>{{ item.peso }}</td>
 											<td>{{ item.sabor }}</td>
 											<td>{{ item.vlr_custo_real | numberFormat:2:',':'.' }}</td>
-											<td  width="50"><input  ng-model="item.qtd" type="text" class="form-control input-xs" /></td>
+											<td  width="50"><input onKeyPress="return SomenteNumero(event);" ng-model="item.qtd" type="text" class="form-control input-xs" /></td>
 											<td width="50" align="center">
-												<button type="button" class="btn btn-xs btn-success" ng-disabled="" ng-click="addInsumo(item)">
+												<button ng-if="!existsInsumo(item.id)" type="button" class="btn btn-xs btn-success" ng-disabled="" ng-click="addInsumo(item)">
 													<i class="fa fa-check-square-o"></i> Selecionar
 												</button>
+												<button ng-if="existsInsumo(item.id)"  ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                               		 <i class="fa fa-check-circle-o"></i> Selecionado
+                                           		 </button>
 											</td>
 										</tr>
 									</tbody>

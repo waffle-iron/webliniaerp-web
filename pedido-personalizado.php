@@ -1443,6 +1443,9 @@
 	<script src="js/endless/endless_form.js"></script>
 	<script src="js/endless/endless.js"></script>
 
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 

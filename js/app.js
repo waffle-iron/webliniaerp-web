@@ -157,14 +157,32 @@ angular.module('filters', [])
 	})
 	.filter('cpfFormat', function () {
 		return function (inputFormat,prefix) {
-			prefix = empty(prefix) ? '' : prefix ;
 			inputFormat = ""+inputFormat;
-			if(inputFormat.length != 11 && $.isNumeric(inputFormat)){
-				return "" ;
-			}
-			var cpf = inputFormat.substring(0,3)+'.'+inputFormat.substring(3,6)+'.'+inputFormat.substring(6,9)+'-'+inputFormat.substring(9,11);
+			if(inputFormat.length == 11){
+				prefix = empty(prefix) ? '' : prefix ;
+				if(inputFormat.length != 11 && $.isNumeric(inputFormat)){
+					return "" ;
+				}
+				var cpf = inputFormat.substring(0,3)+'.'+inputFormat.substring(3,6)+'.'+inputFormat.substring(6,9)+'-'+inputFormat.substring(9,11);
 
-			return prefix+cpf ;
+				return prefix+cpf ;
+			}else{
+				return '' ;
+			}
+
+	    };
+	})
+	.filter('cnpjFormat', function () {
+		return function (inputFormat,prefix) {
+			inputFormat = ""+inputFormat;
+			if(inputFormat.length == 14){
+				prefix = empty(prefix) ? '' : prefix ;
+				var cnpj = inputFormat.substring(0,2)+'.'+inputFormat.substring(2,5)+'.'+inputFormat.substring(5,8)+'/'+inputFormat.substring(8,12)+'-'+inputFormat.substring(12,14);
+
+				return prefix+cnpj ;
+			}else{
+				return '' ;
+			}
 
 	    };
 	})
@@ -610,6 +628,18 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 	ng.loadPedidosTransferenciaRecebido();
 	ng.loadPedidosTransferenciaTransporte();
 });
+
+app.directive('bsTooltip', function ($timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            $timeout(function () {
+                	  element.find("[data-toggle=tooltip]").tooltip();
+            });
+        }
+    }
+});
+
 
 /*app.factory('httpRequestInterceptor',function () {
   var user = angular.fromJson(sessionStorage.user);

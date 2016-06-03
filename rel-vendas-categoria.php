@@ -1,6 +1,6 @@
 <?php
 	include_once "util/login/restrito.php";
-	restrito();
+	restrito(array(1));
 	date_default_timezone_set('America/Sao_Paulo');
 ?>
 <!DOCTYPE html>
@@ -290,7 +290,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="input-group">
-					            <input ng-model="busca.produtos" ng-enter="loadCategorias(0,10)" type="text" class="form-control input-sm">
+					            <input ng-model="busca.categorias" ng-enter="loadCategorias(0,10)" type="text" class="form-control input-sm">
 
 					            <div class="input-group-btn">
 					            	<button ng-click="loadCategorias(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>

@@ -212,6 +212,9 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 
 		aj.get(baseUrlApi()+"bancos")
 		.success(function(data, status, headers, config) {
+			$.each(data.bancos,function(i,x){
+				data.bancos[i].id = Number(data.bancos[i].id);
+			});
 			ng.bancos = data.bancos;
 		})
 		.error(function(data, status, headers, config) {
@@ -371,6 +374,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 		btn.button('reset');
 		 		if(status == 406) {
 		 			var errors = data;
+		 			openAbaValidade(errors);
 		 			if(Object.keys(errors).length == 1 && typeof errors.id_perfil != 'undefined'){
 		 				$('a',$('#tab-cliente .tab-bar li').eq(4)).tab('show');
 		 				setTimeout(function(){
@@ -407,6 +411,25 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 			
 		 		}
 		 	});
+	}
+
+	function openAbaValidade(errors){
+		var campos_abas = {informacoes_basicas:'nome,tel_fixo,endereco,numero,bairro,cep,id_estado,id_cidade',dados_acesso:'id_perfil'};
+		$.each(errors,function(i,x){
+			if(_in(i,campos_abas.informacoes_basicas)){
+				$('#tab-cliente').find('li.active').removeClass('active');
+				$('#tab-cliente-body').find('.active').removeClass('active');
+				$('#tab-cliente').find('[href="#informacoes_basicas"]').parent('li').addClass('active');
+				$('#informacoes_basicas').addClass('active in');
+				return ;
+			}else if(_in(i,campos_abas.dados_acesso)){
+				$('#tab-cliente').find('li.active').removeClass('active');
+				$('#tab-cliente-body').find('.active').removeClass('active');
+				$('#tab-cliente').find('[href="#dados_acesso"]').parent('li').addClass('active');
+				$('#dados_acesso').addClass('active in');
+				return ;
+			}
+		});
 	}
 
 	/*ng.buscarLatLog = function (){
@@ -636,7 +659,6 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		//ng.vlrTotalCompra = numberFormat(vlr_total,2,'.','') ;
 		return vlr_total ;
 	}
-
 	ng.pagamentosCliente = {} ;
 	ng.loadPagamentosPaciente = function(){
 		ng.pagamentosCliente.pagamentos = null ;
@@ -653,7 +675,6 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 
           console.log(ng.pagamentosCliente);
 	}
-
 	ng.loadRegimeCliente = function (cod_cliente) {
 		aj.get(baseUrlApi()+"regime_especial/cliente/get/"+cod_cliente)
 		.success(function(data, status, headers, config) {

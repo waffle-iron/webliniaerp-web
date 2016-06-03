@@ -31,6 +31,7 @@ app.controller('RelatorioTotalVendasVendedorController', function($scope, $http,
 		var dtaInicial  = $("#dtaInicial").val();
 		var dtaFinal    = $("#dtaFinal").val();
 		var queryString = "?ven->id_empreendimento="+ng.userLogged.id_empreendimento;
+		queryString += ng.userLogged.id_perfil != 1 ? '&ven->id_usuario='+ng.userLogged.id : '' ;
 
 		if(dtaInicial != "" && dtaFinal != ""){
 			dtaInicial = formatDate(dtaInicial);

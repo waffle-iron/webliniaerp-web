@@ -307,8 +307,10 @@
 					    			<div class="col-sm-4" id="pagamento_id_banco" ng-if="pagamento.id_forma_pagamento == 8">
 										<div class="form-group" >
 											<label class="control-label">Banco</label>
-											<select ng-model="pagamento.id_banco" class="form-control">
-												<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
+											<select chosen
+										    option="bancos"
+										    ng-model="pagamento.id_banco"
+										    ng-options="banco.id as banco.nome for banco in bancos">
 											</select>
 										</div>
 									</div>
@@ -431,9 +433,11 @@
 										<div class="col-sm-2">
 											<div class="form-group cheque_banco" >
 												<label class="control-label">Banco</label>
-												<select ng-model="item.id_banco" class="form-control">
-													<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
-												</select>
+													<select chosen
+												    option="bancos"
+												    ng-model="pagamento.id_banco"
+												    ng-options="banco.id as banco.nome for banco in bancos">
+													</select>
 											</div>
 										</div>
 
@@ -494,9 +498,11 @@
 										<div class="col-sm-2">
 											<div class="form-group boleto_banco" >
 												<label class="control-label">Banco</label>
-												<select ng-model="item.id_banco" class="form-control">
-													<option ng-repeat="banco in bancos" value="{{ banco.id }}">{{ banco.nome }}</option>
-												</select>
+												<select chosen
+												    option="bancos"
+												    ng-model="item.id_banco"
+												    ng-options="banco.id as banco.nome for banco in bancos">
+													</select>
 											</div>
 										</div>
 
@@ -852,12 +858,12 @@
 
 
 												<td class="text-center">
-													<button type="button" class="btn btn-xs btn-status btn-success"
+													<button ng-disabled="item.id_tipo_conta==5" type="button" class="btn btn-xs btn-status btn-success"
 														ng-if="item.status_pagamento == 1" ng-click="modalChangeStatusPagamento(item)"
 														tooltip="Clique para alterar o status do lançamento" data-toggle="tooltip">
 														<i class="fa fa-check-circle fa-lg"></i> Pago
 													</button>
-													<button type="button" class="btn btn-xs btn-status btn-warning"
+													<button ng-disabled="item.id_tipo_conta==5" type="button" class="btn btn-xs btn-status btn-warning"
 														ng-if="item.status_pagamento == 0" ng-click="modalChangeStatusPagamento(item)"
 														tooltip="Clique para alterar o status do lançamento" data-toggle="tooltip">
 														<i class="fa fa-times-circle fa-lg"></i> Pendente
@@ -877,10 +883,10 @@
 													</button>
 												</td> -->
 												<td class="text-center">
-													<button type="button" ng-click="delete(item,'cliente')" ng-if="item.flg_tipo_lancamento == 'D'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
+													<button ng-disabled="item.id_tipo_conta==5" type="button" ng-click="delete(item,'cliente')" ng-if="item.flg_tipo_lancamento == 'D'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
 														<i class="fa fa-trash-o"></i>
 													</button>
-													<button type="button" ng-click="delete(item,'fornecedor')" ng-if="item.flg_tipo_lancamento == 'C'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
+													<button ng-disabled="item.id_tipo_conta==5" type="button" ng-click="delete(item,'fornecedor')" ng-if="item.flg_tipo_lancamento == 'C'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
 														<i class="fa fa-trash-o"></i>
 													</button>
 													<button type="button" ng-click="printPagamentos(item)" tooltip="Imprimir" data-toggle="tooltip" class="btn btn-xs">
@@ -1011,17 +1017,17 @@
 
 		<!-- /Modal fornecedor-->
 		<div class="modal fade" id="list_fornecedores" style="display:none">
-  			<div class="modal-dialog">
+  			<div class="modal-dialog modal-lg">
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Fornecedores para o produto <span style="color:rgba(41, 145, 179, 1)">{{ nome_produto_form }}</span></h4>
+						<h4>Fornecedores</h4>
       				</div>
 				    <div class="modal-body">
 				    	<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.fornecedores" type="text" class="form-control input-sm">
+						            <input ng-enter="loadFornecedor(0,10)" ng-model="busca.fornecedores" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
 						            	<button ng-click="loadFornecedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
@@ -1034,15 +1040,22 @@
 				   		<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead ng-show="(fornecedores.length != 0)">
 								<tr>
-									<th colspan="2">Nome</th>
+									<th>Nome</th>
+									<th>Nome Fant.</th>
+									<th>CNPJ</th>
+									<th>CPF</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-show="(fornecedores.length == 0)">
-									<td colspan="2">Não a fornecedores relacionados para esté produto</td>
+									<td colspan="5">Nenhum fornecedor encontrado</td>
 								</tr>
 								<tr ng-repeat="item in fornecedores">
 									<td>{{ item.nome_fornecedor }}</td>
+									<td>{{ item.nme_fantasia }}</td>
+									<td>{{ item.num_cnpj | cnpjFormat }}</td>
+									<td>{{ item.num_cpf | cpfFormat }}</td>
 									<td width="80">
 										<button ng-click="addFornecedor(item)" class="btn btn-success btn-xs" type="button">
 												<i class="fa fa-check-square-o"></i> Selecionar
@@ -1409,21 +1422,29 @@
 		  			<div class="modal-dialog error modal-sm">
 		    			<div class="modal-content">
 						    <div class="modal-body">
-							<div class="row">
-								<div class="col-lg-12" style="padding-left: 25px;margin-top: 7px;}">
-									
-
-								<div class="form-group">
-									<label class="control-label">Recebido em:</label>
-									<div class="input-group">
-										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dta_change_pagamento" class="datepicker form-control text-center">
-										<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
+								<div class="row">
+									<div class="col-lg-12">	
+										<div class="form-group">
+											<label class="control-label">Recebido em:</label>
+											<div class="input-group">
+												<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dta_change_pagamento" class="datepicker form-control text-center">
+												<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
+											</div>
+										</div>	
 									</div>
-								</div>
-							
-									
-								</div>
-						    	</div>
+							    </div>
+							    <div class="row">
+							    	<div class="col-sm-12">
+										<div class="form-group" id="id_conta_bancaria">
+											<label class="control-label">Conta</label>
+											<select chosen
+											    option="plano_contas"
+											    ng-model="pagamento_edit.id_conta_bancaria"
+											    ng-options="conta.id as conta.dsc_conta_bancaria for conta in contas">
+											</select>
+										</div>
+									</div>
+							    </div>
 						    </div>
 						<div class="modal-footer" style="   margin-top: 0px;">
 						    	<button type="button" data-loading-text=" Aguarde..." ng-click="updateStatusLancamento(pagamento_edit)" id="btn-aplicar-reforco"
