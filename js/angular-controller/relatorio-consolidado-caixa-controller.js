@@ -66,7 +66,7 @@ app.controller('RelatorioConsolidadoCaixa', function($scope, $http, $window, Use
 
 		ng.loadItens(date_movimentacao);
 
-		$(".modal").modal('show');
+		$("#modal-aguarde").modal('show');
 	}
 
 	ng.loadItens = function(dtaComparacao) {
@@ -125,7 +125,7 @@ app.controller('RelatorioConsolidadoCaixa', function($scope, $http, $window, Use
 
 				ng.formas_pagamento = formas_pagamento;
 
-				$(".modal").modal('hide');
+				$("#modal-aguarde").modal('hide');
 			})
 			.error(function(data, status, headers, config) {
 				console.log(data);

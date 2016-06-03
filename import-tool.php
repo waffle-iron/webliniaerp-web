@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="css/endless-skin.css">
 	<link rel="stylesheet" href="css/custom.css">
 	<style type="text/css">
-		.container { max-width: 1200px; margin: 0 auto; }
+		.container { max-width: 2100px; margin: 0 auto; }
 	</style>
 </head>
 <body>
@@ -42,7 +42,7 @@
 				<?php
 
 				$lines = array();
-				$pointer = fopen("cafe.csv", "r");
+				$pointer = fopen("clientes-25.csv", "r");
 
 				?>
 				<table id="produtos" class="table table-hover table-condesed">
@@ -62,6 +62,7 @@
 										$fields = split(";", $line);
 
 										foreach ($fields as $key => $field) {
+											$field = utf8_encode($field);
 											$field = trim($field);
 											$field = str_replace(".", "", $field);
 											$field = str_replace("$", "s", $field);
@@ -178,10 +179,10 @@
 			$("button#exportToSQL").on("click", function() {
 				var data = {
 					fields: [],
-					input_filename: "cafe.csv",
+					input_filename: "clientes-25.csv",
 					output_format: "sql",
-					output_filename: "cafe.sql",
-					table_name: "tmp_produtos_novo"
+					output_filename: "clientes-25.sql",
+					table_name: "tmp_clientes_narguileste"
 				};
 				$.each($("select"), function(i, field){
 					data.fields.push({

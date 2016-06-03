@@ -269,7 +269,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-12">
+							<div class="col-sm-12 table-responsive">
 								<div class="alert alert-sistema" id="alert-list-vendas" style="display:none"></div>
 								<table class="table table-condensed table-bordered table-striped table-hover">
 										<thead>
@@ -362,7 +362,7 @@
       				</div>
 				    <div class="modal-body">
 				   		<div class="row" >
-				   			<div class="col-sm-12">
+				   			<div class="col-sm-12 table-responsive">
 				   				<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(clientes.length != 0)">
 										<tr>

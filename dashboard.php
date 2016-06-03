@@ -663,7 +663,7 @@
 							<div class="panel-heading">
 								<i class="fa fa-sitemap fa-lg"></i> Estoque p/ Depósito
 							</div>
-							<div class="panel-body">
+							<div class="panel-body table-responsive">
 								<table class="table table-striped table-hover table-condensed table-bordered">
 									<thead>
 										<tr>

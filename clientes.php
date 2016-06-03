@@ -856,7 +856,7 @@
 						<br>
 
 						<div class="row">
-							<div class="col-sm-12">
+							<div class="col-sm-12 table-responsive">
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<tr ng-if="clientes != false && (clientes.length <= 0 || clientes == null)">
 										<th class="text-center" colspan="10" style="text-align:center">

@@ -388,7 +388,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 20 : limit;
 
-		var query_string = "?entrada->id_pedido_fornecedor[exp]=IS NULL&"+$.param({id_fornecedor:ng.nota.id_fornecedor});
+		var query_string = "?entrada->id_pedido_fornecedor[exp]=IS NULL&"+$.param({'frn->id':ng.nota.id_fornecedor});
 		if(ng.busca.pedidos != ""){
 			query_string += "&"+$.param({'pedido->id':ng.busca.pedidos});
 		}
@@ -451,14 +451,14 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	}
 
 	ng.atualizaQtdValidadeItens = function() {
-		/*var qtdTotal = 0;
+		var qtdTotal = 0;
 
 		$.each(ng.produto.validades, function(i, item) {
 			qtdTotal += parseInt(item.qtd,10);
 		});
 
 		ng.produto.qtd = qtdTotal;
-		ng.atualizaValores();*/
+		ng.atualizaValores();
 	}
 
 	ng.deleteValidadeItem = function(index) {
@@ -484,6 +484,8 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 						if(objNF == undefined)
 							ng.entradaEstoque.push(item);
 					}
+					else
+						ng.entradaEstoque.push(item);
 				});
 
 				ng.atualizaValores();
