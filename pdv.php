@@ -652,7 +652,7 @@
 					    		<div class="row">
 					    			<div class="col-sm-12" id="col-sm-auto-complete-cliente">
 										<div class="form-group">
-											<label class="control-label"><h4>Cliente <span><button style="cursor:auto;height: 18px;padding-top: 0;" class="btn btn-xs btn-success" type="button" ng-if="isNumeric(cliente.id) && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
+											<label class="control-label"><h4>Cliente <span><button style="cursor:auto;height: 18px;padding-top: 0;" class="btn btn-xs btn-success" type="button" ng-if="isNumeric(cliente.id) && esconder_cliente">{{ getIdentificadorCliente() }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 											<div class="input-group">
 												<input onKeyPress="return SomenteNumeroLetras(event);" id="input_auto_complete_cliente" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event,false)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
 												<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
@@ -765,7 +765,7 @@
 									<div class="form-group">
 										<label class="control-label"><h4>Cliente</h4></label>
 										<div class="input-group">
-											<input ng-click="selCliente(0,10)"    type="text" class="form-control" ng-model="cliente.nome" readonly="readonly" style="cursor: pointer;" />
+											<input ng-click="selCliente(0,10)"    type="text" class="form-control" value="{{ getIdentificadorCliente() }}" readonly="readonly" style="cursor: pointer;" />
 											<span class="input-group-btn">
 												<button ng-click="selCliente(0,10)" type="button"  class="btn btn-info"><i class="fa fa-users"></i></button>
 											</span>
@@ -834,7 +834,7 @@
 										<div class="col-sm-10" id="col-sm-auto-complete-cliente">
 											<div class="form-group">
 												<label class="control-label"><h4>Cliente <span> <button  style="cursor:auto;height: 18px;padding-top: 0;
-" class="btn btn-xs btn-success" type="button" ng-if="isNumeric(cliente.id) && esconder_cliente">{{ cliente.nome }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
+" class="btn btn-xs btn-success" type="button" ng-if="isNumeric(cliente.id) && esconder_cliente">{{ getIdentificadorCliente() }} <i style="cursor:pointer;" ng-click="removeCliente()" class="fa fa-times fa-lg fa-danger"></i></button></h4></label>
 												<div class="input-group">
 													<input id="input_auto_complete_cliente" onKeyPress="return SomenteNumeroLetras(event);" ng-focus="outoCompleteCliente(busca.cliente_outo_complete,$event)"  ng-keyUp="outoCompleteCliente(busca.cliente_outo_complete)" type="text" class="form-control" ng-model="busca.cliente_outo_complete"/>
 													<div class="content-outo-complete-cliente-pdv" ng-show="clientes_auto_complete.length > 0 && clientes_auto_complete_visible">
