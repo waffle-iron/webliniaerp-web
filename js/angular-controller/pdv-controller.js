@@ -2378,6 +2378,16 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		});
 	}
 
+	ng.getIdentificadorCliente = function(){
+		if(empty(ng.cliente.nome)){
+			if(ng.cliente.tipo_cadastro == 'pf')
+				return 'CPF: '+ng.cliente.cpf;
+			else if(ng.cliente.tipo_cadastro == 'pj')
+				return 'CNPJ: '+ng.cliente.cnpj;
+		}else
+			return ng.cliente.nome;
+	}
+
 	ng.salvarCliente = function(){
 		$(".has-error").removeClass('has-error');
 		ng.new_cliente.empreendimentos = [{id:ng.userLogged.id_empreendimento}];
@@ -2386,12 +2396,15 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		btn.button('loading');
 		ng.new_cliente.id_perfil = 6 ;
 		var new_cliente = angular.copy(ng.new_cliente);
-		new_cliente.dta_nacimento = moment(new_cliente.dta_nacimento,'DD-MM-YYYY').format('YYYY-MM-DD');
+		if(!empty(new_cliente.dta_nacimento))
+			new_cliente.dta_nacimento = moment(new_cliente.dta_nacimento,'DD-MM-YYYY').format('YYYY-MM-DD');
 		aj.post(baseUrlApi()+"cliente/cadastro/rapido",new_cliente)
 		.success(function(data, status, headers, config) {
+			ng.cliente = data.dados;
+			ng.cancelarModal('modal_cadastro_rapido_cliente');
 			btn.button('reset');
 			ng.new_cliente          = {tipo_cadastro:'pf'} ;
-			ng.mensagens('alert-success','<strong>Cliente cadastrado com sucesso</strong>','.alert-cadastro-rapido');
+			//ng.mensagens('alert-success','<strong>Cliente cadastrado com sucesso</strong>','.alert-cadastro-rapido');
 		})
 		.error(function(data, status, headers, config) {
 			btn.button('reset');
