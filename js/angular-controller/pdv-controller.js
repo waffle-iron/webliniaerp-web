@@ -104,7 +104,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}else{
 			ng.finalizarOrcamento = false ;
 			alert('O ID do orçamento é invalido');
-			window.location = "pdv.php";
+			//window.location = "pdv.php";
 		}
 	}
 
@@ -131,7 +131,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		})
 		.error(function(data, status, headers, config) {
 			alert('O ID do orçamento é invalido');
-			window.location = "pdv.php";
+			//window.location = "pdv.php";
 		});
 	}
 
@@ -501,13 +501,24 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}
 	}
 
+	function existsFormaPag(id_forma_pagamento){
+		var r = false ;
+		$.each(ng.recebidos,function(i,x){
+			if(x.id_forma_pagamento == id_forma_pagamento){
+				r = true ;
+				return ;
+			}
+		});
+		return r ;
+	}
+
 	ng.salvar = function(){
 		if(ng.finalizarOrcamento) ng.id_venda_ignore = params.id_orcamento ;
 		$("#input_auto_complete_cliente").parent().tooltip('destroy');
 		$("#input_auto_complete_cliente").parents('.form-group').removeClass("has-error");
 		ng.cod_nota_fiscal_reenviar_sat = null ;
 		if(!$.isNumeric(ng.cliente.id) && ng.modo_venda == 'est' && !ng.orcamento ){
-			$dialogs.notify('Atenção!','<strong>Para realizar uma veda no modo estoque é necessário selecionar um cliente</strong>');
+			$dialogs.notify('Atenção!','<strong>Para realizar uma venda no modo estoque é necessário selecionar um cliente</strong>');
 			return;
 		}else if(ng.pagamento_fulso && !$.isNumeric(ng.cliente.id) && empty(ng.busca.cliente_outo_complete)){
 			$dialogs.notify('Atenção!','<strong>Para realizar uma pagamento é necessário selecionar um cliente</strong>');
@@ -529,6 +540,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		 	}else{
 		 		ng.newCliente = { tipo_cadastro : 'pj', cnpj: ng.busca.cliente_outo_complete }
 		 	}
+		}else if(existsFormaPag(9) && !$.isNumeric(ng.cliente.id)){
+			$dialogs.notify('Atenção!','<strong>Para realizar um pagamento "Promessa de Pagamneto" é necessário informar um cliente</strong>');
+			return;
 		}
 
 		if(ng.orcamento){
