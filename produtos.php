@@ -330,60 +330,62 @@
 											</div>
 										</div>
 										<div ng-show="!(userLogged.id_perfil == 8)" class="tab-pane fade" id="preco">
-											<table class="table table-bordered table-condensed table-striped table-hover">
-												<thead>
-													<tr>
-														<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
-														<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
-														<th class="text-center" colspan="2">Vlr. Atacado</th>
-														<th class="text-center" colspan="2">Vlr. Intermediário</th>
-														<th class="text-center" colspan="2">Vlr. Varejo</th>
-													</tr>
-													<tr>
-														<td class="text-center">%</td>
-														<td class="text-center">R$</td>
-														<td class="text-center">%</td>
-														<td class="text-center">R$</td>
-														<td class="text-center">%</td>
-														<td class="text-center">R$</td>
-													</tr>
-												</thead>
-												<tbody ng-if="produto.precos.length == 0">
-													<tr>
-														<td colspan="9" class="text-center">Nenhum empreendimento vinculado ao produto</td>
-													</tr>
-												</tbody>
-												<tbody ng-repeat="preco in produto.precos">
-													<tr>
-														<td>
-															#{{preco.id_empreendimento}} - {{ preco.nome_empreendimento }}
-														</td>
-														<td>
-															<input ng-disabled="produto.flg_produto_composto == 1" ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
-														</td>
-														<td>
-															<input ng-model="preco.perc_venda_atacado" ng-keyup="calculaMargens('atacado','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-														</td>
-														<td>
-															<input ng-model="preco.valor_venda_atacado" ng-keyup="calculaMargens('atacado','valor',preco)" 
-															 ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-														</td>
+											<div class="table-responsive">
+												<table class="table table-bordered table-condensed table-striped table-hover">
+													<thead>
+														<tr>
+															<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
+															<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
+															<th class="text-center" colspan="2">Vlr. Atacado</th>
+															<th class="text-center" colspan="2">Vlr. Intermediário</th>
+															<th class="text-center" colspan="2">Vlr. Varejo</th>
+														</tr>
+														<tr>
+															<td class="text-center">%</td>
+															<td class="text-center">R$</td>
+															<td class="text-center">%</td>
+															<td class="text-center">R$</td>
+															<td class="text-center">%</td>
+															<td class="text-center">R$</td>
+														</tr>
+													</thead>
+													<tbody ng-if="produto.precos.length == 0">
+														<tr>
+															<td colspan="9" class="text-center">Nenhum empreendimento vinculado ao produto</td>
+														</tr>
+													</tbody>
+													<tbody ng-repeat="preco in produto.precos">
+														<tr>
+															<td>
+																#{{preco.id_empreendimento}} - {{ preco.nome_empreendimento }}
+															</td>
+															<td>
+																<input ng-disabled="flg_produto_composto == 1" ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
+															</td>
+															<td>
+																<input ng-model="preco.perc_venda_atacado" ng-keyup="calculaMargens('atacado','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.valor_venda_atacado" ng-keyup="calculaMargens('atacado','valor',preco)" 
+																 ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
 
-														<td>
-															<input ng-model="preco.perc_venda_intermediario" ng-keyup="calculaMargens('intermediario','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-														</td>
-														<td>
-															<input ng-model="preco.valor_venda_intermediario" ng-keyup="calculaMargens('intermediario','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-														</td>
-														<td>
-															<input ng-model="preco.perc_venda_varejo" ng-keyup="calculaMargens('varejo','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-														</td>
-														<td>
-															<input ng-model="preco.valor_venda_varejo" ng-keyup="calculaMargens('varejo','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-														</td>
-													</tr>
-												</tbody>
-											</table>
+															<td>
+																<input ng-model="preco.perc_venda_intermediario" ng-keyup="calculaMargens('intermediario','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.valor_venda_intermediario" ng-keyup="calculaMargens('intermediario','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.perc_venda_varejo" ng-keyup="calculaMargens('varejo','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.valor_venda_varejo" ng-keyup="calculaMargens('varejo','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
 											<div class="row">
 												<div class="col-sm-12">
 													<div class="pull-right">
@@ -781,7 +783,7 @@
 						<br>
 
 						<div class="row">
-							<div class="col-sm-12">
+							<div class="col-sm-12 table-responsive">
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead>
 										<tr>

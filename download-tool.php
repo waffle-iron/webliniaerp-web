@@ -18,6 +18,7 @@ if(isset($_GET) && !empty($_GET)) {
 	$str_sql .= ");\n\n";
 	
 	fwrite($output_filename, $str_sql);
+	// echo $str_sql . "<br/>";
 
 	$count = -1;
 	while(!feof($input_file)) {
@@ -37,20 +38,27 @@ if(isset($_GET) && !empty($_GET)) {
 			$str_sql .=" ) VALUES ( ";
 
 			$values = split(";", $line);
+
 			foreach ($values as $key => $value) {
 				$value = trim($value);
-				switch ($fields[$key]['field_type']) {
-					case 'VARCHAR(255)':
-						$value = "'". (string)$value ."'";
-						break;
-					case 'INT':
-						$value = (int)str_replace(array("R$ ", ",", "."), "", $value);
-						break;
-					case 'DOUBLE':
-						$value = str_replace("R$ ", "", $value);
-						$value = (double)str_replace(",", ".", $value);
-						$value = number_format($value, 2);
-						break;
+				$value = str_replace("'", "", $value);
+				if(isset($fields[$key])) {
+					switch ($fields[$key]['field_type']) {
+						case 'VARCHAR(255)':
+							$new_value = "'";
+							$new_value .= $value;
+							$new_value .= "'";
+							$value = $new_value;
+							break;
+						case 'INT':
+							$value = (int)str_replace(array("R$ ", ",", "."), "", $value);
+							break;
+						case 'DOUBLE':
+							$value = str_replace("R$ ", "", $value);
+							$value = (double)str_replace(",", ".", $value);
+							$value = number_format($value, 2);
+							break;
+					}
 				}
 				
 				$str_sql .= $value;
@@ -61,6 +69,7 @@ if(isset($_GET) && !empty($_GET)) {
 			$str_sql .= " );\n";
 			
 			fwrite($output_filename, $str_sql);
+			// echo $str_sql . "<br/>";
 		}
 		else
 			continue;
@@ -68,7 +77,7 @@ if(isset($_GET) && !empty($_GET)) {
 
 	fclose($input_file);
 	fclose($output_filename);
-
+	die;
 	header('Content-Type: application/octet-stream');
 	header("Content-Transfer-Encoding: Binary"); 
 	header("Content-disposition: attachment; filename=\"" . basename($_GET["output_filename"]) . "\"");
