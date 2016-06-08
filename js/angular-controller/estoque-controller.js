@@ -387,7 +387,6 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	ng.loadPedidos = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 20 : limit;
-
 		var query_string = "?entrada->id_pedido_fornecedor[exp]=IS NULL&"+$.param({'frn->id':ng.nota.id_fornecedor});
 		if(ng.busca.pedidos != ""){
 			query_string += "&"+$.param({'pedido->id':ng.busca.pedidos});
@@ -483,8 +482,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 						var objNF = _.findWhere(ng.entradaEstoque, {id_produto: parseInt(item.id_produto, 10)});
 						if(objNF == undefined)
 							ng.entradaEstoque.push(item);
-					}
-					else
+					}else
 						ng.entradaEstoque.push(item);
 				});
 
