@@ -1,5 +1,18 @@
 <?php
 
+function sanitizeString($str) {
+	$str = preg_replace('/[áàãâä]/ui', 'a', $str);
+	$str = preg_replace('/[éèêë]/ui', 'e', $str);
+	$str = preg_replace('/[íìîï]/ui', 'i', $str);
+	$str = preg_replace('/[óòõôö]/ui', 'o', $str);
+	$str = preg_replace('/[úùûü]/ui', 'u', $str);
+	$str = preg_replace('/[ç]/ui', 'c', $str);
+	// $str = preg_replace('/[,(),;:|!"#$%&/=?~^><ªº-]/', '_', $str);
+	$str = preg_replace('/[^a-z0-9]/i', '_', $str);
+	$str = preg_replace('/_+/', '_', $str); // ideia do Bacco :)
+	return $str;
+}
+
 if(isset($_GET) && !empty($_GET)) {
 	$fields 			= $_GET["fields"];
 	$input_file 		= fopen($_GET["input_filename"], "r");
@@ -54,7 +67,7 @@ if(isset($_GET) && !empty($_GET)) {
 							$value = (int)str_replace(array("R$ ", ",", "."), "", $value);
 							break;
 						case 'DOUBLE':
-							$value = str_replace("R$ ", "", $value);
+							$value = str_replace(array("R$ ","R$"), "", $value);
 							$value = (double)str_replace(",", ".", $value);
 							$value = number_format($value, 2);
 							break;
@@ -77,7 +90,7 @@ if(isset($_GET) && !empty($_GET)) {
 
 	fclose($input_file);
 	fclose($output_filename);
-	die;
+	
 	header('Content-Type: application/octet-stream');
 	header("Content-Transfer-Encoding: Binary"); 
 	header("Content-disposition: attachment; filename=\"" . basename($_GET["output_filename"]) . "\"");

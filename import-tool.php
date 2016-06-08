@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<?php
+
+function sanitizeString($str) {
+	$str = preg_replace('/[áàãâä]/ui', 'a', $str);
+	$str = preg_replace('/[éèêë]/ui', 'e', $str);
+	$str = preg_replace('/[íìîï]/ui', 'i', $str);
+	$str = preg_replace('/[óòõôö]/ui', 'o', $str);
+	$str = preg_replace('/[úùûü]/ui', 'u', $str);
+	$str = preg_replace('/[ç]/ui', 'c', $str);
+	// $str = preg_replace('/[,(),;:|!"#$%&/=?~^><ªº-]/', '_', $str);
+	$str = preg_replace('/[^a-z0-9]/i', '_', $str);
+	$str = preg_replace('/_+/', '_', $str); // ideia do Bacco :)
+	return $str;
+}
+	
+?>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -37,12 +53,11 @@
 		</div>
 
 		<div class="panel Textoringel-default">
-			<div class="panInteirol-body table-responsive">
-			<div class="Númerol-body table-responsive">
+			<div class="panel-body table-responsive">
 				<?php
 
 				$lines = array();
-				$pointer = fopen("clientes-25.csv", "r");
+				$pointer = fopen("produtos-ldm-comex.csv", "r");
 
 				?>
 				<table id="produtos" class="table table-hover table-condesed">
@@ -64,6 +79,7 @@
 										foreach ($fields as $key => $field) {
 											$field = utf8_encode($field);
 											$field = trim($field);
+											$field = sanitizeString($field);
 											$field = str_replace(".", "", $field);
 											$field = str_replace("$", "s", $field);
 											$field = str_replace(array(" ", "-"), "_", $field);
@@ -134,7 +150,7 @@
 												$value = (int)str_replace(array("R$ ", ",", "."), "", $value);
 												break;
 											case 'DOUBLE':
-												$value = str_replace("R$ ", "", $value);
+												$value = str_replace(array("R$ ","R$"), "", $value);
 												$value = (double)str_replace(",", ".", $value);
 												$value = number_format($value, 2);
 												break;
@@ -179,10 +195,10 @@
 			$("button#exportToSQL").on("click", function() {
 				var data = {
 					fields: [],
-					input_filename: "clientes-25.csv",
+					input_filename: "produtos-ldm-comex.csv",
 					output_format: "sql",
-					output_filename: "clientes-25.sql",
-					table_name: "tmp_clientes_narguileste"
+					output_filename: "produtos-ldm-comex.sql",
+					table_name: "tmp_produtos_ldm"
 				};
 				$.each($("select"), function(i, field){
 					data.fields.push({
