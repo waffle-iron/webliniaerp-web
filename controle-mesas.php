@@ -298,7 +298,7 @@
 							<div ng-repeat="(index, mesa) in mesas" class="col-xs-6 col-sm-3 col-md-3 col-lg-2">
 								<div class="panel panel-{{ (mesa.flg_livre) ? 'success' : 'warning' }} mesa">
 									<div class="panel-heading text-center">
-										<h3 class="panel-title">MESA {{ (index+1) }}</h3>
+										<h3 class="panel-title">{{ mesa.dsc_mesa }}</h3>
 									</div>
 									<div class="panel-body text-center">
 										<span class="unlocked text-bold {{ (!mesa.flg_livre) ? 'hide' : '' }}">LIVRE</span>
@@ -309,7 +309,7 @@
 										<span class="qtd_comandas">{{ mesa.qtd_comandas_abertas }} Comanda(s)</span>
 									</div>
 									<div class="panel-footer text-center">
-										<button ng-if="mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-success" ng-click="changeTela('detMesa')">
+										<button ng-if="mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-success" ng-click="abrirMesa(mesa)">
 											ABRIR MESA
 										</button>
 										<button ng-if="!mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-warning" ng-click="changeTela('detMesa')">
@@ -320,18 +320,18 @@
 							</div>
 						</div>
 					</div>
-					<!-- FIM  EXIBIR APENAS NA VISUALIZAÇÃO DE TODAS AS MESAS -->
+					<!-- FIM - EXIBIR APENAS NA VISUALIZAÇÃO DE TODAS AS MESAS -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A MESA SELECIONADA -->
 					<div ng-show="layout.detMesa">
 						<div class="panel-heading ">
 							<h3 class="panel-title">
-								MESA 1
+								{{ mesaSelecioada.dsc_mesa }}
 								<div class="pull-right">
-									<button ng-click="changeTela(telaAnterior)" type="button" class="btn btn-xs btn-success">
+									<button ng-click="changeTela('mesas')" type="button" class="btn btn-xs btn-primary">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
 									
-									<button type="button" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
+									<button ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
 								</div>
 							</h3>
 						</div>
@@ -391,6 +391,8 @@
 							<h3 class="panel-title clearfix">
 								Informe o Cliente
 								<div class="pull-right hidden-xs">
+									<button ng-click="changeTela('detMesa')" type="button" class="btn btn-xs btn-primary">
+									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
 									<button type="button" class="btn btn-xs btn-success">
 										<i class="fa fa-plus-circle"></i>
 										Cadastrar Novo
@@ -406,7 +408,7 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-lg-12">
-									<input type="text" class="form-control" placeholder="Pesquisar">
+									<input ng-keyup="autoCompleteCliente(busca.cliente)" ng-model="busca.cliente" type="text" class="form-control" placeholder="Pesquisar">
 								</div>
 							</div>
 
@@ -414,39 +416,10 @@
 								<div class="col-lg-12">
 									<table class="table">
 										<tbody>
-											<tr>
-												<td class="text-middle">FILIPE MENDONCA COELHO</td>
-												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
-												<td class="text-middle text-center" width="50">
-													<button type="button" class="btn btn-sm btn-info">
-														<i class="fa fa-check-square-o"></i>
-														<span class="hidden-xs">Selecionar</span>
-													</button>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-middle">JHEIZER WANDEL REI</td>
-												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
-												<td class="text-middle text-center" width="50">
-													<button type="button" class="btn btn-sm btn-info">
-														<i class="fa fa-check-square-o"></i>
-														<span class="hidden-xs">Selecionar</span>
-													</button>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-middle">MARCIO TRISTAO DE OLIVEIRA</td>
-												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
-												<td class="text-middle text-center" width="50">
-													<button type="button" class="btn btn-sm btn-info">
-														<i class="fa fa-check-square-o"></i>
-														<span class="hidden-xs">Selecionar</span>
-													</button>
-												</td>
-											</tr>
-											<tr>
-												<td class="text-middle">RAFAEL DE OLIVEIRA BISPO</td>
-												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
+											<tr ng-repeat="item in clientes">
+												<td class="text-middle">{{ item.nome | uppercase }}</td>
+												<td ng-if="item.tipo_cadastro=='pf'" class="text-middle text-center hidden-xs" width="120">{{ item.cpf | cpfFormat }}</td>
+												<td ng-if="item.tipo_cadastro=='pj'"  class="text-middle text-center hidden-xs" width="120">{{ item.cpf | cnpjFormat }}</td>
 												<td class="text-middle text-center" width="50">
 													<button type="button" class="btn btn-sm btn-info">
 														<i class="fa fa-check-square-o"></i>
@@ -470,7 +443,7 @@
 								Não Informar
 							</button>
 						</div>
-					<div>
+					</div>
 					<!-- FIM - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE SELECIONAR O CLIENTE -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE CADASTRAR O CLIENTE -->
@@ -638,7 +611,7 @@
 								</div>
 							</div>
 						</div>
-					</div>>
+					</div>
 					<!-- FIM - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE DETALHES DO PRODUTO -->
 				</div>
 			</div>
