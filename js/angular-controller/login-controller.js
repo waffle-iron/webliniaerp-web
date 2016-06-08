@@ -107,7 +107,7 @@ app.controller('LoginController', function($scope, $http, $window){
 				}
 				else if(id_perfil_user == 7 || id_perfil_user == 6 || id_perfil_user == 5){
 					window.location.href = item.nickname;
-				}else if(id_perfil_user == 8){
+				}else if(id_perfil_user == 8 || id_perfil_user == 4){
 					window.location.href = "pdv.php";
 				}else if(id_perfil_user == 11){
 					window.location.href = "controle-atendimento.php";

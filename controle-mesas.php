@@ -293,7 +293,7 @@
 
 				<div class="panel panel-default"> <!-- SE ESTIVER NA VISUALIZAÇÃO DA MESA OU COMANDA TROCAR POR 'panel-warning' --> 
 					<!-- INICIO - EXIBIR APENAS NA VISUALIZAÇÃO DE TODAS AS MESAS -->
-					<div class="panel-body">
+					<div class="panel-body" ng-show="layout.mesas">
 						<div class="row">
 							<div ng-repeat="(index, mesa) in mesas" class="col-xs-6 col-sm-3 col-md-3 col-lg-2">
 								<div class="panel panel-{{ (mesa.flg_livre) ? 'success' : 'warning' }} mesa">
@@ -309,8 +309,11 @@
 										<span class="qtd_comandas">{{ mesa.qtd_comandas_abertas }} Comanda(s)</span>
 									</div>
 									<div class="panel-footer text-center">
-										<button type="button" class="btn btn-xs btn-block btn-{{ (mesa.flg_livre) ? 'success' : 'warning' }}">
-											{{ (mesa.flg_livre) ? 'ABRIR MESA' : 'VISUALIZAR' }}
+										<button ng-if="mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-success" ng-click="changeTela('detMesa')">
+											ABRIR MESA
+										</button>
+										<button ng-if="!mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-warning" ng-click="changeTela('detMesa')">
+											VISUALIZAR
 										</button>
 									</div>
 								</div>
@@ -320,309 +323,322 @@
 					<!-- FIM - EXIBIR APENAS NA VISUALIZAÇÃO DE TODAS AS MESAS -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A MESA SELECIONADA -->
-					<div class="panel-heading hide">
-						<h3 class="panel-title">
-							MESA 1
-							<div class="pull-right">
-								<button type="button" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
-							</div>
-						</h3>
-					</div>
+					<div ng-show="layout.detMesa">
+						<div class="panel-heading ">
+							<h3 class="panel-title">
+								MESA 1
+								<div class="pull-right">
+									<button ng-click="changeTela(telaAnterior)" type="button" class="btn btn-xs btn-success">
+									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
+									
+									<button type="button" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
+								</div>
+							</h3>
+						</div>
 
-					<div class="panel-body hide">
-						<table class="table table-bordered table-hover mesa">
-							<caption class="text-left text-bold mesa-caption">Comandas da Mesa</caption>
-							<thead>
-								<th>Cliente</th>
-								<th class="text-center">Itens</th>
-								<th class="text-center">Subtotal</th>
-							</thead>
-							<tbody>
-								<tr>
-									<td>FILIPE COELHO</td>
-									<td class="text-center">006</td>
-									<td class="text-right">R$ 387,93</td>
-								</tr>
-								<tr>
-									<td>JHEIZER WANDEL</td>
-									<td class="text-center">002</td>
-									<td class="text-right">R$ 100,00</td>
-								</tr>
-								<tr>
-									<td>MARCIO TRISTAO</td>
-									<td class="text-center">001</td>
-									<td class="text-right">R$ 37,53</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+						<div class="panel-body ">
+							<table class="table table-bordered table-hover mesa">
+								<caption class="text-left text-bold mesa-caption">Comandas da Mesa</caption>
+								<thead>
+									<th>Cliente</th>
+									<th class="text-center">Itens</th>
+									<th class="text-center">Subtotal</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td>FILIPE COELHO</td>
+										<td class="text-center">006</td>
+										<td class="text-right">R$ 387,93</td>
+									</tr>
+									<tr>
+										<td>JHEIZER WANDEL</td>
+										<td class="text-center">002</td>
+										<td class="text-right">R$ 100,00</td>
+									</tr>
+									<tr>
+										<td>MARCIO TRISTAO</td>
+										<td class="text-center">001</td>
+										<td class="text-right">R$ 37,53</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 
-					<div class="panel-footer total hide">
-						<div class="row">
-							<div class="col-xs-12">
-								<table class="table">
-									<thead>
-										<tr>
-											<td>Total de Comandas</td>
-											<td class="text-right">3</td>
-										</tr>
-										<tr>
-											<td>Total da Mesa</td>
-											<td class="text-right">R$ 248,87</td>
-										</tr>
-									</thead>
-								</table>
+						<div class="panel-footer total ">
+							<div class="row">
+								<div class="col-xs-12">
+									<table class="table">
+										<thead>
+											<tr>
+												<td>Total de Comandas</td>
+												<td class="text-right">3</td>
+											</tr>
+											<tr>
+												<td>Total da Mesa</td>
+												<td class="text-right">R$ 248,87</td>
+											</tr>
+										</thead>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
 					<!-- FIM - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A MESA SELECIONADA -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE SELECIONAR O CLIENTE -->
-					<div class="panel-heading hide">
-						<h3 class="panel-title clearfix">
-							Informe o Cliente
-							<div class="pull-right hidden-xs">
-								<button type="button" class="btn btn-xs btn-success">
-									<i class="fa fa-plus-circle"></i>
-									Cadastrar Novo
-								</button>
-								<button type="button" class="btn btn-xs btn-default">
-									<i class="fa fa-times-circle"></i>
-									Não Informar
-								</button>
-							</div>
-						</h3>
-					</div>
+					<div ng-show="layout.SelCliente">
+						<div class="panel-heading">
+							<h3 class="panel-title clearfix">
+								Informe o Cliente
+								<div class="pull-right hidden-xs">
+									<button type="button" class="btn btn-xs btn-success">
+										<i class="fa fa-plus-circle"></i>
+										Cadastrar Novo
+									</button>
+									<button type="button" class="btn btn-xs btn-default">
+										<i class="fa fa-times-circle"></i>
+										Não Informar
+									</button>
+								</div>
+							</h3>
+						</div>
 
-					<div class="panel-body hide">
-						<div class="row">
-							<div class="col-lg-12">
-								<input type="text" class="form-control" placeholder="Pesquisar">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-lg-12">
+									<input type="text" class="form-control" placeholder="Pesquisar">
+								</div>
+							</div>
+
+							<div class="row client-list">
+								<div class="col-lg-12">
+									<table class="table">
+										<tbody>
+											<tr>
+												<td class="text-middle">FILIPE MENDONCA COELHO</td>
+												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
+												<td class="text-middle text-center" width="50">
+													<button type="button" class="btn btn-sm btn-info">
+														<i class="fa fa-check-square-o"></i>
+														<span class="hidden-xs">Selecionar</span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-middle">JHEIZER WANDEL REI</td>
+												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
+												<td class="text-middle text-center" width="50">
+													<button type="button" class="btn btn-sm btn-info">
+														<i class="fa fa-check-square-o"></i>
+														<span class="hidden-xs">Selecionar</span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-middle">MARCIO TRISTAO DE OLIVEIRA</td>
+												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
+												<td class="text-middle text-center" width="50">
+													<button type="button" class="btn btn-sm btn-info">
+														<i class="fa fa-check-square-o"></i>
+														<span class="hidden-xs">Selecionar</span>
+													</button>
+												</td>
+											</tr>
+											<tr>
+												<td class="text-middle">RAFAEL DE OLIVEIRA BISPO</td>
+												<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
+												<td class="text-middle text-center" width="50">
+													<button type="button" class="btn btn-sm btn-info">
+														<i class="fa fa-check-square-o"></i>
+														<span class="hidden-xs">Selecionar</span>
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 
-						<div class="row client-list">
-							<div class="col-lg-12">
-								<table class="table">
-									<tbody>
-										<tr>
-											<td class="text-middle">FILIPE MENDONCA COELHO</td>
-											<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
-											<td class="text-middle text-center" width="50">
-												<button type="button" class="btn btn-sm btn-info">
-													<i class="fa fa-check-square-o"></i>
-													<span class="hidden-xs">Selecionar</span>
-												</button>
-											</td>
-										</tr>
-										<tr>
-											<td class="text-middle">JHEIZER WANDEL REI</td>
-											<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
-											<td class="text-middle text-center" width="50">
-												<button type="button" class="btn btn-sm btn-info">
-													<i class="fa fa-check-square-o"></i>
-													<span class="hidden-xs">Selecionar</span>
-												</button>
-											</td>
-										</tr>
-										<tr>
-											<td class="text-middle">MARCIO TRISTAO DE OLIVEIRA</td>
-											<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
-											<td class="text-middle text-center" width="50">
-												<button type="button" class="btn btn-sm btn-info">
-													<i class="fa fa-check-square-o"></i>
-													<span class="hidden-xs">Selecionar</span>
-												</button>
-											</td>
-										</tr>
-										<tr>
-											<td class="text-middle">RAFAEL DE OLIVEIRA BISPO</td>
-											<td class="text-middle text-center hidden-xs" width="100">333.333.333.-33</td>
-											<td class="text-middle text-center" width="50">
-												<button type="button" class="btn btn-sm btn-info">
-													<i class="fa fa-check-square-o"></i>
-													<span class="hidden-xs">Selecionar</span>
-												</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+						<div class="panel-footer clearfix hidden-sm hidden-md hidden-lg">
+							<button type="button" class="btn btn-md btn-block btn-success">
+								<i class="fa fa-plus-circle"></i>
+								Cadastrar Novo
+							</button>
+							<button type="button" class="btn btn-md btn-block btn-default">
+								<i class="fa fa-times-circle"></i>
+								Não Informar
+							</button>
 						</div>
-					</div>
-
-					<div class="panel-footer clearfix hidden-sm hidden-md hidden-lg hide">
-						<button type="button" class="btn btn-md btn-block btn-success">
-							<i class="fa fa-plus-circle"></i>
-							Cadastrar Novo
-						</button>
-						<button type="button" class="btn btn-md btn-block btn-default">
-							<i class="fa fa-times-circle"></i>
-							Não Informar
-						</button>
-					</div>
+					<div>
 					<!-- FIM - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE SELECIONAR O CLIENTE -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE CADASTRAR O CLIENTE -->
-					<div class="panel-heading hide">
-						<h3 class="panel-title clearfix">Cadastro de Cliente</h3>
-					</div>
+					<div ng-show="layout.cadCliente">
+						<div class="panel-heading">
+							<h3 class="panel-title clearfix">Cadastro de Cliente</h3>
+						</div>
 
-					<div class="panel-body hide">
-						<div class="row">
-							<div class="col-sm-12 col-md-1 col-lg-1"></div>
-							<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Nome">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-12 col-md-1 col-lg-1"></div>
+								<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="Nome">
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-1 col-lg-1"></div>
+								<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="CPF">
+									</div>
+								</div>
+
+								<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="E-mail">
+									</div>
+								</div>
+
+								<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="Telefone/Celular">
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="row">
-							<div class="col-md-1 col-lg-1"></div>
-							<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="CPF">
-								</div>
-							</div>
-
-							<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="E-mail">
-								</div>
-							</div>
-
-							<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Telefone/Celular">
-								</div>
-							</div>
+						<div class="panel-footer clearfix hidden-sm hidden-md hidden-lg">
+							<button type="button" class="btn btn-md btn-block btn-primary">
+								<i class="fa fa-save"></i>
+								Salvar
+							</button>
 						</div>
-					</div>
 
-					<div class="panel-footer clearfix hidden-sm hidden-md hidden-lg hide">
-						<button type="button" class="btn btn-md btn-block btn-primary">
-							<i class="fa fa-save"></i>
-							Salvar
-						</button>
-					</div>
-
-					<div class="panel-footer clearfix hidden-xs hide">
-						<button type="button" class="btn btn-md btn-primary pull-right">
-							<i class="fa fa-save"></i>
-							Salvar
-						</button>
+						<div class="panel-footer clearfix hidden-xs">
+							<button type="button" class="btn btn-md btn-primary pull-right">
+								<i class="fa fa-save"></i>
+								Salvar
+							</button>
+						</div>
 					</div>
 					<!-- FIM - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE CADASTRAR O CLIENTE -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE ITENS DA COMANDA -->
-					<div class="panel-heading hide">
-						<h3 class="panel-title clearfix">
-							Comanda #42975
-							<div class="pull-right">
-								<button type="button" class="btn btn-xs btn-default">
-									<i class="fa fa-user"></i>
-									<span class="hidden-xs">Informar Cliente</span>
-								</button>
-								<button type="button" class="btn btn-xs btn-info">
-									<i class="fa fa-plus-circle"></i>
-									Adicionar Produto
-								</button>
-							</div>
-						</h3>
-					</div>
-
-					<div class="panel-body hide">
-						<div class="row client-list">
-							<div class="col-lg-12">
-								<table class="table">
-									<caption class="text-bold text-left mesa-caption">Cliente: Filipe Mendonça Coelho</caption>
-
-									<tbody>
-										<tr>
-											<td class="text-middle">PRODUTO ABCDEFGHI</td>
-											<td class="text-middle text-center hidden-xs" width="200">FABRICANTE A</td>
-											<td class="text-middle text-center hidden-xs" width="200">TAMANHO 736</td>
-											<td class="text-middle text-center hidden-xs" width="200">SABOR XYZ</td>
-											<td class="text-middle text-center" width="100">
-												<button type="button" class="btn btn-sm btn-warning">
-													<i class="fa fa-edit"></i>
-													<span class="hidden-xs">Alterar item</span>
-												</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+					<div ng-show="layout.detComanda">
+						<div class="panel-heading">
+							<h3 class="panel-title clearfix">
+								Comanda #42975
+								<div class="pull-right">
+									<button type="button" class="btn btn-xs btn-default">
+										<i class="fa fa-user"></i>
+										<span class="hidden-xs">Informar Cliente</span>
+									</button>
+									<button type="button" class="btn btn-xs btn-info">
+										<i class="fa fa-plus-circle"></i>
+										Adicionar Produto
+									</button>
+								</div>
+							</h3>
 						</div>
-					</div>
 
-					<div class="panel-footer total hide">
-						<div class="row">
-							<div class="col-xs-12">
-								<table class="table">
-									<thead>
-										<tr>
-											<td>Total de Itens</td>
-											<td class="text-right">8</td>
-										</tr>
-										<tr>
-											<td>Total da Comanda</td>
-											<td class="text-right">R$ 124,07</td>
-										</tr>
-									</thead>
-								</table>
+						<div class="panel-body">
+							<div class="row client-list">
+								<div class="col-lg-12">
+									<table class="table">
+										<caption class="text-bold text-left mesa-caption">Cliente: Filipe Mendonça Coelho</caption>
+
+										<tbody>
+											<tr>
+												<td class="text-middle">PRODUTO ABCDEFGHI</td>
+												<td class="text-middle text-center hidden-xs" width="200">FABRICANTE A</td>
+												<td class="text-middle text-center hidden-xs" width="200">TAMANHO 736</td>
+												<td class="text-middle text-center hidden-xs" width="200">SABOR XYZ</td>
+												<td class="text-middle text-center" width="100">
+													<button type="button" class="btn btn-sm btn-warning">
+														<i class="fa fa-edit"></i>
+														<span class="hidden-xs">Alterar item</span>
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 
-						<div class="row">
-							<div class="col-sm-12 col-md-12 col-lg-12 hidden-sm hidden-md hidden-lg"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-								<button type="button" class="btn btn-danger btn-block"><i class="fa fa-dollar"></i> Fechar Comanda</button>
+						<div class="panel-footer total">
+							<div class="row">
+								<div class="col-xs-12">
+									<table class="table">
+										<thead>
+											<tr>
+												<td>Total de Itens</td>
+												<td class="text-right">8</td>
+											</tr>
+											<tr>
+												<td>Total da Comanda</td>
+												<td class="text-right">R$ 124,07</td>
+											</tr>
+										</thead>
+									</table>
+								</div>
 							</div>
-						</div>
 
-						<div class="row">
-							<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-								<button type="button" class="btn btn-danger pull-right"><i class="fa fa-dollar"></i> Fechar Comanda</button>
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-lg-12 hidden-sm hidden-md hidden-lg"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
+									<button type="button" class="btn btn-danger btn-block"><i class="fa fa-dollar"></i> Fechar Comanda</button>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
+									<button type="button" class="btn btn-danger pull-right"><i class="fa fa-dollar"></i> Fechar Comanda</button>
+								</div>
 							</div>
 						</div>
 					</div>
 					<!-- FIM - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE CADASTRAR O CLIENTE -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE DETALHES DO PRODUTO -->
-					<div class="panel-heading hide">
-						<h3 class="panel-title">ESSÊNCIA ADALYA COCO 100G</h3>
-					</div>
+					<div ng-show="layout.detItemComanda">
+						<div class="panel-heading">
+							<h3 class="panel-title">ESSÊNCIA ADALYA COCO 100G</h3>
+						</div>
 
-					<div class="panel-body hide">
-						<fieldset>
-							<legend>Informe a quantidade</legend>
+						<div class="panel-body">
+							<fieldset>
+								<legend>Informe a quantidade</legend>
+
+								<div class="row">
+									<div class="col-lg-12">
+										<input type="number" class="form-control" placeholder="Pesquisar">
+									</div>
+								</div>
+							</fieldset>
+						</div>
+
+						<div class="panel-footer">
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-lg-12 hidden-sm hidden-md hidden-lg"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
+									<button type="button" class="btn btn-primary btn-block"><i class="fa fa-trash-o"></i> Atualizar Item</button>
+									<button type="button" class="btn btn-danger btn-block"><i class="fa fa-trash-o"></i> Excluir Item</button>
+								</div>
+							</div>
 
 							<div class="row">
-								<div class="col-lg-12">
-									<input type="number" class="form-control" placeholder="Pesquisar">
-								</div>
-							</div>
-						</fieldset>
-					</div>
-
-					<div class="panel-footer hide">
-						<div class="row">
-							<div class="col-sm-12 col-md-12 col-lg-12 hidden-sm hidden-md hidden-lg"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-								<button type="button" class="btn btn-primary btn-block"><i class="fa fa-trash-o"></i> Atualizar Item</button>
-								<button type="button" class="btn btn-danger btn-block"><i class="fa fa-trash-o"></i> Excluir Item</button>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-								<div class="pull-right">
-									<button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Excluir Item</button>
-									<button type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i> Atualizar Item</button>
+								<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
+									<div class="pull-right">
+										<button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i> Excluir Item</button>
+										<button type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i> Atualizar Item</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</div>>
 					<!-- FIM - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE DETALHES DO PRODUTO -->
 				</div>
 			</div>

@@ -1,6 +1,16 @@
 app.controller('ControleMesasController', function($scope, $http, $window, UserService) {
 	var ng = $scope,
 		aj = $http;
+	ng.layout = { 
+		mesas:true,
+		detMesa:false,
+		SelCliente:false,
+		cadCliente:false,
+		detComanda:false,
+		detItemComanda:false 
+	} ;
+
+	ng.telaAnterior = null ;
 
 	ng.userLogged = UserService.getUserLogado();
 	$('#sizeToggle').trigger("click");
@@ -52,4 +62,15 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			qtd_comandas_abertas: 4
 		}
 	]
+
+	ng.changeTela = function(tela){
+		if(!empty(tela)){
+			$.each(ng.layout,function(i,x){
+				if(x) ng.telaAnterior = i ;
+				ng.layout[i] = false ;
+			});
+
+			ng.layout[tela] = true ;
+		}
+	}
 });
