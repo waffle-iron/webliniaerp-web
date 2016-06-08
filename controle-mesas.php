@@ -320,7 +320,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- FIM - EXIBIR APENAS NA VISUALIZAÇÃO DE TODAS AS MESAS -->
+					<!-- FIM  EXIBIR APENAS NA VISUALIZAÇÃO DE TODAS AS MESAS -->
 
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A MESA SELECIONADA -->
 					<div ng-show="layout.detMesa">
