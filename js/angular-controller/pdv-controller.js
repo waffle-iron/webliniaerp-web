@@ -983,7 +983,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.cancelar = function(){
-		ng.resetPdv('venda');
+		ng.resetPdv('venda',true);
 	}
 
 	ng.produtos = [] ;
@@ -2746,10 +2746,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						post.dados_emissao.cod_nota_fiscal = ng.cod_nota_fiscal_reenviar_sat ;
 			 			aj.post(baseUrlApi()+"nfe/gravarDadosSat",post)
 						.success(function(data, status, headers, config) {
-							ng.resetPdv('venda');
+							ng.resetPdv('venda',true);
 						})
 						.error(function(data, status, headers, config) {
-							ng.resetPdv('venda');
+							ng.resetPdv('venda',true);
 						});
 					break;
 				case 'satcfe_error':
@@ -3072,7 +3072,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		});
 	}
 
-	ng.resetPdv = function(tela){
+	ng.resetPdv = function(tela,ifOrcamento=false){
+		if(ifOrcamento && !empty(params.id_orcamento)){
+			window.location = 'pdv.php';
+			return ;
+		}
 		$('.modal').modal('hide');
 		//ng.receber_pagamento = false;
 		if(tela == null || tela == 'inicial'){

@@ -1,6 +1,6 @@
 <?php
 	include_once "util/login/restrito.php";
-	restrito(array(8,1));
+	restrito(array(8,1,4));
 ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="HageERP">
