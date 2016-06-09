@@ -435,7 +435,7 @@
 												<label class="control-label">Banco</label>
 													<select chosen
 												    option="bancos"
-												    ng-model="pagamento.id_banco"
+												    ng-model="item.id_banco"
 												    ng-options="banco.id as banco.nome for banco in bancos">
 													</select>
 											</div>
