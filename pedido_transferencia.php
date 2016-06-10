@@ -210,7 +210,7 @@
 						</div>
 						<div class="row" ng-if="!isNumeric(transferencia.id)">
 							<div class="col-sm-5" id="id_empreendimento_transferencia">
-								<label class="control-label">Empreendimento</label>
+								<label class="control-label">Selecione o Empreendimento:</label>
 								<div class="input-group">
 						            <input ng-model="transferencia.nome_empreendimento" ng-disabled="true" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
@@ -311,6 +311,103 @@
 					</div>
 				</div><!-- /panel -->
 
+				<div class="panel panel-default hidden-print" style="margin-top: 15px;">
+					<div class="panel-heading"><i class="fa fa-calendar"></i> Filtros</div>
+
+					<div class="panel-body">
+						<form role="form">
+							<div class="row">
+								<div class="col-lg-2">
+									<div class="form-group">
+										<label class="control-label">Data</label>
+										<div class="input-group">
+											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
+											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-2">
+									<div class="form-group">
+										<label class="control-label">Etapa</label>
+										<select chosen
+									    	option="etapas"
+									    	ng-model="filtro.id_etapa_data"
+									    	ng-options="etapa.id as etapa.nme_etapa for etapa in etapas">
+										</select>
+									</div>
+								</div>
+
+								<div class="col-lg-2">
+									<div class="form-group">
+										<label class="control-label">Status</label>
+										<select chosen
+									    	option="status"
+									    	ng-model="filtro.id_status"
+									    	ng-options="banco.id as banco.nome for banco in status">
+										</select>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="form-group">
+										<label class="control-label">Usuário</label>
+										<div class="input-group">
+											<input ng-click="modalProdutos()" type="text" class="form-control" ng-model="busca.nome_produto" readonly="readonly" style="cursor: pointer;">
+											<span class="input-group-btn">
+												<button ng-click="modalProdutos(0,10)" ng-click="modalProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-2">
+									<div class="form-group">
+										<label class="control-label">Etapa</label>
+										<select chosen
+									    	option="etapas"
+									    	ng-model="filtro.id_etapa_usuario"
+									    	ng-options="etapa.id as etapa.nme_etapa for etapa in etapas">
+										</select>
+									</div>
+								</div>
+
+								<div class="col-lg-4">
+									<div class="form-group">
+										<label class="control-label">Empreendimetno</label>
+										<div class="input-group">
+											<input ng-click="modalProdutos()" type="text" class="form-control" ng-model="busca.nome_produto" readonly="readonly" style="cursor: pointer;">
+											<span class="input-group-btn">
+												<button ng-click="modalProdutos(0,10)" ng-click="modalProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
+											</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-lg-2">
+									<div class="form-group">
+										<label class="control-label">Etapa</label>
+										<select chosen
+									    	option="etapas"
+									    	ng-model="filtro.id_etapa_empreendimento"
+									    	ng-options="etapa.id as etapa.nme_etapa for etapa in etapas | filter : {flg_oculto_empreendimento:false}">
+										</select>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
+							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
+						</div>
+					</div>
+				</div>
+
 				<div class="panel panel-default">
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Pedidos de Transferência Realizados</div>
 
@@ -318,13 +415,15 @@
 						<div class="row">
 							<div class="col-sm-12"><div style="display: none" class="alert alert-transferencia-lista"></div></div>
 						</div>
-						<table class="table table-bordered table-condensed table-striped table-hover">
+						<div class="table-responsive">
+							<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Dta. Pedido</th>
-									<th>Dta. transferência</th>
-									<th>Usuario</th>
+									<th>Data Pedido</th>
+									<th>Data Transferência</th>
+									<th>Data Recebimento</th>
+									<th>Solicitante</th>
 									<th>Empreendimento</th>
 									<th>Status</th>
 									<th width="80" style="text-align: center;">Opções</th>
@@ -345,6 +444,7 @@
 									<td width="80">{{ item.id }}</td>
 									<td>{{ item.dta_pedido | dateFormat : 'dateTime' }}</td>
 									<td>{{ item.dta_transferencia | dateFormat : 'dateTime' }}</td>
+									<td>{{ item.dta_recebido | dateFormat : 'dateTime' }}</td>
 									<td>{{ item.nome_usuario_pedido }}</td>
 									<td>{{ item.nome_empreendimento_transferencia }}</td>
 									<td>{{ item.dsc_status_transferencia_estoque }}</td>
@@ -362,6 +462,7 @@
 								</tr>
 							</tbody>
 						</table>
+						</div>
 					</div>
 					<div class="panel-footer">
 						<div class="row">

@@ -1,4 +1,7 @@
 <div class="pull-right" ng-controller="MasterController">
+	<a class="btn btn-sm" data-toggle="tooltip" title="Frente de Caixa (PDV)" data-placement="bottom" href="pdv.php">
+		<i class="fa fa-desktop"></i>
+	</a>
 	<a class="btn btn-sm" ng-click="openModalMeusEmpreendimentos()" data-toggle="tooltip" title="Trocar de Empreendimento" data-placement="bottom">
 		<i class="fa fa-building-o"></i>
 	</a>
