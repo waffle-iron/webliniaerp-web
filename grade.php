@@ -169,20 +169,20 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-archive"></i> Produtos</li>
+					 <li class="active"><i class="fa fa-th"></i> Vitrine de Produtos</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-archive"></i> Produtos</h3>
+					<h3 class="no-margin"><i class="fa fa-th"></i> Vitrine de Produtos</h3>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
 				<div class="alert alert-sistema" style="display:none"></div>
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-tasks"></i> Produtos Cadastrados na grade</div>
+					<div class="panel-heading"><i class="fa fa-tasks"></i> Produtos Disponíveis na Vitrine Virtual</div>
 
 					<div class="panel-body">
 						<div class="row">

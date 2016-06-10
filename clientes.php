@@ -299,13 +299,13 @@
 
 										<div class="col-sm-2">
 											<div id="inscricao_estadual" class="form-group">
-												<label class="control-label">I.E.  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">I.E.</label>
 												<input class="form-control input-sm" ng-model="cliente.inscricao_estadual">
 											</div>
 										</div>
 										<div class="col-sm-2">
 											<div id="inscricao_estadual" class="form-group">
-												<label class="control-label">I.M.  <i style="font-size: 10px;color: #Telefone Fixo ;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">I.M.</label>
 												<input class="form-control input-sm" ng-model="cliente.num_inscricao_municipal">
 											</div>
 										</div>

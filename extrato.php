@@ -303,8 +303,8 @@
 					<table id="data" class="table table-striped table-condensed">
 						<thead>
 							<tr ng-if="dadosExtrato.extrato.length > 0">
-								<th class="text-center">Data de entrada no Sistema</th>
-								<th >Lançamento</th>
+								<th class="text-center">Data do Evento</th>
+								<th >Evento</th>
 								<th class="text-right">Valor</th>
 								<th class="text-right">Saldo</th>
 							</tr>
@@ -312,7 +312,7 @@
 								<th class="text-center" colspan="4">Selecione um periodo ou intervalo para a busca</th>
 							</tr>
 							<tr ng-if="dadosExtrato.length == 0">
-								<th class="text-center" colspan="4">Aguarde, buscando extrato</th>
+								<th class="text-center" colspan="4"><i class="fa fa-loading fa-sping"></i> Aguarde, carregando extrato...</th>
 							</tr>
 							<tr ng-if="dadosExtrato.extrato == false">
 								<th class="text-center" colspan="4">Nenhum lançamento foi relalizado para o cliente <b style="text-decoration: underline;">{{ cliente.nome }}</b> no periodo selecionado</th>
@@ -323,7 +323,7 @@
 								<td class="text-center" ng-if="item.tipo != 'saldo'">{{ item.dta_entrada | dateFormat: 'dateTime' }}</td>
 								<td class="text-center" ng-if="item.tipo == 'saldo'"></td>
 
-								<td ng-if="item.tipo == 'venda'" >COMPRA</td>
+								<td ng-if="item.tipo == 'venda'" >COMPRA (<a href="vendas.php?id_venda={{ item.id }}" target="_blank" class="text-info">#{{ item.id }}</a>)</td>
 								<td ng-if="item.tipo == 'saldo' "style="font-weight: bold;" >{{ item.tipo |uppercase }}</td>
 								<td ng-if="item.tipo == 'pagamento' && item.id_forma_pagamento != 6" >{{ item.tipo | uppercase }}  EM {{item.descricao_forma_pagamento | uppercase}} <b>PARA O DIA : {{ item.dta_pagamento | dateFormat: 'date' }}</b> </td>
 								<td ng-if="item.tipo == 'pagamento' && item.id_forma_pagamento == 6" >{{ item.tipo | uppercase}} EM {{ item.n_parcelas | uppercase }}X  NO {{item.descricao_forma_pagamento | uppercase }} <a style="cursor:pointer;font-weight: bold;text-decoration: underline;" href="#" rel="popover"  data-content="{{ item.template_popover }}" data-trigger="focus">(DATA DAS PARCELAS)</a> </td>

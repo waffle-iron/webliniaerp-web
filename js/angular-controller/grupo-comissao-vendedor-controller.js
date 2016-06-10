@@ -101,8 +101,8 @@ app.controller('GrupoComissaoVendedorController', function($scope, $http, $windo
 	}
 
 	ng.editar = function(item) {
-		item.perc_comissao = item.perc_comissao * 100;
 		ng.grupoComissaoVendedor = angular.copy(item);
+		ng.grupoComissaoVendedor.perc_comissao = item.perc_comissao * 100;
 		ng.showBoxNovo(true);
 	}
 

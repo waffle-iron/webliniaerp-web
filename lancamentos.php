@@ -1030,6 +1030,10 @@
 						            	<button ng-click="loadFornecedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
 						            	</button>
+
+						            	<a href="fornecedores.php" target="_blank" class="btn btn-sm btn-info">
+						            		<i class="fa fa-plus-circle"></i> Cadastrar
+						            	</a>
 						            </div> <!-- /input-group-btn -->
 						        </div> <!-- /input-group -->
 							</div><!-- /.col -->
@@ -1094,6 +1098,9 @@
 						            	<button ng-click="loadCliente(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
 						            	</button>
+						            	<a href="clientes.php" target="_blank" class="btn btn-sm btn-info">
+						            		<i class="fa fa-plus-circle"></i> Cadastrar
+						            	</a>
 						            </div> <!-- /input-group-btn -->
 						        </div> <!-- /input-group -->
 							</div><!-- /.col -->
