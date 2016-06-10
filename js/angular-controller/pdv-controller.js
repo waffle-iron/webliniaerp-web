@@ -2130,7 +2130,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					message:JSON.stringify(data)
 				};
 				ng.sendMessageWebSocket(mg);
-				ng.resetPdv('venda');
+				ng.resetPdv('venda',true);
 			}else{
 				btn.button('reset');
 				alert('Não foi possível emitir o cupom pois não existe conexão com o aplicativo cliente (WebliniaERP Client)');
@@ -3072,7 +3072,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		});
 	}
 
-	ng.resetPdv = function(tela,ifOrcamento=false){
+	ng.resetPdv = function(tela,ifOrcamento){
+		ifOrcamento = ifOrcamento == null ? false : ifOrcamento ;
 		if(ifOrcamento && !empty(params.id_orcamento)){
 			window.location = 'pdv.php';
 			return ;

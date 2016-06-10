@@ -351,6 +351,28 @@ angular.module('filters', [])
 	    		
 	    	}
 	    }
+	}).directive('preLoadImg', function ($compile,$filter) {
+	    return {
+	    	link:function(scope,element,attrs,ctrl){
+			   //Coloque no atributo IMG o caminho (src) da imagem clicada
+				$(element).attr('src',attrs.imgpreload);
+				//$(element).fadeIn(300);
+				//Agora faça a leitura do arquivo usando o atributo .load() da imagem
+				//$(element).load(function(response, status, xhr) {
+					//console.log(response);
+					//Após acabar a leitura faça a imagem aparecer
+					//$(element).fadeIn(300);
+				//});
+				$(element).after('<img style="display:none" class="pre-load-img-cache" src="'+attrs.datasrc+'"/>')
+				$(element).next('.pre-load-img-cache').on('load', function() {
+					$(element).attr('src',attrs.datasrc);
+					$(element).next('.pre-load-img-cache').remove();
+				})
+			    .on('error', function() {
+			    	$(element).attr('src',attrs.notimg);
+			    })
+	    	}
+	    }
 	});
 
 function Ctrl($scope) {
