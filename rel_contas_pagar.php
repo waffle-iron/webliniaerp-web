@@ -251,7 +251,7 @@
 						<div class="pull-right">
 							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
 							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
-							<button class="btn btn-sm btn-success hidden-print" ng-show="itens.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
+							<button class="btn btn-sm btn-success hidden-print" ng-show="pagamentos.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
 				</div>
@@ -286,7 +286,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="row">
+				<div class="row hidden-print">
 		    		<div class="col-sm-12">
 		    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.pagamentos.length > 1">
 							<li ng-repeat="item in paginacao.pagamentos" ng-class="{'active': item.current}">

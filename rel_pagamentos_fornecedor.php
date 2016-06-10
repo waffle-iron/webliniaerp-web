@@ -267,19 +267,20 @@
 
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
-							<button type="button" class="btn btn-sm btn-primary" ng-click="loadPagamentosFornecedor()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
-							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
-							<button class="btn btn-sm btn-success hidden-print" ng-show="vendas.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
-						</div>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-sm-12">
-						<a style="cursor:pointer" ng-click="export()" target="_blank" class="btn btn-xs btn-success pull-right" type="button">
+							<button type="button" class="btn btn-sm btn-primary" ng-click="loadPagamentosFornecedor()">
+								<i class="fa fa-filter"></i> Aplicar Filtro
+							</button>
+							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">
+								<i class="fa fa-times-circle"></i> Limpar Filtro
+							</button>
+							<button id="invoicePrint" class="btn btn-sm btn-success hidden-print" ng-show="pagamentos.length > 0">
+								<i class="fa fa-print"></i> Imprimir
+							</button>
+							<button type="button" class="btn btn-sm btn-success hidden-print" ng-click="export()">
 								<i class="fa fa-download"></i>
-								Exportar
-						</a>
+								Exportar p/ Excel
+							</button>
+						</div>
 					</div>
 				</div>
 
