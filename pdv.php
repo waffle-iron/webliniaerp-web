@@ -1882,7 +1882,7 @@
 	  			<div class="modal-dialog error modal-lg">
 	    			<div class="modal-content">
 	      				<div class="modal-header">
-							<h4>Cadastro Rápido de cliente</h4>
+							<h4>Cadastro Rápido de Cliente</h4>
 	      				</div>
 
 					    <div class="modal-body">
@@ -1906,13 +1906,26 @@
 												</label>
 											</div>
 											<div class="row">
-												<div class="col-sm-4">
+												<div class="col-lg-3" ng-if="new_cliente.tipo_cadastro == 'pj'">
+													<div id="razao_social" class="form-group">
+														<label class="control-label">Razão Social</label>
+														<input class="form-control" ng-model="new_cliente.razao_social">
+													</div>
+												</div>
+
+												<div class="col-sm-3" ng-if="new_cliente.tipo_cadastro == 'pj'">
+													<div id="nome_fantasia" class="form-group">
+														<label class="control-label">Nome Fantasia</label>
+														<input class="form-control" ng-model="new_cliente.nome_fantasia">
+													</div>
+												</div>
+												<div class="col-sm-4" ng-if="new_cliente.tipo_cadastro == 'pf'">
 													<div id="nome" class="form-group">
 														<label for="nome" class="control-label">Nome</label>
 														<input type="text" class="form-control" id="nome" ng-model="new_cliente.nome">
 													</div>
 												</div>
-												<div class="col-sm-3">
+												<div class="col-sm-3" ng-if="new_cliente.tipo_cadastro == 'pf'">
 													<div id="dta_nacimento" class="form-group">
 														<label class="control-label">Data de Nacimento</label>
 														<input class="form-control input-sm" ui-mask="99/99/9999" id="dta_nacimento" ng-model="new_cliente.dta_nacimento">
@@ -1932,20 +1945,6 @@
 														<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="new_cliente.celular">
 													</div>
 												</div>
-												<div class="col-lg-3">
-													<div id="razao_social" class="form-group">
-														<label class="control-label">Razão Social</label>
-														<input class="form-control" ng-model="new_cliente.razao_social">
-													</div>
-												</div>
-
-												<div class="col-sm-3">
-													<div id="nome_fantasia" class="form-group">
-														<label class="control-label">Nome Fantasia</label>
-														<input class="form-control" ng-model="new_cliente.nome_fantasia">
-													</div>
-												</div>
-
 												<div class="col-sm-2">
 													<div id="cnpj" class="form-group">
 														<label class="control-label">CNPJ  <span style="color:red;font-weight: bold;">*</span></label>
