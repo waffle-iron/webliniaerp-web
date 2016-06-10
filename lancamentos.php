@@ -211,14 +211,14 @@
 					<h3 class="no-margin"><i class="fa fa-money"></i> Lançamentos Financeiros</h3>
 					<h6>Contas a Pagar e Receber</h6>
 					<br/>
-					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Lançamento</a>
+					<a class="btn btn-info hidden-print" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Lançamento</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
 				<div class="alert alert-sistema" style="display:none"></div>
 
-				<div class="panel panel-default" id="box-novo" style="display:none">
+				<div class="panel panel-default hidden-print" id="box-novo" style="display:none">
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Lançamento</div>
 
 					<div class="panel-body">
@@ -435,7 +435,7 @@
 												<label class="control-label">Banco</label>
 													<select chosen
 												    option="bancos"
-												    ng-model="pagamento.id_banco"
+												    ng-model="item.id_banco"
 												    ng-options="banco.id as banco.nome for banco in bancos">
 													</select>
 											</div>
@@ -626,9 +626,9 @@
 					</div>
 			</div><!-- /panel -->
 
-				<div class="panel panel-default">
+				<div class="panel panel-default hidden-print">
 					<div class="panel-heading">
-						<i class="fa fa-random"></i> Lançamentos 
+						<i class="fa fa-cogs"></i> Filtros 
 						<i class="pull-right fa fa-cog fa-lg" style="cursor:pointer" data-toggle="tooltip" data-placement="left" title="Opções de Exibição" ng-click="configTable()"></i>
 					</div>
 
@@ -654,38 +654,45 @@
 								</div>
 							</div>
 
-							<div class="col-sm-4">
+							<div class="col-sm-5">
 								<div class="form-group">
-									<label class="control-label">Conta</label>
-									<select class="form-control" ng-model="busca.dsc_conta_bancaria">
-										<option ></option>
-										<option ng-repeat="item in contas" value="{{ item.dsc_conta_bancaria }}">{{ item.dsc_conta_bancaria }}</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="col-sm-1">
-								<div class="form-group">
-									<label class="control-label"><br></label>
+									<label class="control-label" style="display: block;"><br></label>
 									<button type="button" class="btn btn-sm btn-primary" ng-click="load(0,20)"><i class="fa fa-filter"></i> Filtrar</button>
-								</div>
-							</div>
-
-							<div class="col-sm-1">
-								<div class="form-group">
-									<label class="control-label"><br></label>
-									<button type="button" class="btn btn-sm btn-default" ng-click="limparBusca()">Limpar</button>
-								</div>
-							</div>
-
-							<div class="col-sm-1">
-								<div class="form-group">
-									<label class="control-label"><br></label>
-								<buttom ng-click="buscaAvancada()" class="btn btn-sm btn-primary">Pequisa Avançada <i ng-show="busca_avancada==false" class="fa fa-sort-down"></i><i ng-show="busca_avancada" class="fa fa-sort-up"></i></buttom>
+									<button type="button" class="btn btn-sm btn-default" ng-click="limparBusca()"><i class="fa fa-times-circle"></i> Limpar</button>
+									<button type="button" id="invoicePrint" class="btn btn-sm btn-success"><i class="fa fa-print"></i> Imprimir</button>
+									<buttom ng-click="buscaAvancada()" class="btn btn-sm btn-primary">
+										Pequisa Avançada
+										<i ng-show="busca_avancada==false" class="fa fa-sort-down"></i>
+										<i ng-show="busca_avancada" class="fa fa-sort-up"></i>
+									</buttom>
 								</div>
 							</div>
 						</div>
-						<div class="busca_avancada" ng-show="busca_avancada">
+
+						<div class="busca_avancada hidden-print" ng-show="busca_avancada">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label">Conta</label>
+										<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+										    option="contas"
+										    ng-model="busca.dsc_conta_bancaria"
+										    ng-options="item.id as item.dsc_conta_bancaria for item in contas">
+										</select>
+									</div>
+								</div>
+
+								<div class="col-sm-7">
+									<div class="form-group" id="regimeTributario">
+										<label class="ccontrol-label">Natureza da Operação</label> 
+										<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+										    option="plano_contas"
+										    ng-model="busca.id_plano_conta"
+										    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
+										</select>
+									</div>
+								</div>
+							</div>
 							<div class="row" >
 								<div class="col-sm-2">
 									<label class="control-label">Tipo</label>
@@ -713,16 +720,7 @@
 										<input ng-model="busca.nome_clienteORfornecedor" ng-enter="" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
 									</div>
 								</div>
-								<div class="col-sm-3">
-										<div class="form-group" id="regimeTributario">
-											<label class="ccontrol-label">Nat da Operação</label> 
-											<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
-										    option="plano_contas"
-										    ng-model="busca.id_plano_conta"
-										    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
-											</select>
-										</div>
-									</div>
+								
 								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Forma de Pag.</label>
@@ -775,241 +773,241 @@
 								</div>
 							</div>
 						</div>
+					</div>
+				</div>
 
-						<br/>
-
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="alert alert-delete" style="display:none"></div>
-							</div>
+				<div class="clearfix">
+					<div class="row hidden-print">
+						<div class="col-sm-12">
+							<div class="alert alert-delete" style="display:none"></div>
 						</div>
+					</div>
 
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="form-group" id="container-tabela" style="overflow: auto">
-									<table id="tabela-lancamentos" class="table table-condensed table-bordered table-hover">
-										<thead>
-											<tr>
-												<th ng-show="!config_table.groupPerDay">Data</td>
-												<th class="text-center" rowspan="2">Conta</th>
-												<th class="text-center" rowspan="2">Cliente/Fornecedor</th>
-												<th class="text-center" rowspan="2">Natureza da Operação</th>
-												<th class="text-center" rowspan="2">Forma de Pgto.</th>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group" id="container-tabela" style="overflow: auto">
+								<table id="tabela-lancamentos" class="table table-condensed table-bordered table-hover">
+									<thead>
+										<tr>
+											<th ng-show="!config_table.groupPerDay" rowspan="2">Data</td>
+											<th class="text-center" rowspan="2">Conta</th>
+											<th class="text-center" rowspan="2">Cliente/Fornecedor</th>
+											<th class="text-center" rowspan="2">Natureza da Operação</th>
+											<th class="text-center" rowspan="2">Forma de Pgto.</th>
 
-												<th class="text-center" rowspan="2" ng-if="config_table.observacao == true">Observação</th>
+											<th class="text-center" rowspan="2" ng-if="config_table.observacao == true">Observação</th>
 
-												<th class="text-center" rowspan="2" ng-if="config_table.cheque">Banco</th>
-												<th class="text-center" colspan="3" ng-if="config_table.cheque">Dados Cheque</th>
-												<th class="text-center" colspan="2" ng-if="config_table.boleto">Dados Boleto</th>
-												<th class="text-center" colspan="3" ng-if="config_table.transferencia">Dados Transferência</th>
-												
-												<th class="text-center" rowspan="2">Status</th>
-												<th class="text-center" rowspan="2">Valor</th>
-												<th class="text-center" width="90px" rowspan="2">Ações</th>
-											</tr>
-											<tr>
-												<th class="text-center" ng-if="config_table.cheque">Nº C/C </th>
-												<th class="text-center" ng-if="config_table.cheque">Nº </th>
-												<th class="text-center" ng-if="config_table.cheque">Predatado </th>
-
-												<th class="text-center" ng-if="config_table.boleto">Documento </th>
-												<th class="text-center" ng-if="config_table.boleto">Nº </th>
-
-												<th class="text-center" ng-if="config_table.transferencia">Agencia</th>
-												<th class="text-center" ng-if="config_table.transferencia">conta</th>
-												<th class="text-center" ng-if="config_table.transferencia">proprietario</th>
-
-											</tr>
-										</thead>
-										<tr  ng-if="dataGroups.length <= 0 && dataGroups != null">
-												<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }} " style="text-align:center">
-													<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
-												</td>
+											<th class="text-center" rowspan="2" ng-if="config_table.cheque">Banco</th>
+											<th class="text-center" colspan="3" ng-if="config_table.cheque">Dados Cheque</th>
+											<th class="text-center" colspan="2" ng-if="config_table.boleto">Dados Boleto</th>
+											<th class="text-center" colspan="3" ng-if="config_table.transferencia">Dados Transferência</th>
+											
+											<th class="text-center" rowspan="2">Status</th>
+											<th class="text-center" rowspan="2">Valor</th>
+											<th class="text-center" width="90px" rowspan="2">Ações</th>
 										</tr>
-										<tr  ng-if="dataGroups == null">
-												<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="text-align:center">
-													Nenhum lançamento encontrado
-												</td>
+										<tr>
+											<th class="text-center" ng-if="config_table.cheque">C/C</th>
+											<th class="text-center" ng-if="config_table.cheque">Nº</th>
+											<th class="text-center" ng-if="config_table.cheque">Pre?</th>
+
+											<th class="text-center" ng-if="config_table.boleto">Nº Doc.</th>
+											<th class="text-center" ng-if="config_table.boleto">Nº</th>
+
+											<th class="text-center" ng-if="config_table.transferencia">Agência</th>
+											<th class="text-center" ng-if="config_table.transferencia">C/C</th>
+											<th class="text-center" ng-if="config_table.transferencia">Proprietário</th>
+
 										</tr>
-										<tbody ng-repeat="(key, value) in dataGroups">
-											<tr class="info" ng-show="config_table.groupPerDay">
-												<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}">{{ key | dateFormat: 'date' }} <span class="badge pull-right">{{ value.items.length }}</span></td>
-											</tr>
-											<tr ng-repeat="item in value.items">
-												<td ng-show="!config_table.groupPerDay">{{ key | dateFormat: 'date' }} </td>
-												<td class="text-center">{{ item.dsc_conta_bancaria }}</td>
-												<td>{{ item.nome | uppercase }}</td>
-												<td>{{ item.cod_plano }} - {{ item.dsc_natureza_operacao | uppercase}}</td>
-												<td>{{ item.descricao_forma_pagamento }}</td>
+									</thead>
+									<tr  ng-if="dataGroups.length <= 0 && dataGroups != null">
+											<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }} " style="text-align:center">
+												<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
+											</td>
+									</tr>
+									<tr  ng-if="dataGroups == null">
+											<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="text-align:center">
+												Nenhum lançamento encontrado
+											</td>
+									</tr>
+									<tbody ng-repeat="(key, value) in dataGroups">
+										<tr class="info" ng-show="config_table.groupPerDay">
+											<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}">{{ key | dateFormat: 'date' }} <span class="badge pull-right">{{ value.items.length }}</span></td>
+										</tr>
+										<tr ng-repeat="item in value.items">
+											<td ng-show="!config_table.groupPerDay">{{ key | dateFormat: 'date' }} </td>
+											<td class="text-center">{{ item.dsc_conta_bancaria }}</td>
+											<td>{{ item.nome | uppercase }}</td>
+											<td>{{ item.cod_plano }} - {{ item.dsc_natureza_operacao | uppercase}}</td>
+											<td>{{ item.descricao_forma_pagamento }}</td>
 
-												<td ng-if="config_table.observacao == true" control-size-string content="{{ item.nome }}" size="16"></td>
+											<td ng-if="config_table.observacao == true" control-size-string content="{{ item.nome }}" size="16"></td>
 
-												<th class="text-center" ng-if="config_table.cheque">{{ item.nome_banco }}</th>
-												<th class="text-center" ng-if="config_table.cheque">{{ item.num_conta_corrente }}</th>
-												<th class="text-center" ng-if="config_table.cheque">{{ item.num_cheque }}</th>
-												<th class="text-center" ng-if="item.flg_cheque_predatado == 1 && config_table.cheque == true">Sim</th>
-												<th class="text-center" ng-if="item.flg_cheque_predatado == 0 && config_table.cheque == true">Não</th>
-												<th class="text-center" ng-if="(item.flg_cheque_predatado == null || item.flg_cheque_predatado == '') && config_table.cheque == true "></th>
-												<th class="text-center" ng-if="config_table.boleto">{{ item.doc_boleto }}</th>
-												<th class="text-center" ng-if="config_table.boleto">{{ item.num_boleto }}</th>
-												<th class="text-center" ng-if="config_table.transferencia">{{ item.agencia_transferencia }}</th>
-												<th class="text-center" ng-if="config_table.transferencia">{{ item.conta_transferencia }}</th>
-												<th class="text-center" ng-if="config_table.transferencia">{{ item.proprietario_conta_transferencia }}</th>
+											<th class="text-center" ng-if="config_table.cheque">{{ item.nome_banco }}</th>
+											<th class="text-center" ng-if="config_table.cheque">{{ item.num_conta_corrente }}</th>
+											<th class="text-center" ng-if="config_table.cheque">{{ item.num_cheque }}</th>
+											<th class="text-center" ng-if="item.flg_cheque_predatado == 1 && config_table.cheque == true">Sim</th>
+											<th class="text-center" ng-if="item.flg_cheque_predatado == 0 && config_table.cheque == true">Não</th>
+											<th class="text-center" ng-if="(item.flg_cheque_predatado == null || item.flg_cheque_predatado == '') && config_table.cheque == true "></th>
+											<th class="text-center" ng-if="config_table.boleto">{{ item.doc_boleto }}</th>
+											<th class="text-center" ng-if="config_table.boleto">{{ item.num_boleto }}</th>
+											<th class="text-center" ng-if="config_table.transferencia">{{ item.agencia_transferencia }}</th>
+											<th class="text-center" ng-if="config_table.transferencia">{{ item.conta_transferencia }}</th>
+											<th class="text-center" ng-if="config_table.transferencia">{{ item.proprietario_conta_transferencia }}</th>
 
 
-												<td class="text-center">
-													<button ng-disabled="item.id_tipo_conta==5" type="button" class="btn btn-xs btn-status btn-success"
-														ng-if="item.status_pagamento == 1" ng-click="modalChangeStatusPagamento(item)"
-														tooltip="Clique para alterar o status do lançamento" data-toggle="tooltip">
-														<i class="fa fa-check-circle fa-lg"></i> Pago
-													</button>
-													<button ng-disabled="item.id_tipo_conta==5" type="button" class="btn btn-xs btn-status btn-warning"
-														ng-if="item.status_pagamento == 0" ng-click="modalChangeStatusPagamento(item)"
-														tooltip="Clique para alterar o status do lançamento" data-toggle="tooltip">
-														<i class="fa fa-times-circle fa-lg"></i> Pendente
-													</button>
-												</td>
-												<td class="text-right">
-													<span class="label label-success" ng-if="item.flg_tipo_lancamento == 'C'">
-														R$ {{ item.valor_pagamento | numberFormat:2 : ',' : '.' }}
-													</span>
-													<span class="label label-danger" ng-if="item.flg_tipo_lancamento == 'D'">
-														R$ {{ item.valor_pagamento | numberFormat:2 : ',' : '.' }}
-													</span>
-												</td>
-												<!-- <td class="text-center" width="30">
-													<button type="button" tooltip="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
-														<i class="fa fa-edit"></i>
-													</button>
-												</td> -->
-												<td class="text-center">
-													<button ng-disabled="item.id_tipo_conta==5" type="button" ng-click="delete(item,'cliente')" ng-if="item.flg_tipo_lancamento == 'D'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
-														<i class="fa fa-trash-o"></i>
-													</button>
-													<button ng-disabled="item.id_tipo_conta==5" type="button" ng-click="delete(item,'fornecedor')" ng-if="item.flg_tipo_lancamento == 'C'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
-														<i class="fa fa-trash-o"></i>
-													</button>
-													<button type="button" ng-click="printPagamentos(item)" tooltip="Imprimir" data-toggle="tooltip" class="btn btn-xs">
-														<i class="fa fa-print"></i>
-													</button>
-													<!--<button type="button" ng-click="editar(item)" tooltip="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
-														<i class="fa fa-edit"></i>
-													</button>-->
-												</td>
-											</tr>
-											<tr ng-show="config_table.overviewOfDay">
-												<td class="text-center" colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="background-color: #898989;"><strong style="color: #FFF;">Totais - {{ key | dateFormat: 'date' }}</strong></td>
-											</tr>
-											<tr ng-show="config_table.overviewOfDay">
-												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>A Receber</strong></td>
-												<td class="text-right">
-													<span class="label label-success">
-														R$ {{ value.a_receber | numberFormat: '2' : ',' : '.' }}
-													</span>
-												</td>
-												<td></td>
-											</tr>
-											<tr ng-show="config_table.overviewOfDay">
-												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>A Pagar</strong></td>
-												<td class="text-right">
-													<span class="label label-danger">
-														R$ {{ value.a_pagar | numberFormat: '2' : ',' : '.' }}
-													</span>
-												</td>
-												<td></td>
-											</tr>
-											<tr class="warning" ng-show="config_table.overviewOfDay">
-												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Saldo</strong></td>
-												<td class="text-right">
-													<span class="label label-danger" ng-if="(value.a_receber - value.a_pagar ) < 0">
-														R$ {{ (value.a_receber - value.a_pagar ) | numberFormat: '2' : ',' : '.' }}
-													</span>
-													<span class="label label-success" ng-if="(value.a_receber - value.a_pagar ) >= 0">
-														R$ {{ (value.a_receber - value.a_pagar ) | numberFormat: '2' : ',' : '.' }}
-													</span>
-												</td>
-												<td></td>
-											</tr>
-
-											<tr ng-show="config_table.overviewOfDay">
-												<td class="text-center" colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="background-color: #898989;padding: 2px;"><strong style="color: #FFF;"></strong></td>
-											</tr>
-
-											<tr ng-show="config_table.overviewOfDay">
-												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Recebido</strong></td>
-												<td class="text-right">
-													<span class="label label-success">
-														R$ {{ value.recebido | numberFormat: '2' : ',' : '.' }}
-													</span>
-												</td>
-												<td></td>
-											</tr>
-											<tr ng-show="config_table.overviewOfDay">
-												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Pago</strong></td>
-												<td class="text-right">
-													<span class="label label-danger">
-														R$ {{ value.pago | numberFormat: '2' : ',' : '.' }}
-													</span>
-												</td>
-												<td></td>
-											</tr>
-											<!--<tr class="warning">
-												<td class="text-right" colspan="14"><strong>Saldo</strong></td>
-												<td class="text-right">
-													<span class="label label-danger" ng-if="(value.recedido - value.pago ) < 0">
-														R$ {{ (value.recebido - value.pago ) | numberFormat: '2' : ',' : '.' }}
-													</span>
-													<span class="label label-success" ng-if="(value.recedido - value.pago ) >= 0">
-														R$ {{ (value.recebido - value.pago ) | numberFormat: '2' : ',' : '.' }}
-													</span>
-												</td>
-												<td></td>
-											</tr>-->
-											<tr class="warning" ng-show="config_table.groupPerDay">
-												<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Saldo</strong></td>
-												<td class="text-right">
-													<span class="label label-success" ng-if="value.vlr_total_item > 0">
-														R$ {{ value.vlr_total_item | numberFormat: '2' : ',' : '.' }}
-													</span>
-													<span class="label label-danger" ng-if="value.vlr_total_item < 0">
-														R$ {{ value.vlr_total_item | numberFormat: '2' : ',' : '.' }}
-													</span>
-													<span class="label label-money-blue" ng-if="value.vlr_total_item == 0">
-														R$ {{ value.vlr_total_item | numberFormat: '2' : ',' : '.' }}
-													</span>
-												</td>
-												<td></td>
-											</tr>
-										</tbody>
-										<tr ng-hide="dataGroups.length <= 0 || dataGroups == null">
-											<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}" class="text-right">Total Período</td>
+											<td class="text-center">
+												<button ng-disabled="item.id_tipo_conta==5" type="button" class="btn btn-xs btn-status btn-success"
+													ng-if="item.status_pagamento == 1" ng-click="modalChangeStatusPagamento(item)"
+													tooltip="Clique para alterar o status do lançamento" data-toggle="tooltip">
+													<i class="fa fa-check-circle fa-lg"></i> Pago
+												</button>
+												<button ng-disabled="item.id_tipo_conta==5" type="button" class="btn btn-xs btn-status btn-warning"
+													ng-if="item.status_pagamento == 0" ng-click="modalChangeStatusPagamento(item)"
+													tooltip="Clique para alterar o status do lançamento" data-toggle="tooltip">
+													<i class="fa fa-times-circle fa-lg"></i> Pendente
+												</button>
+											</td>
 											<td class="text-right">
-												<span class="label label-success" ng-if="vlrTotalPeriodo > 0">
-													R$ {{ vlrTotalPeriodo | numberFormat: '2' : ',' : '.' }}
+												<span class="label label-success" ng-if="item.flg_tipo_lancamento == 'C'">
+													R$ {{ item.valor_pagamento | numberFormat:2 : ',' : '.' }}
 												</span>
-												<span class="label label-danger" ng-if="vlrTotalPeriodo < 0">
-													R$ {{ vlrTotalPeriodo | numberFormat: '2' : ',' : '.' }}
+												<span class="label label-danger" ng-if="item.flg_tipo_lancamento == 'D'">
+													R$ {{ item.valor_pagamento | numberFormat:2 : ',' : '.' }}
 												</span>
-												<span class="label label-money-blue" ng-if="vlrTotalPeriodo == 0">
-													R$ {{ vlrTotalPeriodo | numberFormat: '2' : ',' : '.' }}
+											</td>
+											<!-- <td class="text-center" width="30">
+												<button type="button" tooltip="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
+													<i class="fa fa-edit"></i>
+												</button>
+											</td> -->
+											<td class="text-center">
+												<button ng-disabled="item.id_tipo_conta==5" type="button" ng-click="delete(item,'cliente')" ng-if="item.flg_tipo_lancamento == 'D'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
+													<i class="fa fa-trash-o"></i>
+												</button>
+												<button ng-disabled="item.id_tipo_conta==5" type="button" ng-click="delete(item,'fornecedor')" ng-if="item.flg_tipo_lancamento == 'C'" tooltip="Excluir" data-toggle="tooltip" class="btn btn-xs btn-danger">
+													<i class="fa fa-trash-o"></i>
+												</button>
+												<button type="button" ng-click="printPagamentos(item)" tooltip="Imprimir" data-toggle="tooltip" class="btn btn-xs">
+													<i class="fa fa-print"></i>
+												</button>
+												<!--<button type="button" ng-click="editar(item)" tooltip="Editar" data-toggle="tooltip" class="btn btn-xs btn-warning">
+													<i class="fa fa-edit"></i>
+												</button>-->
+											</td>
+										</tr>
+										<tr ng-show="config_table.overviewOfDay">
+											<td class="text-center" colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="background-color: #898989;"><strong style="color: #FFF;">Totais - {{ key | dateFormat: 'date' }}</strong></td>
+										</tr>
+										<tr ng-show="config_table.overviewOfDay">
+											<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>A Receber</strong></td>
+											<td class="text-right">
+												<span class="label label-success">
+													R$ {{ value.a_receber | numberFormat: '2' : ',' : '.' }}
 												</span>
 											</td>
 											<td></td>
 										</tr>
-									</table>
-								</div>
+										<tr ng-show="config_table.overviewOfDay">
+											<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>A Pagar</strong></td>
+											<td class="text-right">
+												<span class="label label-danger">
+													R$ {{ value.a_pagar | numberFormat: '2' : ',' : '.' }}
+												</span>
+											</td>
+											<td></td>
+										</tr>
+										<tr class="warning" ng-show="config_table.overviewOfDay">
+											<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Saldo</strong></td>
+											<td class="text-right">
+												<span class="label label-danger" ng-if="(value.a_receber - value.a_pagar ) < 0">
+													R$ {{ (value.a_receber - value.a_pagar ) | numberFormat: '2' : ',' : '.' }}
+												</span>
+												<span class="label label-success" ng-if="(value.a_receber - value.a_pagar ) >= 0">
+													R$ {{ (value.a_receber - value.a_pagar ) | numberFormat: '2' : ',' : '.' }}
+												</span>
+											</td>
+											<td></td>
+										</tr>
+
+										<tr ng-show="config_table.overviewOfDay">
+											<td class="text-center" colspan="{{ (config_table.groupPerDay) ? calculaColspan(7) : calculaColspan(8) }}" style="background-color: #898989;padding: 2px;"><strong style="color: #FFF;"></strong></td>
+										</tr>
+
+										<tr ng-show="config_table.overviewOfDay">
+											<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Recebido</strong></td>
+											<td class="text-right">
+												<span class="label label-success">
+													R$ {{ value.recebido | numberFormat: '2' : ',' : '.' }}
+												</span>
+											</td>
+											<td></td>
+										</tr>
+										<tr ng-show="config_table.overviewOfDay">
+											<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Pago</strong></td>
+											<td class="text-right">
+												<span class="label label-danger">
+													R$ {{ value.pago | numberFormat: '2' : ',' : '.' }}
+												</span>
+											</td>
+											<td></td>
+										</tr>
+										<!--<tr class="warning">
+											<td class="text-right" colspan="14"><strong>Saldo</strong></td>
+											<td class="text-right">
+												<span class="label label-danger" ng-if="(value.recedido - value.pago ) < 0">
+													R$ {{ (value.recebido - value.pago ) | numberFormat: '2' : ',' : '.' }}
+												</span>
+												<span class="label label-success" ng-if="(value.recedido - value.pago ) >= 0">
+													R$ {{ (value.recebido - value.pago ) | numberFormat: '2' : ',' : '.' }}
+												</span>
+											</td>
+											<td></td>
+										</tr>-->
+										<tr class="warning" ng-show="config_table.groupPerDay">
+											<td class="text-right" colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}"><strong>Saldo</strong></td>
+											<td class="text-right">
+												<span class="label label-success" ng-if="value.vlr_total_item > 0">
+													R$ {{ value.vlr_total_item | numberFormat: '2' : ',' : '.' }}
+												</span>
+												<span class="label label-danger" ng-if="value.vlr_total_item < 0">
+													R$ {{ value.vlr_total_item | numberFormat: '2' : ',' : '.' }}
+												</span>
+												<span class="label label-money-blue" ng-if="value.vlr_total_item == 0">
+													R$ {{ value.vlr_total_item | numberFormat: '2' : ',' : '.' }}
+												</span>
+											</td>
+											<td></td>
+										</tr>
+									</tbody>
+									<tr ng-hide="dataGroups.length <= 0 || dataGroups == null">
+										<td colspan="{{ (config_table.groupPerDay) ? calculaColspan(5) : calculaColspan(6) }}" class="text-right">Total Período</td>
+										<td class="text-right">
+											<span class="label label-success" ng-if="vlrTotalPeriodo > 0">
+												R$ {{ vlrTotalPeriodo | numberFormat: '2' : ',' : '.' }}
+											</span>
+											<span class="label label-danger" ng-if="vlrTotalPeriodo < 0">
+												R$ {{ vlrTotalPeriodo | numberFormat: '2' : ',' : '.' }}
+											</span>
+											<span class="label label-money-blue" ng-if="vlrTotalPeriodo == 0">
+												R$ {{ vlrTotalPeriodo | numberFormat: '2' : ',' : '.' }}
+											</span>
+										</td>
+										<td></td>
+									</tr>
+								</table>
 							</div>
 						</div>
 					</div>
-					<div class="panel-footer clearfix">
-						<div class="pull-right">
-							<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.pagamentos.length > 1">
-								<li ng-repeat="item in paginacao.pagamentos" ng-class="{'active': item.current}">
-									<a href="" h ng-click="load(item.offset,item.limit)">{{ item.index }}</a>
-								</li>
-							</ul>
-						</div>
-					</div>
+				</div>
+
+				<div class="clearfix">
+					<div class="pull-right">
+						<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.pagamentos.length > 1">
+							<li ng-repeat="item in paginacao.pagamentos" ng-class="{'active': item.current}">
+								<a href="" h ng-click="load(item.offset,item.limit)">{{ item.index }}</a>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>

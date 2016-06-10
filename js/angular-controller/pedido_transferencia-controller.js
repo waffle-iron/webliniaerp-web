@@ -7,6 +7,15 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 	ng.busca 		= {empreendimento:'',produto:''} ;
 	ng.paginacao    = {};
     ng.lista_emp    = [];
+
+    ng.filtro = {};
+
+    ng.etapas = [
+    	{id: "1", nme_etapa: "Solicitação", flg_oculto_empreendimento: false},
+    	{id: "2", nme_etapa: "Envio", flg_oculto_empreendimento: true},
+    	{id: "3", nme_etapa: "Recebimento", flg_oculto_empreendimento: false}
+    ];
+
     var transferenciaTO = {
     	id : null,
 		id_empreendimento_pedido : ng.userLogged.id_empreendimento,

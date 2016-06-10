@@ -512,7 +512,7 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 	};
 	ng.loadCountOrcamentos = function(first_date,last_date) {
 		var vlrTotalVendasPeriodoComparativo = 0 ;
-		aj.get(baseUrlApi()+"count_orcamentos/dashboard/"+first_date+"/"+last_date+"?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"count_orcamentos/dashboard?id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.count.orcamentos = data.total_orcamentos  ;
 

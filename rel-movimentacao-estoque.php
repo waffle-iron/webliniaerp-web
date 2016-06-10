@@ -33,7 +33,7 @@
 	<link rel="stylesheet" type="text/css" href="css/custom.css">
   </head>
 
-  <body class="overflow-hidden" ng-controller="RelatorioTotalVendasClienteController" ng-init="setDateInit()" ng-cloak>
+  <body class="overflow-hidden" ng-controller="RelatorioTotalProdutoEstoque" ng-cloak>
 	<!-- Overlay Div -->
 	<!-- <div id="overlay" class="transparent"></div>
 
@@ -182,8 +182,8 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório Pagamentos Fornecedor</h3>
-							<span class="text-muted">Lista de Pagamentos a Fornecedores</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Movimentação de Estoque</h3>
+							<span class="text-muted">Histórico do Produto</span>
 						</div>
 					</div>
 
@@ -205,7 +205,7 @@
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
-											<input  readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control">
+											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
 											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
@@ -215,146 +215,90 @@
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control">
+											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control text-center">
 											<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
 								</div>
 
-								<div class="col-lg-2">
+								<div class="col-lg-6">
 									<div class="form-group">
-										<label class="control-label">fornecedor</label>
+										<label class="control-label">Produto</label>
 										<div class="input-group">
-											<input ng-click="selFornecedor()" type="text" class="form-control" ng-model="fornecedor.nome_fornecedor" readonly="readonly" style="cursor: pointer;" input/>
+											<input ng-click="modalProdutos()" type="text" class="form-control" ng-model="busca.nome_produto" readonly="readonly" style="cursor: pointer;">
 											<span class="input-group-btn">
-												<button  ng-click="selFornecedor()" type="button" class="btn"><i class="fa fa-users"></i></button>
+												<button ng-click="modalProdutos(0,10)" ng-click="modalProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
 											</span>
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-2">
-									<div class="form-group">
-										<label class="control-label">Forma de Pag.</label>
-										<select ng-model="busca.id_forma_pagamento" class="form-control">
-											<option value=""></option>
-											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.nome }}</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-sm-2">
-									<div class="form-group">
-										<label class="control-label">Status</label>
-										<select ng-model="busca.status_pagamento" class="form-control">
-											<option value=""></option>
-											<option value="0">Pendente</option>
-											<option value="1">Pago</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-lg-2">
-									<div class="form-group">
-										<label class="control-label">&nbsp;</label>
-										<label class="label-checkbox">
-											<input ng-model="busca.agrupar" ng-change="loadPagamentosFornecedor()" ng-true-value="true" ng-false-value="false" type="checkbox">
-											<span class="custom-checkbox"></span>
-											Agrupar
-										</label>
-									</div>
-								</div><!-- /.col -->
 							</div>
 						</form>
 					</div>
 
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
-							<button type="button" class="btn btn-sm btn-primary" ng-click="loadPagamentosFornecedor()">
-								<i class="fa fa-filter"></i> Aplicar Filtro
-							</button>
-							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">
-								<i class="fa fa-times-circle"></i> Limpar Filtro
-							</button>
-							<button id="invoicePrint" class="btn btn-sm btn-success hidden-print" ng-show="pagamentos.length > 0">
-								<i class="fa fa-print"></i> Imprimir
-							</button>
-							<button type="button" class="btn btn-sm btn-success hidden-print" ng-click="export()">
-								<i class="fa fa-download"></i>
-								Exportar p/ Excel
-							</button>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
+							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
+							<button class="btn btn-sm btn-success hidden-print"  id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
 				</div>
 
-				<br/>
+				<br>
 
-				<table id="data" class="table table-bordered table-hover table-striped table-condensed" ng-if="!busca.agrupar">
+				<table class="table table-bordered table-hover table-striped table-condensed">
 					<thead>
-						<tr ng-if="pagamentos.length != null && pagamentos.length > 0">
-							<th width="100" class="hidden-print">ID Pagamento</th>
-							<th>Fornecedor</th>
-							<th width="100" class="text-center">Data</th>
-							<th>Forma Pagamento</th>
-							<th width="100" class="text-center">Status</th>
-							<th width="100" class="text-right">Valor</th>
+						<tr>
+							<th class="text-center">Data/Hora</th>
+							<th class="text-center">Usuário Responsável</th>
+							<th>Descrição do Evento</th>
+							<th class="text-center" width="100">Entrada</th>
+							<th class="text-center" width="100">Saída</th>
+							<th class="text-center" width="100">Saldo</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-if="pagamentos.length == null">
-							<td class="text-center" colspan="4">
-								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
+						<tr class="info text-bold">
+							<td class="text-center">20/06/2016</td>
+							<td colspan="4"></td>
+							<td class="text-right">
+								<span class="badge">3 eventos</span>
 							</td>
 						</tr>
-						<tr ng-if="pagamentos.length != null && pagamentos.length <= 0">
-							<td colspan="6" class="text-center">
-								<b>Nenhum Pagamento encontrado</b>
-							</td>
+						<tr>
+							<td class="text-center" width="100">13:09:20</td>
+							<td class="text-center">Filipe M. Coelho</td>
+							<td>Efetuou cadastro</td>
+							<td class="text-center text-success"></td>
+							<td class="text-center text-danger"></td>
+							<td class="text-center text-info"></td>
 						</tr>
-						<tr ng-repeat="item in pagamentos">
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'">#{{ item.id_pagamento }}</td>
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'">{{ item.nome_fornecedor }}</td>
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'" class="text-center">{{ item.data_pagamento | dateFormat:'date' }}</td>
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'">{{ item.descricao_forma_pagamento }}</td>
-							<td ng-if="item.status_pagamento == 0"> Pendente </td>
-							<td ng-if="item.status_pagamento == 1"> Pago </td>
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'" class="text-right">R$ {{item.valor_pagamento | numberFormat:2:',':'.'}}</td>
-							
-							<td ng-if="item.descricao_forma_pagamento == 'saldo'" class="text-right" style="background: #E7E7E7;border-right-color: #E7E7E7;" colspan="5"><b>TOTAL A PAGAR PARA O DIA {{  item.data | dateFormat:'date'  }}</b></td>
-							<td ng-if="item.descricao_forma_pagamento == 'saldo'" class="text-right" style="background: #E7E7E7;"><b>R$ {{item.valor | numberFormat:2:',':'.'}}</b></td>
-
-							<td ng-if="item.descricao_forma_pagamento == 'total'" class="text-right" style="background: #626262;color: #FFF;border-top: 8px solid #FFF;border-right-color: #626262;" colspan="5"><b>TOTAL A PAGAR NO PERÍODO</b></td>
-							<td ng-if="item.descricao_forma_pagamento == 'total'" class="text-right" style="background: #626262;color: #FFF;border-top: 8px solid #FFF;"><b>R$ {{item.valor | numberFormat:2:',':'.'}}</b></td>
-
+						<tr>
+							<td class="text-center" width="100">14:29:40</td>
+							<td class="text-center">Filipe M. Coelho</td>
+							<td>Incluiu estoque manualmente no cadastro do produto</td>
+							<td class="text-center text-success">10</td>
+							<td class="text-center text-danger"></td>
+							<td class="text-center text-info">10</td>
+						</tr>
+						<tr>
+							<td class="text-center" width="100">15:25:21</td>
+							<td class="text-center">Filipe M. Coelho</td>
+							<td>Baixa do estoque por motivo de venda</td>
+							<td class="text-center text-success"></td>
+							<td class="text-center text-danger">5</td>
+							<td class="text-center text-info">5</td>
 						</tr>
 					</tbody>
 				</table>
-				<table id="data" class="table table-bordered table-hover table-striped table-condensed" ng-if="busca.agrupar">
-					<thead>
-						<tr ng-if="pagamentos.length != null && pagamentos.length > 0">
-							<th>Fornecedor</th>
-							<th class="text-center">Quantidade</th>
-							<th width="100" class="text-right">Valor</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-if="pagamentos.length == null">
-							<td class="text-center" colspan="4">
-								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
-							</td>
-						</tr>
-						<tr ng-if="pagamentos.length != null && pagamentos.length <= 0">
-							<td colspan="6" class="text-center">
-								<b>Nenhum Pagamento encontrado</b>
-							</td>
-						</tr>
-						<tr ng-repeat="item in pagamentos">
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'">{{ item.nome_fornecedor }}</td>
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'" class="text-center">{{ item.qtd_pagamento }}</td>
-							<td ng-if="item.descricao_forma_pagamento != 'saldo' && item.descricao_forma_pagamento != 'total'" class="text-right">R$ {{item.valor_pagamento | numberFormat:2:',':'.'}}</td>
 
-							<td ng-if="item.descricao_forma_pagamento == 'total'" class="text-right" style="background: #626262;color: #FFF;border-top: 8px solid #FFF;border-right-color: #626262;" colspan="2"><b>TOTAL A PAGAR NO PERÍODO</b></td>
-							<td ng-if="item.descricao_forma_pagamento == 'total'" class="text-right" style="background: #626262;color: #FFF;border-top: 8px solid #FFF;"><b>R$ {{item.valor | numberFormat:2:',':'.'}}</b></td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="pull-right hidden-print">
+					<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.produtos.length > 1">
+						<li ng-repeat="item in paginacao.produtos" ng-class="{'active': item.current}">
+							<a href="" h ng-click="loadProdutos(item.offset,item.limit)">{{ item.index }}</a>
+						</li>
+					</ul>
 				</div>
 			</div><!-- /.padding20 -->
 		</div><!-- /main-container -->
@@ -373,65 +317,83 @@
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
-	<!-- /Modal fornecedor-->
-		<div class="modal fade" id="list_fornecedores" style="display:none">
-  			<div class="modal-dialog">
-    			<div class="modal-content">
-      				<div class="modal-header">
-        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Fornecedores para o produto <span style="color:rgba(41, 145, 179, 1)">{{ nome_produto_form }}</span></h4>
-      				</div>
-				    <div class="modal-body">
-				    	<div class="row">
-							<div class="col-md-12">
-								<div class="input-group">
-						            <input ng-model="busca.fornecedores" type="text" class="form-control input-sm">
-						            <div class="input-group-btn">
-						            	<button ng-click="loadFornecedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-						            		<i class="fa fa-search"></i> Buscar
-						            	</button>
-						            </div> <!-- /input-group-btn -->
-						        </div> <!-- /input-group -->
-							</div><!-- /.col -->
-						</div>
-						<br/></br>
-				   		<table class="table table-bordered table-condensed table-striped table-hover">
-							<thead ng-show="(fornecedores.length != 0)">
-								<tr>
-									<th colspan="2">Nome</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-show="(fornecedores.length == 0 && fornecedores != null)">
-									<td colspan="2">Não a fornecedores relacionados para esté produto</td>
-								</tr>
-								<tr ng-show="(fornecedores == null)">
-									<td colspan="2">Carregando ...</td>
-								</tr>
-								<tr ng-repeat="item in fornecedores">
-									<td>{{ item.nome_fornecedor }}</td>
-									<td width="80">
-										<button ng-click="addFornecedor(item)" class="btn btn-success btn-xs" type="button">
-												<i class="fa fa-check-square-o"></i> Selecionar
+	<!-- /Modal Produtos-->
+	<div class="modal fade" id="list_produtos" style="display: none;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+  				<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4>Produtos</span></h4>
+  				</div>
+			    <div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="input-group">
+					            <input ng-model="busca.produto_modal" ng-enter="loadProdutosModal(0,10)" type="text" class="form-control input-sm">
+
+					            <div class="input-group-btn">
+					            	<button tabindex="-1" class="btn btn-sm btn-primary" type="button"
+					            		ng-click="loadProdutosModal(0,10)">
+					            		<i class="fa fa-search"></i> Buscar
+					            	</button>
+					            </div> <!-- /input-group-btn -->
+					        </div> <!-- /input-group -->
+						</div><!-- /.col -->
+					</div>
+
+					<br>
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="alert alert-produtos" style="display:none"></div>
+					   		<table class="table table-bordered table-condensed table-striped table-hover">
+								<thead ng-show="(produtos_modal.length != 0)">
+									<tr>
+										<th>#</th>
+										<th>Nome</th>
+										<th>Fabricante</th>
+										<th>Tamanho</th>
+										<th>Sabor/Cor</th>
+										<th width="80"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-show="(produtos_modal.length == 0)">
+										<td colspan="3">Não a resultados para a busca</td>
+									</tr>
+									<tr ng-repeat="item in produtos_modal">
+										<td>{{ item.id_produto }}</td>
+										<td>{{ item.nome }}</td>
+										<td>{{ item.nome_fabricante }}</td>
+										<td>{{ item.peso }}</td>
+										<td>{{ item.sabor }}</td>			
+										<td>
+										<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
+											<i class="fa fa-check-square-o"></i> Selecionar
 										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="row">
-				    		<div class="col-sm-12">
-				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_fornecedores.length > 1">
-									<li ng-repeat="item in paginacao_fornecedores" ng-class="{'active': item.current}">
-										<a href="" h ng-click="loadFornecedor(item.offset,item.limit)">{{ item.index }}</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+				    <div class="row">
+				    	<div class="col-md-12">
+							<div class="input-group pull-right">
+					             <ul class="pagination pagination-xs m-top-none" ng-show="paginacao.produtos_modal.length > 1">
+									<li ng-repeat="item in paginacao.produtos_modal" ng-class="{'active': item.current}">
+										<a href="" ng-click="loadProdutosModal(item.offset,item.limit)">{{ item.index }}</a>
 									</li>
 								</ul>
-				    		</div>
-				    	</div>
-				    </div>
-			  	</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div>
-		<!-- /.modal -->
+					        </div> <!-- /input-group -->
+						</div><!-- /.col -->
+					</div>
+				</div>
+		  	</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 
 	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
@@ -472,6 +434,9 @@
 	<!-- Endless -->
 	<script src="js/endless/endless.js"></script>
 
+	<!-- UnderscoreJS -->
+	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -487,7 +452,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/relatorio_pagamentos_fornercedor-controller.js?<?php echo filemtime('js/angular-controller/relatorio_pagamentos_fornercedor-controller.js')?>"></script>
+	<script src="js/angular-controller/relatorio-total-produto-estoque-controller.js"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -498,6 +463,41 @@
 
 			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
 			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+		});
+
+		$('.datepicker').datepicker();
+		$("#cld_pagameto").on("click", function(){ $("#pagamentoData").trigger("focus"); });
+		$("#cld_dtaInicial").on("click", function(){ $("#dtaInicial").trigger("focus"); });
+		$("#cld_dtaFinal").on("click", function(){ $("#dtaFinal").trigger("focus"); });
+
+		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+		
+		function printDiv(id, pg) {
+			var contentToPrint, printWindow;
+
+			contentToPrint = window.document.getElementById(id).innerHTML;
+			printWindow = window.open(pg);
+
+		    printWindow.document.write("<link href='bootstrap/css/bootstrap.min.css' rel='stylesheet'>");
+			printWindow.document.write("<link href='css/font-awesome.min.css' rel='stylesheet'>");
+			printWindow.document.write("<link href='css/pace.css' rel='stylesheet'>");
+			printWindow.document.write("<link href='css/endless.min.css' rel='stylesheet'>");
+			printWindow.document.write("<link href='css/endless-skin.css' rel='stylesheet'>");
+
+			printWindow.document.write("<style type='text/css' media='print'>@page { size: portrait; } th, td { font-size: 8pt; }</style><style type='text/css'>#invoicePrint{ display:none }</style>");
+
+			printWindow.document.write(contentToPrint);
+
+			printWindow.window.print();
+			printWindow.document.close();
+			printWindow.focus();
+		}
+
+		$(function()	{
+			$('#invoicePrint').click(function()	{
+				printDiv("main-container", "");
+			});
 		});
 	</script>
 	<?php include("google_analytics.php"); ?>

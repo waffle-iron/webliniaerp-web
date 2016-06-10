@@ -1,3 +1,6 @@
+<li class="dropdown" data-toggle="tooltip" data-placement="bottom" title="Ir p/ Transferências">
+	<a href="pedido_transferencia.php"><i class="fa fa-arrows-h fa-lg"></i></a>
+</li>
 <li class="dropdown" ng-controller="AlertasController">
 	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 		<i class="fa fa-bell fa-lg"></i>
