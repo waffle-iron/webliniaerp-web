@@ -183,7 +183,7 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 
 			ng.loadSaldoDevedorFornecedor(date_first, date_last);
 			ng.loadVendasBycategoria(date_first, date_last);
-			ng.loadCountOrcamentos(date_first, date_last);
+			ng.loadCountOrcamentos();
 			ng.loadCountVendas(date_first, date_last);
 			ng.loadVendasTop10Clientes(date_first, date_last);
 			ng.loadVendasTop10Fabricantes(date_first, date_last);
@@ -534,9 +534,9 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 				});
 		}
 
-		ng.loadCountOrcamentos = function(first_date,last_date) {
+		ng.loadCountOrcamentos = function() {
 			var vlrTotalVendasPeriodoComparativo = 0 ;
-			aj.get(baseUrlApi()+"count_orcamentos/dashboard/"+first_date+"/"+last_date+"?id_empreendimento="+ng.userLogged.id_empreendimento)
+			aj.get(baseUrlApi()+"count_orcamentos/dashboard?id_empreendimento="+ng.userLogged.id_empreendimento)
 				.success(function(data, status, headers, config) {
 					ng.count.orcamentos = data.total_orcamentos  ;
 				})
