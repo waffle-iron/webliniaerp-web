@@ -532,3 +532,19 @@ function not_in(str_compare,str_values){
     });  
     return ret ;       
 }
+
+function groupObjByQtd(arr,qtd){
+    var index = 0 ;
+    var count = 1;
+    var aux = [] ;
+    $.each(arr,function(i,x){
+        if(typeof aux[index] == 'undefined') aux[index] = [] ;
+        aux[index].push(x);
+        if(count == qtd){
+            index ++;
+            count = 1 ;
+        }else
+            count ++ ;
+    });
+    return aux ;
+}
