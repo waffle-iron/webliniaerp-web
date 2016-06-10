@@ -567,7 +567,7 @@
 												<td class="text-middle text-center hidden-xs" width="200">{{ item.nome_fabricante }}</td>
 												<td class="text-middle text-center hidden-xs" width="200">{{ item.peso }}</td>
 												<td class="text-middle text-center hidden-xs" width="200">{{ item.sabor }}</td>
-												<td class="text-middle text-center" width="100">
+												<td class="text-middle text-right" width="100">
 													<button ng-click="selProduto(item,true)" type="button" class="btn btn-sm btn-warning">
 														<i class="fa fa-edit"></i>
 														<span class="hidden-xs">Alterar item</span>
@@ -638,7 +638,7 @@
 									<button ng-click="excluirItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-danger btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Excluir Item</button>
 
 									<button ng-if="!EditProduto"  ng-click="incluirItemComanda($event)"  type="button" class="btn btn-primary btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-cart-plus "></i>&nbsp;Incluir no carrinho</button>
-									<button  ng-click="cancelarProduto()"  type="button" class="btn btn-warning btn-block"><i class="fa fa-ban"></i>&nbsp;Cancelar</button>
+									<button  ng-click="cancelarProduto()"  type="button" class="btn btn-default btn-block"><i class="fa fa-ban"></i>&nbsp;Cancelar</button>
 								</div>
 							</div>
 
@@ -650,7 +650,7 @@
 										<button ng-click="editItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Atualizar Item</button>
 
 										<button ng-if="!EditProduto" ng-click="incluirItemComanda($event)" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Incluir no carrinho</button>
-										<button ng-click="cancelarProduto()" type="button" class="btn btn-warning"><i class="fa fa-ban"></i>&nbsp;Cancelar</button>
+										<button ng-click="cancelarProduto()" type="button" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp;Cancelar</button>
 									</div>
 								</div>
 							</div>
