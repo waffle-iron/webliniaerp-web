@@ -520,7 +520,7 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 					ng.alertas.push({
 						type: 'danger',
 						message: "Você tem "+ ng.count.orcamentos +" orçamentos para validar!",
-						link: "vendas.php?status=orcamento&dtaInicio="+first_date+"&dtaFim="+last_date
+						link: "vendas.php?status=orcamento"
 					});
 				}
 			})
