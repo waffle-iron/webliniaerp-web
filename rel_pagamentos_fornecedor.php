@@ -276,7 +276,7 @@
 							<button id="invoicePrint" class="btn btn-sm btn-success hidden-print" ng-show="pagamentos.length > 0">
 								<i class="fa fa-print"></i> Imprimir
 							</button>
-							<button type="button" class="btn btn-sm btn-success hidden-print" ng-click="export()">
+							<button type="button" class="btn btn-sm btn-success hidden-print" ng-show="pagamentos.length > 0" ng-click="export()">
 								<i class="fa fa-download"></i>
 								Exportar p/ Excel
 							</button>
