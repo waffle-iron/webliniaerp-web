@@ -238,7 +238,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="row">
+									<div class="row" ng-if="cliente.tipo_cadastro == 'pf'">
 										<div class="col-sm-6">
 											<div id="nome" class="form-group">
 												<label for="nome" class="control-label">Nome <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
@@ -313,7 +313,7 @@
 									<div class="row">
 										<div class="col-sm-2">
 											<div id="tel_fixo" class="form-group">
-												<label for="" class="control-label">Telefone Fixo  <i style="font-size: 10px;color: #Telefone Fixo ;" class="fa fa-asterisk"></i></label>
+												<label for="" class="control-label">Telefone Fixo</label>
 												<input type="text" ui-mask="(99) 99999999" class="form-control input-sm" ng-model="cliente.tel_fixo">
 											</div>
 										</div>
@@ -342,28 +342,28 @@
 									<div class="row">
 										<div class="col-sm-2">
 											<div id="cep" class="form-group">
-												<label class="control-label">CEP  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">CEP</label>
 												<input type="text" class="form-control input-sm" ui-mask="99999-999" ng-model="cliente.cep" ng-keyUp="validCep(cliente.cep)" ng-blur="validCep(cliente.cep)">
 											</div>
 										</div>
 
 										<div class="col-sm-7">
 											<div id="endereco" class="form-group">
-												<label class="control-label">Endereço  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">Endereço</label>
 												<input type="text" class="form-control input-sm" ng-model="cliente.endereco">
 											</div>
 										</div>
 
 										<div class="col-sm-1">
 											<div id="numero" class="form-group">
-												<label class="control-label">No. <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">No.</label>
 												<input id="num_logradouro" type="text" class="form-control input-sm" ng-model="cliente.numero" ng-blur="consultaLatLog()">
 											</div>
 										</div>
 
 										<div class="col-sm-2">
 											<div id="bairro" class="form-group">
-												<label class="control-label">Bairro  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">Bairro</label>
 												<input type="text" class="form-control input-sm" ng-model="cliente.bairro">
 											</div>
 										</div>
@@ -392,7 +392,7 @@
 
 										<div class="col-sm-2">
 											<div id="id_estado" class="form-group">
-												<label class="control-label">Estado  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">Estado</label>
 												<select chosen id="id_select_estado" class="form-control input-sm" readonly="readonly" ng-model="cliente.id_estado" ng-options="item.id as item.nome for item in estados" ng-change="cliente.id_cidade=null;loadCidadesByEstado()"></select>
 											</div>
 										</div>
@@ -400,7 +400,7 @@
 
 										<div class="col-sm-4">
 											<div id="id_cidade" class="form-group">
-												<label class="control-label">Cidade  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
+												<label class="control-label">Cidade</label>
 												<select chosen class="form-control input-sm" readonly="readonly" ng-model="cliente.id_cidade" ng-options="a.id as a.nome for a in cidades"></select>
 											</div>
 										</div>
