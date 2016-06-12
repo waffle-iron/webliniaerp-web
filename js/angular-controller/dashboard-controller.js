@@ -619,8 +619,6 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 		ng.loadCountClientes();
 		ng.loadCustoTotalEstoque();
 
-
-
 		var item = [{de: 0, ate: 2, qtd: 0}, {de: 3, ate: 5, qtd: 0}, {de: 6, ate: 10, qtd: 0}, {de: 11, ate: null, qtd: 0}];
 		var num = 11 ;
 		var aux = num ;

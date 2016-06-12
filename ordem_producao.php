@@ -20,6 +20,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Gritter -->
+	<link href="css/gritter/jquery.gritter.css" rel="stylesheet">
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -599,6 +602,9 @@
 
 	<!-- Jquery -->
 	<script src="js/jquery-1.10.2.min.js"></script>
+
+	<!-- Gritter -->
+	<script src="js/jquery.gritter.min.js"></script>
 
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>

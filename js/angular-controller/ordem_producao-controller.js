@@ -295,7 +295,15 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 
 	 ng.loadOrdemProducao();
 
-	
+
+	// EXEMPLO DE ALERTA QUANDO CHEGAR PEDIDO
+	$.gritter.add({
+		title: '<i class="fa fa-exclamation-triangle"></i> Novo Pedido Solicitado.',
+		text: "Pedido #36527 criado pelo usuário<br/>{{ nome_usuario }}.",
+		sticky: false,
+		time: 5000,
+		class_name: 'gritter-warning'
+	});
 });
 
 app.directive('bsTooltip', function ($timeout) {
