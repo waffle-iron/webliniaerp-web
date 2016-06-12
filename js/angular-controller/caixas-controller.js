@@ -11,8 +11,8 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
     ng.conta                        = {} ;
     ng.impressoras                  = [
     	{ value: null					, dsc:'Selecione' 			},
-    	{ value:'bematech_mp_4200_th'	, dsc:'BEMATECH MP-4200 TH' },
     	{ value:'bematech_mp_2500_th'	, dsc:'BEMATECH MP-2500 TH' },
+    	{ value:'bematech_mp_4200_th'	, dsc:'BEMATECH MP-4200 TH' },
     	{ value:'epson_tm_t20'			, dsc:'EPSON TM T20' 		}
 	];
 
