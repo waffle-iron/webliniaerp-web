@@ -1,10 +1,11 @@
-app.controller('OrdemProducaoController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('OrdemProducaoController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
 
 	var ng = $scope
 		aj = $http;
 
 	ng.baseUrl 		 = baseUrl();
 	ng.userLogged 	 = UserService.getUserLogado();
+	ng.configuracao  = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.ordemProducao = {itens:[]};
 	ng.busca         = {produtos:"",depositos:""};
 	ng.paginacao     = {produtos:[]} ;
@@ -254,6 +255,13 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 					ng.mensagens('alert-success','Status Alterado com Sucesso','.alert-list-pedidos');
 					item.id_status = data.status.id;
 					item.nome_status = data.status.nome_status;
+					if(id_status == 3){
+						var msg = {
+							type : 'op_finished',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+							id_usuario:item.id_responsavel, message : JSON.stringify({id_ordem_producao:item.id})
+						}
+						ng.sendMessageWebSocket(msg);
+					}
 				})
 				.error(function(data, status, headers, config) {
 				 but.button('reset');
@@ -293,17 +301,50 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 		}
 	}
 
+	ng.newConnWebSocket = function(){
+		ng.conn = new WebSocket(ng.configuracao.patch_socket_sat);
+		ng.conn.onopen = function(e) {
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - WebSocket conectado.');
+		};
+
+		ng.conn.onclose = function(e) {
+
+		}
+
+		ng.conn.onmessage = function(e) {
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Mensagem Recebida : '+e.data);
+			var data = JSON.parse(e.data);
+			data.message = parseJSON(data.message);
+			switch(data.type){
+				case 'session_id':
+					var msg = {
+						type : 'set_id_empreendimento',from : data.to,
+						message : JSON.stringify({id_empreendimento:ng.userLogged.id_empreendimento,id_usuario:ng.userLogged.id,id_perfil:ng.userLogged.id_perfil})
+					}
+					ng.sendMessageWebSocket(msg);
+					break;
+				case 'op_new':
+					$.gritter.add({
+						title: '<i class="fa fa-exclamation-triangle"></i> Novo Pedido Solicitado.',
+						text: "Pedido #"+data.message.id_ordem_producao+" criado pelo usuário<br/>"+data.message.nome_usuario+".",
+						sticky: true,
+						class_name: 'gritter-warning'
+					});
+					ng.loadOrdemProducao();
+				break;
+			}			
+		};
+	}
+	ng.sendMessageWebSocket = function(data){
+		console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - mensagem Enviada: '+JSON.stringify(data));
+		ng.conn.send(JSON.stringify(data));
+	}
+
+	if(!empty(ng.configuracao.patch_socket_sat))
+		ng.newConnWebSocket();
+
 	 ng.loadOrdemProducao();
-
-
-	// EXEMPLO DE ALERTA QUANDO CHEGAR PEDIDO
-	$.gritter.add({
-		title: '<i class="fa fa-exclamation-triangle"></i> Novo Pedido Solicitado.',
-		text: "Pedido #36527 criado pelo usuário<br/>{{ nome_usuario }}.",
-		sticky: false,
-		time: 5000,
-		class_name: 'gritter-warning'
-	});
+	
 });
 
 app.directive('bsTooltip', function ($timeout) {

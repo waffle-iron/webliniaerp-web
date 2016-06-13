@@ -609,6 +609,9 @@
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
 	<!-- Modernizr -->
 	<script src='js/modernizr.min.js'></script>
 

@@ -20,6 +20,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Gritter -->
+	<link href="css/gritter/jquery.gritter.css" rel="stylesheet">
+
 	<!-- Datepicker -->
 	<link href="css/datepicker.css" rel="stylesheet"/>
 
@@ -369,8 +372,10 @@
 								<div class="pull-right">
 									<button ng-click="changeTela('mesas')" type="button" class="btn btn-xs btn-primary">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
+
+									<button ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-xs"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
 									
-									<button ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
+									<button ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
 								</div>
 							</h3>
 						</div>
@@ -391,7 +396,9 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="comanda in mesaSelecioada.comandas" style="cursor:pointer" ng-click="abrirDetalhesComanda(comanda.id_comanda)">
-										<td>{{ comanda.nome_cliente }}</td>
+										<td ng-if="comanda.id_cliente != configuracao.id_cliente_movimentacao_caixa" >{{ comanda.nome_cliente }}</td>
+										<td ng-if="comanda.id_cliente == configuracao.id_cliente_movimentacao_caixa" ><b>(Cliente não informado)</b></td>
+
 										<td class="text-center">{{ comanda.qtd_total }}</td>
 										<td class="text-right">R$ {{ comanda.valor_total | numberFormat:2:',':'.' }}</td>
 									</tr>
@@ -425,14 +432,17 @@
 						<div class="panel-heading">
 							<h3 class="panel-title clearfix">
 								Informe o Cliente
-								<div class="pull-right hidden-xs">
-									<button ng-click="changeTela('detMesa')" type="button" class="btn btn-xs btn-primary">
+								<div class="pull-right">
+									<button ng-if="!editComanda" ng-click="changeTela('detMesa')" type="button" class="btn btn-xs btn-primary">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
-									<button type="button" class="btn btn-xs btn-success">
+									<button ng-if="editComanda" ng-click="changeTela('detComanda',{'editComanda':false});" type="button" class="btn btn-xs btn-primary">
+									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
+
+									<button ng-click="changeTela('cadCliente')" type="button" class="btn btn-xs btn-success hidden-xs">
 										<i class="fa fa-plus-circle"></i>
 										Cadastrar Novo
 									</button>
-									<button type="button" class="btn btn-xs btn-default">
+									<button type="button" class="btn btn-xs btn-default hidden-xs" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="abrirComanda(configuracao.id_cliente_movimentacao_caixa,$event)">
 										<i class="fa fa-times-circle"></i>
 										Não Informar
 									</button>
@@ -456,7 +466,11 @@
 												<td ng-if="item.tipo_cadastro=='pf'" class="text-middle text-center hidden-xs" width="120">{{ item.cpf | cpfFormat }}</td>
 												<td ng-if="item.tipo_cadastro=='pj'"  class="text-middle text-center hidden-xs" width="120">{{ item.cpf | cnpjFormat }}</td>
 												<td class="text-middle text-center" width="50">
-													<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="abrirComanda(item,$event)" type="button" class="btn btn-sm btn-info">
+													<button ng-if="!editComanda" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="abrirComanda(item.id,$event)" type="button" class="btn btn-sm btn-info">
+														<i class="fa fa-check-square-o"></i>
+														<span class="hidden-xs">Selecionar</span>
+													</button>
+													<button ng-if="editComanda" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="changeCliente(item.id,$event)" type="button" class="btn btn-sm btn-info">
 														<i class="fa fa-check-square-o"></i>
 														<span class="hidden-xs">Selecionar</span>
 													</button>
@@ -469,11 +483,15 @@
 						</div>
 
 						<div class="panel-footer clearfix hidden-sm hidden-md hidden-lg">
-							<button type="button" class="btn btn-md btn-block btn-success">
+							<button ng-click="changeTela('cadCliente')" type="button" class="btn btn-md btn-block btn-success">
 								<i class="fa fa-plus-circle"></i>
 								Cadastrar Novo
 							</button>
-							<button type="button" class="btn btn-md btn-block btn-default">
+							<button ng-if="!editComanda" ng-click="abrirComanda(configuracao.id_cliente_movimentacao_caixa,$event)" type="button" class="btn btn-md btn-block btn-default">
+								<i class="fa fa-times-circle"></i>
+								Não Informar
+							</button>
+							<button ng-if="editComanda" ng-click="changeCliente(configuracao.id_cliente_movimentacao_caixa,$event)" type="button" class="btn btn-md btn-block btn-default">
 								<i class="fa fa-times-circle"></i>
 								Não Informar
 							</button>
@@ -484,7 +502,12 @@
 					<!-- INICIO - EXIBIR APENAS QUANDO ESTIVER VISUALIZANDO A TELA DE CADASTRAR O CLIENTE -->
 					<div ng-show="layout.cadCliente">
 						<div class="panel-heading">
-							<h3 class="panel-title clearfix">Cadastro de Cliente</h3>
+							<h3 class="panel-title clearfix">Cadastro de Cliente
+								<div class="pull-right">
+									<button  ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-primary">
+									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
+								</div>
+							</h3>
 						</div>
 
 						<div class="panel-body">
@@ -492,7 +515,7 @@
 								<div class="col-sm-12 col-md-1 col-lg-1"></div>
 								<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
 									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Nome">
+										<input type="text" ng-model="new_cliente.nome" class="form-control" placeholder="Nome">
 									</div>
 								</div>
 							</div>
@@ -501,33 +524,33 @@
 								<div class="col-md-1 col-lg-1"></div>
 								<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 									<div class="form-group">
-										<input type="text" class="form-control" placeholder="CPF">
+										<input type="text" ng-model="new_cliente.cpf" class="form-control" placeholder="CPF">
 									</div>
 								</div>
 
 								<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
 									<div class="form-group">
-										<input type="text" class="form-control" placeholder="E-mail">
+										<input type="text" ng-model="new_cliente.email" class="form-control" placeholder="E-mail">
 									</div>
 								</div>
 
 								<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
 									<div class="form-group">
-										<input type="text" class="form-control" placeholder="Telefone/Celular">
+										<input type="text" ng-model="new_cliente.celular" class="form-control" placeholder="Telefone/Celular">
 									</div>
 								</div>
 							</div>
 						</div>
 
 						<div class="panel-footer clearfix hidden-sm hidden-md hidden-lg">
-							<button type="button" class="btn btn-md btn-block btn-primary">
+							<button ng-click="cadastrarCliente($event)" type="button" class="btn btn-md btn-block btn-primary">
 								<i class="fa fa-save"></i>
 								Salvar
 							</button>
 						</div>
 
 						<div class="panel-footer clearfix hidden-xs">
-							<button type="button" class="btn btn-md btn-primary pull-right">
+							<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="cadastrarCliente($event)" type="button" class="btn btn-md btn-primary pull-right">
 								<i class="fa fa-save"></i>
 								Salvar
 							</button>
@@ -543,11 +566,15 @@
 								<div class="pull-right">
 									<button ng-click="changeTela('detMesa')" type="button" class="btn btn-xs btn-primary">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
-									<button  type="button" class="btn btn-xs btn-default">
+									<button  type="button" class="btn btn-xs btn-default" ng-click="goChangeCliente()">
 										<i class="fa fa-user"></i>
 										<span class="hidden-xs">Informar Cliente</span>
 									</button>
-									<button type="button" class="btn btn-xs btn-info" ng-click="changeTela('escTipoProduto')">
+									<button type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg" ng-click="changeTela('escTipoProduto')">
+										<i class="fa fa-plus-circle"></i>
+										Adicionar Produto
+									</button>
+									<button type="button" class="btn btn-xs btn-info hidden-xs" ng-click="openModalProdutos()">
 										<i class="fa fa-plus-circle"></i>
 										Adicionar Produto
 									</button>
@@ -559,7 +586,8 @@
 							<div class="row client-list">
 								<div class="col-lg-12">
 									<table class="table">
-										<caption class="text-bold text-left mesa-caption">Cliente: {{ comandaSelecionada.cliente.nome }}</caption>
+										<caption ng-if="comandaSelecionada.cliente.id != configuracao.id_cliente_movimentacao_caixa" class="text-bold text-left mesa-caption">Cliente: {{ comandaSelecionada.cliente.nome }}</caption>
+										<caption ng-if="comandaSelecionada.cliente.id == configuracao.id_cliente_movimentacao_caixa" class="text-bold text-left mesa-caption"><b>Cliente: (Cliente não informado)</b></caption>
 
 										<tbody>
 											<tr ng-repeat="item in comandaSelecionada.comanda.itens">
@@ -598,13 +626,7 @@
 								</div>
 							</div>
 
-							<div class="row">
-								<div class="col-sm-12 col-md-12 col-lg-12 hidden-sm hidden-md hidden-lg"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-									<button type="button" class="btn btn-danger btn-block"><i class="fa fa-dollar"></i> Fechar Comanda</button>
-								</div>
-							</div>
-
-							<div class="row">
+							<div class="row" ng-if="getPermission('1,8')">
 								<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
 									<button type="button" class="btn btn-danger pull-right"><i class="fa fa-dollar"></i> Fechar Comanda</button>
 								</div>
@@ -625,7 +647,7 @@
 
 								<div class="row">
 									<div class="col-lg-12">
-										<input type="number" ng-model="produto.qtd" class="form-control" onKeyPress="return SomenteNumero(event);">
+										<input ng-disabled="produto.id_ordem_producao!=null" type="number" ng-model="produto.qtd" class="form-control" onKeyPress="return SomenteNumero(event);">
 									</div>
 								</div>
 							</fieldset>
@@ -634,7 +656,7 @@
 						<div class="panel-footer">
 							<div class="row">
 								<div class="col-sm-12 col-md-12 col-lg-12 hidden-sm hidden-md hidden-lg"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-									<button ng-click="editItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-primary btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Atualizar Item</button>
+									<button ng-disabled="produto.id_ordem_producao!=null" ng-click="editItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-primary btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Atualizar Item</button>
 									<button ng-click="excluirItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-danger btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Excluir Item</button>
 
 									<button ng-if="!EditProduto"  ng-click="incluirItemComanda($event)"  type="button" class="btn btn-primary btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-cart-plus "></i>&nbsp;Incluir no carrinho</button>
@@ -647,7 +669,7 @@
 									<div class="pull-right">
 										<button ng-click="excluirItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-danger" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Excluir Item</button>
 
-										<button ng-click="editItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Atualizar Item</button>
+										<button ng-disabled="produto.id_ordem_producao!=null" ng-click="editItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Atualizar Item</button>
 
 										<button ng-if="!EditProduto" ng-click="incluirItemComanda($event)" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Incluir no carrinho</button>
 										<button ng-click="cancelarProduto()" type="button" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp;Cancelar</button>
@@ -765,7 +787,7 @@
 									<div ng-click="selProduto(produto)" class="panel panel-primary middle-frame">
 										<div class="panel-body">
 											<div class="text-center container">
-												<img pre-load-img imgpreload="img/img-preload-app.jpg" notimg="img/sem-imagem-app.png" datasrc="http://webliniaerp.com.br/assets/imagens/produtos/{{ produto.img }}"  class="img-responsive">
+												<img pre-load-img imgpreload="img/img-preload-app.jpg" notimg="img/sem-imagem-app.png" datasrc="{{ baseUrl()+'assets/imagens/produtos/'+produto.img }}"  class="img-responsive">
 												<span class="product-name">{{ produto.nome }}</span>
 												<span class="product-price">R$ {{ produto.vlr_venda_varejo | numberFormat:2:',':'.' }}</span>
 											</div>
@@ -787,6 +809,93 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-MODAIS->
+
+		<!-- /Modal Produtos-->
+		<div class="modal fade" id="list_produtos" style="display:none">
+  			<div class="modal-dialog modal-xl">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Produtos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.produtosModal" ng-enter="loadProdutosModal(0,10)" type="text" class="form-control input-sm">
+
+						            <div class="input-group-btn">
+						            	<button tabindex="-1" class="btn btn-sm btn-primary" type="button"
+						            		ng-click="loadProdutosModal(0,10)">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="alert alert-produtos" style="display:none"></div>
+						   		<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(produtosModal.itens.length != 0)">
+										<tr>
+											<th>#</th>
+											<th>Nome</th>
+											<th>Fabricante</th>
+											<th>Tamanho</th>
+											<th>Sabor</th>
+											<th width="80">qtd</th>
+											<th width="80"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-if="produtosModal.itens == null">
+											<th class="text-center" colspan="9" style="text-align:center">
+												<i class='fa fa-refresh fa-spin'></i> Carregando... 
+											</th>
+										</tr>
+										<tr ng-show="(produtosModal.itens.length == 0)">
+											<td colspan="3">Nenhum produto encontrado</td>
+										</tr>
+										<tr ng-repeat="item in produtosModal.itens">
+											<td>{{ item.id_produto }}</td>
+											<td>{{ item.nome }}</td>
+											<td>{{ item.nome_fabricante }}</td>
+											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
+											<td><input onKeyPress="return SomenteNumero(event);" ng-keyUp="" ng-model="item.qtd" type="text" class="form-control input-xs" width="50" /></td>
+											<td>
+											<button  ng-click="incluirItemComandaModal(item,$event)" class="btn btn-success btn-xs" type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+												<i class="fa fa-check-square-o"></i> Adicionar
+											</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					    <div class="row">
+					    	<div class="col-md-12">
+								<div class="input-group pull-right">
+						             <ul class="pagination pagination-xs m-top-none" ng-show="produtosModal.paginacao.length > 1">
+										<li ng-repeat="item in produtosModal.paginacao" ng-class="{'active': item.current}">
+											<a href="" ng-click="loadProdutosModal(item.offset,item.limit)">{{ item.index }}</a>
+										</li>
+									</ul>
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+					</div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->
@@ -822,6 +931,9 @@
 
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Gritter -->
+	<script src="js/jquery.gritter.min.js"></script>
 
     <!-- Chosen -->
 	<script src='js/chosen.jquery.min.js'></script>

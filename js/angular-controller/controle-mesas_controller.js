@@ -25,14 +25,24 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	ng.produtos = {itens:[],paginacao:[]};
 	ng.produto = {} ;
 	ng.EditProduto = false ;
+	ng.editComanda = false ;
+	ng.new_cliente = {id_empreendimento:ng.userLogged.id_empreendimento,id_perfil:6};
 	$('#sizeToggle').trigger("click");
 
-	ng.changeTela = function(tela){
+	ng.changeTela = function(tela,changeValue){
 		if(!empty(tela)){
 			$.each(ng.layout,function(i,x){
 				if(x) ng.telaAnterior = i ;
 				ng.layout[i] = false ;
 			});
+
+			if(!empty(changeValue)){
+				$.each(changeValue,function(i,v){
+					ng[i] = v ;
+				});
+
+			}
+
 			ng.layout[tela] = true ;
 			$('html,body').animate({scrollTop: 0});
 			if(tela=='mesas')
@@ -40,6 +50,10 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			else if(tela=='detMesa')
 				ng.loadComandasByMesa();
 		}
+	}
+
+	ng.baseUrl = function(){
+		return baseUrl();
 	}
 
 	ng.loadMesas = function(offset,limit){
@@ -91,13 +105,13 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		}); 
 	}
 
-	ng.abrirComanda = function(cliente,event){
+	ng.abrirComanda = function(id_cliente,event){
 		var btn = $(event.target);
 		if(!btn.is(':button')) btn = $(event.target).parent();
 		btn.button('loading');
 		var post = {
 			id_usuario : ng.userLogged.id,
-			id_cliente : cliente.id,
+			id_cliente : id_cliente,
 			id_empreendimento : ng.userLogged.id_empreendimento,
 			dta_venda : moment().format('YYYY-MM-DD HH:mm:ss'),
 			id_mesa : ng.mesaSelecioada.mesa.id_mesa 
@@ -278,6 +292,87 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			});
 	}
 
+	ng.openModalProdutos = function(){
+		ng.loadProdutosModal();
+		$('#list_produtos').modal('show')
+	}
+
+	ng.loadProdutosModal = function(offset, limit) {
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+		ng.produtosModal = null ;
+		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(!empty(ng.busca.produtosModal)){
+			var busca = ng.busca.produtosModal.replace(/\s/g, '%');
+			if(isNaN(Number(ng.busca.produtosModal)))
+				query_string += "&("+$.param({nome:{exp:"like '%"+busca+"%' OR codigo_barra like '%"+busca+"%'"}})+")";
+			else
+				query_string += "&("+$.param({nome:{exp:"like '%"+busca+"%' OR codigo_barra like '%"+busca+"%' OR pro.id = "+busca+""}})+")";
+		}
+
+		aj.get(baseUrlApi()+"produtos/"+ offset +"/"+ limit +"/"+query_string)
+			.success(function(data, status, headers, config) {
+					$.each(data.produtos,function(i,v){
+						data.produtos[i].qtd = null ;
+					});
+					var aux = {itens:data.produtos,paginacao:data.paginacao}
+					ng.produtosModal = aux;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404) {
+					var aux = {itens:[],paginacao:[]}
+					ng.produtosModal = aux ;
+				}
+			});
+	}
+
+	ng.incluirItemComandaModal = function(item,event){
+		var produto = angular.copy(item);
+		produto.qtd = empty(produto.qtd) ? 1 : produto.qtd ; 
+		var btn = $(event.target);
+		if(!btn.is(':button')) btn = $(event.target).parent();
+		btn.button('loading');
+		var post = {
+			id_venda : ng.comandaSelecionada.comanda.id,
+			id_produto : produto.id ,
+			desconto_aplicado : 0 ,
+			valor_desconto : 0 ,
+			qtd : produto.qtd,
+			valor_real_item : round(produto.vlr_venda_varejo,2) ,
+			vlr_custo : produto.vlr_custo_real,
+			perc_imposto_compra : produto.perc_imposto_compra ,
+			perc_desconto_compra : produto.perc_desconto_compra,
+			perc_margem_aplicada : produto.perc_venda_varejo,
+			id_empreendimento : ng.userLogged.id_empreendimento,
+			id_deposito : ng.configuracao.id_deposito_padrao,
+			flg_produto_composto : produto.flg_produto_composto,
+			id_usuario : ng.userLogged.id,
+			dta_create : moment().format('YYYY-MM-DD HH:mm:ss')
+		}
+
+		aj.post(baseUrlApi()+"item_comanda/add",post)
+		.success(function(data, status, headers, config) {
+			if(Number(produto.flg_produto_composto) == 1){
+				var msg = {
+						type : 'op_new',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+						message : JSON.stringify({id_ordem_producao:data.id_ordem_producao,nome_usuario:ng.userLogged.nme_usuario})
+					}
+					ng.sendMessageWebSocket(msg);
+			}
+			item.qtd = null ;
+			btn.button('reset');
+			ng.loadComanda(ng.comandaSelecionada.comanda.id);
+		})
+		.error(function(data, status, headers, config) {
+			btn.button('reset');
+			if(status == 406){
+				$dialogs.notify('Atenção!','<strong>Produto com estoque insuficiente</strong>');
+			}else
+				$dialogs.notify('Atenção!','<strong>Erro ao incluir produto</strong>');
+		});
+	}
+
 	ng.getNextPage = function(paginacao){
 		var indexNext ;
 		var pages = [];
@@ -328,6 +423,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			ng.changeTela('escProduto');
 	}
 
+
 	ng.incluirItemComanda = function(event){
 		var btn = $(event.target);
 		if(!btn.is(':button')) btn = $(event.target).parent();
@@ -344,11 +440,21 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			perc_desconto_compra : ng.produto.perc_desconto_compra,
 			perc_margem_aplicada : ng.produto.perc_venda_varejo,
 			id_empreendimento : ng.userLogged.id_empreendimento,
-			id_deposito : ng.configuracao.id_deposito_padrao
+			id_deposito : ng.configuracao.id_deposito_padrao,
+			flg_produto_composto : ng.produto.flg_produto_composto,
+			id_usuario : ng.userLogged.id,
+			dta_create : moment().format('YYYY-MM-DD HH:mm:ss')
 		}
 
 		aj.post(baseUrlApi()+"item_comanda/add",post)
 		.success(function(data, status, headers, config) {
+			if(Number(ng.produto.flg_produto_composto) == 1){
+				var msg = {
+						type : 'op_new',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+						message : JSON.stringify({id_ordem_producao:data.id_ordem_producao,nome_usuario:ng.userLogged.nme_usuario})
+					}
+					ng.sendMessageWebSocket(msg);
+			}
 			btn.button('reset');
 			ng.produto = {} ;
 			ng.abrirDetalhesComanda(ng.comandaSelecionada.comanda.id);
@@ -439,9 +545,114 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		return total ;
 	}
 
+	ng.goChangeCliente = function(){
+		ng.editComanda = true ;
+		ng.changeTela('SelCliente');
+	}
+
+	ng.changeCliente = function(id_cliente,event){
+		var btn = $(event.target);
+		if(!btn.is(':button')) btn = $(event.target).parent();
+		btn.button('loading');
+		var id_comanda = ng.comandaSelecionada.comanda.id
+		var post = {
+			campos:{
+				id_cliente : id_cliente
+			},
+			where : 'id='+id_comanda
+		}
+
+		aj.post(baseUrlApi()+"comanda/edit",post)
+		.success(function(data, status, headers, config) {
+			btn.button('reset');
+			ng.editComanda = false ;
+			ng.changeTela('detComanda');
+			ng.comandaSelecionada = {} ;
+			ng.loadComanda(id_comanda);
+		})
+		.error(function(data, status, headers, config) {
+			btn.button('reset');
+			$dialogs.notify('Atenção!','<strong>Erro ao trocar o cliente da comanda</strong>');
+		});
+	}
+
+	ng.cadastrarCliente = function($event){
+		var btn = $(event.target);
+		if(!btn.is(':button')) btn = $(event.target).parent();
+		btn.button('loading');
+		var cliente = angular.copy(ng.new_cliente);
+		cliente.celular = empty(cliente.celular) ? null : cliente.celular ;
+		aj.post(baseUrlApi()+"comanda/cliente/new",cliente)
+		.success(function(data, status, headers, config) {
+			if(ng.editComanda){
+				ng.changeCliente(data.usuario.id,$event);
+			}else
+				ng.abrirComanda(data.usuario.id,$event);
+		})
+		.error(function(data, status, headers, config) {
+			btn.button('reset');
+			if(status == 406){
+				var str = "";
+				$.each(data,function(i,x){
+					str += x[0]+'<br/>';
+				});
+				$dialogs.notify('Atenção!','<strong>'+str+'</strong>');
+			}
+		});
+	}
+
+	ng.newConnWebSocket = function(){
+		ng.conn = new WebSocket(ng.configuracao.patch_socket_sat);
+		ng.conn.onopen = function(e) {
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - WebSocket conectado.');
+		};
+
+		ng.conn.onclose = function(e) {
+
+		}
+
+		ng.conn.onmessage = function(e) {
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Mensagem Recebida : '+e.data);
+			var data = JSON.parse(e.data);
+			data.message = parseJSON(data.message);
+			switch(data.type){
+				case 'session_id':
+					ng.id_ws_web = data.to ;
+					var msg = {
+						type : 'set_id_empreendimento',from : data.to,
+						message : JSON.stringify({id_empreendimento:ng.userLogged.id_empreendimento,id_usuario:ng.userLogged.id,id_perfil:ng.userLogged.id_perfil})
+					}
+					ng.sendMessageWebSocket(msg);
+					break;
+				case 'op_finished':
+					aj.get(baseUrlApi()+"mesa/ordem_producao/"+data.message.id_ordem_producao)
+					.success(function(data, status, headers, config) {
+						$.gritter.add({
+							title: '<i class="fa fa-check-circle"></i>&nbsp;Produto pronto para entrega<br/>'+
+							'Mesa:'+data.dsc_mesa+'<br/>'+
+							( ng.configuracao.id_cliente_movimentacao_caixa == data.id_cliente ? '' :'Cliente:'+data.nome_cliente+'<br/>')+
+							'Comanda:#'+data.id_venda+'<br/>',
+							sticky: true,
+							class_name: 'gritter-success'
+						});
+					})
+					.error(function(data, status, headers, config) {
+						
+					});
+				break;
+			}			
+		};
+	}
+	ng.sendMessageWebSocket = function(data){
+		console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - mensagem Enviada: '+JSON.stringify(data));
+		ng.conn.send(JSON.stringify(data));
+	}
+
+	if(!empty(ng.configuracao.patch_socket_sat))
+		ng.newConnWebSocket();
+
 	ng.loadMesas();
 	ng.loadCategorias();
 	ng.loadFabricantes();
 	ng.paginacaoProdutos();
-
 });
