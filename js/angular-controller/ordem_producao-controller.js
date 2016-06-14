@@ -9,7 +9,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 	ng.ordemProducao = {itens:[]};
 	ng.busca         = {produtos:"",depositos:""};
 	ng.paginacao     = {produtos:[]} ;
-	ng.id_ws_dsk     =  null ;
+	ng.id_ws_dsk     =  ng.configuracao.id_ws_dsk_op ;
 	ng.status_websocket = 0 ;
 	var TimeWaitingResponseTestConection = 10000;
 	var timeOutSendTestConection = null ;
