@@ -334,7 +334,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 						from:ng.id_ws_web,
 						to:ng.id_ws_dsk,
 						type:'cop_print',
-						message : { 
+						message : JSON.stringify({ 
 							numOrdemProducao: data.message.id_ordem_producao,
 							numMesa:     data.message.dsc_mesa,
 							numComanda:   data.message.id_venda,
@@ -346,7 +346,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 							nmeFabricante:   data.message.nome_fabricante,
 							nmeQtdItem:   data.message.qtd,
 							nmePrinterModel:   ng.configuracao.printer_model_op
-						}
+						})
 					}
 					ng.sendMessageWebSocket(msg);
 					$.gritter.add({
