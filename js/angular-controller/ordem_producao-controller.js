@@ -9,6 +9,11 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 	ng.ordemProducao = {itens:[]};
 	ng.busca         = {produtos:"",depositos:""};
 	ng.paginacao     = {produtos:[]} ;
+	ng.id_ws_dsk     =  null ;
+	ng.status_websocket = 0 ;
+	var TimeWaitingResponseTestConection = 10000;
+	var timeOutSendTestConection = null ;
+	var timeOutWaitingResponseTestConection = null ;
 
     ng.editing = false;
 
@@ -139,15 +144,13 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 		});
 	}
 
-	 ng.loadOrdemProducao = function(offset, limit) {
+	ng.loadOrdemProducao = function(offset, limit) {
 		ng.ordem_producao = [];
 
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 
 		var query_string = "?top->id_empreendimento="+ng.userLogged.id_empreendimento+"&top->flg_excluido=0";
-
-		
 
 		aj.get(baseUrlApi()+"ordem_producao/"+ offset +"/"+ limit +"/"+query_string)
 			.success(function(data, status, headers, config) {
@@ -305,6 +308,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 		ng.conn = new WebSocket(ng.configuracao.patch_socket_sat);
 		ng.conn.onopen = function(e) {
 			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - WebSocket conectado.');
+			$scope.$apply(function () { ng.status_websocket = 1 ;});
 		};
 
 		ng.conn.onclose = function(e) {
@@ -322,8 +326,29 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 						message : JSON.stringify({id_empreendimento:ng.userLogged.id_empreendimento,id_usuario:ng.userLogged.id,id_perfil:ng.userLogged.id_perfil})
 					}
 					ng.sendMessageWebSocket(msg);
+					ng.id_ws_web = data.to ;
+					enviaTesteConexao();
 					break;
 				case 'op_new':
+					var msg = {
+						from:ng.id_ws_web,
+						to:ng.id_ws_dsk,
+						type:'cop_print',
+						message : { 
+							numOrdemProducao: data.message.id_ordem_producao,
+							numMesa:     data.message.dsc_mesa,
+							numComanda:   data.message.id_venda,
+							nmeSolicitante: data.message.nome_usuario,
+							nmeCliente:   data.message.nome_cliente,
+							nmeProduto:   data.message.nome_produto,
+							nmeCorSabor:   data.message.sabor,
+							nmeTamanho:   data.message.tamanho,
+							nmeFabricante:   data.message.nome_fabricante,
+							nmeQtdItem:   data.message.qtd,
+							nmePrinterModel:   ng.configuracao.printer_model_op
+						}
+					}
+					ng.sendMessageWebSocket(msg);
 					$.gritter.add({
 						title: '<i class="fa fa-exclamation-triangle"></i> Novo Pedido Solicitado.',
 						text: "Pedido #"+data.message.id_ordem_producao+" criado pelo usuário<br/>"+data.message.nome_usuario+".",
@@ -332,12 +357,47 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 					});
 					ng.loadOrdemProducao();
 				break;
+				case 'connection_test_response':
+					clearTimeout(timeOutWaitingResponseTestConection);
+					$scope.$apply(function () { ng.status_websocket = 2 ;});
+					ng.id_ws_dsk = data.from ;
+					console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Conexão com App client extabelecida');
+				break;
 			}			
 		};
 	}
 	ng.sendMessageWebSocket = function(data){
 		console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - mensagem Enviada: '+JSON.stringify(data));
 		ng.conn.send(JSON.stringify(data));
+	}
+
+	function enviaTesteConexao(){	
+		timeOutSendTestConection = setTimeout(function(){
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Buscando id_ws_dsk ...');
+			aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento+"/id_ws_dsk_op")
+				.success(function(data, status, headers, config) {
+					if(!empty(data.id_ws_dsk_op)){
+						ng.id_ws_dsk = data.id_ws_dsk_op ;
+						var mg = {
+							from:ng.id_ws_web,
+							to:ng.id_ws_dsk,
+							type:'connection_test_request',
+							message:"Teste de conexão com client desktop"
+						};
+						ng.sendMessageWebSocket(mg);
+						 timeOutWaitingResponseTestConection = setTimeout(function() {
+						 	$scope.$apply(function () { ng.status_websocket = 1 ;});
+						 	console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível obter resposta do APP Client para o teste de conexão');
+						 }, TimeWaitingResponseTestConection);
+					}else
+						console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível obter o id_ws_dsk');
+					enviaTesteConexao();
+				})
+				.error(function(data, status, headers, config) {
+					console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível obter o id_ws_dsk');
+					enviaTesteConexao();
+				});
+		},60000);
 	}
 
 	if(!empty(ng.configuracao.patch_socket_sat))

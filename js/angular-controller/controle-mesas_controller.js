@@ -356,7 +356,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			if(Number(produto.flg_produto_composto) == 1){
 				var msg = {
 						type : 'op_new',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
-						message : JSON.stringify({id_ordem_producao:data.id_ordem_producao,nome_usuario:ng.userLogged.nme_usuario})
+						message : JSON.stringify(data.ordem_producao)
 					}
 					ng.sendMessageWebSocket(msg);
 			}
@@ -451,7 +451,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			if(Number(ng.produto.flg_produto_composto) == 1){
 				var msg = {
 						type : 'op_new',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
-						message : JSON.stringify({id_ordem_producao:data.id_ordem_producao,nome_usuario:ng.userLogged.nme_usuario})
+						message : JSON.stringify(data.ordem_producao)
 					}
 					ng.sendMessageWebSocket(msg);
 			}

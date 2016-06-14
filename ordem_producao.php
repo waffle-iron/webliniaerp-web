@@ -193,7 +193,7 @@
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa  fa-wrench"></i> Ordem de Produção</h3>
+					<h3 class="no-margin"><i class="fa  fa-wrench"></i> Ordem de Produção {{ status_websocket }}</h3>
 					<br/>
 					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Ordem de Produção</a>
 				</div><!-- /page-title -->
