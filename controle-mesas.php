@@ -38,6 +38,7 @@
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
+	<link href="css/animate.css" rel="stylesheet">
 	<link href="css/custom.css" rel="stylesheet">
 
 	<style type="text/css">
@@ -572,7 +573,6 @@
 									</button>
 									<button type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg" ng-click="changeTela('escTipoProduto')">
 										<i class="fa fa-plus-circle"></i>
-										Adicionar Produto
 									</button>
 									<button type="button" class="btn btn-xs btn-info hidden-xs" ng-click="openModalProdutos()">
 										<i class="fa fa-plus-circle"></i>
@@ -1018,6 +1018,8 @@
 
 	<!-- accounting -->
 	<script type="text/javascript" src="js/accounting.min.js"></script>
+
+	<script src="bower_components/noty/js/noty/packaged/jquery.noty.packaged.min.js"></script>
 
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>

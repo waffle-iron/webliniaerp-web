@@ -257,11 +257,11 @@
 								</div>
 								<div class="col-sm-3" >
 									<div class="form-group">
-										<label class="control-label">Impressora</label> 
+										<label class="control-label">Modelo de Impressora</label> 
 										<select chosen
-									    option="impressoras"
-									    ng-model="conta.mod_impressora"
-									    ng-options="item.value as item.dsc for item in impressoras">
+									    	option="impressoras"
+									    	ng-model="conta.mod_impressora"
+									    	ng-options="item.value as item.dsc for item in impressoras">
 										</select>
 									</div>
 								</div>

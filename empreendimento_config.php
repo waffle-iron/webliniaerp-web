@@ -214,6 +214,7 @@
 							<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
 							<li><a href="#estoque" data-toggle="tab"><i class="fa fa-sitemap"></i> Estoque</a></li>
 							<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
+							<li><a href="#mesas" data-toggle="tab"><i class="fa fa-table"></i> Controle Mesas</a></li>
 							<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> Fiscal</a></li>
 							<li><a href="#notificacoes" data-toggle="tab"><i class="fa fa-bell"></i> Notificações</a></li>
 							<li><a href="#mod_clinica" ng-if="userLogged.id_empreendimento == 75" data-toggle="tab"><i class="fa fa-list"></i> Controle de Atendimento</a></li>
@@ -924,6 +925,32 @@
 									<div class="col-sm-12">
 										<div class="pull-right">
 											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigAtendimento($event)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="mesas">
+								<div class="alert alert-config-mesas" style="display:none"></div>
+								<div class="row">
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label class="control-label">Modelo de Impressora</label>
+											<select chosen
+										    	option="impressoras"
+										    	ng-model="configuracoes.printer_model_op"
+										    	ng-options="item.value as item.dsc for item in impressoras">
+											</select>
+										</div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigControleMesas($event)" type="submit" class="btn btn-success btn-sm">
 												<i class="fa fa-save"></i> Salvar
 											</button>
 										</div>
