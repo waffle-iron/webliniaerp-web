@@ -589,13 +589,25 @@
 										<caption ng-if="comandaSelecionada.cliente.id != configuracao.id_cliente_movimentacao_caixa" class="text-bold text-left mesa-caption">Cliente: {{ comandaSelecionada.cliente.nome }}</caption>
 										<caption ng-if="comandaSelecionada.cliente.id == configuracao.id_cliente_movimentacao_caixa" class="text-bold text-left mesa-caption"><b>Cliente: (Cliente não informado)</b></caption>
 
+										<thead>
+											<th class="text-middle">Produto</th>
+											<th class="text-middle text-center hidden-xs" width="200">Fabricante</th>
+											<th class="text-middle text-center hidden-xs">Tamanho</th>
+											<th class="text-middle text-center hidden-xs">Cor/Sabor</th>
+											<th class="text-middle text-center">Qtd.</th>
+											<th class="text-middle text-center">Valor</th>
+											<th class="text-middle text-right hidden-xs" width="100">Ações</th>
+											<th class="text-middle text-right hidden-sm hidden-sm hidden-lg" width="50">Ações</th>
+										</thead>
 										<tbody>
 											<tr ng-repeat="item in comandaSelecionada.comanda.itens">
 												<td class="text-middle">{{ item.nome }}</td>
 												<td class="text-middle text-center hidden-xs" width="200">{{ item.nome_fabricante }}</td>
-												<td class="text-middle text-center hidden-xs" width="200">{{ item.peso }}</td>
-												<td class="text-middle text-center hidden-xs" width="200">{{ item.sabor }}</td>
-												<td class="text-middle text-right" width="100">
+												<td class="text-middle text-center hidden-xs">{{ item.peso }}</td>
+												<td class="text-middle text-center hidden-xs">{{ item.sabor }}</td>
+												<td class="text-middle text-center">{{ item.qtd_total }}</td>
+												<td class="text-middle text-center">R$ {{ item.vlr_venda_varejo | numberFormat:2 : ',' : '.' }}</td>
+												<td class="text-middle text-right">
 													<button ng-click="selProduto(item,true)" type="button" class="btn btn-sm btn-warning">
 														<i class="fa fa-edit"></i>
 														<span class="hidden-xs">Alterar item</span>
