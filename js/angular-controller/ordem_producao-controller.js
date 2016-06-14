@@ -403,8 +403,21 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 	if(!empty(ng.configuracao.patch_socket_sat))
 		ng.newConnWebSocket();
 
-	 ng.loadOrdemProducao();
-	
+	ng.loadOrdemProducao();
+
+
+	setTimeout(function() {
+		noty({
+			layout: 'topRight',
+			type: 'warning',
+			theme: 'relax',
+			text: 'noty - a jquery notification library!',
+			animation : {
+				open  : 'animated bounceInRight',
+				close : 'animated bounceOutRight'
+			}
+		});
+	}, 3000);
 });
 
 app.directive('bsTooltip', function ($timeout) {
