@@ -3075,6 +3075,51 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		});
 	}
 
+	ng.modalComandas = function(){
+		$('#list_comandas').modal('show');
+		ng.loadComandas(0,10);
+		ng.loadMesas();
+	}
+
+	ng.loadComandas = function(offset,limit) {
+		offset = offset == null ? 0  : offset;
+    	limit  = limit  == null ? 20 : limit;
+    	var query_string = "?te->id="+ng.userLogged.id_empreendimento;
+    	if(!empty(ng.busca.id_mesa_comanda)) query_string += "&tm->id_mesa="+ng.busca.id_mesa_comanda;
+    	
+    	if(!empty(ng.busca.comandas)){
+    		query_string += "&tm->id_mesa="+ng.busca.id_mesa_comanda;
+    		/*if(isNaN(Number(ng.busca.produtos)))
+    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
+    		else
+    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%' OR prd.id = "+ng.busca.produtos+""}})+")";
+    		*/
+    	}
+
+		ng.comandas =  {dados:null,paginacao:[]};
+		aj.get(baseUrlApi()+"comandas/"+offset+"/"+limit+query_string)
+			.success(function(data, status, headers, config) {
+				ng.comandas = data ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.comandas =  {dados:[],paginacao:[]};
+			});
+	}
+
+	ng.loadMesas = function() {
+    	var query_string = "?tm->id_empreendimento="+ng.userLogged.id_empreendimento;
+		ng.mesas = [] ;
+		aj.get(baseUrlApi()+"mesas"+query_string)
+			.success(function(data, status, headers, config) {
+				ng.mesas = [{id_mesa:null,dsc_mesa:'Selecione'}];
+				ng.mesas = ng.mesas.concat(data) ;
+				setTimeout(function(){$("select").trigger("chosen:updated");},300);
+			})
+			.error(function(data, status, headers, config) {
+				ng.mesas =  [];
+			});
+	}
+
 	ng.resetPdv = function(tela,ifOrcamento){
 		ifOrcamento = ifOrcamento == null ? false : ifOrcamento ;
 		if(ifOrcamento && !empty(params.id_orcamento)){

@@ -365,6 +365,7 @@
 								<li class="hidden-lg"><a href="#" ng-click="selVendedor()"><i class="fa fa-retweet fa-lg"></i>  Trocar Vendedor</a></li>
 								<li><a href="pedido_transferencia.php"><i class="fa fa-arrows-h fa-lg"></i> Transferência</a></li>
 								<li ><a href="#" ng-click="showCadastroRapido()"><i class="fa fa-users"></i> Novo Cliente</a></li>
+								<li><a href="#" ng-click="modalComandas()"><i class="fa fa-table"></i> Comandas</a></li>
 								<li><a href="#" ng-click="modalReforco()"><i class="fa fa-download"></i> Incluir Reforço</a></li>
 								<li><a href="#" ng-click="modalSangria()"><i class="fa fa-upload"></i> Efetuar Sangria</a></li>
 								<li><a href="#" ng-click="modalFechar()"><i class="fa fa-sign-out"></i> Fechar Caixa</a></li>
@@ -1710,510 +1711,510 @@
 			</div>
 
 
-			<!-- /Modal Print-->
-				<div class="modal fade" id="modal-print" style="display:none"  data-keyboard="false">
-		  			<div class="modal-dialog error modal-lg">
-		    			<div class="modal-content">
-		      				<div class="modal-header" id="topo_print">
-								<div class="clearfix">
-									<div class="pull-left">
-										<span class="img-demo">
-											<img src="assets/imagens/logos/{{ userLogged.nme_logo }}" height="40" width="40">
-										</span>
+		<!-- /Modal Print-->
+		<div class="modal fade" id="modal-print" style="display:none"  data-keyboard="false">
+  			<div class="modal-dialog error modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header" id="topo_print">
+						<div class="clearfix">
+							<div class="pull-left">
+								<span class="img-demo">
+									<img src="assets/imagens/logos/{{ userLogged.nme_logo }}" height="40" width="40">
+								</span>
 
-										<div class="pull-left m-left-sm">
-											<h3 class="m-bottom-xs m-top-xs" ng-if="pagamento_fulso != true  && orcamento!=true">Comprovante de Venda</h3>
-											<h3 class="m-bottom-xs m-top-xs" ng-if="orcamento == true">Pedido de Venda</h3>
-											<h3 class="m-bottom-xs m-top-xs" ng-if="pagamento_fulso == true">Comprovante de Pagamento</h3>
-											<span class="text-muted">{{ userLogged.nome_empreendimento }}</span>
-										</div>
-									</div>
-
-									<div class="pull-right text-right">
-										<h5 ng-if="pagamento_fulso != true && finalizarOrcamento == false"><strong>#{{ id_venda }}</strong></h5>
-										<h5 ng-if="finalizarOrcamento"><strong>#{{ id_orcamento }}</strong></h5>
-										<h5 ng-if="pagamento_fulso == true"><strong>#{{ id_controle_pagamento }}</strong></h5>
-										<strong><?php echo date("d/m/Y H:i:s"); ?></strong>
-									</div>
+								<div class="pull-left m-left-sm">
+									<h3 class="m-bottom-xs m-top-xs" ng-if="pagamento_fulso != true  && orcamento!=true">Comprovante de Venda</h3>
+									<h3 class="m-bottom-xs m-top-xs" ng-if="orcamento == true">Pedido de Venda</h3>
+									<h3 class="m-bottom-xs m-top-xs" ng-if="pagamento_fulso == true">Comprovante de Pagamento</h3>
+									<span class="text-muted">{{ userLogged.nome_empreendimento }}</span>
 								</div>
-		      				</div>
-
-						    <div class="modal-body">
-						    	<div class="row">
-						    		<div class="col-sm-12">
-
-						    		</div>
-						    	</div>
-						    	<div class="row" id="tbl_print">
-						    		<div class="col-sm-12" id="valor_pagamento">
-						    			<strong style="font-size:14px;margin-bottom:5px">Vendedor : {{ vendedor.nome_vendedor }}</strong>
-						    			<br>
-						    			<strong style="font-size:14px" ng-if="isNumeric(cliente.id)">Cliente : {{ cliente.nome }}</strong>
-						    			<br>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="vlr_saldo_devedor >= 0 && isNumeric(cliente.id) && (orcamento == false)">Saldo : R${{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="vlr_saldo_devedor < 0 && isNumeric(cliente.id) && (orcamento == false)">Saldo : R$ {{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="(isNumeric(cliente.id) && cliente.vlr_saldo_devedor >= 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
-						    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="(isNumeric(cliente.id) && cliente.vlr_saldo_devedor < 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
-						    			<br>
-						    			<br>
-						    			<table class="table table-bordered" ng-if="pagamento_fulso != true">
-											<thead ng-show="carrinho.length  > 0">
-												<tr>
-													<th>Produto</th>
-													<th>Fabricante</th>
-													<th>Tamanho</th>
-													<th class="text-center" style="width: 80px;" >Quantidade</th>
-													<th class="text-center" style="width: 100px;">Valor Unitário</th>
-													<th class="text-center" style="width: 60px;">Valor desconto</th>
-													<th class="text-center" style="width: 100px;">Subtotal</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="item in carrinho" id="{{ item.id_produto }}">
-													<td>{{ item.nome_produto }}</td>
-													<td>{{ item.nome_fabricante }}</td>
-													<td>{{ item.peso }}</td>
-													<td class="text-center" width="20">{{ item.qtd_total }}</td>
-													<td class="text-right">R$ {{ item.vlr_unitario | numberFormat : 2 : ',' : '.' }}</td>
-													<td class="text-center"><span ng-if="item.valor_desconto_real > 0 && item.valor_desconto_real != undefined">R$<span> {{ item.valor_desconto_real | numberFormat : 2 : ',' : '.' }}</td>
-													<td class="text-right">R$ {{ item.sub_total | numberFormat : 2 : ',' : '.' }}</td>
-												</tr>
-												<tr>
-													<td colspan="6"><b>TOTAL</b></td>
-													<td style="text-align:right">R$ {{ vlrTotalCompra | numberFormat : 2 : ',' : '.' }}</td>
-												</tr>
-											</tbody>
-										</table>
-						    		</div>
-						    	</div>
-					    		<div class="row" id="tbl_print_pg">
-						    		<div class="col-sm-12" id="valor_pagamento">
-						    			<table class="table table-bordered table-condensed table-striped table-hover">
-											<thead ng-if="pagamento_fulso != true" >
-												<tr>
-													<th colspan="2" class="text-center" >Pagamentos referentes a venda</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-if="(recebidos.length == 0)">
-													<td colspan="1">Não foi recebido nenhum pagamento</td>
-												</tr>
-												<tr ng-repeat="item in recebidos">
-													<td ng-if="item.id_forma_pagamento != 6">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-													<td ng-if="item.id_forma_pagamento == 6">{{ item.forma_pagamento  }} em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
-												</tr>
-											</tbody>
-										</table>
-						    		</div>
-					    		</div>
-					    		<div class="row" ng-show="emitirNfe">
-									<div class="col-sm-12">
-										<div class="form-group" id="regimeTributario">
-											<label class="ccontrol-label">Operação</label> 
-											<select chosen
-										    option="lista_operacao"
-										    ng-model="configuracoes.id_operacao_padrao_venda"
-										    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
-											</select>
-										</div>
-									</div>
-								</div>
-
-						    </div>
-
-						    <div class="modal-footer">
-						    	<a ng-show="!emitirNfe" id="printTermic" class="btn btn-md  btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="printTermic()" >
-						    		<i class="fa fa-print"></i> Imprimir (via Impressora Térmica)
-						    	</a>
-						    	<button ng-show="!emitirNfe" type="button" data-loading-text=" Aguarde..." id="btn-imprimir"
-						    		class="btn btn-md  btn-success" ng-click="printDiv('modal-print')">
-						    		<i class="fa fa-print"></i> Imprimir (via Papel A4)
-						    	</button>
-						    	<button ng-show="!emitirNfe" ng-click="set('emitirNfe',true)" ng-if="configuracoes.flg_emitir_nfe_pdv == 1" type="button" data-loading-text=" Aguarde..." 
-						    		class="btn btn-md  btn-info">
-						    		<i class="fa fa-print"></i> Emitir NF-e
-						    	</button>
-						    	<a ng-show="!emitirNfe" ng-click="cancelar()" class="btn btn-md  btn-default">
-						    		<i class="fa fa-reply"></i> Voltar ao PDV
-						    	</a>
-						    	<a ng-show="emitirNfe==true" ng-disabled="configuracoes.id_operacao_padrao_venda == undefined || configuracoes.id_operacao_padrao_venda == '' " href="nota-fiscal.php?id_venda={{ id_venda }}&&cod_operacao={{configuracoes.id_operacao_padrao_venda}}"  type="button" data-loading-text=" Aguarde..." 
-						    		class="btn btn-md  btn-info" >
-						    		<i class="fa fa-print"></i> Confirmar Emissão NF-e
-						    	</a>
-						    	<a ng-show="emitirNfe" ng-click="emitirNfe = false" class="btn btn-md  btn-default">
-						    		<i class="fa fa-reply"></i> Voltar
-						    	</a>
-						    </div>
-					  	</div>
-					  	<!-- /.modal-content -->
-					</div>
-					<!-- /.modal-dialog -->
-				</div>
-				<!-- /.modal -->
-
-			<!-- /Modal Processando Venda-->
-			<div class="modal fade" id="modal_progresso_venda" style="display:none">
-	  			<div class="modal-dialog error modal-md">
-	    			<div class="modal-content">
-	      				<div class="modal-header">
-							<h4>Processando Venda</h4>
-	      				</div>
-
-					    <div class="modal-body">
-					    	<div class="alert alert-reforco" style="display:none"></div>
-
-					    	<div class="row">
-					    		<div class="col-sm-6" id="valor_pagamento">
-					    		<p>
-					    			<strong id="text_status_venda">Verificando estoque</strong><img src="assets/imagens/progresso_venda.gif">
-					    		</p>
-								</div>
-					    	</div>
-					    </div>
-				  	</div>
-				  	<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
-
-			<!-- /Modal Cadastro rapido de clientes-->
-			<div class="modal fade" id="modal_cadastro_rapido_cliente" style="display:none">
-	  			<div class="modal-dialog error modal-lg">
-	    			<div class="modal-content">
-	      				<div class="modal-header">
-							<h4>Cadastro Rápido de Cliente</h4>
-	      				</div>
-
-					    <div class="modal-body">
-					    	<div class="alert alert-cadastro-rapido" style="display:none"></div>
-					    	<div class="alert alert-cadastro-rapido-error" style="display:none"></div>
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="form-group">
-											<label for="" class="control-label">Tipo de Cadastro</label>
-											<div class="form-group">
-												<label class="label-radio inline">
-													<input ng-model="new_cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Pessoa Física</span>
-												</label>
-
-												<label class="label-radio inline">
-													<input ng-model="new_cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Pessoa Jurídica</span>
-												</label>
-											</div>
-											<div class="row">
-												<div class="col-lg-3" ng-if="new_cliente.tipo_cadastro == 'pj'">
-													<div id="razao_social" class="form-group">
-														<label class="control-label">Razão Social</label>
-														<input class="form-control" ng-model="new_cliente.razao_social">
-													</div>
-												</div>
-
-												<div class="col-sm-3" ng-if="new_cliente.tipo_cadastro == 'pj'">
-													<div id="nome_fantasia" class="form-group">
-														<label class="control-label">Nome Fantasia</label>
-														<input class="form-control" ng-model="new_cliente.nome_fantasia">
-													</div>
-												</div>
-												<div class="col-sm-4" ng-if="new_cliente.tipo_cadastro == 'pf'">
-													<div id="nome" class="form-group">
-														<label for="nome" class="control-label">Nome</label>
-														<input type="text" class="form-control" id="nome" ng-model="new_cliente.nome">
-													</div>
-												</div>
-												<div class="col-sm-3" ng-if="new_cliente.tipo_cadastro == 'pf'">
-													<div id="dta_nacimento" class="form-group">
-														<label class="control-label">Data de Nacimento</label>
-														<input class="form-control input-sm" ui-mask="99/99/9999" id="dta_nacimento" ng-model="new_cliente.dta_nacimento">
-													</div>
-												</div>
-												<div class="col-sm-4">
-													<div id="email" class="form-group">
-														<label for="email" class="control-label">E-mail</label>
-														<input type="text" class="form-control" id="email" ng-model="new_cliente.email">
-													</div>
-												</div>
-										    </div>
-										    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pj'">
-										    	<div class="col-sm-2">
-													<div id="celular" class="form-group">
-														<label for="" class="control-label">Telefone </label>
-														<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="new_cliente.celular">
-													</div>
-												</div>
-												<div class="col-sm-2">
-													<div id="cnpj" class="form-group">
-														<label class="control-label">CNPJ  <span style="color:red;font-weight: bold;">*</span></label>
-														<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="new_cliente.cnpj">
-													</div>
-												</div>
-
-												<div class="col-sm-2">
-													<div id="inscricao_estadual" class="form-group">
-														<label class="control-label">I.E. </label>
-														<input class="form-control" ng-model="new_cliente.inscricao_estadual">
-													</div>
-												</div>
-											</div>
-										    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pf'">
-										    	<div class="col-sm-2">
-													<div id="celular" class="form-group">
-														<label for="" class="control-label">Telefone </label>
-														<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="new_cliente.celular">
-													</div>
-												</div>
-												<div class="col-sm-3">
-													<div id="rg" class="form-group">
-														<label class="control-label">RG</label>
-														<input class="form-control" ng-model="new_cliente.rg"/>
-													</div>
-												</div>
-
-												<div class="col-sm-3">
-													<div id="cpf" class="form-group">
-														<label class="control-label">CPF</label>
-														<input class="form-control" ui-mask="999.999.999-99" ng-model="new_cliente.cpf"/>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-					    </div>
-					      <div class="modal-footer">
-					      		<button type="button" class="btn btn-danger btn-sm" ng-click="cancelarModal('modal_cadastro_rapido_cliente')">
-									<i class="fa fa-times-circle"></i> Cancelar
-								</button>
-								<button data-loading-text=" Aguarde..." id="btn-salvar-cliente" type="submit" class="btn btn-success btn-sm" ng-click="salvarCliente()">
-									<i class="fa fa-save"></i> Salvar Cliente
-								</button>
-					    </div>
-				  	</div>
-				  	<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
-
-			<!-- /Modal Vendedor -->
-			<div class="modal fade" id="list-vendedor" style="display:none">
-	  			<div class="modal-dialog">
-	    			<div class="modal-content" ng-if="modal_senha_vendedor.show == false">
-	      				<div class="modal-header">
-	        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4>Vendedores</span></h4>
-	      				</div>
-					    <div class="modal-body">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="input-group">
-							            <input ng-model="busca.vendedor"  ng-enter="loadVendedor(0,10)" type="text" class="form-control input-sm">
-							            <div class="input-group-btn">
-							            	<button ng-click="loadVendedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-							            		<i class="fa fa-search"></i> Buscar
-							            	</button>
-							            </div> <!-- /input-group-btn -->
-							        </div> <!-- /input-group -->
-								</div><!-- /.col -->
 							</div>
-							<br />
+
+							<div class="pull-right text-right">
+								<h5 ng-if="pagamento_fulso != true && finalizarOrcamento == false"><strong>#{{ id_venda }}</strong></h5>
+								<h5 ng-if="finalizarOrcamento"><strong>#{{ id_orcamento }}</strong></h5>
+								<h5 ng-if="pagamento_fulso == true"><strong>#{{ id_controle_pagamento }}</strong></h5>
+								<strong><?php echo date("d/m/Y H:i:s"); ?></strong>
+							</div>
+						</div>
+      				</div>
+
+				    <div class="modal-body">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+
+				    		</div>
+				    	</div>
+				    	<div class="row" id="tbl_print">
+				    		<div class="col-sm-12" id="valor_pagamento">
+				    			<strong style="font-size:14px;margin-bottom:5px">Vendedor : {{ vendedor.nome_vendedor }}</strong>
+				    			<br>
+				    			<strong style="font-size:14px" ng-if="isNumeric(cliente.id)">Cliente : {{ cliente.nome }}</strong>
+				    			<br>
+				    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="vlr_saldo_devedor >= 0 && isNumeric(cliente.id) && (orcamento == false)">Saldo : R${{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+				    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="vlr_saldo_devedor < 0 && isNumeric(cliente.id) && (orcamento == false)">Saldo : R$ {{ vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+				    			<strong style="font-size:14px;margin-bottom:5px;color:#2C800C" ng-if="(isNumeric(cliente.id) && cliente.vlr_saldo_devedor >= 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+				    			<strong style="font-size:14px;margin-bottom:5px;color:#D82121" ng-if="(isNumeric(cliente.id) && cliente.vlr_saldo_devedor < 0) && (orcamento == true)">Saldo : R$ {{ cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }} </strong>
+				    			<br>
+				    			<br>
+				    			<table class="table table-bordered" ng-if="pagamento_fulso != true">
+									<thead ng-show="carrinho.length  > 0">
+										<tr>
+											<th>Produto</th>
+											<th>Fabricante</th>
+											<th>Tamanho</th>
+											<th class="text-center" style="width: 80px;" >Quantidade</th>
+											<th class="text-center" style="width: 100px;">Valor Unitário</th>
+											<th class="text-center" style="width: 60px;">Valor desconto</th>
+											<th class="text-center" style="width: 100px;">Subtotal</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in carrinho" id="{{ item.id_produto }}">
+											<td>{{ item.nome_produto }}</td>
+											<td>{{ item.nome_fabricante }}</td>
+											<td>{{ item.peso }}</td>
+											<td class="text-center" width="20">{{ item.qtd_total }}</td>
+											<td class="text-right">R$ {{ item.vlr_unitario | numberFormat : 2 : ',' : '.' }}</td>
+											<td class="text-center"><span ng-if="item.valor_desconto_real > 0 && item.valor_desconto_real != undefined">R$<span> {{ item.valor_desconto_real | numberFormat : 2 : ',' : '.' }}</td>
+											<td class="text-right">R$ {{ item.sub_total | numberFormat : 2 : ',' : '.' }}</td>
+										</tr>
+										<tr>
+											<td colspan="6"><b>TOTAL</b></td>
+											<td style="text-align:right">R$ {{ vlrTotalCompra | numberFormat : 2 : ',' : '.' }}</td>
+										</tr>
+									</tbody>
+								</table>
+				    		</div>
+				    	</div>
+			    		<div class="row" id="tbl_print_pg">
+				    		<div class="col-sm-12" id="valor_pagamento">
+				    			<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-if="pagamento_fulso != true" >
+										<tr>
+											<th colspan="2" class="text-center" >Pagamentos referentes a venda</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-if="(recebidos.length == 0)">
+											<td colspan="1">Não foi recebido nenhum pagamento</td>
+										</tr>
+										<tr ng-repeat="item in recebidos">
+											<td ng-if="item.id_forma_pagamento != 6">{{ item.forma_pagamento  }} <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+											<td ng-if="item.id_forma_pagamento == 6">{{ item.forma_pagamento  }} em {{item.parcelas}}x <strong class="pull-right">R$ {{ item.valor | numberFormat:2:',':'.' }}</strong></td>
+										</tr>
+									</tbody>
+								</table>
+				    		</div>
+			    		</div>
+			    		<div class="row" ng-show="emitirNfe">
+							<div class="col-sm-12">
+								<div class="form-group" id="regimeTributario">
+									<label class="ccontrol-label">Operação</label> 
+									<select chosen
+								    option="lista_operacao"
+								    ng-model="configuracoes.id_operacao_padrao_venda"
+								    ng-options="operacao.cod_operacao as operacao.dsc_operacao for operacao in lista_operacao">
+									</select>
+								</div>
+							</div>
+						</div>
+
+				    </div>
+
+				    <div class="modal-footer">
+				    	<a ng-show="!emitirNfe" id="printTermic" class="btn btn-md  btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="printTermic()" >
+				    		<i class="fa fa-print"></i> Imprimir (via Impressora Térmica)
+				    	</a>
+				    	<button ng-show="!emitirNfe" type="button" data-loading-text=" Aguarde..." id="btn-imprimir"
+				    		class="btn btn-md  btn-success" ng-click="printDiv('modal-print')">
+				    		<i class="fa fa-print"></i> Imprimir (via Papel A4)
+				    	</button>
+				    	<button ng-show="!emitirNfe" ng-click="set('emitirNfe',true)" ng-if="configuracoes.flg_emitir_nfe_pdv == 1" type="button" data-loading-text=" Aguarde..." 
+				    		class="btn btn-md  btn-info">
+				    		<i class="fa fa-print"></i> Emitir NF-e
+				    	</button>
+				    	<a ng-show="!emitirNfe" ng-click="cancelar()" class="btn btn-md  btn-default">
+				    		<i class="fa fa-reply"></i> Voltar ao PDV
+				    	</a>
+				    	<a ng-show="emitirNfe==true" ng-disabled="configuracoes.id_operacao_padrao_venda == undefined || configuracoes.id_operacao_padrao_venda == '' " href="nota-fiscal.php?id_venda={{ id_venda }}&&cod_operacao={{configuracoes.id_operacao_padrao_venda}}"  type="button" data-loading-text=" Aguarde..." 
+				    		class="btn btn-md  btn-info" >
+				    		<i class="fa fa-print"></i> Confirmar Emissão NF-e
+				    	</a>
+				    	<a ng-show="emitirNfe" ng-click="emitirNfe = false" class="btn btn-md  btn-default">
+				    		<i class="fa fa-reply"></i> Voltar
+				    	</a>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Processando Venda-->
+		<div class="modal fade" id="modal_progresso_venda" style="display:none">
+  			<div class="modal-dialog error modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+						<h4>Processando Venda</h4>
+      				</div>
+
+				    <div class="modal-body">
+				    	<div class="alert alert-reforco" style="display:none"></div>
+
+				    	<div class="row">
+				    		<div class="col-sm-6" id="valor_pagamento">
+				    		<p>
+				    			<strong id="text_status_venda">Verificando estoque</strong><img src="assets/imagens/progresso_venda.gif">
+				    		</p>
+							</div>
+				    	</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Cadastro rapido de clientes-->
+		<div class="modal fade" id="modal_cadastro_rapido_cliente" style="display:none">
+  			<div class="modal-dialog error modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header">
+						<h4>Cadastro Rápido de Cliente</h4>
+      				</div>
+
+				    <div class="modal-body">
+				    	<div class="alert alert-cadastro-rapido" style="display:none"></div>
+				    	<div class="alert alert-cadastro-rapido-error" style="display:none"></div>
 							<div class="row">
 								<div class="col-sm-12">
-									<table class="table table-bordered table-condensed table-striped table-hover">
-										<tr ng-if="clientes != false && (clientes.length <= 0 || clientes == null)">
-											<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
-										</tr>
-										<tr ng-if="clientes == false">
-											<th class="text-center" colspan="9" colspan="9" style="text-align:center">Não a resultados para a busca</th>
-										</tr>
-										<thead ng-show="(clientes.length != 0)">
-											<tr>
-												<th >Nome</th>
-												<th >Apelido</th>
-												<th >Perfil</th>
-												<th colspan="2">selecionar</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr ng-repeat="item in clientes">
-												<td>{{ item.nome }}</td>
-												<td>{{ item.apelido }}</td>
-												<td>{{ item.nome_perfil }}</td>
-												<td width="50" align="center">
-													<button type="button" class="btn btn-xs btn-success" ng-click="modalSenhaVendedor(item)">
-														<i class="fa fa-check-square-o"></i> Selecionar
-													</button>
-												</td>
-											</tr>
-										</tbody>
-									</table>
+									<div class="form-group">
+										<label for="" class="control-label">Tipo de Cadastro</label>
+										<div class="form-group">
+											<label class="label-radio inline">
+												<input ng-model="new_cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio">
+												<span class="custom-radio"></span>
+												<span>Pessoa Física</span>
+											</label>
+
+											<label class="label-radio inline">
+												<input ng-model="new_cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio">
+												<span class="custom-radio"></span>
+												<span>Pessoa Jurídica</span>
+											</label>
+										</div>
+										<div class="row">
+											<div class="col-lg-3" ng-if="new_cliente.tipo_cadastro == 'pj'">
+												<div id="razao_social" class="form-group">
+													<label class="control-label">Razão Social</label>
+													<input class="form-control" ng-model="new_cliente.razao_social">
+												</div>
+											</div>
+
+											<div class="col-sm-3" ng-if="new_cliente.tipo_cadastro == 'pj'">
+												<div id="nome_fantasia" class="form-group">
+													<label class="control-label">Nome Fantasia</label>
+													<input class="form-control" ng-model="new_cliente.nome_fantasia">
+												</div>
+											</div>
+											<div class="col-sm-4" ng-if="new_cliente.tipo_cadastro == 'pf'">
+												<div id="nome" class="form-group">
+													<label for="nome" class="control-label">Nome</label>
+													<input type="text" class="form-control" id="nome" ng-model="new_cliente.nome">
+												</div>
+											</div>
+											<div class="col-sm-3" ng-if="new_cliente.tipo_cadastro == 'pf'">
+												<div id="dta_nacimento" class="form-group">
+													<label class="control-label">Data de Nacimento</label>
+													<input class="form-control input-sm" ui-mask="99/99/9999" id="dta_nacimento" ng-model="new_cliente.dta_nacimento">
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div id="email" class="form-group">
+													<label for="email" class="control-label">E-mail</label>
+													<input type="text" class="form-control" id="email" ng-model="new_cliente.email">
+												</div>
+											</div>
+									    </div>
+									    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pj'">
+									    	<div class="col-sm-2">
+												<div id="celular" class="form-group">
+													<label for="" class="control-label">Telefone </label>
+													<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="new_cliente.celular">
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div id="cnpj" class="form-group">
+													<label class="control-label">CNPJ  <span style="color:red;font-weight: bold;">*</span></label>
+													<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="new_cliente.cnpj">
+												</div>
+											</div>
+
+											<div class="col-sm-2">
+												<div id="inscricao_estadual" class="form-group">
+													<label class="control-label">I.E. </label>
+													<input class="form-control" ng-model="new_cliente.inscricao_estadual">
+												</div>
+											</div>
+										</div>
+									    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pf'">
+									    	<div class="col-sm-2">
+												<div id="celular" class="form-group">
+													<label for="" class="control-label">Telefone </label>
+													<input type="text" ui-mask="(99) 99999999?9" class="form-control input-sm" ng-model="new_cliente.celular">
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div id="rg" class="form-group">
+													<label class="control-label">RG</label>
+													<input class="form-control" ng-model="new_cliente.rg"/>
+												</div>
+											</div>
+
+											<div class="col-sm-3">
+												<div id="cpf" class="form-group">
+													<label class="control-label">CPF</label>
+													<input class="form-control" ui-mask="999.999.999-99" ng-model="new_cliente.cpf"/>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
-
-							<div class="row">
-					    		<div class="col-sm-12">
-					    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_clientes.length > 1">
-										<li ng-repeat="item in paginacao_clientes" ng-class="{'active': item.current}">
-											<a href="" h ng-click="loadVendedor(item.offset,item.limit)">{{ item.index }}</a>
-										</li>
-									</ul>
-					    		</div>
-					    	</div>
-					    </div>
-				  	</div><!-- /.modal-content -->
-				  	<div class="modal-content" ng-if="modal_senha_vendedor.show">
-				  		<div class="modal-header">
-	        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4>Selecionar Vendedor</span></h4>
-	      				</div>
-	      				<div class="modal-body" ng-if="modal_senha_vendedor.show == true">
-	      					<div class="row">
-	      						<div class="col-sm-12">
-	      							<div class="alert alert-vendedor" style="display:none">
-	      								
-	      							</div>
-	      						</div>
-	      					</div>
-	      					<form class="form-horizontal">
-								<div class="form-group">
-									<label for="inputEmail1" class="col-lg-2 control-label">Vendedor</label>
-									<div class="col-lg-10">
-										<label class="label-checkbox">{{ modal_senha_vendedor.nome_vendedor }}</label>
-									</div><!-- /.col -->
-								</div><!-- /form-group -->
-								<div class="form-group" id="senha_vendedor">
-									<label for="inputPassword1" class="col-lg-2 control-label">Senha</label>
-									<div class="col-lg-6">
-										<input type="password" ng-model="modal_senha_vendedor.senha_vendedor" class="form-control input-sm">
-									</div><!-- /.col -->
-								</div><!-- /form-group -->
-								<div class="form-group">
-									<div class="col-lg-offset-2 col-lg-10">
-										<button ng-click="mudarVendedor()" class="btn btn-success btn-sm">Selecionar</button>
-									</div><!-- /.col -->
-								</div><!-- /form-group -->
-							</form>
-	      				</div>
-				  	</div>
-				</div><!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
-
-			<!-- /Modal Processando Venda-->
-			<div class="modal fade" id="modal-sat-cfe" style="display:none">
-	  			<div class="modal-dialog error modal-md">
-	    			<div class="modal-content">
-	      				<div class="modal-header">
-							<h4>Aguarde</h4>
-	      				</div>
-
-					    <div class="modal-body">
-					    	<div class="alert alert-reforco" style="display:none"></div>
-
-					    	<div class="row">
-					    		<div class="col-sm-6" id="valor_pagamento">
-					    		<p>
-					    			<strong id="text_status_sat_cfe">Imprimindo cupom fiscal</strong><img src="assets/imagens/progresso_venda.gif">
-					    		</p>
-								</div>
-					    	</div>
-					    </div>
-				  	</div>
-				  	<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
-
-			<!-- /Modal Processando erro sat -->
-			<div class="modal fade" id="modal-erro-sat" style="display:none">
-	  			<div class="modal-dialog error modal-md">
-	    			<div class="modal-content">
-	      				<div class="modal-header">
-	      					<h4>Ocorreu um erro ao processar o SAT</h4>
-	      				</div>
-					    <div class="modal-body">
-					    	<div class="row">
-					    		<div class="col-sm-12">
-					    			<b>Código de Erro: </b> {{ erro_sat.codigoErro | Utf8Decode }} <br/>
-					    			<b>Mensagem: </b> {{ erro_sat.msgErro | Utf8Decode }} <br/>
-					    			<b>Problemas: </b> <br/>
-					    			<p ng-repeat="item in erro_sat.problemas track by $index"><i class="fa fa-circle text-danger"></i> {{item | Utf8Decode}}</p>	
-								</div>
-					    	</div>
-					    </div>
-					     <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
-				    		 OK
-				    	</button>
 				    </div>
-				  	</div>
-				  	<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
-
-			<!-- /Modal Processando erro sat -->
-			<div class="modal fade" id="modal-erro-cacular-impostos" style="display:none">
-	  			<div class="modal-dialog error modal-md">
-	    			<div class="modal-content">
-	      				<div class="modal-header">
-	      					<h4>Erro ao Calcular os Impostos e Tributos</h4>
-	      				</div>
-					    <div class="modal-body">
-					    	<div class="row">
-					    		<div class="col-sm-12">
-					    			Verifique se todos os produtos da venda estão com suas configurações fiscais	
-								</div>
-					    	</div>
-					    </div>
-					     <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
-				    		 OK
-				    	</button>
+				      <div class="modal-footer">
+				      		<button type="button" class="btn btn-danger btn-sm" ng-click="cancelarModal('modal_cadastro_rapido_cliente')">
+								<i class="fa fa-times-circle"></i> Cancelar
+							</button>
+							<button data-loading-text=" Aguarde..." id="btn-salvar-cliente" type="submit" class="btn btn-success btn-sm" ng-click="salvarCliente()">
+								<i class="fa fa-save"></i> Salvar Cliente
+							</button>
 				    </div>
-				  	</div>
-				  	<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
+			  	</div>
+			  	<!-- /.modal-content -->
 			</div>
-			<!-- /.modal -->
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
-			<!-- /Modal Processando erro sat -->
-			<div class="modal fade" id="modal-conexao-websocket" style="display:none">
-	  			<div class="modal-dialog error modal-md">
-	    			<div class="modal-content">
-	      				<div class="modal-header">
-	      					<h4>Conexão com WebSocket</h4>
-	      				</div>
-					    <div class="modal-body">
-					    	<div class="row">
-					    		<div class="col-sm-12">
-					    			<strong>Não foi possível emitir o cupom SAT CF-e pois o aplicativo cliente (WebliniaERP Client) não está aberto.<br/>Após iniciar o aplicativo tente reprocessar este cupom.</strong>	
-								</div>
-					    	</div>
-					    </div>
-					     <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-md btn-default" ng-click="resetPdv('venda')">
-				    		 OK
-				    	</button>
+		<!-- /Modal Vendedor -->
+		<div class="modal fade" id="list-vendedor" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content" ng-if="modal_senha_vendedor.show == false">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Vendedores</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.vendedor"  ng-enter="loadVendedor(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadVendedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered table-condensed table-striped table-hover">
+									<tr ng-if="clientes != false && (clientes.length <= 0 || clientes == null)">
+										<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+									</tr>
+									<tr ng-if="clientes == false">
+										<th class="text-center" colspan="9" colspan="9" style="text-align:center">Não a resultados para a busca</th>
+									</tr>
+									<thead ng-show="(clientes.length != 0)">
+										<tr>
+											<th >Nome</th>
+											<th >Apelido</th>
+											<th >Perfil</th>
+											<th colspan="2">selecionar</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in clientes">
+											<td>{{ item.nome }}</td>
+											<td>{{ item.apelido }}</td>
+											<td>{{ item.nome_perfil }}</td>
+											<td width="50" align="center">
+												<button type="button" class="btn btn-xs btn-success" ng-click="modalSenhaVendedor(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_clientes.length > 1">
+									<li ng-repeat="item in paginacao_clientes" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadVendedor(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+				    		</div>
+				    	</div>
 				    </div>
-				  	</div>
-				  	<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
-			</div>
-			<!-- /.modal -->
+			  	</div><!-- /.modal-content -->
+			  	<div class="modal-content" ng-if="modal_senha_vendedor.show">
+			  		<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Selecionar Vendedor</span></h4>
+      				</div>
+      				<div class="modal-body" ng-if="modal_senha_vendedor.show == true">
+      					<div class="row">
+      						<div class="col-sm-12">
+      							<div class="alert alert-vendedor" style="display:none">
+      								
+      							</div>
+      						</div>
+      					</div>
+      					<form class="form-horizontal">
+							<div class="form-group">
+								<label for="inputEmail1" class="col-lg-2 control-label">Vendedor</label>
+								<div class="col-lg-10">
+									<label class="label-checkbox">{{ modal_senha_vendedor.nome_vendedor }}</label>
+								</div><!-- /.col -->
+							</div><!-- /form-group -->
+							<div class="form-group" id="senha_vendedor">
+								<label for="inputPassword1" class="col-lg-2 control-label">Senha</label>
+								<div class="col-lg-6">
+									<input type="password" ng-model="modal_senha_vendedor.senha_vendedor" class="form-control input-sm">
+								</div><!-- /.col -->
+							</div><!-- /form-group -->
+							<div class="form-group">
+								<div class="col-lg-offset-2 col-lg-10">
+									<button ng-click="mudarVendedor()" class="btn btn-success btn-sm">Selecionar</button>
+								</div><!-- /.col -->
+							</div><!-- /form-group -->
+						</form>
+      				</div>
+			  	</div>
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
-			<!-- /Modal Vendas para reenviar SAT-->
+		<!-- /Modal Processando Venda-->
+		<div class="modal fade" id="modal-sat-cfe" style="display:none">
+  			<div class="modal-dialog error modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+						<h4>Aguarde</h4>
+      				</div>
+
+				    <div class="modal-body">
+				    	<div class="alert alert-reforco" style="display:none"></div>
+
+				    	<div class="row">
+				    		<div class="col-sm-6" id="valor_pagamento">
+				    		<p>
+				    			<strong id="text_status_sat_cfe">Imprimindo cupom fiscal</strong><img src="assets/imagens/progresso_venda.gif">
+				    		</p>
+							</div>
+				    	</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Processando erro sat -->
+		<div class="modal fade" id="modal-erro-sat" style="display:none">
+  			<div class="modal-dialog error modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+      					<h4>Ocorreu um erro ao processar o SAT</h4>
+      				</div>
+				    <div class="modal-body">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+				    			<b>Código de Erro: </b> {{ erro_sat.codigoErro | Utf8Decode }} <br/>
+				    			<b>Mensagem: </b> {{ erro_sat.msgErro | Utf8Decode }} <br/>
+				    			<b>Problemas: </b> <br/>
+				    			<p ng-repeat="item in erro_sat.problemas track by $index"><i class="fa fa-circle text-danger"></i> {{item | Utf8Decode}}</p>	
+							</div>
+				    	</div>
+				    </div>
+				     <div class="modal-footer">
+			    	<button type="button" data-loading-text=" Aguarde..."
+			    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
+			    		 OK
+			    	</button>
+			    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Processando erro sat -->
+		<div class="modal fade" id="modal-erro-cacular-impostos" style="display:none">
+  			<div class="modal-dialog error modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+      					<h4>Erro ao Calcular os Impostos e Tributos</h4>
+      				</div>
+				    <div class="modal-body">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+				    			Verifique se todos os produtos da venda estão com suas configurações fiscais	
+							</div>
+				    	</div>
+				    </div>
+				     <div class="modal-footer">
+			    	<button type="button" data-loading-text=" Aguarde..."
+			    		class="btn btn-md btn-default" ng-click="location('pdv.php')">
+			    		 OK
+			    	</button>
+			    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Processando erro sat -->
+		<div class="modal fade" id="modal-conexao-websocket" style="display:none">
+  			<div class="modal-dialog error modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+      					<h4>Conexão com WebSocket</h4>
+      				</div>
+				    <div class="modal-body">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+				    			<strong>Não foi possível emitir o cupom SAT CF-e pois o aplicativo cliente (WebliniaERP Client) não está aberto.<br/>Após iniciar o aplicativo tente reprocessar este cupom.</strong>	
+							</div>
+				    	</div>
+				    </div>
+				     <div class="modal-footer">
+			    	<button type="button" data-loading-text=" Aguarde..."
+			    		class="btn btn-md btn-default" ng-click="resetPdv('venda')">
+			    		 OK
+			    	</button>
+			    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Vendas para reenviar SAT-->
 		<div class="modal fade" id="modal-vendas-reenviar-sat" style="display:none">
   			<div class="modal-dialog modal-md">
     			<div class="modal-content">
@@ -2280,6 +2281,98 @@
 						             <ul class="pagination pagination-xs m-top-none" ng-show="paginacao.vendas_reenviar_sat.length > 1">
 										<li ng-repeat="item in paginacao.vendas_reenviar_sat" ng-class="{'active': item.current}">
 											<a href="" ng-click="loadVendasReenviarSat(item.offset,item.limit)">{{ item.index }}</a>
+										</li>
+									</ul>
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+					</div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal Comandas-->
+		<div class="modal fade" id="list_comandas" style="display:none">
+				<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+						<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Comandas</span></h4>
+						</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="form-group" id="regimeTributario">
+									<!--<label class="control-label">Operação</label> -->
+									<select chosen
+								    option="mesas"
+								    ng-model="busca.id_mesa_comanda"
+								    ng-change="loadComandas(0,10)"
+								    ng-options="mesa.id_mesa as mesa.dsc_mesa for mesa in mesas">
+									</select>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="input-group">
+						            <input ng-model="busca.comandas" ng-enter="loadComandas(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button tabindex="-1" class="btn btn-sm btn-primary" type="button"
+						            		ng-click="loadComandas(0,10)">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="alert alert-produtos" style="display:none"></div>
+						   		<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(comandas.dados != 0)">
+										<tr>
+											<th>#</th>
+											<th class="text-center">Mesa</th>
+											<th class="text-center">Cliente</th>
+											<th class="text-center">Qtd.</th>
+											<th width="100" class="text-center">Valor</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-if="comandas.dados == null">
+											<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+										</tr>
+										<tr class="text-center" ng-show="(comandas.dados.length == 0)">
+											<td colspan="3">Nenhuma comanda encontrada</td>
+										</tr>
+										<tr ng-repeat="item in comandas.dados">
+											<td class="text-center">#{{ item.id_comanda }}</td>
+											<td>{{ item.dsc_mesa }}</td>
+											<td ng-if="config.id_cliente_movimentacao_caixa != item.id_cliente">{{ item.nome_cliente }}</td>
+											<td ng-if="config.id_cliente_movimentacao_caixa == item.id_cliente">(Não informado)</td>
+											<td class="text-center">{{ item.qtd_total }}</td>
+											<td class="text-right">R$ {{ item.valor_total | numberFormat:2:',':'.' }}</td>
+											<td width="50" align="center">
+												<a href="pdv.php?id_orcamento={{item.id_comanda}}" type="button" class="btn btn-xs btn-success">
+													<i class="fa fa-dollar"></i> fechar
+												</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					    <div class="row">
+					    	<div class="col-md-12">
+								<div class="input-group pull-right">
+						             <ul class="pagination pagination-xs m-top-none" ng-show="comandas.paginacao.length > 1">
+										<li ng-repeat="item in comandas.paginacao" ng-class="{'active': item.current}">
+											<a href="" ng-click="loadComandas(item.offset,item.limit)">{{ item.index }}</a>
 										</li>
 									</ul>
 						        </div> <!-- /input-group -->
