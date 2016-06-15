@@ -330,30 +330,35 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 					enviaTesteConexao();
 					break;
 				case 'op_new':
+					data.message.nome_cliente = ((ng.configuracao.id_cliente_movimentacao_caixa == data.message.id_cliente) ? '' : data.message.nome_cliente.toUpperCase());
 					var msg = {
 						from:ng.id_ws_web,
 						to:ng.id_ws_dsk,
 						type:'cop_print',
 						message : JSON.stringify({ 
-							numOrdemProducao: data.message.id_ordem_producao,
-							numMesa:     data.message.dsc_mesa,
-							numComanda:   data.message.id_venda,
-							nmeSolicitante: data.message.nome_usuario,
-							nmeCliente:   data.message.nome_cliente,
-							nmeProduto:   data.message.nome_produto,
-							nmeCorSabor:   data.message.sabor,
-							nmeTamanho:   data.message.tamanho,
-							nmeFabricante:   data.message.nome_fabricante,
-							nmeQtdItem:   data.message.qtd,
-							nmePrinterModel:   ng.configuracao.printer_model_op
+							numOrdemProducao: 	(!empty(data.message.id_ordem_producao) 	? data.message.id_ordem_producao 	: ""),
+							numMesa: 			(!empty(data.message.dsc_mesa) 				? data.message.dsc_mesa 			: ""),
+							numComanda: 		(!empty(data.message.id_venda) 				? data.message.id_venda 			: ""),
+							nmeSolicitante: 	(!empty(data.message.nome_usuario) 			? data.message.nome_usuario 		: ""),
+							nmeCliente: 		(!empty(data.message.nome_cliente) 			? data.message.nome_cliente 		: ""),
+							nmeProduto: 		(!empty(data.message.nome_produto) 			? data.message.nome_produto 		: ""),
+							nmeCorSabor: 		(!empty(data.message.sabor) 				? data.message.sabor 				: ""),
+							nmeTamanho: 		(!empty(data.message.tamanho) 				? data.message.tamanho 				: ""),
+							nmeFabricante: 		(!empty(data.message.nome_fabricante) 		? data.message.nome_fabricante 		: ""),
+							qtdItem: 			(!empty(data.message.qtd) 					? data.message.qtd 					: ""),
+							nmePrinterModel: 	(!empty(ng.configuracao.printer_model_op) 	? ng.configuracao.printer_model_op 	: "")
 						})
 					}
 					ng.sendMessageWebSocket(msg);
-					$.gritter.add({
-						title: '<i class="fa fa-exclamation-triangle"></i> Novo Pedido Solicitado.',
-						text: "Pedido #"+data.message.id_ordem_producao+" criado pelo usuário<br/>"+data.message.nome_usuario+".",
-						sticky: true,
-						class_name: 'gritter-warning'
+					noty({
+						layout: 'topRight',
+						type: 'warning',
+						theme: 'relax',
+						text: '<i class="fa fa-wrench"></i><strong> NOVO PEDIDO (#'+ data.message.id_ordem_producao +')</strong><br/>SOLICITANTE: '+ data.message.nome_usuario.toUpperCase() + '<br/>CLIENTE: '+ data.message.nome_cliente.toUpperCase() + '<br/>MESA: '+ data.message.dsc_mesa.toUpperCase(),
+						animation : {
+							open  : 'animated bounceInRight',
+							close : 'animated bounceOutRight'
+						}
 					});
 					ng.loadOrdemProducao();
 				break;
@@ -404,20 +409,6 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 		ng.newConnWebSocket();
 
 	ng.loadOrdemProducao();
-
-
-	setTimeout(function() {
-		noty({
-			layout: 'topRight',
-			type: 'warning',
-			theme: 'relax',
-			text: 'noty - a jquery notification library!',
-			animation : {
-				open  : 'animated bounceInRight',
-				close : 'animated bounceOutRight'
-			}
-		});
-	}, 3000);
 });
 
 app.directive('bsTooltip', function ($timeout) {

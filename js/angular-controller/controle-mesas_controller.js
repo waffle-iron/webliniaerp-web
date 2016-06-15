@@ -627,13 +627,15 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 				case 'op_finished':
 					aj.get(baseUrlApi()+"mesa/ordem_producao/"+data.message.id_ordem_producao)
 					.success(function(data, status, headers, config) {
-						$.gritter.add({
-							title: '<i class="fa fa-check-circle"></i>&nbsp;Produto pronto para entrega<br/>'+
-							'Mesa:'+data.dsc_mesa+'<br/>'+
-							( ng.configuracao.id_cliente_movimentacao_caixa == data.id_cliente ? '' :'Cliente:'+data.nome_cliente+'<br/>')+
-							'Comanda:#'+data.id_venda+'<br/>',
-							sticky: true,
-							class_name: 'gritter-success'
+						noty({
+							layout: 'topRight',
+							type: 'success',
+							theme: 'relax',
+							text: '<i class="fa fa-check-circle"></i> <strong>PRODUTO PRONTO P/ ENTREGA</strong><br/>CLIENTE: '+ ((ng.configuracao.id_cliente_movimentacao_caixa == data.id_cliente) ? '' : data.nome_cliente.toUpperCase()) + '<br/>MESA: '+ data.dsc_mesa.toUpperCase(),
+							animation : {
+								open  : 'animated bounceInRight',
+								close : 'animated bounceOutRight'
+							}
 						});
 					})
 					.error(function(data, status, headers, config) {

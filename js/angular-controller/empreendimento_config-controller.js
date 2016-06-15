@@ -22,7 +22,13 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
     	infantil: { tamanhos: { de: null , ate:null }, faixas: [/*{ de:null,ate:null,valor:null }*/] }, 
     	adulto: { tamanhos: { de: null , ate:null }, faixas: [/*{ de:null,ate:null,valor:null }*/] },
     	adicionais:{cor_adicional:null,chinelo_quadrado:null,acima_41:null}
-    }
+    };
+    ng.impressoras                  = [
+    	{ value: null					, dsc:'Selecione' 			},
+    	{ value:'bematech_mp_2500_th'	, dsc:'BEMATECH MP-2500 TH' },
+    	{ value:'bematech_mp_4200_th'	, dsc:'BEMATECH MP-4200 TH' },
+    	{ value:'epson_tm_t20'			, dsc:'EPSON TM T20' 		}
+	];
 
 
 	ng.loadPlanoContasSelect = function() {
@@ -577,6 +583,34 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
 				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-atendimento');
+				ng.loadConfig();
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+			});
+	}
+
+	ng.salvarConfigControleMesas = function(event){
+		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		var chaves = [];
+
+		if(ng.configuracoes.printer_model_op != undefined){
+			var item = {
+				nome 				:'printer_model_op',
+				valor 				:ng.configuracoes.printer_model_op , 
+				id_empreendimento	:ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+
+		btn.button('loading');
+		
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves: chaves })
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-mesas');
 				ng.loadConfig();
 			})
 			.error(function(data, status, headers, config) {
