@@ -1174,7 +1174,7 @@ a.list-group-item {
   border-width: 1px 0 1px 0;
 }
 .shortcut-wrapper {
-  text-align: center;
+  text-align: center !important;
 }
 @media (max-width: 767px) {
   .shortcut-wrapper {
