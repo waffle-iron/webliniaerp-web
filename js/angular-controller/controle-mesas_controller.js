@@ -16,7 +16,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	} ;
 	ng.telaAnterior = null ;
 	ng.mesas = [];
-	ng.mesaSelecioada = {mesa:{},comandas:[]} ;
+	ng.mesaSelecionada = {mesa:{},comandas:[]} ;
 	ng.comandaSelecionada = {};
 	ng.busca = {} ;
 	ng.buscaTipoProduto = {} ;
@@ -69,8 +69,9 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		}); 
 	}
 
-	ng.abrirMesa = function(mesa){
-		ng.mesaSelecioada.mesa = angular.copy(mesa);
+	ng.abrirMesa = function(mesa,index){
+		ng.mesaSelecionada.mesa = angular.copy(mesa);
+		ng.indeMesaSelecionada = index;
 		ng.changeTela('detMesa');
 	}
 
@@ -114,11 +115,16 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			id_cliente : id_cliente,
 			id_empreendimento : ng.userLogged.id_empreendimento,
 			dta_venda : moment().format('YYYY-MM-DD HH:mm:ss'),
-			id_mesa : ng.mesaSelecioada.mesa.id_mesa 
+			id_mesa : ng.mesaSelecionada.mesa.id_mesa 
 		}
 
 		aj.post(baseUrlApi()+'mesa',post)
 		.success(function(data, status, headers, config) {
+			var msg = {
+					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+				}
+			ng.sendMessageWebSocket(msg);
 			btn.button('reset');
 			ng.changeTela('detMesa');
 		})
@@ -128,13 +134,13 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	}
 
 	ng.loadComandasByMesa = function(){
-		ng.mesaSelecioada.comandas = null ;
-		aj.get(baseUrlApi()+'mesa/comandas/'+ng.mesaSelecioada.mesa.id_mesa)
+		ng.mesaSelecionada.comandas = null ;
+		aj.get(baseUrlApi()+'mesa/comandas/'+ng.mesaSelecionada.mesa.id_mesa)
 		.success(function(data, status, headers, config) {
-			ng.mesaSelecioada.comandas = data ;
+			ng.mesaSelecionada.comandas = data ;
 		})
 		.error(function(data, status, headers, config) {
-			ng.mesaSelecioada.comandas = [] ;
+			ng.mesaSelecionada.comandas = [] ;
 			if(status != 406)
 			console.log('Não foi possivel buscar as comandas');
 		}); 
@@ -142,8 +148,8 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 
 	ng.qtdTotalComandas = function(){
 		var qtd_total = 0 ;
-		if(ng.mesaSelecioada.comandas != null){
-			$.each(ng.mesaSelecioada.comandas,function(i,x){
+		if(ng.mesaSelecionada.comandas != null){
+			$.each(ng.mesaSelecionada.comandas,function(i,x){
 				qtd_total += x.qtd_total ;
 			});
 		}
@@ -153,8 +159,8 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 
 	ng.vlrTotalComanda = function(){
 		var valor_total = 0 ;
-		if(ng.mesaSelecioada.comandas != null){
-			$.each(ng.mesaSelecioada.comandas,function(i,x){
+		if(ng.mesaSelecionada.comandas != null){
+			$.each(ng.mesaSelecionada.comandas,function(i,x){
 				valor_total += x.valor_total ;
 			});
 		}
@@ -335,6 +341,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		btn.button('loading');
 		var post = {
 			id_venda : ng.comandaSelecionada.comanda.id,
+			id_usuario : ng.userLogged.id_usuario,
 			id_produto : produto.id ,
 			desconto_aplicado : 0 ,
 			valor_desconto : 0 ,
@@ -348,7 +355,9 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			id_deposito : ng.configuracao.id_deposito_padrao,
 			flg_produto_composto : produto.flg_produto_composto,
 			id_usuario : ng.userLogged.id,
-			dta_create : moment().format('YYYY-MM-DD HH:mm:ss')
+			dta_create : moment().format('YYYY-MM-DD HH:mm:ss'),
+			dta_lancamento : moment().format('YYYY-MM-DD HH:mm:ss'),
+			id_mesa : ng.mesaSelecionada.mesa.id_mesa 
 		}
 
 		aj.post(baseUrlApi()+"item_comanda/add",post)
@@ -360,6 +369,11 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 					}
 					ng.sendMessageWebSocket(msg);
 			}
+			var msg = {
+					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+				}
+			ng.sendMessageWebSocket(msg);
 			item.qtd = null ;
 			btn.button('reset');
 			ng.loadComanda(ng.comandaSelecionada.comanda.id);
@@ -430,6 +444,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		btn.button('loading');
 		var post = {
 			id_venda : ng.comandaSelecionada.comanda.id,
+			id_usuario : ng.userLogged.id,
 			id_produto : ng.produto.id ,
 			desconto_aplicado : 0 ,
 			valor_desconto : 0 ,
@@ -442,8 +457,9 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			id_empreendimento : ng.userLogged.id_empreendimento,
 			id_deposito : ng.configuracao.id_deposito_padrao,
 			flg_produto_composto : ng.produto.flg_produto_composto,
-			id_usuario : ng.userLogged.id,
-			dta_create : moment().format('YYYY-MM-DD HH:mm:ss')
+			dta_create : moment().format('YYYY-MM-DD HH:mm:ss'),
+			dta_lancamento : moment().format('YYYY-MM-DD HH:mm:ss'),
+			id_mesa : ng.mesaSelecionada.mesa.id_mesa 
 		}
 
 		aj.post(baseUrlApi()+"item_comanda/add",post)
@@ -455,6 +471,11 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 					}
 					ng.sendMessageWebSocket(msg);
 			}
+			var msg = {
+					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+				}
+			ng.sendMessageWebSocket(msg);
 			btn.button('reset');
 			ng.produto = {} ;
 			ng.abrirDetalhesComanda(ng.comandaSelecionada.comanda.id);
@@ -473,6 +494,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		if(!btn.is(':button')) btn = $(event.target).parent();
 		btn.button('loading');
 		var post = {
+			id_mesa : ng.mesaSelecionada.mesa.id_mesa,
 			campos:{
 				id_venda : ng.comandaSelecionada.comanda.id,
 				id_produto : ng.produto.id ,
@@ -492,6 +514,11 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 
 		aj.post(baseUrlApi()+"item_comanda/edit",post)
 		.success(function(data, status, headers, config) {
+			var msg = {
+					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+				}
+			ng.sendMessageWebSocket(msg);
 			btn.button('reset');
 			ng.produto = {} ;
 			ng.abrirDetalhesComanda(ng.comandaSelecionada.comanda.id);
@@ -510,8 +537,13 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		if(!btn.is(':button')) btn = $(event.target).parent();
 		btn.button('loading');
 
-		aj.get(baseUrlApi()+"item_comanda/delete/"+ng.produto.id_item_venda)
+		aj.get(baseUrlApi()+"item_comanda/delete/"+ng.produto.id_item_venda+"/"+ng.mesaSelecionada.mesa.id_mesa)
 		.success(function(data, status, headers, config) {
+			var msg = {
+					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+				}
+			ng.sendMessageWebSocket(msg);
 			btn.button('reset');
 			ng.produto = {} ;
 			ng.abrirDetalhesComanda(ng.comandaSelecionada.comanda.id);
@@ -640,6 +672,11 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 					})
 					.error(function(data, status, headers, config) {
 						
+					});
+				break;
+				case 'table_change':
+					$scope.$apply(function () { 
+						ng.mesas[data.message.index_mesa] = data.message.mesa ;
 					});
 				break;
 			}			

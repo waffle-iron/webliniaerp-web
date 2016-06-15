@@ -260,8 +260,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 					item.nome_status = data.status.nome_status;
 					if(id_status == 3){
 						var msg = {
-							type : 'op_finished',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
-							id_usuario:item.id_responsavel, message : JSON.stringify({id_ordem_producao:item.id})
+							type : 'op_finished',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento, message : JSON.stringify({id_ordem_producao:item.id})
 						}
 						ng.sendMessageWebSocket(msg);
 					}

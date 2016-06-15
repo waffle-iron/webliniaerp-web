@@ -352,10 +352,10 @@
 										<span class="qtd_comandas">{{ mesa.qtd_comandas_abertas }} Comanda(s)</span>
 									</div>
 									<div class="panel-footer text-center">
-										<button ng-if="mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-success" ng-click="abrirMesa(mesa)">
+										<button ng-if="mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-success" ng-click="abrirMesa(mesa,$index)">
 											ABRIR MESA
 										</button>
-										<button ng-if="!mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-warning" ng-click="abrirMesa(mesa)">
+										<button ng-if="!mesa.flg_livre" type="button" class="btn btn-xs btn-block btn-warning" ng-click="abrirMesa(mesa,$index)">
 											VISUALIZAR
 										</button>
 									</div>
@@ -369,7 +369,7 @@
 					<div ng-show="layout.detMesa">
 						<div class="panel-heading ">
 							<h3 class="panel-title">
-								{{ mesaSelecioada.mesa.dsc_mesa }}
+								{{ mesaSelecionada.mesa.dsc_mesa }}
 								<div class="pull-right">
 									<button ng-click="changeTela('mesas')" type="button" class="btn btn-xs btn-primary">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
@@ -384,19 +384,19 @@
 						<div class="panel-body ">
 							<table class="table table-bordered table-hover mesa">
 								<caption class="text-left text-bold mesa-caption">Comandas da Mesa</caption>
-								<thead ng-show="mesaSelecioada.comandas.length > 0">
+								<thead ng-show="mesaSelecionada.comandas.length > 0">
 									<th>Cliente</th>
 									<th class="text-center">Itens</th>
 									<th class="text-center">Subtotal</th>
 								</thead>
-								<thead ng-show="mesaSelecioada.comandas.length == 0">
+								<thead ng-show="mesaSelecionada.comandas.length == 0">
 									<th colspan="3">Não existe nenhuma comanda aberta para esta mesa</th>
 								</thead>
-								<thead ng-show="mesaSelecioada.comandas == null">
+								<thead ng-show="mesaSelecionada.comandas == null">
 									<th colspan="3" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando comandas</th>
 								</thead>
 								<tbody>
-									<tr ng-repeat="comanda in mesaSelecioada.comandas" style="cursor:pointer" ng-click="abrirDetalhesComanda(comanda.id_comanda)">
+									<tr ng-repeat="comanda in mesaSelecionada.comandas" style="cursor:pointer" ng-click="abrirDetalhesComanda(comanda.id_comanda)">
 										<td ng-if="comanda.id_cliente != configuracao.id_cliente_movimentacao_caixa" >{{ comanda.nome_cliente }}</td>
 										<td ng-if="comanda.id_cliente == configuracao.id_cliente_movimentacao_caixa" ><b>(Cliente não informado)</b></td>
 
@@ -414,7 +414,7 @@
 										<thead>
 											<tr>
 												<td>Total de Comandas</td>
-												<td class="text-right">{{ mesaSelecioada.comandas.length }}</td>
+												<td class="text-right">{{ mesaSelecionada.comandas.length }}</td>
 											</tr>
 											<tr>
 												<td>Total da Mesa</td>
