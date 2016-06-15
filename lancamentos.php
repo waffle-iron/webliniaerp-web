@@ -841,7 +841,7 @@
 											<td>{{ item.cod_plano }} - {{ item.dsc_natureza_operacao | uppercase}}</td>
 											<td>{{ item.descricao_forma_pagamento }}</td>
 
-											<td ng-if="config_table.observacao == true" control-size-string content="{{ item.nome }}" size="16"></td>
+											<td ng-if="config_table.observacao == true" control-size-string content="{{ item.obs_pagamento }}" size="16"></td>
 
 											<th class="text-center" ng-if="config_table.cheque">{{ item.nome_banco }}</th>
 											<th class="text-center" ng-if="config_table.cheque">{{ item.num_conta_corrente }}</th>
