@@ -11,7 +11,7 @@
 	if(!( isset($_GET['offset']) && isset($_GET['limit']) && isset($_GET['pasta']) )){
 
 		if($_SERVER['SERVER_NAME'] == 'localhost'){
-		$url = 'http://localhost/hage-api/produtos/export/'.$id_empreendimento.'/0/'.$prd_pg;
+			$url = 'http://localhost/webliniaerp-api/produtos/export/'.$id_empreendimento.'/0/'.$prd_pg;
 		}else{
 			$url = 'http://www.hageerp.com.br/api/produtos/export/'.$id_empreendimento.'/0/'.$prd_pg;		
 		}

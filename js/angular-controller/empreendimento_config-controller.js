@@ -42,6 +42,104 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 
+	ng.modalDepositos = function(){
+		$('#modal-depositos').modal('show');
+		ng.loadDepositos(0,10);
+	}
+
+	ng.busca_vazia 	= {};
+	ng.busca 		= {};
+	ng.paginacao 	= {};
+	ng.loadDepositos = function(offset, limit,loadPag) {
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+		ng.busca_vazia.depositos = false ;
+		var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento ;
+		if(!empty(ng.busca.depositos))
+			query_string  += "&"+$.param({nme_deposito:{exp:"like '%"+ng.busca.depositos+"%'"}});
+
+    	aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+query_string)
+			.success(function(data, status, headers, config) {
+				ng.depositos = data.depositos ;
+				if(loadPag == true){
+					if(ng.depositos.length == 1)
+						ng.addDeposito(ng.depositos[0]);
+				}
+				ng.paginacao.depositos = data.paginacao ;
+			})
+			.error(function(data, status, headers, config) {
+				if(status != 404)
+					alert("ocorreu um erro");
+				else{
+					ng.paginacao.depositos = [] ;
+					ng.depositos = [] ;	
+					ng.busca_vazia.depositos = true ;
+				}
+					
+			});
+	}
+
+	ng.addDeposito = function(item){
+		if(empty(ng.configuracoes.deposito_padrao))
+			ng.configuracoes.deposito_padrao = {};
+
+		ng.configuracoes.deposito_padrao.nome_deposito = item.nme_deposito;
+		ng.configuracoes.deposito_padrao.id_deposito   = item.id;
+
+		$('#modal-depositos').modal('hide');
+	}
+
+	ng.loadDepositoPadrao = function(id_deposito) {
+		aj.get(baseUrlApi() + "deposito/" + id_deposito)
+			.success(function(data, status, headers, config) {
+				if(empty(ng.configuracoes.deposito_padrao)) {
+					ng.configuracoes.deposito_padrao = {
+						id_deposito: data.id,
+						nome_deposito: data.nme_deposito
+					};
+				}
+
+				setTimeout(function() {
+					$scope.$apply();
+				}, 500);
+			})
+			.error(function(data, status, headers, config) {
+				if(status != 404)
+					alert("ocorreu um erro");
+				else {
+					ng.configuracoes.deposito_padrao = null;
+				}
+			});
+	}
+
+	ng.salvarConfigDepositoPadrao = function(event){
+		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		var chaves = [];
+
+		if(!empty(ng.configuracoes.deposito_padrao)){
+			var item = {
+				nome 				: 'id_deposito_padrao',
+				valor 				: ng.configuracoes.deposito_padrao.id_deposito,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+
+		btn.button('loading');
+		
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves: chaves })
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-estoque');
+				ng.loadConfig();
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+			});
+	}
+
 	ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
 		$(alertClass).fadeIn().addClass(classe).html(msg);
@@ -155,6 +253,9 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 				ng.configuracoes = data;
 				ng.configuracoes.id_plano_conta_pagamento_profissional = ""+ng.configuracoes.id_plano_conta_pagamento_profissional ;
 				ng.notEmails = emails;
+
+				if(!empty(data.id_deposito_padrao))
+					ng.loadDepositoPadrao(data.id_deposito_padrao);
 
 				if(!empty(data.valores_chinelos) && typeof parseJSON(data.valores_chinelos) == 'object' ){
 					ng.valoresChinelos = parseJSON(data.valores_chinelos);

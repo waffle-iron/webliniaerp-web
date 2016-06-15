@@ -440,7 +440,7 @@
 								<div class="row">
 									<div class="col-sm-4" id="id_plano_caixa">
 										<div class="input-group">
-											<label class="control-label">Plano de Contas p/ Movimentação de Caixa</label>
+											<label class="control-label">Plano de Contas p/ Mov. de Caixa</label>
 							            	<input ng-model="config.nome_plano_movimentacao" type="text" class="form-control input-sm">
 							            	<div class="input-group-btn" style="top: 11px;">
 							            		<button ng-click="modalPlanoContas('movimentacao')" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-code-fork"></i></button>
@@ -450,7 +450,7 @@
 
 									<div class="col-sm-4" id="id_plano_fechamento_caixa">
 										<div class="input-group">
-											<label class="control-label">Plano de Contas p/ Fechamento de Caixa</label>
+											<label class="control-label">Plano de Contas p/ Fech. de Caixa</label>
 								            <input ng-model="config.nome_plano_fechamento" type="text" class="form-control input-sm">
 
 								            <div class="input-group-btn" style="top: 11px;">
@@ -481,24 +481,7 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label for="" class="control-label">Busca/cadastro pelo CPF</label>
-											<div class="form-group">
-												<label class="label-radio inline">
-													<input ng-model="configuracoes.cadastro_cpf_pdv" value="1" name="cadastro_cpf_pdv"   type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Sim</span>
-												</label>
-												<label class="label-radio inline">
-													<input ng-model="configuracoes.cadastro_cpf_pdv" value="0" name="cadastro_cpf_pdv"   type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Não</span>
-												</label>
-											</div>
-										</div>
-									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-5">
 										<div class="form-group">
 											<label for="" class="control-label">Emitir NF-e no PDV?</label>
 											<div class="form-group">
@@ -521,7 +504,7 @@
 											<input ng-model="configuracoes.patch_socket_sat"  type="text" class="form-control input-sm parsley-validated">
 										</div>
 									</div>
-									<div class="col-sm-4">
+									<div class="col-sm-3">
 										<div class="form-group" id="num_cnpj_sw"  >
 											<label class="control-label">CNPJ Software House</label>
 											<input ng-model="configuracoes.num_cnpj_sw"  type="text" class="form-control input-sm parsley-validated">
@@ -529,7 +512,7 @@
 									</div>
 								</div>
 								<div class="row">
-									<div class="col-sm-4">
+									<div class="col-sm-5">
 										<div class="form-group">
 										 <label for="txt_sign_ac">Formas de Pagamento Disponíveis no PDV:</label>
 										 	<div class="clearfix" ng-repeat="item in formas_pagamento_pdv">
@@ -542,7 +525,7 @@
 										</div>
 									</div>
 
-									<div class="col-sm-8" id="txt_sign_ac">
+									<div class="col-sm-7" id="txt_sign_ac">
 										<div class="form-group">
 										  <label for="txt_sign_ac">Assinatura AC (Hash Base64):</label>
 										  <textarea class="form-control" rows="5" ng-model="configuracoes.txt_sign_ac"></textarea>
@@ -615,15 +598,15 @@
 											</select>
 										</div>
 									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-3">
 										<div class="form-group" id="vlr_custo">
-											<label class="control-label">% Credito Simples</label>
+											<label class="control-label">% Crédito Simples</label>
 											<input  ng-model="empreendimento.num_percentual_credito_simples" thousands-formatter class="form-control input-sm">
 										</div>
 									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-3">
 										<div class="form-group">
-											<label for="" class="control-label">Contribuinte ICMS</label>
+											<label for="" class="control-label">Contribuinte ICMS?</label>
 											<div class="form-group">
 												<label class="label-radio inline">
 													<input ng-model="empreendimento.flg_contribuinte_icms" value="0" type="radio" class="inline-radio">
@@ -641,7 +624,7 @@
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group">
-											<label for="" class="control-label">Contribuinte IPI</label>
+											<label for="" class="control-label">Contribuinte IPI?</label>
 											<div class="form-group">
 												<label class="label-radio inline">
 													<input ng-model="empreendimento.flg_contribuinte_ipi" value="0" type="radio" class="inline-radio">
@@ -733,7 +716,7 @@
 											</div>
 										</div>
 
-										<div class="col-sm-2" id="num_ultimo_documento_fiscal">
+										<div class="col-sm-3" id="num_ultimo_documento_fiscal">
 											<div class="form-group">
 												<label class="control-label">Últ. Número Utilizado</label>
 												<input ng-model="serie_documento_fiscal.num_ultimo_documento_fiscal" type="text" class="form-control input-sm">
@@ -795,7 +778,7 @@
 								</div>
 
 								<div class="row">
-									<div class="col-sm-4">
+									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="ccontrol-label">Modelo Documento/Série Padrão p/ NFC-e</label> 
 											<select chosen
@@ -806,7 +789,7 @@
 										</div>
 									</div>
 
-									<div class="col-sm-4">
+									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="ccontrol-label">Modelo Documento/Série Padrão p/ NF-e</label> 
 											<select chosen
@@ -819,7 +802,7 @@
 								</div>
 
 								<div class="row">
-									<div class="col-sm-3">
+									<div class="col-sm-4">
 										<div class="form-group">
 											<label for="" class="control-label">Ambiente de Emissão da NF-e</label>
 											<div class="form-group">
@@ -836,13 +819,16 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-sm-4">
+								</div>
+
+								<div class="row">
+									<div class="col-sm-6">
 										<div class="form-group" id="serie_documento_fiscal">
 											<label class="control-label">Token Produção</label>
 											<input type="text" ng-model="configuracoes.token_focus_producao" class="form-control input-sm">
 										</div>
 									</div>
-									<div class="col-sm-4">
+									<div class="col-sm-6">
 										<div class="form-group" id="serie_documento_fiscal">
 											<label class="control-label">Token Homologação</label>
 											<input type="text" ng-model="configuracoes.token_focus_homologacao" class="form-control input-sm">
@@ -904,7 +890,7 @@
 									</div>
 									<div class="col-sm-5">
 										<div class="form-group">
-											<label for="" class="control-label">Controlar tempo de atendimento ? </label>
+											<label for="" class="control-label">Controlar tempo de atendimento?</label>
 											<div class="form-group">
 												<label class="label-radio inline">
 													<input ng-model="configuracoes.flg_controlar_tempo_atendimento" value="1" name="flg_controlar_tempo_atendimento"   type="radio" class="inline-radio">
@@ -1139,13 +1125,23 @@
 									<div class="col-sm-4">
 										<div class="input-group">
 											<label class="control-label">Depósito Padrão</label>
-							            	<input ng-model="config.nome_deposito" type="text" class="form-control input-sm">
+							            	<input ng-model="configuracoes.deposito_padrao.nome_deposito" type="text" class="form-control input-sm">
 							            	<div class="input-group-btn" style="top: 11px;">
-							            		<button tabindex="-1" class="btn btn-sm btn-primary" type="button">
+							            		<button tabindex="-1" class="btn btn-sm btn-primary" type="button" ng-click="modalDepositos()">
 							            			<i class="fa fa-sitemap"></i>
 						            			</button>
 							            	</div>
 							        	</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigDepositoPadrao($event)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -1201,6 +1197,71 @@
 			  	<!-- /.modal-content -->
 			</div>
 			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal depositos-->
+		<div class="modal fade" id="modal-depositos" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Depositos</span></h4>
+      				</div>
+
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.depositos" ng-enter="loadDepositos(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadDepositos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br/>
+
+				   		<div class="row">
+				   			<div class="col-sm-12">
+				   				<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(depositos.length != 0)">
+										<tr>
+											<th colspan="2">Nome</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(depositos.length == 0)">
+											<td colspan="3">{{ busca_vazia.depositos  && 'Não há resultado para a busca' || 'Não há Depositos cadastrados' }}</td>
+										</tr>
+										<tr ng-repeat="item in depositos">
+											<td>{{ item.nme_deposito }}</td>
+											<td width="50" align="center">
+												<button type="button" class="btn btn-xs btn-success" ng-click="addDeposito(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+				   			</div>
+				   		</div>
+
+				   		<div class="row">
+					    	<div class="col-sm-12">
+					    		<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.depositos.length > 1">
+									<li ng-repeat="item in paginacao.depositos" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadDepositos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+					    	</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
 

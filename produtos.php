@@ -1069,7 +1069,7 @@
 		</div>
 		<!-- /.modal -->
 
-			<!-- /Modal depositos-->
+		<!-- /Modal depositos-->
 		<div class="modal fade" id="modal-depositos" style="display:none">
   			<div class="modal-dialog">
     			<div class="modal-content">
