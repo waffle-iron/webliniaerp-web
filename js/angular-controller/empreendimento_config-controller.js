@@ -24,15 +24,16 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
     	adicionais:{cor_adicional:null,chinelo_quadrado:null,acima_41:null}
     }
 
+
 	ng.loadPlanoContasSelect = function() {
-	 	ng.currentNode 	= null;
+	 	ng.plano_contas = [{id:null,dsc_completa:"Selecione"}];
 		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
-				ng.planoContas = data;
+				ng.plano_contas = ng.plano_contas.concat(data);
+				setTimeout(function(){$("select").trigger("chosen:updated");},300);
 			})
 			.error(function(data, status, headers, config) {
-				if(status == 404)
-					ng.planoContas = [];
+				ng.plano_contas;
 			});
 	}
 
