@@ -113,6 +113,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		.success(function(data, status, headers, config) {
 			var orcamento = data.orcamento;
 			ng.id_orcamento = orcamento.id ;
+			if(!empty(ng.config.id_deposito_padrao) && orcamento.flg_comanda == 1){
+				ng.caixa.id_deposito = ng.config.id_deposito_padrao ;
+			}
 			if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa))
 				ng.cliente = data.cliente;
 			$.each(orcamento.itens,function(i,v){

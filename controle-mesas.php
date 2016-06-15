@@ -640,7 +640,7 @@
 
 							<div class="row" ng-if="getPermission('1,8')">
 								<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-									<button type="button" class="btn btn-danger pull-right"><i class="fa fa-dollar"></i> Fechar Comanda</button>
+									<a href="pdv.php?id_orcamento={{ comandaSelecionada.comanda.id }}" target="_blank"a class="btn btn-danger pull-right"><i class="fa fa-dollar"></i> Fechar Comanda</a>
 								</div>
 							</div>
 						</div>
