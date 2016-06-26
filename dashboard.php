@@ -39,7 +39,29 @@
 	<link href="css/endless.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
 
+	<link href="css/fileinput/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+
 	<link href="css/custom.css" rel="stylesheet">
+	<style type="text/css">
+		 .kv-avatar .file-preview-frame,.kv-avatar .file-preview-frame:hover {
+            margin: 0;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            text-align: center;
+        }
+        .kv-avatar .file-input {
+            display: table-cell;
+            max-width: 220px;
+        }
+        .kv-avatar .file-drag-handle{
+            display: none
+        }
+        .file-drop-zone.clickable:hover {
+            border: 1px dashed #aaa !important ;
+        }
+        </style>
+	</style>
   </head>
 
   <body class="overflow-hidden" ng-controller="DashboardController">
@@ -158,7 +180,6 @@
 				</div><!-- /main-menu -->
 			</div><!-- /sidebar-inner -->
 		</aside>
-
 		<div id="main-container">
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
@@ -770,6 +791,42 @@
 		</footer>
 	</div><!-- /wrapper -->
 
+
+
+	<!-- /Modal Processando erro sat -->
+	<div class="modal fade" id="modal-upload" style="display:none">
+			<div class="modal-dialog error modal-md">
+			<div class="modal-content">
+  				<div class="modal-header">
+  					<h4>Upload Imagem</h4>
+  				</div>
+			    <div class="modal-body">
+			    	<div class="row">
+			    		<div class="col-sm-12">
+			    			<!-- the avatar markup -->
+						    <div id="kv-avatar-errors-2" class="center-block" style="width:800px;display:none"></div>
+						    <form class="text-center" action="/avatar_upload.php" method="post" enctype="multipart/form-data">
+						        <div class="kv-avatar center-block" style="width:200px">
+						            <input id="avatar-2" name="avatar-2" type="file" class="file-loading">
+						        </div>
+						        <!-- include other inputs if needed and include a form submit (save) button -->
+						    </form>
+						</div>
+			    	</div>
+			    </div>
+			     <div class="modal-footer">
+		    	<button type="button" data-loading-text=" Aguarde..."
+		    		class="btn btn-md btn-default" ng-click="resetPdv('venda')">
+		    		 OK
+		    	</button>
+		    </div>
+		  	</div>
+		  	<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
 	<a href="" id="scroll-to-top" class="hidden-print"><i class="fa fa-chevron-up"></i></a>
 
 	<!-- Logout confirmation -->
@@ -826,6 +883,9 @@
 	<script src="js/endless/endless_dashboard.js"></script>
 	<script src="js/endless/endless.js"></script>
 
+	 <script src="js/fileinput/fileinput.js" type="text/javascript"></script>
+     <script src="js/fileinput/locales/pt-BR.js" type="text/javascript"></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -843,6 +903,46 @@
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/dashboard-controller.js?<?php echo filemtime('js/angular-controller/dashboard-controller.js')?>"></script>
 	<script type="text/javascript">
+		var btnCust = '';
+		$("#avatar-2").fileinput({
+		    language:'pt-BR',
+		    overwriteInitial: true,
+		    maxFileSize: 1500,
+		    showClose: false,
+		    showCaption: false,
+		    showBrowse: false,
+		    browseOnZoneClick: true,
+		    removeLabel: '',
+		    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+		    removeTitle: 'Cancelar Alterações',
+		    elErrorContainer: '#kv-avatar-errors-2',
+		    msgErrorClass: 'alert alert-block alert-danger',
+		    defaultPreviewContent: '<img src="http://plugins.krajee.com/uploads/default_avatar_male.jpg" alt="" style="width:160px"><h6 class="text-muted">Selecionar</h6>',
+		    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+		    allowedFileExtensions: ["jpg", "png", "gif"],
+		    uploadTitle :'salvar imagem',
+		    uploadIcon: '<i class="glyphicon glyphicon-upload"></i>',
+		    uploadUrl: "http://localhost/file-upload-single/1", // server upload action
+		    uploadAsync: true,
+		    maxFileCount: 1,
+		    initialPreview: [
+		        'https://scontent.fplu1-1.fna.fbcdn.net/v/t1.0-9/13428413_1344925185522957_3900445461738087085_n.jpg?oh=a050c8c0de58b7f2dc85cd11a65b2bd2&oe=57C4B836',
+		    ],
+		    initialPreviewAsData: true,
+		    initialPreviewConfig: [
+		        {caption: "jheizer.jpg", width: "160px", key: 1},
+		    ],
+		    previewZoomSettings:{
+		        image: {'max-height': "480px",'height':'auto','width':'auto'},
+		    },
+		    deleteUrl: "http://localhost/bootstrap-fileinput-master/examples/delete.php"
+
+		});
+
+		$('#avatar-2').on('filezoomshow', function(event, params) {
+			 params.modal.appendTo('body');
+			
+		});
 		$('.datepicker').datepicker();
 		$('.timepicker').timepicker();
 

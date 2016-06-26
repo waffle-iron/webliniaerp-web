@@ -288,12 +288,20 @@ angular.module('filters', [])
 	    return {
 	        require: 'ngModel',
 	            link: function (scope, element, attrs, ctrl) {
-	            $(element).datepicker().on('changeDate', function(e) {
+	            $(element).datepicker(
+	            	{	
+	            		format: "dd/mm/yyyy",
+				        language: "pt-BR",
+				        clearBtn:true
+				    }
+	            ).on('changeDate', function(e) {
 	            	ctrl.$viewValue = e.date;
                		ctrl.$commitViewValue();
                		ctrl.$setViewValue(e.date);
                		ctrl.render ;
+               		$(this).datepicker('hide');
 			    });
+			    $(element).parent().children('span').on("click", function(){ $(element).trigger("focus"); })
 	            ctrl.$parsers.push(function (data) {
 	            	var data = $(element).val();
 	            	if(data.length == 10)
@@ -301,8 +309,13 @@ angular.module('filters', [])
 	            });
 	        }
 	    };
-	})
-	.directive('controlSizeString', function ($filter) {
+	}).directive('tooltip', function ($filter) {
+	    return {
+	            link: function (scope, element, attrs, ctrl) {
+	           	$(element).tooltip()
+	        }
+	    };
+	}).directive('controlSizeString', function ($filter) {
 	    return {
 	    	link:function(scope,element,attrs,ctrl){
 	    		var size = Number(attrs.size);
@@ -373,7 +386,121 @@ angular.module('filters', [])
 			    })
 	    	}
 	    }
-	});
+	}).directive('uploadFile', function ($compile,$filter) {
+		var controle = 0 ;
+	    return {
+	    	link:function(scope,element,attrs,ctrl){
+		    	element.bind('click', function (event) {
+		    		var idModalUploadFile = $(element).attr('datamodaluploadfile');
+		    			idModalUploadFile = 'modal-upload';
+		    			$('#'+idModalUploadFile).remove();
+		    			var nameInput = !empty($(element).attr('datanameinput')) ? $(element).attr('datanameinput') : 'image_upload_file' ;
+			       		var htmlModal = 
+				       		'<div class="modal fade modal-upload" id="'+idModalUploadFile+'" style="display:none">'+
+								'<div class="modal-dialog error modal-md">'+
+									'<div class="modal-content">'+
+						  				'<div class="modal-header">'+
+						  					'<h4>Upload Imagem</h4>'+
+						  				'</div>'+
+									    '<div class="modal-body">'+
+									    	'<div class="row">'+
+									    		'<div class="col-sm-12">'+
+									    			'<!-- the avatar markup -->'+
+												    '<div id="kv-avatar-errors-" class="center-block" style="width:800px;display:none"></div>'+
+												    '<form class="text-center" action="/avatar_upload.php" method="post" enctype="multipart/form-data">'+
+												        '<div class="kv-avatar center-block" style="width:200px">'+
+												            '<input id="avatar-2" name="'+nameInput+'" type="file" class="file-loading">'+
+												        '</div>'+
+												    '</form>'+
+												'</div>'+
+									    	'</div>'+
+									    '</div>'+
+									    '<div class="modal-footer">'+
+									    	'<button type="button" data-loading-text=" Aguarde..."'+
+									    		'class="btn btn-md btn-default hide-modal-upload-file">'+
+									    		 'OK'+
+									    	'</button>'+
+								   		'</div>'+
+								  	'</div>'+
+								'</div>'+
+							'</div>' ;
+						$('body').append(htmlModal);
+						$('#'+idModalUploadFile+' .hide-modal-upload-file').click(function(){
+							$(this).parents('.modal').modal('hide');
+						});
+						
+						$('#'+idModalUploadFile).modal('show');
+						var preview = '<img style="cursor:pointer" src="img/sem-imagem-produto.jpg" alt="" style="width:160px"><h6 class="text-muted">Selecionar</h6>';
+						if(!empty(attrs.defaultPreviewContent))
+							preview = '<img style="cursor:pointer" src="'+attrs.defaultPreviewContent+'" alt="" style="width:160px"><h6 class="text-muted">Selecionar</h6>';
+						var btnCust = '';
+						var config = {
+						    language:'pt-BR',
+						    overwriteInitial: true,
+						    maxFileSize: 1500,
+						    showClose: false,
+						    showCaption: false,
+						    showBrowse: false,
+						    browseOnZoneClick: true,
+						    removeLabel: '',
+						    removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+						    removeTitle: 'Cancelar Alterações',
+						    elErrorContainer: '#kv-avatar-errors-2',
+						    msgErrorClass: 'alert alert-block alert-danger',
+						    defaultPreviewContent:  preview ,
+						    layoutTemplates: {main2: '{preview} ' +  btnCust + ' {remove} {browse}'},
+						    allowedFileExtensions: ["jpg", "png", "gif"],
+						    uploadTitle :'salvar imagem',
+						    uploadIcon: '<i class="glyphicon glyphicon-upload"></i>',
+						    uploadUrl: ( !empty(attrs.uploadurl) ? attrs.uploadurl : "file-upload-single.php" ), // server upload action
+						    uploadAsync: true,
+						    maxFileCount: 1,
+						    initialPreviewAsData: true,
+						    previewZoomSettings:{
+						        image: {'max-height': "480px",'height':'auto','width':'auto'},
+						    },
+						    deleteUrl: ( !empty(attrs.deleteurl) ? attrs.deleteurl : "delete_upload_file.php" ),
+						    uploadExtraData : {nome:'jheizer'}
+
+						}
+
+						 if(!empty(attrs.uploadextradata)){
+					    	var extra = parseJSON(attrs.uploadextradata);
+					    	if(typeof(extra) == 'object')
+					    		config.uploadExtraData = extra ;
+						  }
+
+						if(!empty(attrs.dataimg)){
+							 config.initialPreview=[
+						        attrs.dataimg
+						    ];
+						     config.initialPreviewConfig = [
+						        {caption: "", width: "160px", key: null},
+						    ];
+						    if(!empty(attrs.deleteextradata)){
+						    	var extra = parseJSON(attrs.deleteextradata);
+						    	if(typeof(extra) == 'object')
+						    		config.initialPreviewConfig[0].extra = extra ;
+						    }
+						}
+						$("#avatar-2").fileinput(config);
+						$('#avatar-2').on('filezoomshow', function(event, params) {
+							 params.modal.appendTo('body');
+						});
+						$('#avatar-2').on('filedeleteerror', function(event, data, msg) {
+						    console.log('File delete error');
+						});
+						$('#avatar-2').on('fileuploaderror', function(event, data, msg) {
+						    var form = data.form, files = data.files, extra = data.extra,
+						        response = data.response, reader = data.reader;
+						    console.log('File upload error');
+						});
+
+	            });
+	    		
+	    	}
+	    }
+	})
 
 function Ctrl($scope) {
     $scope.currencyVal;

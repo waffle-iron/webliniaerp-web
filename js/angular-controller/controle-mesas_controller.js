@@ -27,6 +27,12 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	ng.EditProduto = false ;
 	ng.editComanda = false ;
 	ng.new_cliente = {id_empreendimento:ng.userLogged.id_empreendimento,id_perfil:6};
+	ng.id_ws_dsk     =  ng.configuracao.id_ws_dsk_op ;
+	ng.status_websocket = 0 ;
+	var TimeWaitingResponseTestConection = 10000;
+	var timeOutSendTestConection = null ;
+	var timeOutWaitingResponseTestConection = null ;
+
 	$('#sizeToggle').trigger("click");
 
 	ng.changeTela = function(tela,changeValue){
@@ -47,6 +53,13 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			$('html,body').animate({scrollTop: 0});
 			if(tela=='mesas')
 				ng.loadMesas();
+			if(tela=='SelCliente'){
+				ng.busca.cliente = '';
+				ng.clientes = [];
+			}
+			if(tela=='cadCliente'){
+				ng.new_cliente = {id_empreendimento:ng.userLogged.id_empreendimento,id_perfil:6};
+			}
 			else if(tela=='detMesa')
 				ng.loadComandasByMesa();
 		}
@@ -187,6 +200,8 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	}
 
 	ng.bucaTipoProduto = function(tipo){
+		ng.busca.produtosModal = '' ;
+		ng.busca.produtos = '' ;
 		if(tipo != null){
 			ng.buscaTipoProduto = {};
 			ng.buscaTipoProduto[tipo] = null ;
@@ -299,6 +314,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	}
 
 	ng.openModalProdutos = function(){
+		ng.busca.produtosModal = '' ;
 		ng.loadProdutosModal();
 		$('#list_produtos').modal('show')
 	}
@@ -363,6 +379,27 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		aj.post(baseUrlApi()+"item_comanda/add",post)
 		.success(function(data, status, headers, config) {
 			if(Number(produto.flg_produto_composto) == 1){
+				data.ordem_producao.nome_cliente = ((ng.configuracao.id_cliente_movimentacao_caixa == data.ordem_producao.id_cliente) ? '' : data.ordem_producao.nome_cliente.toUpperCase());
+				var msg = {
+					from:ng.id_ws_web,
+					to:ng.id_ws_dsk,
+					type:'cop_print',
+					message : JSON.stringify({ 
+						numOrdemProducao: 	(!empty(data.ordem_producao.id_ordem_producao) 	? data.ordem_producao.id_ordem_producao : ""),
+						numMesa: 			(!empty(data.ordem_producao.dsc_mesa) 			? data.ordem_producao.dsc_mesa 			: ""),
+						numComanda: 		(!empty(data.ordem_producao.id_venda) 			? data.ordem_producao.id_venda 			: ""),
+						nmeSolicitante: 	(!empty(data.ordem_producao.nome_usuario) 		? data.ordem_producao.nome_usuario 		: ""),
+						nmeCliente: 		(!empty(data.ordem_producao.nome_cliente) 		? data.ordem_producao.nome_cliente 		: ""),
+						nmeProduto: 		(!empty(data.ordem_producao.nome_produto) 		? data.ordem_producao.nome_produto 		: ""),
+						nmeCorSabor: 		(!empty(data.ordem_producao.sabor) 				? data.ordem_producao.sabor 			: ""),
+						nmeTamanho: 		(!empty(data.ordem_producao.tamanho) 			? data.ordem_producao.tamanho 			: ""),
+						nmeFabricante: 		(!empty(data.ordem_producao.nome_fabricante) 	? data.ordem_producao.nome_fabricante 	: ""),
+						qtdItem: 			(!empty(data.ordem_producao.qtd) 				? data.ordem_producao.qtd 				: ""),
+						nmePrinterModel: 	(!empty(ng.configuracao.printer_model_op) 	    ? ng.configuracao.printer_model_op 		: "")
+					})
+				}
+				ng.sendMessageWebSocket(msg);
+
 				var msg = {
 						type : 'op_new',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
 						message : JSON.stringify(data.ordem_producao)
@@ -371,8 +408,9 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			}
 			var msg = {
 					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
-					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
-				}
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa,id_comanda:ng.comandaSelecionada.comanda.id})
+			}
+				
 			ng.sendMessageWebSocket(msg);
 			item.qtd = null ;
 			btn.button('reset');
@@ -465,6 +503,26 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		aj.post(baseUrlApi()+"item_comanda/add",post)
 		.success(function(data, status, headers, config) {
 			if(Number(ng.produto.flg_produto_composto) == 1){
+				data.ordem_producao.nome_cliente = ((ng.configuracao.id_cliente_movimentacao_caixa == data.ordem_producao.id_cliente) ? '' : data.ordem_producao.nome_cliente.toUpperCase());
+				var msg = {
+					from:ng.id_ws_web,
+					to:ng.id_ws_dsk,
+					type:'cop_print',
+					message : JSON.stringify({ 
+						numOrdemProducao: 	(!empty(data.ordem_producao.id_ordem_producao) 	? data.ordem_producao.id_ordem_producao : ""),
+						numMesa: 			(!empty(data.ordem_producao.dsc_mesa) 			? data.ordem_producao.dsc_mesa 			: ""),
+						numComanda: 		(!empty(data.ordem_producao.id_venda) 			? data.ordem_producao.id_venda 			: ""),
+						nmeSolicitante: 	(!empty(data.ordem_producao.nome_usuario) 		? data.ordem_producao.nome_usuario 		: ""),
+						nmeCliente: 		(!empty(data.ordem_producao.nome_cliente) 		? data.ordem_producao.nome_cliente 		: ""),
+						nmeProduto: 		(!empty(data.ordem_producao.nome_produto) 		? data.ordem_producao.nome_produto 		: ""),
+						nmeCorSabor: 		(!empty(data.ordem_producao.sabor) 				? data.ordem_producao.sabor 			: ""),
+						nmeTamanho: 		(!empty(data.ordem_producao.tamanho) 			? data.ordem_producao.tamanho 			: ""),
+						nmeFabricante: 		(!empty(data.ordem_producao.nome_fabricante) 	? data.ordem_producao.nome_fabricante 	: ""),
+						qtdItem: 			(!empty(data.ordem_producao.qtd) 				? data.ordem_producao.qtd 				: ""),
+						nmePrinterModel: 	(!empty(ng.configuracao.printer_model_op) 	    ? ng.configuracao.printer_model_op 		: "")
+					})
+				}
+				ng.sendMessageWebSocket(msg);
 				var msg = {
 						type : 'op_new',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
 						message : JSON.stringify(data.ordem_producao)
@@ -473,7 +531,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 			}
 			var msg = {
 					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
-					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa,id_comanda:ng.comandaSelecionada.comanda.id})
 				}
 			ng.sendMessageWebSocket(msg);
 			btn.button('reset');
@@ -516,7 +574,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		.success(function(data, status, headers, config) {
 			var msg = {
 					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
-					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa,id_comanda:ng.comandaSelecionada.comanda.id})
 				}
 			ng.sendMessageWebSocket(msg);
 			btn.button('reset');
@@ -541,7 +599,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		.success(function(data, status, headers, config) {
 			var msg = {
 					type : 'table_change',from : ng.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
-					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa})
+					message : JSON.stringify({index_mesa:ng.indeMesaSelecionada,mesa:data.mesa,id_comanda:ng.comandaSelecionada.comanda.id})
 				}
 			ng.sendMessageWebSocket(msg);
 			btn.button('reset');
@@ -655,6 +713,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 						message : JSON.stringify({id_empreendimento:ng.userLogged.id_empreendimento,id_usuario:ng.userLogged.id,id_perfil:ng.userLogged.id_perfil})
 					}
 					ng.sendMessageWebSocket(msg);
+					enviaTesteConexao();
 					break;
 				case 'op_finished':
 					aj.get(baseUrlApi()+"mesa/ordem_producao/"+data.message.id_ordem_producao)
@@ -676,8 +735,21 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 				break;
 				case 'table_change':
 					$scope.$apply(function () { 
+						if(empty(data.message.index_mesa))
+							data.message.index_mesa = getIndex('id_mesa',data.message.mesa.id_mesa,ng.mesas);
 						ng.mesas[data.message.index_mesa] = data.message.mesa ;
+						if(!(empty(ng.mesaSelecionada.mesa)) && ng.mesaSelecionada.mesa.id_mesa == data.message.mesa.id_mesa)
+							ng.loadComandasByMesa();
+						if(( !empty(data.message.id_comanda) && !empty(ng.comandaSelecionada.comanda)) && ng.comandaSelecionada.comanda.id == data.message.id_comanda)
+							ng.loadComanda(data.message.id_comanda);
+						
 					});
+				break;
+				case 'connection_test_response':
+					clearTimeout(timeOutWaitingResponseTestConection);
+					$scope.$apply(function () { ng.status_websocket = 2 ;});
+					ng.id_ws_dsk = data.from ;
+					console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Conexão com App client extabelecida');
 				break;
 			}			
 		};
@@ -685,6 +757,35 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	ng.sendMessageWebSocket = function(data){
 		console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - mensagem Enviada: '+JSON.stringify(data));
 		ng.conn.send(JSON.stringify(data));
+	}
+
+	function enviaTesteConexao(){	
+		timeOutSendTestConection = setTimeout(function(){
+			console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Buscando id_ws_dsk ...');
+			aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento+"/id_ws_dsk_op")
+				.success(function(data, status, headers, config) {
+					if(!empty(data.id_ws_dsk_op)){
+						ng.id_ws_dsk = data.id_ws_dsk_op ;
+						var mg = {
+							from:ng.id_ws_web,
+							to:ng.id_ws_dsk,
+							type:'connection_test_request',
+							message:"Teste de conexão com client desktop"
+						};
+						ng.sendMessageWebSocket(mg);
+						 timeOutWaitingResponseTestConection = setTimeout(function() {
+						 	$scope.$apply(function () { ng.status_websocket = 1 ;});
+						 	console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível obter resposta do APP Client para o teste de conexão');
+						 }, TimeWaitingResponseTestConection);
+					}else
+						console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível obter o id_ws_dsk');
+					enviaTesteConexao();
+				})
+				.error(function(data, status, headers, config) {
+					console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Não foi possível obter o id_ws_dsk');
+					enviaTesteConexao();
+				});
+		},60000);
 	}
 
 	if(!empty(ng.configuracao.patch_socket_sat))

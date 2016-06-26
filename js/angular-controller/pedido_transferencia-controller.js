@@ -1,20 +1,45 @@
-app.controller('PedidoTransferenciaController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('PedidoTransferenciaController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
 	var ng = $scope
 		aj = $http;
 
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
 	ng.busca 		= {empreendimento:'',produto:''} ;
+	ng.configuracoes = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.paginacao    = {};
     ng.lista_emp    = [];
-
+    ng.busca        = {usuario_pedido:{},empreendimento_busca:{}} ;
     ng.filtro = {};
 
     ng.etapas = [
-    	{id: "1", nme_etapa: "Solicitação", flg_oculto_empreendimento: false},
-    	{id: "2", nme_etapa: "Envio", flg_oculto_empreendimento: true},
-    	{id: "3", nme_etapa: "Recebimento", flg_oculto_empreendimento: false}
+    	{id: null , nme_etapa: "Selecione", flg_oculto_empreendimento: false},
+    	{id: 1 , nme_etapa: "Solicitação", flg_oculto_empreendimento: false},
+    	{id: 2 , nme_etapa: "Envio", flg_oculto_empreendimento: true},
+    	{id: 3 , nme_etapa: "Recebimento", flg_oculto_empreendimento: false}
     ];
+
+    ng.status = [
+   		{
+			id_status_transferencia_estoque: null,
+			dsc_status_transferencia_estoque: "Selecione"
+		},
+		{
+			id_status_transferencia_estoque: 1,
+			dsc_status_transferencia_estoque: "Pedido enviado"
+		},
+		{
+			id_status_transferencia_estoque: 2,
+			dsc_status_transferencia_estoque: "Pedido em transito"
+		},
+		{
+			id_status_transferencia_estoque: 3,
+			dsc_status_transferencia_estoque: "Pedido recebido"
+		},
+		{
+			id_status_transferencia_estoque: 4,
+			dsc_status_transferencia_estoque: "Pedido a solicitar"
+		},
+	] ;
 
     var transferenciaTO = {
     	id : null,
@@ -24,7 +49,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		id_usuario_transferencia : null,
 		dta_pedido : null,
 		dta_transferencia : null,
-		id_status_transferencia : 1,
+		id_status_transferencia : null,
    		produtos:[]
 	};
     ng.transferencia = angular.copy(transferenciaTO);
@@ -47,6 +72,11 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 				}
 			});
 		}
+	}
+
+	ng.resetFilter = function(){
+		ng.busca  = {usuario_pedido:{},empreendimento_busca:{}} ;
+		ng.loadtransferencias(0,10);
 	}
 
 	ng.cancelar = function(){
@@ -76,8 +106,8 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
     	limit  = limit  == null ? 20 : limit;
 
     	var query_string = "?id_usuario="+ng.userLogged.id;
-    	if(ng.busca.empreendimento != ""){
-    		query_string = "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
+    	if(empty(!ng.busca.empreendimento)){
+    		query_string += "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
     	}
 
     	ng.empreendimentos = [];
@@ -91,10 +121,25 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 					ng.empreendimentos = [];
 			});
 	}
-	ng.addEmpreendimento = function(item) {
+	ng.addEmpreendimento = function(item,event) {
+		var btn = $(event.target);
+		if(!btn.is(':button')) btn = $(event.target).parent();
+		btn.button('loading');
+		ng.transferencia.produtos = [] ;
 		ng.transferencia.id_empreendimento_transferencia = item.id;
 		ng.transferencia.nome_empreendimento = item.nome_empreendimento ;
-		$('#list_empreendimentos').modal('hide');
+		aj.get(baseUrlApi()+"configuracoes/"+item.id+"/id_deposito_padrao")
+		.success(function(data, status, headers, config) {
+			ng.transferencia.id_deposito_padrao_pedido = data.id_deposito_padrao ;
+			btn.button('reset');
+			$('#list_empreendimentos').modal('hide');
+		})
+		.error(function(data, status, headers, config) {
+			ng.transferencia.id_deposito_padrao_pedido = null ;
+			btn.button('reset');
+			$('#list_empreendimentos').modal('hide');
+		});
+		
 	}
 
 
@@ -107,13 +152,17 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 	ng.loadProdutos = function(offset, limit) {
 		ng.produtos = null;
 
-		offset = offset == null ? 0  : offset;
+ 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 
 		var query_string = "?tpe->id_empreendimento="+ng.transferencia.id_empreendimento_transferencia;
+		if(!empty(ng.transferencia.id_deposito_padrao_pedido)){
+			query_string += "&id_deposito_estoque="+ng.transferencia.id_deposito_padrao_pedido;
+			query_string += "&getQtdProduto(tpe->id_empreendimento,pro->id,null,"+ng.transferencia.id_deposito_padrao_pedido+",null)[exp]=>0";
+		}
 		query_string +="&pro->id[exp]= IN(SELECT tp.id FROM tbl_produtos AS tp INNER JOIN tbl_produto_empreendimento AS tpe ON tp.id = tpe.id_produto WHERE tpe.id_empreendimento IN ("+ng.userLogged.id_empreendimento+"))";
 
-		if(ng.busca.produto != ""){
+		if(!empty(ng.busca.produto)){
 			if(isNaN(Number(ng.busca.produto)))
 				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%'"}})+")";
 			else
@@ -155,19 +204,20 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		item.qtd_pedida = null ;
 	}
 
-	ng.salvarTransferencia = function(){
+	ng.salvarTransferencia = function(id_status_transferencia,event){
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
-		var btn = $('#salvar-transferencia');
+		var btn = $(event.target);
+		if(!btn.is(':button')) btn = $(event.target).parent();
 		btn.button('loading');
 		var error = 0 ;
 
 		if(!$.isNumeric(ng.transferencia.id_empreendimento_transferencia)){
 			$("#id_empreendimento_transferencia").addClass("has-error");
-			var formControl = $('#id_empreendimento_transferencia')
+			var formControl = $('#id_empreendimento_transferencia .input-group')
 				.attr("data-toggle", "tooltip")
 				.attr("data-placement", "top")
-				.attr("title", 'Informe o empreendimento que está solicitando a transferência')
+				.attr("title", 'Informe o empreendimento que deseja solicitar a transferência')
 				.attr("data-original-title", 'Informe o empreendimento que está solicitando a transferência');
 			formControl.tooltip();
 			if(error == 0){
@@ -210,8 +260,18 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 			btn.button('reset'); 
 			return ;
 		}
+		ng.transferencia.id_status_transferencia = id_status_transferencia ;
 		var post = angular.copy(ng.transferencia);
-		aj.post(baseUrlApi()+"estoque/pedido/transferencia",post)
+		post.dta_pedido = id_status_transferencia == 4 ? null : moment().format('YYYY-MM-DD HH:mm:ss');
+
+		var url ;
+		if($.isNumeric(ng.transferencia.id)){
+			url = 'estoque/pedido/transferencia/edit';
+		}else{
+			url = 'estoque/pedido/transferencia';
+		}
+
+		aj.post(baseUrlApi()+url,post)
 		.success(function(data, status, headers, config) {
 			btn.button('reset'); 
 			ng.transferencia = angular.copy(transferenciaTO);
@@ -231,7 +291,24 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 	ng.listaTransferencias = {} ;
 	ng.loadtransferencias = function(offset, limit){
 		ng.listaTransferencias.transferencias = null 
-		aj.get(baseUrlApi()+"transferencias/estoque/"+offset+"/"+limit+"?cplSql=id_empreendimento_pedido="+ng.userLogged.id_empreendimento+" ORDER BY dta_pedido DESC")
+		var query_string = "?cplSql=id_empreendimento_pedido="+ng.userLogged.id_empreendimento+" AND id_status_transferencia <> 5 ";
+		if(!empty(ng.busca.data) && !empty(ng.busca.id_etapa_data)){
+			if(ng.busca.id_etapa_data == 1 )
+				query_string += " AND date_format(tte.dta_pedido,'%Y-%m-%d') = '"+ng.busca.data+"' ";
+			else if(ng.busca.id_etapa_data == 2)
+				query_string += " AND date_format(tte.dta_transferencia,'%Y-%m-%d') = '"+ng.busca.data+"' ";
+			else if(ng.busca.id_etapa_data == 3)
+				query_string += " AND date_format(tte.dta_recebido,'%Y-%m-%d') = '"+ng.busca.data+"' ";
+		}
+		if(!empty(ng.busca.id_status))
+			query_string += " AND id_status_transferencia = "+ng.busca.id_status+" ";
+		if(!empty(ng.busca.usuario_pedido.id))
+			query_string += " AND id_usuario_pedido = "+ng.busca.usuario_pedido.id+" ";
+		if(!empty(ng.busca.empreendimento_busca.id))
+			query_string += " AND id_empreendimento_transferencia = "+ng.busca.empreendimento_busca.id+" ";
+		
+		query_string += "ORDER BY (CASE WHEN dta_pedido IS NULL THEN tte.id ELSE 0 END) DESC ,dta_pedido DESC";
+		aj.get(baseUrlApi()+"transferencias/estoque/"+offset+"/"+limit+query_string)
 		.success(function(data, status, headers, config) {
 			ng.listaTransferencias.transferencias = data.transferencias ;
 			ng.listaTransferencias.paginacao = data.paginacao ;
@@ -258,7 +335,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 	}
 
 	var index_current_edit = null ;
-	ng.editTransferencia = function(index,event){
+	ng.editTransferencia = function(index,event,id_status_transferencia){
 		var id = ng.listaTransferencias.transferencias[index].id ;
 		index_current_edit = index ;
 		var btn = $(event.target) ;
@@ -272,9 +349,10 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		aj.get(baseUrlApi()+"transferencia/estoque/"+id)
 		.success(function(data, status, headers, config) {
 			var prd_in = ''; aux = [];
+			ng.addEmpreendimento(data.empreendimento_transferencia,event);
 			$.each(data.itens,function(i,x){
 				prd_in += x.id_produto+",";
-				aux[x.id_produto] = {qtd_pedida:x.qtd_pedida,qtd_transferida:x.qtd_transferida} ;
+				aux[x.id_produto] = {qtd_pedida:x.qtd_pedida,qtd_transferida:x.qtd_transferida,id_item:x.id} ;
 			});
 			prd_in = prd_in.substring(0,prd_in.length-1);	
 			aj.get(baseUrlApi()+"produtos?pro->id[exp]=IN("+prd_in+")")
@@ -286,14 +364,17 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 				ng.transferencia.id_usuario_transferencia = ng.userLogged.id ;
 				//ng.transferencia.dta_pedido = data.dta_pedido ;
 				//ng.transferencia.dta_transferencia = data.dta_transferencia ;
-				ng.transferencia.id_status_transferencia = 3 ;
+				ng.transferencia.id_status_transferencia = id_status_transferencia ;
 				ng.transferencia.produtos = [];
 				ng.showBoxNovo(true);
+				$.each(prd.produtos,function(x,i){ prd.produtos[x].id_item = aux[i.id_produto].id_item; });
+				prd.produtos = _.sortBy(prd.produtos,'id_item');
 				$.each(prd.produtos,function(x,i){
 					i.qtd_pedida = aux[i.id_produto].qtd_pedida;
 					i.qtd_transferida = aux[i.id_produto].qtd_transferida;
 					ng.addProduto(i);
 				});
+				ng.loadDepositos(0,10,true);
 				btn.button('reset');
 				$('html,body').animate({scrollTop: 0},'slow');
 			})
@@ -326,6 +407,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		$('#list_depositos').modal('show');
 		ng.loadDepositos(0,10);
 	}
+
 	ng.addDeposito = function(item){
 		ng.nome_deposito_principal = item.nme_deposito;
 		ng.id_deposito_principal = item.id;
@@ -336,7 +418,8 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		});
 	}
 
-	ng.loadDepositos = function(offset, limit) {
+	ng.loadDepositos = function(offset, limit,preSel) {
+		preSel = empty(preSel) ? false : preSel ;
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 		ng.depositos = null ;
@@ -348,9 +431,8 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		.success(function(data, status, headers, config) {
 			ng.depositos = data.depositos ;
 			ng.paginacao_depositos = data.paginacao ;
-			if(ng.depositos.length == 1){
-				ng.estoqueSaida.nome_deposito = ng.depositos[0].nme_deposito;
-				ng.estoqueSaida.id_deposito   = ng.depositos[0].id;
+			if(ng.depositos.length == 1 && preSel){
+				ng.addDeposito(ng.depositos[0]);
 			}
 			
 		})
@@ -465,6 +547,70 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
         eModal
             .iframe({message:caminho, title:title,size:'lg'})
             .then(function () { t8.success('iFrame loaded!!!!', title) });
+	}
+
+	ng.showCliente = function(){
+		var offset = 0  ;
+    	var limit  =  10 ;;
+
+		ng.loadCliente(offset,limit);
+		$("#list_clientes").modal("show");
+	}
+
+	ng.loadCliente= function(offset,limit) {
+		offset = offset == null ? 0  : offset;
+    	limit  = limit  == null ? 10 : limit;
+		ng.usuarios = { itens:null, paginacao:[] };
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+"&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
+
+		if(!empty(ng.busca.clientes)){
+			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.clientes+"%' OR usu.apelido LIKE '%"+ng.busca.clientes+"%')"}});
+		}
+
+		aj.get(baseUrlApi()+"usuarios/"+offset+"/"+limit+"/"+query_string)
+			.success(function(data, status, headers, config) {
+				ng.usuarios = { itens:data.usuarios, paginacao:data.paginacao }
+			})
+			.error(function(data, status, headers, config) {
+				ng.usuarios = { itens:[], paginacao:[] }
+			});
+	}
+
+	ng.addCliente = function(item){
+		item = angular.copy(item);
+		ng.busca.usuario_pedido = item;
+		$("#list_clientes").modal("hide");
+	}
+
+	ng.showEmpreendimentosBusca = function() {
+		ng.busca.empreendimento_busca ;
+		$('#list_empreendimentos_busca').modal('show');
+		ng.loadEmpreendimentosBusca(0,10);
+	}
+
+	ng.loadEmpreendimentosBusca = function(offset, limit) {
+		offset = offset == null ? 0  : offset;
+    	limit  = limit  == null ? 20 : limit;
+
+    	var query_string = "?id_usuario="+ng.userLogged.id;
+    	if(empty(!ng.busca.str_empreendimento_busca)){
+    		query_string +="&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.str_empreendimento_busca+"%'"}});
+    	}
+
+    	ng.empreendimentos_busca = {itens:null,paginacao:null};
+		aj.get(baseUrlApi()+"empreendimentos/"+offset+"/"+limit+"/"+query_string)
+		.success(function(data, status, headers, config) {
+			ng.empreendimentos_busca = { itens:data.empreendimentos,paginacao:data.paginacao };
+		})
+		.error(function(data, status, headers, config) {
+			ng.empreendimentos_busca = { itens:[],paginacao:[] };
+		});
+	}
+
+	ng.addEmpreendimentoBusca = function(item){
+		item = angular.copy(item);
+		ng.busca.empreendimento_busca = item ;
+		$('#list_empreendimentos_busca').modal('hide');
 	}
 
 	ng.loadtransferencias(0,10);

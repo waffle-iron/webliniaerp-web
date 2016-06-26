@@ -24,6 +24,8 @@
 	<!-- Chosen -->
 	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
 
+	<link href="css/fileinput/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -33,9 +35,9 @@
 		.panel.panel-default {
 		    overflow: visible !important;
 		}
-		.modal {
+		/*.modal {
 			display: block;
-		}
+		}*/
 
 		/* Custom dialog/modal headers */
 
@@ -60,6 +62,24 @@
 			font-size: 12px;
 			border-color: #ccc;
 		}
+
+		 .kv-avatar .file-preview-frame,.kv-avatar .file-preview-frame:hover {
+            margin: 0;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            text-align: center;
+        }
+        .kv-avatar .file-input {
+            display: table-cell;
+            max-width: 220px;
+        }
+        .kv-avatar .file-drag-handle{
+            display: none
+        }
+        .file-drop-zone.clickable:hover {
+            border: 1px dashed #aaa !important ;
+        }
 	</style>
   </head>
 
@@ -360,7 +380,7 @@
 																#{{preco.id_empreendimento}} - {{ preco.nome_empreendimento }}
 															</td>
 															<td>
-																<input ng-disabled="flg_produto_composto == 1" ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
+																<input ng-disabled="produto.flg_produto_composto == 1" ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
 															</td>
 															<td>
 																<input ng-model="preco.perc_venda_atacado" ng-keyup="calculaMargens('atacado','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
@@ -812,7 +832,15 @@
 											</td>
 										</tr>
 										<tr ng-repeat="item in produtos" title="{{ configuracao.id_produto_debito_anterior_cliente == item.id_produto && 'este produto não pode ser deletado, ele faz parte das confurações internas do sistema' || '' }}">
-											<td class="text-center" width="80">{{ item.id_produto }}</td>
+											<td class="text-center" width="80" 
+												upload-File
+												uploadextradata = '{"id_produto": {{ item.id }} }'
+												deleteextradata = '{"id_produto": {{ item.id }} }'
+												defaultPreviewContent = 'img/sem-imagem-produto.jpg'
+												dataimg="{{ (item.img == null || item.img == '' ? null : 'assets/imagens/produtos/'+item.img) }}"
+											>
+											{{ item.id_produto }}
+											</td>
 											<td class="text-center">{{ item.codigo_barra }}</td>
 											<td >{{ item.nome }}</td>
 											<td>{{ item.nome_fabricante }}</td>
@@ -1470,6 +1498,8 @@
 	<!-- UnderscoreJS -->
 	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
+	<script src="js/fileinput/fileinput.js" type="text/javascript"></script>
+    <script src="js/fileinput/locales/pt-BR.js" type="text/javascript"></script>
 
 	 <!-- Fix for old browsers -->
         <script src="http://nervgh.github.io/js/es5-shim.min.js"></script>

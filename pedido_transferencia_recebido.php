@@ -200,8 +200,8 @@
 			<div class="main-header clearfix">
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-arrows-h"></i> Pedidos de Transferências</h3>
-					<!--<br/>
-					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Transferência</a>-->
+					<br/>
+					<a ng-if="!isNumeric(transferencia.id)" class="btn btn-info" id="btn-novo"  ng-click="openNovaTransferencia()"><i class="fa fa-plus-circle"></i> Enviar Mercadorias</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -209,88 +209,186 @@
 				<div class="alert alert-sistema" style="display:none"></div>
 
 				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Nova Transferência</div>
-
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-12"><div style="display: none" class="alert alert-transferencia-form"></div></div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<div class="form-group" id="id_deposito_principal">
-									<label class="control-label">Deposito</label>
-									<div class="input-group">
-										<input ng-click="selDeposito()" type="text" class="form-control" ng-model="nome_deposito_principal" readonly="readonly" style="cursor: pointer;" />
-										<span class="input-group-btn">
-											<button ng-click="selDeposito()" type="button"  class="btn"><i class="fa fa-sitemap"></i></button>
-										</span>
+					<div ng-if="isNumeric(transferencia.id)" class="panel-heading"><i class="fa fa-edit"></i> Atendendo Pedido de Transferência #{{ transferencia.id }}</div>
+					<div ng-if="!enviarNovaTransferencia">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-12"><div style="display: none" class="alert alert-transferencia-form"></div></div>
+							</div>
+							<!-- <div class="row">
+								<div class="col-sm-4">
+									<div class="form-group" id="id_deposito_principal">
+										<label class="control-label">Deposito</label>
+										<div class="input-group">
+											<input ng-click="selDeposito()" type="text" class="form-control" ng-model="nome_deposito_principal" readonly="readonly" style="cursor: pointer;" />
+											<span class="input-group-btn">
+												<button ng-click="selDeposito()" type="button"  class="btn"><i class="fa fa-sitemap"></i></button>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<br/> -->
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group" id="produtos">
+											<table class="table table-bordered table-condensed table-striped table-hover">
+												<thead>
+													<tr>
+														<td colspan="9"><i class="fa fa-archive"></i> Produtos</td>
+														<td width="60" align="center">
+														<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
+														</td>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<th>ID</th>
+														<th>Produto</th>
+														<th>Fabricante</th>
+														<th>Peso</th>
+														<th>sabor</th>
+														<th class="text-center" >Estoque</th>
+														<th class="text-center" >Qtd.Pedida</th>
+														<th>Qtd. transferir</th>
+														<th width="250">
+															Deposito
+															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
+														</th>
+														<th></th>
+													</tr>
+													<tr ng-repeat="item in transferencia.produtos" id="tr-prd-{{ item.id }}">
+														<td>{{ item.id	 }}</td>
+														<td>{{ item.nome }}</td>
+														<td>{{ item.nome_fabricante }}</td>
+														<td>{{ item.peso }}</td>
+														<td>{{ item.sabor }}</td>
+														<td class="text-center" ng-if="!item.load_estoque">{{ item.qtd_item }}</td>
+														<td class="text-center" ng-if="item.load_estoque"><i class='fa fa-refresh fa-spin'></i></td>
+														<td width="80" class="text-center">{{ item.qtd_pedida }}</td>
+														<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input onKeyPress="return SomenteNumero(event);" style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
+														<td id="td-prd-deposito-saida-{{ item.id }}">
+															<select chosen ng-change="loadestoque(item)" 
+														    option="depositos_chosen"
+														    ng-model="item.id_deposito_saida"
+														    ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
+															</select>
+														</td>
+														<td align="center">
+															<button ng-if="item.add == 1" class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
+														</td>
+													</tr>
+												</tbody>
+											</table>
 									</div>
 								</div>
 							</div>
 						</div>
-						<br/>
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="form-group" id="produtos">
-										<table class="table table-bordered table-condensed table-striped table-hover">
-											<thead>
-												<tr>
-													<td colspan="8"><i class="fa fa-archive"></i> Produtos</td>
-													<td width="60" align="center">
-													<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
-													</td>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<th>ID</th>
-													<th>Produto</th>
-													<th>Fabricante</th>
-													<th>Peso</th>
-													<th>sabor</th>
-													<th class="text-center" >Estoque</th>
-													<th class="text-center" >Qtd.Pedida</th>
-													<th>Qtd. transferir</th>
-													<th width="250">Deposito</th>
-													<th></th>
-												</tr>
-												<tr ng-repeat="item in transferencia.produtos" id="tr-prd-{{ item.id }}">
-													<td>{{ item.id	 }}</td>
-													<td>{{ item.nome }}</td>
-													<td>{{ item.nome_fabricante }}</td>
-													<td>{{ item.peso }}</td>
-													<td>{{ item.sabor }}</td>
-													<td class="text-center" ng-if="!item.load_estoque">{{ item.qtd_item }}</td>
-													<td class="text-center" ng-if="item.load_estoque"><i class='fa fa-refresh fa-spin'></i></td>
-													<td width="80" class="text-center">{{ item.qtd_pedida }}</td>
-													<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input onKeyPress="return SomenteNumero(event);" style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
-													<td id="td-prd-deposito-saida-{{ item.id }}">
-														<select chosen ng-change="loadestoque(item)" 
-													    option="depositos_chosen"
-													    ng-model="item.id_deposito_saida"
-													    ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
-														</select>
-													</td>
-													<td align="center">
-														<button ng-if="item.add == 1" class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+						<div class="panel-footer">
+							<div class="pull-right">
+								<button ng-click="cancelar()" class="btn btn-danger btn-sm"><i class="fa fa-times-circle"></i> Cancelar</button>
+								<button ng-click="salvarTransferencia()" class="btn btn-success btn-sm" id="salvar-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+									<i class="fa fa-save"></i> Salvar
+								</button>
+
+							</div>
+							<div style="clear: both;"></div>
+						</div>
+					</div>
+					<div ng-if="enviarNovaTransferencia">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-sm-12"><div style="display: none" class="alert alert-transferencia-form"></div></div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6" id="id_empreendimento_transferencia">
+									<label class="control-label">Selecione o Empreendimento:</label>
+									<div class="input-group">
+							            <input ng-model="transferencia.nome_empreendimento" ng-disabled="true" type="text" class="form-control input-sm">
+							            <div class="input-group-btn">
+							            	<button ng-click="showEmpreendimentos()" tabindex="-2" class="btn btn-sm btn-primary" type="button">
+							            		<i class="fa fa-building-o"></i>
+							            	</button>
+							            </div>
+							        </div>
+								</div>
+							</div>
+							<br/>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group" id="produtos">
+											<table class="table table-bordered table-condensed table-striped table-hover">
+												<thead>
+													<tr>
+														<td colspan="9"><i class="fa fa-archive"></i> Produtos</td>
+														<td width="60" align="center">
+														<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
+														</td>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<th>ID</th>
+														<th>Produto</th>
+														<th>Fabricante</th>
+														<th>Peso</th>
+														<th>sabor</th>
+														<th class="text-center" >Estoque</th>
+														<th class="text-center" >Qtd.Pedida</th>
+														<th>Qtd. transferir</th>
+														<th width="250">
+															Deposito
+															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
+														</th>
+														<th></th>
+													</tr>
+													<tr ng-repeat="item in transferencia.produtos" id="tr-prd-{{ item.id }}">
+														<td>{{ item.id	 }}</td>
+														<td>{{ item.nome }}</td>
+														<td>{{ item.nome_fabricante }}</td>
+														<td>{{ item.peso }}</td>
+														<td>{{ item.sabor }}</td>
+														<td class="text-center" ng-if="!item.load_estoque">{{ item.qtd_item }}</td>
+														<td class="text-center" ng-if="item.load_estoque"><i class='fa fa-refresh fa-spin'></i></td>
+														<td width="80" class="text-center">{{ item.qtd_pedida }}</td>
+														<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input onKeyPress="return SomenteNumero(event);" style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
+														<td id="td-prd-deposito-saida-{{ item.id }}">
+															<select chosen ng-change="loadestoque(item)" 
+														    option="depositos_chosen"
+														    ng-model="item.id_deposito_saida"
+														    ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
+															</select>
+														</td>
+														<td align="center">
+															<button ng-if="item.add == 1" class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="panel-footer">
-						<div class="pull-right">
-							<button ng-click="cancelar()" class="btn btn-danger btn-sm"><i class="fa fa-times-circle"></i> Cancelar</button>
-							<button ng-click="salvarTransferencia()" class="btn btn-success btn-sm" id="salvar-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
-								<i class="fa fa-save"></i> Salvar
-							</button>
-
+						<div class="panel-footer">
+							<div class="row">
+								<span class="pull-right">
+								<div class="col-sm-12 pull-right">
+									<button ng-click="cancelar()" class="btn btn-danger btn-sm"><i class="fa fa-times-circle"></i> Cancelar</button>
+									<button  ng-click="salvarNovaTransferencia(5,$event)" class="btn btn-success btn-sm" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+										<i class="fa fa-save"></i> Salvar
+									</button>
+									<button  ng-click="salvarTransferencia()" class="btn btn-primary btn-sm" id="salvar-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+										<i class="fa fa-paper-plane-o"></i> Salvar e enviar
+									</button>
+								</div>
+								</span>
+							</div>
 						</div>
-						<div style="clear: both;"></div>
 					</div>
+
+
+
+
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
@@ -327,16 +425,24 @@
 									<td width="80">{{ item.id }}</td>
 									<td>{{ item.dta_pedido | dateFormat : 'dateTime' }}</td>
 									<td>{{ item.dta_transferencia | dateFormat : 'dateTime' }}</td>
-									<td>{{ item.nome_usuario_pedido }}</td>
+									<td>{{ item.nome_usuario_transferencia }}</td>
 									<td>{{ item.nome_empreendimento_pedido }}</td>
 									<td>{{ item.id_status_transferencia == 1 && 'Pedido recebido' || item.dsc_status_transferencia_estoque }}</td>
 									<td align="center">
-										<button type="button" ng-show="item.id != transferencia.id && item.id_status_transferencia == 1" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia($index,$event)" title="Realizar Transferência" class="btn btn-xs btn-warning" data-toggle="tooltip">
+										<button type="button" ng-show="item.id != transferencia.id && item.id_status_transferencia == 1" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia($index,$event)" title="Realizar Transferência" class="btn btn-xs btn-info" data-toggle="tooltip">
+											<i class="fa fa-arrows-h"></i>
+										</button>
+										<button type="button" ng-show="item.id == transferencia.id && item.id_status_transferencia != 5" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  title="Em edição" class="btn btn-xs btn-success" data-toggle="tooltip">
+											<i class="fa fa-arrows-h"></i>
+										</button>
+
+										<button type="button" ng-show=" item.id != transferencia.id && item.id_status_transferencia == 5" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia($index,$event,4)" title="editar pedido" class="btn btn-xs btn-warning" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button type="button" ng-show="item.id == transferencia.id" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  title="Em edição" class="btn btn-xs btn-success" data-toggle="tooltip">
+										<button type="button" ng-show="item.id == transferencia.id && item.id_status_transferencia == 5" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  title="Em edição" class="btn btn-xs btn-success" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
+
 										<button type="button"  ng-click="detalhesPedido(item)" title="Detalhes" class="btn btn-xs btn-primary" data-toggle="tooltip">
 											<i class="fa fa-tasks"></i>
 										</button>
@@ -685,6 +791,9 @@
 
 	<!-- Easy Modal -->
     <script src="js/eModal.js"></script>
+
+    <!-- UnderscoreJS -->
+	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
     
 	<!-- Extras -->
 	<script src="js/extras.js"></script>

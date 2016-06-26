@@ -169,13 +169,13 @@ app.controller('ZeraEstoqueController', function($scope, $http, $window, $dialog
 
 		var selectedItems = _.where(ng.itens, {excluir: true});
 
-		var formData = "";
+		var formData = [];
 
 		$.each(selectedItems, function(i, item) {
-			formData += "id_estoque_produto["+ i +"]="+ item.id_estoque_produto +"&";
+			formData.push({ id_estoque_produto : item.id_estoque_produto, id_produto : item.id, dta_validade : item.dta_validade, id_deposito : item.id_deposito, qtd_saida : item.qtd_item }) ;
 		});
 
-		aj.post(baseUrlApi()+"estoque/excluir", formData).
+		aj.post(baseUrlApi()+"estoque/excluir", { id_usuario:ng.userLogged.id,id_empreendimento:ng.userLogged.id_empreendimento, produtos: formData }).
 			success(function(data, status, headers, config) {
 				ng.aplicarFiltro();
 

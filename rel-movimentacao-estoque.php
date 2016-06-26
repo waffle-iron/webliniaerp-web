@@ -22,7 +22,7 @@
 	<link href="css/pace.css" rel="stylesheet">
 
 	<!-- Datepicker -->
-	<link href="css/datepicker.css" rel="stylesheet"/>
+	<link href="css/datepicker/bootstrap-datepicker.css" rel="stylesheet"/>
 
 	<!-- Timepicker -->
 	<link href="css/bootstrap-timepicker.css" rel="stylesheet"/>
@@ -205,7 +205,7 @@
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
+											<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="busca.dta_inicial" type="text" date-picker  class="form-control text-center">
 											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
@@ -215,7 +215,7 @@
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control text-center">
+											<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="busca.dta_final" type="text" date-picker type="text"  class="form-control text-center">
 											<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
@@ -240,7 +240,7 @@
 						<div class="pull-right">
 							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
 							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
-							<button class="btn btn-sm btn-success hidden-print"  id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
+							<button ng-if="false" class="btn btn-sm btn-success hidden-print"  id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
 				</div>
@@ -248,33 +248,61 @@
 				<br>
 
 				<table class="table table-bordered table-hover table-striped table-condensed">
-					<thead>
+					<thead ng-if="lengthObj(movimentacoes) > 0">
 						<tr>
 							<th class="text-center">Data/Hora</th>
 							<th class="text-center">Usuário Responsável</th>
 							<th>Descrição do Evento</th>
+							<th>Depósito</th>
 							<th class="text-center" width="100">Entrada</th>
 							<th class="text-center" width="100">Saída</th>
 							<th class="text-center" width="100">Saldo</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tr ng-if="saldo_anterior && lengthObj(movimentacoes) > 0">
+						<td colspan="6" style="border-right: none;">Saldo</td>
+						<td class="text-center" style="border-left: none;" >{{ saldo_anterior }}</td>
+					</tr>
+					<tbody ng-repeat="(dta,mov) in movimentacoes" >
 						<tr class="info text-bold">
-							<td class="text-center">20/06/2016</td>
-							<td colspan="4"></td>
+							<td class="text-center"></td>
+							<td colspan="5">{{ dta | dateFormat:'date' }}</td>
 							<td class="text-right">
-								<span class="badge">3 eventos</span>
+								<span class="badge">{{ mov.length }} eventos</span>
 							</td>
 						</tr>
-						<tr>
-							<td class="text-center" width="100">13:09:20</td>
-							<td class="text-center">Filipe M. Coelho</td>
-							<td>Efetuou cadastro</td>
-							<td class="text-center text-success"></td>
-							<td class="text-center text-danger"></td>
-							<td class="text-center text-info"></td>
+
+						<tr ng-repeat="item in mov">
+							<td class="text-center" width="100">{{ item.dta_movimentacao | dateFormat : 'time' }}</td>
+							<td class="text-center">{{ item.nome_usuario }}</td>
+
+							<td ng-if="item.acao == 'entrada' && item.tipo == 'inventario'">Inventário <span ng-if="item.flg_tela_produto == 1">Via Tela de Produtos</span> </td>
+							<td ng-if="item.acao == 'entrada' && item.tipo == 'ordem_producao'">Ordem de Produção</td>
+							<td ng-if="item.acao == 'entrada' && item.tipo == 'pedido_fornecedor'">Pedido a Fornecedor</td>
+							<td ng-if="item.acao == 'entrada' && item.tipo == 'pedido_venda'">Pedido de Venda</td>
+							<td ng-if="item.acao == 'entrada' && item.tipo == 'transferencia_estoque'">Transferência de Estoque</td>
+							<td ng-if="item.acao == 'entrada' && item.tipo == 'devolucao'">Devolucao</td>
+							<td ng-if="item.acao == 'entrada' && item.tipo == 'normal'">Normal</td>
+
+							<td ng-if="item.acao == 'saida' && item.tipo == 'venda'">Venda</td>
+							<td ng-if="item.acao == 'saida' && item.tipo == 'ordem_producao'">Ordem de Produção</td>
+							<td ng-if="item.acao == 'saida' && item.tipo == 'pedido_venda'">Pedido  de Venda</td>
+							<td ng-if="item.acao == 'saida' && item.tipo == 'transferencia_estoque'">Transferência de Estoque</td>
+							<td ng-if="item.acao == 'saida' && item.tipo == 'normal'">Saida Manual</td>
+							<td ng-if="item.acao == 'saida' && item.tipo == 'limpeza_estoque'">Limpeza de Estoque</td>
+
+							<td>{{ item.nome_deposito }}</td>
+
+							<td class="text-center text-success" ng-if="item.acao == 'entrada'">{{ item.qtd_item }}</td>
+							<td class="text-center text-success" ng-if="item.acao != 'entrada'"></td
+							>
+							<td class="text-center text-danger" ng-if="item.acao == 'saida'">{{ item.qtd_item }}</td>
+							<td class="text-center text-danger" ng-if="item.acao != 'saida'"></td>
+
+							<td class="text-center text-info">{{ item.saldo }}</td>
 						</tr>
-						<tr>
+
+						<!-- <tr>
 							<td class="text-center" width="100">14:29:40</td>
 							<td class="text-center">Filipe M. Coelho</td>
 							<td>Incluiu estoque manualmente no cadastro do produto</td>
@@ -282,6 +310,7 @@
 							<td class="text-center text-danger"></td>
 							<td class="text-center text-info">10</td>
 						</tr>
+
 						<tr>
 							<td class="text-center" width="100">15:25:21</td>
 							<td class="text-center">Filipe M. Coelho</td>
@@ -289,8 +318,18 @@
 							<td class="text-center text-success"></td>
 							<td class="text-center text-danger">5</td>
 							<td class="text-center text-info">5</td>
-						</tr>
+						</tr> -->
 					</tbody>
+					<tr ng-if="movimentacoes==false && movimentacoes.length != 0">
+						<td class="text-center">
+							Selecione um produto para a busca
+						</td>
+					</tr>
+					<tr ng-if="movimentacoes.length == 0">
+						<td class="text-center">
+							Não existe  resultado para a busca
+						</td>
+					</tr>
 				</table>
 
 				<div class="pull-right hidden-print">
@@ -414,7 +453,8 @@
 	<script src='js/modernizr.min.js'></script>
 
 	<!-- Datepicker -->
-	<script src='js/bootstrap-datepicker.min.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.pt-BR.js'></script>
 
 	<!-- Timepicker -->
 	<script src='js/bootstrap-timepicker.min.js'></script>
@@ -439,6 +479,9 @@
 
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
+
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
 
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>

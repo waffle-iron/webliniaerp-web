@@ -29,6 +29,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	var params      = getUrlVars();
 	ng.emitirNfe = false ;
 	ng.id_venda_ignore  = null ;
+	ng.sendEmailPdf = false ;
+	ng.emailSendPdfVenda = [] ;
 
 
 	ng.reforco             = {} ;
@@ -49,6 +51,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.boletos					= [{id_banco:null,num_conta_corrente:null,num_cheque:null,status_pagamento:0}];
 	ng.promessas_pagamento      = [{status_pagamento:0,data_pagamento:null,valor_pagamento:0}] ;
 	ng.dsc_formas_pagamento     = [] ;
+	ng.dadosOrcamento           = null ;
 
 
 	ng.formas_pagamento = [
@@ -114,6 +117,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			var orcamento = data.orcamento;
 			ng.id_orcamento = orcamento.id ;
 			if(!empty(ng.config.id_deposito_padrao) && orcamento.flg_comanda == 1){
+				ng.dadosOrcamento = orcamento ;
 				ng.caixa.id_deposito = ng.config.id_deposito_padrao ;
 			}
 			if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa))
@@ -701,6 +705,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.gravarVenda = function(venda){
 		if(typeof ng.newCliente == 'object'){
 			ng.venda.newCliente = ng.newCliente ;
+			ng.venda.vlr_saldo_anterior = 0 ;
+		}else if(ng.config.id_cliente_movimentacao_caixa != ng.cliente.id) {
+			ng.venda.vlr_saldo_anterior = ng.cliente.vlr_saldo_devedor;
 		}
 		aj.post(baseUrlApi()+"venda/gravarVenda",{venda:ng.venda})
 			.success(function(data, status, headers, config) {
@@ -739,6 +746,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				btn.button('reset');
 				ng.modalProgressoVenda('hide');
 				ng.showModalPrint();
+				ng.printPdf();
 				return ;
 			}
 		}
@@ -747,6 +755,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		var item_enviar = produtos_enviar[init];
 
 		aj.post(baseUrlApi()+"venda/gravarItensVenda",{	id_venda:id_venda ,
+														id_vendedor :ng.vendedor.id_vendedor,
 														produtos:item_enviar,
 														venda_confirmada 	: ng.orcamento ? 0 : 1,
 														id_empreendimento:ng.userLogged.id_empreendimento,
@@ -782,6 +791,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				btn.button('reset');
 				ng.modalProgressoVenda('hide');
 				ng.showModalPrint();
+				ng.printPdf();
 				return ;
 			}
 		}
@@ -805,15 +815,28 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.gravarMovimentacoes = function(){
 			console.log(ng.pagamentos_enviar);
-			var id_venda = ng.finalizarOrcamento == true ? ng.id_orcamento : ng.id_venda
-			aj.post(baseUrlApi()+"venda/gravarMovimentacoes",{ id_venda:id_venda,
+			var id_venda = ng.finalizarOrcamento == true ? ng.id_orcamento : ng.id_venda;
+			var id_mesa = null; 
+			if(!empty(ng.dadosOrcamento)){
+				if(ng.dadosOrcamento.flg_comanda == 1)
+					id_mesa = ng.dadosOrcamento.id_mesa ;
+			}
+			aj.post(baseUrlApi()+"venda/gravarMovimentacoes",{ 
+															   id_venda:id_venda,
+															   id_mesa : id_mesa ,
 															   pagamentos:ng.pagamentos_enviar,
 															   id_cliente:ng.cliente.id,
 															   id_empreendimento:ng.userLogged.id_empreendimento
 															 }
 			).success(function(data, status, headers) {
 				var btn = $('#btn-fazer-compra');
-				
+				if(!empty(data.mesa)){
+					var msg = {
+						type : 'table_change',from : ng.caixa_open.id_ws_web,to_empreendimento:ng.userLogged.id_empreendimento,
+						message : JSON.stringify({mesa:data.mesa})
+					}
+					ng.sendMessageWebSocket(msg);
+				}
 				if(Number(ng.caixa_aberto.flg_imprimir_sat_cfe) == 1){
 
 					if(empty(ng.caixa_open.id_ws_dsk)){
@@ -866,6 +889,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					ng.vlr_saldo_devedor = data.vlr_saldo_devedor ;
 					ng.id_controle_pagamento = data.id_controle_pagamento ;
 					ng.showModalPrint();
+					ng.printPdf();
 			 	}
 			})
 			.error(function(data, status, headers, config) {
@@ -914,12 +938,20 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.addClienteAutoComplete = function(item){
+		if(!empty(item.email)){
+			ng.emailSendPdfVenda = [] ;
+			ng.emailSendPdfVenda.push({text:item.email});
+		}
 		ng.addCliente(item);
 		ng.clientes_auto_complete_visible = false ;
 		ng.busca.cliente_outo_complete = "" ;
 	}
 
 	ng.addCliente = function(item){
+		if(!empty(item.email)){
+			ng.emailSendPdfVenda = [] ;
+			ng.emailSendPdfVenda.push({text:item.email});
+		}
 		item = angular.copy(item);
 		if(empty(item.nome)){
 			if(item.tipo_cadastro == 'pf'){
@@ -1030,6 +1062,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.addProduto = function(item){
+		item.vlr_venda_atacado = round(item.vlr_venda_atacado,2) ;
+		item.vlr_venda_intermediario = round(item.vlr_venda_intermediario,2) ;
+		item.vlr_venda_varejo = round(item.vlr_venda_varejo,2) ;
 		ng.incluirCarrinho(angular.copy(item));
 		item.qtd_total = "";
 		ng.calcTotalCompra();
@@ -1323,7 +1358,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
-		$(alertClass).fadeIn().addClass(classe).html(msg);
+		$(alertClass).fadeIn().removeClass('alert-success alert-danger alert-warning').addClass(classe).html(msg);
 		setTimeout(function(){
 			$(alertClass).fadeOut('slow');
 		},5000);
@@ -3084,16 +3119,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadComandas = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
-    	var query_string = "?te->id="+ng.userLogged.id_empreendimento;
+    	var query_string = "?te->id="+ng.userLogged.id_empreendimento+"&tv->venda_confirmada=0";
     	if(!empty(ng.busca.id_mesa_comanda)) query_string += "&tm->id_mesa="+ng.busca.id_mesa_comanda;
     	
-    	if(!empty(ng.busca.comandas)){
-    		query_string += "&tm->id_mesa="+ng.busca.id_mesa_comanda;
-    		/*if(isNaN(Number(ng.busca.produtos)))
-    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
-    		else
-    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%' OR prd.id = "+ng.busca.produtos+""}})+")";
-    		*/
+    	if(!empty(ng.busca.comandas)){	
+    			query_string += "&("+$.param({'tm->dsc_mesa':{exp:"like'%"+ng.busca.comandas+"%' OR tu.nome like'%"+ng.busca.comandas+"%' OR tv.id='"+ng.busca.comandas+"'"}})+")";
     	}
 
 		ng.comandas =  {dados:null,paginacao:[]};
@@ -3154,6 +3184,80 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.imgProduto = 'img/imagem_padrao_produto.gif';
 		ng.cliente  = {id:""};
 		ng.nome_ultimo_produto = null ;
+		$('button').button('reset');
+	}
+
+	ng.setvalue = function(variable,value){
+		ng[variable] = value ;
+	}
+
+	ng.enviarEmailPdfVenda = function(event){
+		var btn = $(event.target) ;
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		var emails = [];
+		if(ng.emailSendPdfVenda.length > 0){
+			btn.button('loading');
+			$.each(ng.emailSendPdfVenda,function(i,v){
+				emails.push({
+					nome : "",
+					email : v.text
+				});
+			});
+
+			var assunto = "" ;
+			var corpo   = "" ;
+			if(ng.orcamento){
+				assunto = 'Orçamento '+ng.id_venda+' - '+ng.userLogged.nome_empreendimento;
+				corpo = 'orcamento.php';
+			}
+			else if(ng.pagamento_fulso){
+				assunto = 'Comprovante de Pagamento '+ng.id_controle_pagamento+' - '+ng.userLogged.nome_empreendimento;
+				corpo = 'comprovante_pagamento.php' ;
+			}
+			else {
+				assunto =  'Comprovante de venda #'+ng.id_venda+' - '+ng.userLogged.nome_empreendimento ;
+				corpo = 'comprovante_venda.php';
+			}
+			var post = {
+				assunto : assunto,
+				corpo : corpo,
+				destinatarios : emails ,
+				form_data : { url_pdf : ng.url_pdf }
+			}
+
+			aj.post(baseUrlApi()+"email/send",post)
+			.success(function(data, status, headers, config) {
+				ng.mensagens('alert-success','<b>E-amail enviado com sucesso</b>','#alert-enviar-email-comprovante-pdf');
+				ng.emailSendPdfVenda = [] ;
+				btn.button('reset');
+			})
+			.error(function(data, status, headers, config) {
+				ng.mensagens('alert-danger','<b>Ocorreu um erro ao enviar o E-amail</b>','#alert-enviar-email-comprovante-pdf');
+				btn.button('reset');
+			});
+		}
+
+	}
+	ng.url_pdf = '' ;
+	ng.printPdf = function(){
+		ng.url_pdf = baseUrlApi()+'relPDF?template=comprovante_venda&'+($.param({dados:{json:JSON.stringify({
+                    pagamentos : ng.recebidos,
+					vlr_saldo_devedor: ng.cliente.vlr_saldo_devedor,
+					id_empreendimento : ng.userLogged.id_empreendimento,
+                    id_venda : ng.id_venda,
+                    id_cliente : ng.cliente.id,
+                    pagamento_fulso : ng.pagamento_fulso,
+                    id_controle_pagamento : (ng.pagamento_fulso ? ng.id_controle_pagamento : null)
+				})}}));
+		$('#load-pdf-venda').show();
+		$('#pdf-venda').hide();
+		$('#pdf-venda').html('<iframe style="height:450px" width="100%"  src="'+ng.url_pdf+'" frameborder=0 allowTransparency="true"  style=" width: 100%;height: 900px;background: #fff;border: none;overflow: hidden; display:none"></iframe>')
+		$('#pdf-venda iframe').load(function(){
+			$('#pdf-venda').show();
+		    $(this).show();
+		   	$('#load-pdf-venda').hide();
+		});
 	}
 
 	ng.existsCookie();

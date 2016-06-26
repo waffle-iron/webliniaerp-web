@@ -191,13 +191,6 @@
 		</a>
 	</li>
 	<li>
-		<a href="controle-mesas.php">
-			<span class="submenu-label">
-				<i class="fa fa-table"></i> Controle de Mesas
-			</span>
-		</a>
-	</li>
-	<li>
 		<a href="vendas.php">
 			<span class="submenu-label">
 				<i class="fa fa-signal"></i> Vendas

@@ -348,7 +348,7 @@
 		<!-- /main-container -->
 
 		<!-- /Modal detalhes da venda-->
-		<div class="modal fade" id="list_clientes" style="display:none">
+		<!--<div class="modal fade" id="list_clientes" style="display:none">
   			<div class="modal-dialog modal-lg">
     			<div class="modal-content">
       				<div class="modal-header">
@@ -407,8 +407,25 @@
 							</li>
 						</ul>
 				    </div>
-			  	</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
+			  	</div>
+			</div>
+		</div>-->
+		<!-- /.modal -->
+
+		<!-- /Modal Print-->
+		<div class="modal fade" id="modal-print-venda" style="display:none"  data-keyboard="false">
+  			<div class="modal-dialog error modal-lg">
+    			<div class="modal-content">
+				    <div class="modal-body" >
+				    	<div id="load-pdf-venda" class="text-center" style="height: 450px;line-height: 400px;vertical-align:middle;width: 100%;font-size: 15px;">
+				    		<i class='fa fa-refresh fa-spin'></i> Aguarde, carregando ...
+				    	</div>
+				    	<div id="pdf-venda"></div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
 

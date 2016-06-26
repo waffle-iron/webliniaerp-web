@@ -406,6 +406,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		 	success:function(data){
 		 		$('#formProdutos')[0].reset();
 		 		btn.button('reset');
+		 		$('.upload-file label span').eq(0).attr('data-title','');
+		 		$('.upload-file label span').eq(1).attr('data-title','');
 		 		if(ng.editing)
 		 			ng.loadProdutos(currentPaginacao.offset,currentPaginacao.limit);
 		 		else
@@ -975,7 +977,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 				ng.campos_extras_produto.push(v);
 				ng.valor_campo_extra[v.nome_campo] = 0 ;
 			});
-			console.log(ng.chosen_campo_extra);
 		})
 		.error(function(data, status, headers, config) {
 		

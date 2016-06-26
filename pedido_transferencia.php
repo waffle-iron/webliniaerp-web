@@ -29,6 +29,9 @@
 
 	<link href="css/custom.css" rel="stylesheet">
 
+	<!-- Datepicker -->
+	<link href="css/datepicker/bootstrap-datepicker.css" rel="stylesheet"/>
+
 	<style type="text/css">
 
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
@@ -194,7 +197,8 @@
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-arrows-h "></i> Transferência</h3>
 					<br/>
-					<a ng-if="!isNumeric(transferencia.id)" class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Transferência</a>
+					<a ng-if="!isNumeric(transferencia.id)" class="btn btn-info" id="btn-novo"  ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Solicitar Transferência</a>
+					<a  class="btn btn-primary"  href="pedido_transferencia_recebido.php"><i class="fa fa-paper-plane-o"></i> Enviar Mercadoria</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -203,12 +207,13 @@
 
 				<div class="panel panel-default" id="box-novo" style="display:none">
 					<div class="panel-heading" ng-if="!isNumeric(transferencia.id)"> <i class="fa fa-plus-circle"></i> Nova Transferência</div>
-					<div class="panel-heading" ng-if="isNumeric(transferencia.id)"> <i class="fa fa-check-circle-o "></i> Receber Pedido de Transferência #{{transferencia.id }} </div>
+					<div class="panel-heading" ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3"> <i class="fa fa-check-circle-o "></i> Recebendo Pedido de Transferência #{{transferencia.id }} </div>
+					<div class="panel-heading" ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 4"> <i class="fa fa-edit "></i> Editando Pedido de Transferência #{{transferencia.id }} </div>
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-12"><div style="display: none" class="alert alert-transferencia-form"></div></div>
 						</div>
-						<div class="row" ng-if="!isNumeric(transferencia.id)">
+						<div class="row" ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4">
 							<div class="col-sm-5" id="id_empreendimento_transferencia">
 								<label class="control-label">Selecione o Empreendimento:</label>
 								<div class="input-group">
@@ -221,7 +226,7 @@
 						        </div>
 							</div>
 						</div>
-						<div class="row" ng-if="isNumeric(transferencia.id)">
+						<!--<div class="row" ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">
 							<div class="col-sm-4">
 								<div class="form-group" id="id_deposito_principal">
 									<label class="control-label">Deposito</label>
@@ -234,15 +239,16 @@
 								</div>
 							</div>
 						</div>
-						<br/>
+						 -->
+						 <br/>
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="form-group" id="produtos">
 										<table class="table table-bordered table-condensed table-striped table-hover">
 											<thead>
 												<tr>
-													<td colspan="{{ isNumeric(transferencia.id) && 9 || 6 }}"><i class="fa fa-archive"></i> Produtos</td>
-													<td width="60" align="center"  ng-if="!isNumeric(transferencia.id)">
+													<td colspan="{{ ( isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3 ) && 9 || 6 }}"><i class="fa fa-archive"></i> Produtos</td>
+													<td width="60" align="center"  ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4">
 													<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
 													</td>
 												</tr>
@@ -255,13 +261,16 @@
 													<th>Peso</th>
 													<th>sabor</th>
 													<th>Qtd.Pedida</th>
-													<th ng-if="isNumeric(transferencia.id)">Qtd. transferida</th>
-													<th ng-if="isNumeric(transferencia.id)">Qtd. recebida</th>
-													<th ng-if="isNumeric(transferencia.id)" width="250">Deposito</th>
-													<th ng-if="!isNumeric(transferencia.id)" ></th>
+													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. transferida</th>
+													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. recebida</th>
+													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3" width="250">
+														Deposito
+														<button style="float:right" class="btn btn-xs btn-info" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
+													</th>
+													<th ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" ></th>
 												</tr>
 												<tr ng-show="(transferencia.produtos.length == 0)">
-													<td colspan="{{ isNumeric(transferencia.id) && 7 || 8 }}" align="center">Nenhum produto selecionado</td>
+													<td colspan="{{ ( isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3 ) && 7 || 8 }}" align="center">Nenhum produto selecionado</td>
 												</tr>
 												<tr ng-repeat="item in transferencia.produtos">
 													<td>{{ item.id_produto }}</td>
@@ -269,22 +278,22 @@
 													<td>{{ item.nome_fabricante }}</td>
 													<td>{{ item.peso }}</td>
 													<td>{{ item.sabor }}</td>
-													<td ng-if="!isNumeric(transferencia.id)" width="75" id="td-trasnferencia-qtd-pedida-{{ item.id_produto }}">
-														<input  ng-model="item.qtd_pedida" type="text" class="form-control input-xs" />
+													<td ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" width="75" id="td-trasnferencia-qtd-pedida-{{ item.id_produto }}">
+														<input onKeyPress="return SomenteNumero(event);"  ng-model="item.qtd_pedida" type="text" class="form-control input-xs" />
 													</td>
-													<td class="text-center" ng-if="isNumeric(transferencia.id)">{{ item.qtd_pedida }}</td>
-													<td class="text-center" ng-if="isNumeric(transferencia.id)">{{ item.qtd_transferida }}</td>
-													<td ng-if="isNumeric(transferencia.id)" width="100" id="td-trasnferencia-qtd-recebida-{{ item.id_produto }}">
+													<td class="text-center" ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">{{ item.qtd_pedida }}</td>
+													<td class="text-center" ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">{{ item.qtd_transferida }}</td>
+													<td ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3" width="100" id="td-trasnferencia-qtd-recebida-{{ item.id_produto }}">
 														<input onKeyPress="return SomenteNumero(event);"  ng-model="item.qtd_recebida" type="text" class="form-control input-xs" />
 													</td>
-													<td ng-if="isNumeric(transferencia.id)" id="td-trasnferencia-id-deposito-entrada-{{ item.id_produto }}" >
+													<td ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3" id="td-trasnferencia-id-deposito-entrada-{{ item.id_produto }}" >
 														<select chosen ng-change="" 
 													    option="depositos_chosen"
 													    ng-model="item.id_deposito_entrada"
 													    ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
 														</select>
 													</td>
-													<td ng-if="!isNumeric(transferencia.id)" align="center">
+													<td ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" align="center">
 														<button class="btn btn-xs btn-danger" ng-click="excluirProdutoLista($index)"><i class="fa fa-trash-o"></i></button>
 													</td>
 												</tr>
@@ -299,11 +308,14 @@
 							<span class="pull-right">
 							<div class="col-sm-12 pull-right">
 								<button ng-click="cancelar()" class="btn btn-danger btn-sm"><i class="fa fa-times-circle"></i> Cancelar</button>
-							<button ng-if="!isNumeric(transferencia.id)" ng-click="salvarTransferencia()" class="btn btn-success btn-sm" id="salvar-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+							<button ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" ng-click="salvarTransferencia(4,$event)" class="btn btn-success btn-sm" id="salvar-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
 								<i class="fa fa-save"></i> Salvar
 							</button>
-							<button ng-if="isNumeric(transferencia.id)" ng-click="receberTransferencia()" class="btn btn-success btn-sm" id="receber-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
-								<i class="fa fa-save"></i> Salvar
+							<button ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4 " ng-click="salvarTransferencia(1,$event)" class="btn btn-primary btn-sm" id="salvar-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+								<i class="fa fa-paper-plane-o"></i> Salvar e solicitar
+							</button>
+							<button ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3" ng-click="receberTransferencia()" class="btn btn-success btn-sm" id="receber-transferencia" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde...">
+								<i class="fa fa-save"></i> Receber
 							</button>
 							</div>
 							</span>
@@ -311,7 +323,7 @@
 					</div>
 				</div><!-- /panel -->
 
-				<div class="panel panel-default hidden-print" style="margin-top: 15px;">
+				<div  class="panel panel-default hidden-print" style="margin-top: 15px;">
 					<div class="panel-heading"><i class="fa fa-calendar"></i> Filtros</div>
 
 					<div class="panel-body">
@@ -321,7 +333,7 @@
 									<div class="form-group">
 										<label class="control-label">Data</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
+											<input date-picker ng-model="busca.data" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
 											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
@@ -332,7 +344,7 @@
 										<label class="control-label">Etapa</label>
 										<select chosen
 									    	option="etapas"
-									    	ng-model="filtro.id_etapa_data"
+									    	ng-model="busca.id_etapa_data"
 									    	ng-options="etapa.id as etapa.nme_etapa for etapa in etapas">
 										</select>
 									</div>
@@ -343,66 +355,41 @@
 										<label class="control-label">Status</label>
 										<select chosen
 									    	option="status"
-									    	ng-model="filtro.id_status"
-									    	ng-options="banco.id as banco.nome for banco in status">
+									    	ng-model="busca.id_status"
+									    	ng-options="banco.id_status_transferencia_estoque as banco.dsc_status_transferencia_estoque for banco in status">
 										</select>
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="form-group">
+										<label class="control-label">Usuário</label>
+										<div class="input-group">
+											<input ng-click="showCliente()" type="text" class="form-control" ng-model="busca.usuario_pedido.nome" readonly="readonly" style="cursor: pointer;">
+											<span class="input-group-btn">
+												<button ng-click="showCliente()"  type="button" class="btn"><i class="fa fa-archive"></i></button>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="form-group">
+										<label class="control-label">Empreendimento</label>
+										<div class="input-group">
+											<input ng-click="showEmpreendimentosBusca()" type="text" class="form-control" ng-model="busca.empreendimento_busca.nome_empreendimento" readonly="readonly" style="cursor: pointer;">
+											<span class="input-group-btn">
+												<button ng-click="showEmpreendimentosBusca(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
+											</span>
+										</div>
 									</div>
 								</div>
 							</div>
 							
-							<div class="row">
-								<div class="col-lg-4">
-									<div class="form-group">
-										<label class="control-label">Usuário</label>
-										<div class="input-group">
-											<input ng-click="modalProdutos()" type="text" class="form-control" ng-model="busca.nome_produto" readonly="readonly" style="cursor: pointer;">
-											<span class="input-group-btn">
-												<button ng-click="modalProdutos(0,10)" ng-click="modalProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
-											</span>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-2">
-									<div class="form-group">
-										<label class="control-label">Etapa</label>
-										<select chosen
-									    	option="etapas"
-									    	ng-model="filtro.id_etapa_usuario"
-									    	ng-options="etapa.id as etapa.nme_etapa for etapa in etapas">
-										</select>
-									</div>
-								</div>
-
-								<div class="col-lg-4">
-									<div class="form-group">
-										<label class="control-label">Empreendimetno</label>
-										<div class="input-group">
-											<input ng-click="modalProdutos()" type="text" class="form-control" ng-model="busca.nome_produto" readonly="readonly" style="cursor: pointer;">
-											<span class="input-group-btn">
-												<button ng-click="modalProdutos(0,10)" ng-click="modalProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
-											</span>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-2">
-									<div class="form-group">
-										<label class="control-label">Etapa</label>
-										<select chosen
-									    	option="etapas"
-									    	ng-model="filtro.id_etapa_empreendimento"
-									    	ng-options="etapa.id as etapa.nme_etapa for etapa in etapas | filter : {flg_oculto_empreendimento:false}">
-										</select>
-									</div>
-								</div>
-							</div>
 						</form>
 					</div>
 
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
-							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="loadtransferencias(0,10)"><i class="fa fa-filter"></i> Aplicar Filtro</button>
 							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
 						</div>
 					</div>
@@ -449,12 +436,20 @@
 									<td>{{ item.nome_empreendimento_transferencia }}</td>
 									<td>{{ item.dsc_status_transferencia_estoque }}</td>
 									<td align="center">
-										<button type="button" ng-show="item.id != transferencia.id && item.id_status_transferencia == 2" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia($index,$event)" title="Receber pedido" class="btn btn-xs btn-warning" data-toggle="tooltip">
+										<button type="button" ng-show="item.id != transferencia.id && item.id_status_transferencia == 2" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia($index,$event,3)" title="Receber pedido" class="btn btn-xs btn-info" data-toggle="tooltip">
+											<i class="fa fa-check-square-o"></i>
+										</button>
+										<button type="button" ng-show="item.id == transferencia.id && item.id_status_transferencia == 2" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  title="Em edição" class="btn btn-xs btn-success" data-toggle="tooltip">
+											<i class="fa fa-check-square-o"></i>
+										</button>
+
+										<button type="button" ng-show="item.id != transferencia.id && item.id_status_transferencia == 4" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editTransferencia($index,$event,4)" title="editar pedido" class="btn btn-xs btn-warning" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button type="button" ng-show="item.id == transferencia.id" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  title="Em edição" class="btn btn-xs btn-success" data-toggle="tooltip">
+										<button type="button" ng-show="item.id == transferencia.id && item.id_status_transferencia == 4" data-loading-text="<i class='fa fa-refresh fa-spin'></i>"  title="Em edição" class="btn btn-xs btn-success" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
+
 										<button type="button" ng-click="detalhesPedido(item)" title="Detalhes" class="btn btn-xs btn-primary" data-toggle="tooltip">
 											<i class="fa fa-tasks"></i>
 										</button>
@@ -521,7 +516,7 @@
 										<tr ng-repeat="item in empreendimentos">
 											<td>{{ item.nome_empreendimento }}</td>
 											<td width="50" align="center">
-												<button ng-show="transferencia.id_empreendimento != item.id" type="button" class="btn btn-xs btn-success" ng-click="addEmpreendimento(item)">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-show="transferencia.id_empreendimento != item.id" type="button" class="btn btn-xs btn-success" ng-click="addEmpreendimento(item,$event)">
 													<i class="fa fa-check-square-o"></i> Selecionar
 												</button>
 												<button ng-show="transferencia.id_empreendimento == item.id" ng-show="existsAcessorio(item)" ng-disabled="true" class="btn btn-primary btn-xs" type="button">
@@ -677,6 +672,7 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
 		<!-- /Modal depositos-->
 		<div class="modal fade" id="list_depositos" style="display:none">
   			<div class="modal-dialog">
@@ -743,6 +739,153 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+		<!-- /Modal Clientes-->
+		<div class="modal fade" id="list_clientes" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Clientes</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.clientes"  ng-enter="loadCliente(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadCliente(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead>
+										<tr>
+											<th >Nome</th>
+											<th >Apelido</th>
+											<th >Perfil</th>
+											<th colspan="2">selecionar</th>
+										</tr>
+									</thead>
+									<tr ng-if="usuarios.itens == null">
+										<th class="text-center" colspan="9" style="text-align:center">
+											<i class='fa fa-refresh fa-spin'></i>
+											<strong>Carregando...</strong>
+										</th>
+									</tr>
+									<tr ng-if="usuarios.itens.length == 0">
+										<th colspan="4" class="text-center">Nenhum cliente encontrado</th>
+									</tr>
+									<tbody>
+										<tr ng-repeat="item in usuarios.itens">
+											<td>{{ item.nome }}</td>
+											<td>{{ item.apelido }}</td>
+											<td>{{ item.nome_perfil }}</td>
+											<td width="50" align="center">
+												<button type="button" class="btn btn-xs btn-success" ng-click="addCliente(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="usuarios.paginacao.length > 1">
+									<li ng-repeat="item in usuarios.paginacao" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadCliente(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+				    		</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal empreendimento Busca -->
+		<div class="modal fade" id="list_empreendimentos_busca" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Empreendimentos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.str_empreendimento_busca" ng-enter="loadEmpreendimentosBusca(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadEmpreendimentosBusca(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(empreendimentos_busca.itens.length != 0)">
+										<tr>
+											<th colspan="2">Nome</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-if="empreendimentos_busca.itens == null">
+											<th class="text-center" colspan="9" style="text-align:center">
+												<i class='fa fa-refresh fa-spin'></i>
+												<strong>Carregando...</strong>
+											</th>
+										</tr>
+										<tr ng-show="(empreendimentos_busca.itens.length == 0)">
+											<td colspan="2">Não há resultado para a busca</td>
+										</tr>
+										<tr ng-repeat="item in empreendimentos_busca.itens">
+											<td>{{ item.nome_empreendimento }}</td>
+											<td width="50" align="center">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-show="busca.empreendimento_busca.id != item.id" type="button" class="btn btn-xs btn-success" ng-click="addEmpreendimentoBusca(item,$event)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+												<button ng-show="busca.empreendimento_busca.id == item.id" ng-show="existsAcessorio(item)" ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                                	<i class="fa fa-check-circle-o"></i> Selecionado
+                                            	</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="empreendimentos_busca.paginacao.length > 1">
+									<li ng-repeat="item in empreendimentos_busca.paginacao" ng-class="{'active': item.current}">
+										<a href="" ng-click="loadEmpreendimentosBusca(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+				    		</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 		<!-- Footer
 		================================================== -->
 		<footer>
@@ -800,6 +943,13 @@
 
 	<!-- Moment -->
 	<script src="js/moment/moment.min.js"></script>
+
+	<!-- Datepicker -->
+	<script src='js/datepicker/bootstrap-datepicker.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.pt-BR.js'></script>
+
+	<!-- UnderscoreJS -->
+	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
 	<!-- Extras -->
 	<script src="js/extras.js"></script>

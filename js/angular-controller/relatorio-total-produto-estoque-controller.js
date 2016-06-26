@@ -1,4 +1,4 @@
-app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, UserService) {
+app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, UserService,$dialogs) {
 	var ng 				= $scope,
 		aj 				= $http;
 	ng.userLogged 		= UserService.getUserLogado();
@@ -10,6 +10,8 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 	ng.busca			= {nome_produto:null,id_produto:null,qtd_produto:null,produto_modal:null,depositos:null,id_deposito:null,nome_deposito:null}
 	ng.busca.clientes  	= '';
 	ng.cliente          = {};
+	ng.saldo_anterior   = false ;
+	ng.movimentacoes    = false ;
 
 	ng.reset = function() {
 			ng.busca			= {nome_produto:null,id_produto:null,qtd_produto:null,produto_modal:null,depositos:null,id_deposito:null,nome_deposito:null};
@@ -17,13 +19,22 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 	}
 
 	ng.resetFilter = function() {
-		ng.reset();
-		ng.loadProdutos(0,ng.itensPorPagina);
+		ng.busca = {} ;
+		ng.movimentacoes = false ;
+	}
+
+	ng.lengthObj = function(obj){
+		if(typeof obj == 'object' && !empty(obj))
+			return Object.keys(obj).length;
 	}
 	
 	ng.aplicarFiltro = function() {
+		if(!$.isNumeric(ng.busca.id_produto)){
+			ng.movimentacoes    = false ;
+			return;
+		}
 		$("#modal-aguarde").modal('show');
-		ng.loadProdutos(0,ng.itensPorPagina);
+		ng.loadMovimentacao();
 	}
 	ng.grupo_busca     = '';
 	ng.grupo_tabela    = 'produto';
@@ -163,9 +174,56 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
     	$('#modal-depositos').modal('hide');
 	}
 
+	ng.loadMovimentacao= function() {
+		ng.saldo_anterior   = false ;
+		ng.movimentacoes = null ;
+		var query_string = "" ;
+		var dta_saldo_anterior = "";
+		if(!empty(ng.busca.dta_inicial) && empty(ng.busca.dta_final)){
+			dta_saldo_anterior = ng.busca.dta_inicial ;
+			query_string = empty(query_string) ? 'WHERE '  : query_string ;
+			query_string  += " date_format(dta_movimentacao,'%Y-%m-%d')>='"+ng.busca.dta_inicial+"'";
+		}else if(!empty(ng.busca.dta_final) && empty(ng.busca.dta_inicial)){
+			query_string = empty(query_string) ? 'WHERE '  : query_string ;
+			query_string  += " date_format(dta_movimentacao,'%Y-%m-%d')<='"+ng.busca.dta_final+"'" ;
+		}else if(!empty(ng.busca.dta_final) && !empty(ng.busca.dta_inicial)){
+			dta_saldo_anterior = ng.busca.dta_inicial ;
+			query_string = empty(query_string) ? 'WHERE '  : query_string ;
+			query_string  += " dta_movimentacao BETWEEN '"+ng.busca.dta_inicial+" 00:00:00' AND '"+ng.busca.dta_final+" 23:59:59'" ;
+		}
+		query_string = "?cplSql="+query_string+" ORDER BY dta_movimentacao ASC" ;
+    	aj.get(baseUrlApi()+"movimentacao_estoque/produto/"+ng.userLogged.id_empreendimento+"/"+ng.busca.id_produto+"/null"+(empty(dta_saldo_anterior) ? '' : '/'+dta_saldo_anterior )+query_string)
+		.success(function(data, status, headers, config) {
+			var saldo_anterior = 0 ;
+			if(!empty(data.saldo_anterior) || (empty(data.saldo_anterior) && data.movimentacoes == 0)){
+				ng.saldo_anterior   =  data.saldo_anterior ;
+				saldo_anterior = data.saldo_anterior ;
+			}
+			$.each(data.movimentacoes,function(i,v){
+				var dta = v.dta_movimentacao.split(' ');
+				if(v.acao == 'entrada' && v.tipo == 'inventario'){
+					saldo_anterior = v.qtd_item;
+				}else if(v.acao == 'entrada'){
+					saldo_anterior += v.qtd_item ;
+				}else if(v.acao == 'saida'){
+					saldo_anterior -= v.qtd_item ;
+				}
+				data.movimentacoes[i].dta = dta[0];
+				data.movimentacoes[i].saldo = saldo_anterior;
+			});	
+			ng.movimentacoes =  _.groupBy(data.movimentacoes, "dta"); 
+			console.log(ng.movimentacoes);
+			$("#modal-aguarde").modal('hide');
+		})
+		.error(function(data, status, headers, config) {
+			ng.movimentacoes = [] ;
+			$("#modal-aguarde").modal('hide');
+		});
+	}
+
 	ng.configuracao = null ;
 
 
 	ng.reset();
-	ng.aplicarFiltro();
+	//ng.aplicarFiltro();
 });

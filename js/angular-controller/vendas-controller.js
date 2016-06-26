@@ -68,8 +68,24 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 
 	ng.loadDetalhesVenda = function(venda) {
 		ng.venda = venda;
+		$('#modal-print-venda').modal('show');
+		ng.url_pdf = baseUrlApi()+'relPDF?template=comprovante_venda&'+($.param({dados:{json:JSON.stringify({
+                    id_venda : ng.venda.id,
+                    id_empreendimento : ng.venda.id_empreendimento,
+                    pagamento_fulso : false,
+                    id_controle_pagamento : null,
+                    id_cliente : ng.venda.id_cliente
+				})}}));
+		$('#load-pdf-venda').show();
+		$('#pdf-venda').hide();
+		$('#pdf-venda').html('<iframe style="height:500px" width="100%"  src="'+ng.url_pdf+'" frameborder=0 allowTransparency="true"  style=" width: 100%;height: 900px;background: #fff;border: none;overflow: hidden; display:none"></iframe>')
+		$('#pdf-venda iframe').load(function(){
+			$('#pdf-venda').show();
+		    $(this).show();
+		   	$('#load-pdf-venda').hide();
+		});
 
-		$('#list_clientes').modal('show');
+		/*$('#list_clientes').modal('show');
 
 		aj.get(baseUrlApi()+"venda/itens/"+ venda.id)
 			.success(function(data, status, headers, config) {
@@ -77,7 +93,7 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 			})
 			.error(function(data, status, headers, config) {
 				console.log(data);
-			});
+			});*/
 	}
 
 	ng.loadEditVenda = function(venda) {

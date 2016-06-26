@@ -548,3 +548,14 @@ function groupObjByQtd(arr,qtd){
     });
     return aux ;
 }
+
+function getIndex(campo,vlr,obj){
+    var index = null ;
+    $.each(obj,function(i,v){
+        if(!empty(v[campo]) && v[campo] == vlr){
+            index = i;
+            return
+        }
+    });
+    return index ;
+}

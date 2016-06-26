@@ -198,4 +198,11 @@
 			</span>
 		</a>
 	</li>
+	<li>
+		<a href="rel-movimentacao-estoque.php">
+			<span class="submenu-label">
+				<i class="fa fa-file-text-o"></i> Mov. de Estoque
+			</span>
+		</a>
+	</li>
 <?php } ?>

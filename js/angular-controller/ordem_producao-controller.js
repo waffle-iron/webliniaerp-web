@@ -9,11 +9,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 	ng.ordemProducao = {itens:[]};
 	ng.busca         = {produtos:"",depositos:""};
 	ng.paginacao     = {produtos:[]} ;
-	ng.id_ws_dsk     =  ng.configuracao.id_ws_dsk_op ;
-	ng.status_websocket = 0 ;
-	var TimeWaitingResponseTestConection = 10000;
-	var timeOutSendTestConection = null ;
-	var timeOutWaitingResponseTestConection = null ;
+
 
     ng.editing = false;
 
@@ -253,7 +249,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 
 		dlg.result.then(function(btn){
 			but.button('loading');
-			aj.get(baseUrlApi()+"ordem_producao/chage_status/"+item.id+"/"+id_status+"/"+ng.userLogged.id_empreendimento+"")
+			aj.get(baseUrlApi()+"ordem_producao/chage_status/"+item.id+"/"+id_status+"/"+ng.userLogged.id_empreendimento+"/"+ng.userLogged.id)
 				.success(function(data, status, headers, config) {
 					ng.mensagens('alert-success','Status Alterado com Sucesso','.alert-list-pedidos');
 					item.id_status = data.status.id;
@@ -326,29 +322,8 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 					}
 					ng.sendMessageWebSocket(msg);
 					ng.id_ws_web = data.to ;
-					enviaTesteConexao();
 					break;
 				case 'op_new':
-					data.message.nome_cliente = ((ng.configuracao.id_cliente_movimentacao_caixa == data.message.id_cliente) ? '' : data.message.nome_cliente.toUpperCase());
-					var msg = {
-						from:ng.id_ws_web,
-						to:ng.id_ws_dsk,
-						type:'cop_print',
-						message : JSON.stringify({ 
-							numOrdemProducao: 	(!empty(data.message.id_ordem_producao) 	? data.message.id_ordem_producao 	: ""),
-							numMesa: 			(!empty(data.message.dsc_mesa) 				? data.message.dsc_mesa 			: ""),
-							numComanda: 		(!empty(data.message.id_venda) 				? data.message.id_venda 			: ""),
-							nmeSolicitante: 	(!empty(data.message.nome_usuario) 			? data.message.nome_usuario 		: ""),
-							nmeCliente: 		(!empty(data.message.nome_cliente) 			? data.message.nome_cliente 		: ""),
-							nmeProduto: 		(!empty(data.message.nome_produto) 			? data.message.nome_produto 		: ""),
-							nmeCorSabor: 		(!empty(data.message.sabor) 				? data.message.sabor 				: ""),
-							nmeTamanho: 		(!empty(data.message.tamanho) 				? data.message.tamanho 				: ""),
-							nmeFabricante: 		(!empty(data.message.nome_fabricante) 		? data.message.nome_fabricante 		: ""),
-							qtdItem: 			(!empty(data.message.qtd) 					? data.message.qtd 					: ""),
-							nmePrinterModel: 	(!empty(ng.configuracao.printer_model_op) 	? ng.configuracao.printer_model_op 	: "")
-						})
-					}
-					ng.sendMessageWebSocket(msg);
 					noty({
 						layout: 'topRight',
 						type: 'warning',
@@ -360,12 +335,6 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 						}
 					});
 					ng.loadOrdemProducao();
-				break;
-				case 'connection_test_response':
-					clearTimeout(timeOutWaitingResponseTestConection);
-					$scope.$apply(function () { ng.status_websocket = 2 ;});
-					ng.id_ws_dsk = data.from ;
-					console.log(moment().format("YYYY-MM-DD HH:mm:ss")+' - Conexão com App client extabelecida');
 				break;
 			}			
 		};

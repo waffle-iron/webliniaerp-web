@@ -36,8 +36,12 @@
 
 	<!-- autocomplete -->
 	<link href="css/autocomplete.css" rel="stylesheet">
-	<style type="text/css">
 
+	<!-- Tags Input -->
+	<link href="css/ng-tags-input.min.css" rel="stylesheet"/>
+	<link href="css/ng-tags-input.bootstrap.min.css" rel="stylesheet"/>
+
+	<style type="text/css">
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
 
 		.modal {
@@ -1715,7 +1719,7 @@
 		<div class="modal fade" id="modal-print" style="display:none"  data-keyboard="false">
   			<div class="modal-dialog error modal-lg">
     			<div class="modal-content">
-      				<div class="modal-header" id="topo_print">
+      				<!--<div class="modal-header" id="topo_print">
 						<div class="clearfix">
 							<div class="pull-left">
 								<span class="img-demo">
@@ -1820,30 +1824,59 @@
 							</div>
 						</div>
 
-				    </div>
+				    </div>-->
 
+				    <div class="modal-body" >
+				    	<div id="load-pdf-venda" class="text-center" style="height: 450px;line-height: 400px;vertical-align:middle;width: 100%;font-size: 15px;">
+				    		<i class='fa fa-refresh fa-spin'></i> Aguarde, carregando comprovante...
+				    	</div>
+				    	<div id="pdf-venda"></div>
+				    </div>
 				    <div class="modal-footer">
-				    	<a ng-show="!emitirNfe" id="printTermic" class="btn btn-md  btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="printTermic()" >
-				    		<i class="fa fa-print"></i> Imprimir (via Impressora Térmica)
-				    	</a>
-				    	<button ng-show="!emitirNfe" type="button" data-loading-text=" Aguarde..." id="btn-imprimir"
-				    		class="btn btn-md  btn-success" ng-click="printDiv('modal-print')">
-				    		<i class="fa fa-print"></i> Imprimir (via Papel A4)
-				    	</button>
-				    	<button ng-show="!emitirNfe" ng-click="set('emitirNfe',true)" ng-if="configuracoes.flg_emitir_nfe_pdv == 1" type="button" data-loading-text=" Aguarde..." 
-				    		class="btn btn-md  btn-info">
-				    		<i class="fa fa-print"></i> Emitir NF-e
-				    	</button>
-				    	<a ng-show="!emitirNfe" ng-click="cancelar()" class="btn btn-md  btn-default">
-				    		<i class="fa fa-reply"></i> Voltar ao PDV
-				    	</a>
-				    	<a ng-show="emitirNfe==true" ng-disabled="configuracoes.id_operacao_padrao_venda == undefined || configuracoes.id_operacao_padrao_venda == '' " href="nota-fiscal.php?id_venda={{ id_venda }}&&cod_operacao={{configuracoes.id_operacao_padrao_venda}}"  type="button" data-loading-text=" Aguarde..." 
-				    		class="btn btn-md  btn-info" >
-				    		<i class="fa fa-print"></i> Confirmar Emissão NF-e
-				    	</a>
-				    	<a ng-show="emitirNfe" ng-click="emitirNfe = false" class="btn btn-md  btn-default">
-				    		<i class="fa fa-reply"></i> Voltar
-				    	</a>
+				    	<div ng-if="!sendEmailPdf">
+					    	<a ng-show="!emitirNfe" id="printTermic" class="btn btn-md  btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="printTermic()" >
+					    		<i class="fa fa-print"></i> Imprimir (via Impressora Térmica)
+					    	</a>
+					    	<button ng-show="!emitirNfe" type="button" data-loading-text=" Aguarde..." id="btn-imprimir"
+					    		class="btn btn-md  btn-success" ng-click="setvalue('sendEmailPdf',true)">
+					    		<i class="fa fa-envelope-o"></i> Enviar por E-mail
+					    	</button>
+					    	<button ng-show="!emitirNfe" ng-click="set('emitirNfe',true)" ng-if="configuracoes.flg_emitir_nfe_pdv == 1" type="button" data-loading-text=" Aguarde..." 
+					    		class="btn btn-md  btn-info">
+					    		<i class="fa fa-print"></i> Emitir NF-e
+					    	</button>
+					    	<a ng-show="!emitirNfe" ng-click="cancelar()" class="btn btn-md  btn-default">
+					    		<i class="fa fa-reply"></i> Voltar ao PDV
+					    	</a>
+					    	<a ng-show="emitirNfe==true" ng-disabled="configuracoes.id_operacao_padrao_venda == undefined || configuracoes.id_operacao_padrao_venda == '' " href="nota-fiscal.php?id_venda={{ id_venda }}&&cod_operacao={{configuracoes.id_operacao_padrao_venda}}"  type="button" data-loading-text=" Aguarde..." 
+					    		class="btn btn-md  btn-info" >
+					    		<i class="fa fa-print"></i> Confirmar Emissão NF-e
+					    	</a>
+					    	<a ng-show="emitirNfe" ng-click="emitirNfe = false" class="btn btn-md  btn-default">
+					    		<i class="fa fa-reply"></i> Voltar
+					    	</a>
+				    	</div>
+				    	<div ng-if="sendEmailPdf">
+				    		<div class="col-sm-12">
+					    		<div class="alert text-center" style="display:none" id="alert-enviar-email-comprovante-pdf"></div>
+							</div>
+				    		<div class="col-sm-8" id="emails-enviar-email-comprovante-pdf">
+					    		<tags-input
+								 ng-model="emailSendPdfVenda"
+								 allowed-tags-pattern="^[a-zA-Z0-9][a-zA-Z0-9\._-]+@([a-zA-Z0-9\._-]+\.)[a-zA-Z-0-9]{2}"
+								  placeholder="Add email" >
+								</tags-input>
+							</div>
+							<div class="col-sm-4">
+					    		<button ng-show="!emitirNfe" type="button" ng-click="enviarEmailPdfVenda($event)" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde" id="btn-imprimir"
+						    		class="btn btn-md  btn-success">
+						    		<i class="fa fa-paper-plane-o"></i> Enviar
+						    	</button>
+						    	<button ng-click="setvalue('sendEmailPdf',false)" ng-click="emitirNfe = false" class="btn btn-md  btn-default">
+						    		<i class="fa fa-reply"></i> Voltar
+						    	</button>
+					    	</div>
+				    	</div>
 				    </div>
 			  	</div>
 			  	<!-- /.modal-content -->
@@ -2298,7 +2331,7 @@
 				<div class="modal-content">
 						<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Comandas</span></h4>
+						<h4>Comandas em aberto</span></h4>
 						</div>
 				    <div class="modal-body">
 						<div class="row">
@@ -2309,6 +2342,7 @@
 								    option="mesas"
 								    ng-model="busca.id_mesa_comanda"
 								    ng-change="loadComandas(0,10)"
+								    data-placeholder="Selecione uma mesa"
 								    ng-options="mesa.id_mesa as mesa.dsc_mesa for mesa in mesas">
 									</select>
 								</div>
@@ -2334,10 +2368,10 @@
 						   		<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(comandas.dados != 0)">
 										<tr>
-											<th>#</th>
+											<th class="text-center">Nº Comanda</th>
 											<th class="text-center">Mesa</th>
 											<th class="text-center">Cliente</th>
-											<th class="text-center">Qtd.</th>
+											<th class="text-center">Qtd. itens</th>
 											<th width="100" class="text-center">Valor</th>
 											<th></th>
 										</tr>
@@ -2351,14 +2385,14 @@
 										</tr>
 										<tr ng-repeat="item in comandas.dados">
 											<td class="text-center">#{{ item.id_comanda }}</td>
-											<td>{{ item.dsc_mesa }}</td>
+											<td class="text-center">{{ item.dsc_mesa }}</td>
 											<td ng-if="config.id_cliente_movimentacao_caixa != item.id_cliente">{{ item.nome_cliente }}</td>
 											<td ng-if="config.id_cliente_movimentacao_caixa == item.id_cliente">(Não informado)</td>
 											<td class="text-center">{{ item.qtd_total }}</td>
 											<td class="text-right">R$ {{ item.valor_total | numberFormat:2:',':'.' }}</td>
 											<td width="50" align="center">
 												<a href="pdv.php?id_orcamento={{item.id_comanda}}" type="button" class="btn btn-xs btn-success">
-													<i class="fa fa-dollar"></i> fechar
+													<i class="fa fa-dollar"></i> Fechar Comanda
 												</a>
 											</td>
 										</tr>
@@ -2476,12 +2510,9 @@
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
   	<script src="js/auto-complete/ng-sanitize.js"></script>
   	<script src="js/angular-chosen.js"></script>
+  	<script src="js/ng-tags-input.min.js"></script>
     <script type="text/javascript">
-    /*
-    	$(".datepicker").datepicker();
-        $("#btnDtaCalendar").on("click", function(){$("#data-atendimento").trigger("focus");});
-        $('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});*/
-    	var addParamModule = ['angular.chosen'] ;
+    	var addParamModule = ['angular.chosen','ngTagsInput'] ;
     </script>
     <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>
     <script src="js/auto-complete/AutoComplete.js?version=<?php echo date("dmY-His", filemtime("js/auto-complete/AutoComplete.js")) ?>"></script>

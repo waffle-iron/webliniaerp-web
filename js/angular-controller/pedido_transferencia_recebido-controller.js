@@ -19,8 +19,8 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
    		produtos:[]
 	};
     ng.transferencia = angular.copy(transferenciaTO);
-
     ng.editing = false;
+    ng.enviarNovaTransferencia = false ;
 
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
@@ -43,6 +43,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 	ng.cancelar = function(){
 		ng.showBoxNovo();
 		ng.transferencia = angular.copy(transferenciaTO);
+		ng.enviarNovaTransferencia = false ;
 	}
 
 	ng.isNumeric = function(vlr){
@@ -83,7 +84,9 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			});
 	}
 	ng.addEmpreendimento = function(item) {
-		ng.transferencia.id_empreendimento_transferencia = item.id;
+		if( !(ng.transferencia.id_empreendimento_pedido == item.id) )
+			ng.transferencia.produtos = [] ;
+		ng.transferencia.id_empreendimento_pedido = item.id;
 		ng.transferencia.nome_empreendimento = item.nome_empreendimento ;
 		$('#list_empreendimentos').modal('hide');
 	}
@@ -147,6 +150,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 		produto.id_produto = item.id ;
 		produto.qtd_pedida = empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida  ;
 		produto.add 	   = item.add == 0 ? 0 : 1 ;
+		if(ng.enviarNovaTransferencia) produto.qtd_pedida = 0 ;
 		ng.transferencia.produtos.push(produto);
 		item.qtd_pedida = null ;
 	}
@@ -154,7 +158,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 	ng.listaTransferencias = {} ;
 	ng.loadtransferencias = function(offset, limit){
 		ng.listaTransferencias.transferencias = null 
-		aj.get(baseUrlApi()+"transferencias/estoque/"+offset+"/"+limit+"?cplSql=id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+" ORDER BY id  DESC")
+		aj.get(baseUrlApi()+"transferencias/estoque/"+offset+"/"+limit+"?cplSql=id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+" AND id_status_transferencia <> 4 ORDER BY id  DESC")
 		.success(function(data, status, headers, config) {
 			ng.listaTransferencias.transferencias = data.transferencias ;
 			ng.listaTransferencias.paginacao = data.paginacao ;
@@ -324,13 +328,13 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 
 		$('.has-error').removeClass('has-error');
 		var error = 0 ;
-		if(!$.isNumeric(ng.id_deposito_principal)){
+		/*if(!$.isNumeric(ng.id_deposito_principal)){
 			$('#id_deposito_principal').addClass('has-error');
 			$('#id_deposito_principal').find('.input-group').attr("data-placement", "top").attr("title", 'Informe o deposito').attr("data-original-title", 'Informe o deposito'); 
 			$('#id_deposito_principal').find('.input-group').tooltip('show');	
 			$('html,body').animate({scrollTop: 0},'slow');
 			error ++ ;
-		}
+		}*/
 		$.each(ng.transferencia.produtos,function(key,item){
 			if(!($.isNumeric(item.qtd_transferida))){
 				$('#td-prd-'+item.id).addClass('has-error');
@@ -402,6 +406,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 
 	var index_current_edit = null ;
 	ng.editTransferencia = function(index,event){
+		ng.enviarNovaTransferencia = ng.listaTransferencias.transferencias[index].id_status_transferencia == 5 ? true : false ;
 		var id = ng.listaTransferencias.transferencias[index].id ;
 		index_current_edit = index ;
 		var btn = $(event.target) ;
@@ -415,11 +420,13 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			var prd_in = ''; aux = [];
 			$.each(data.itens,function(i,x){
 				prd_in += x.id_produto+",";
-				aux[x.id_produto] = x.qtd_pedida ;
+				aux[x.id_produto] = { qtd_pedida : x.qtd_pedida, qtd_transferida : x.qtd_transferida ,id_deposito_saida : x.id_deposito_saida}  ;
 			});
 			prd_in = prd_in.substring(0,prd_in.length-1);	
 			aj.get(baseUrlApi()+"produtos?pro->id[exp]=IN("+prd_in+")&tpe->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(prd, status, headers, config) {
+				if(ng.enviarNovaTransferencia)
+					ng.addEmpreendimento(data.empreendimento_pedido);
 				ng.transferencia.id = data.id ;
 				ng.transferencia.id_empreendimento_pedido = data.id_empreendimento_pedido ;
 				ng.transferencia.id_empreendimento_transferencia = data.id_empreendimento_transferencia ;
@@ -430,8 +437,12 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 				ng.transferencia.id_status_transferencia = 2 ;
 				ng.transferencia.produtos = [];
 				ng.showBoxNovo(true);
+				$.each(prd.produtos,function(x,i){ prd.produtos[x].id_item = aux[i.id_produto].id_item; });
+				prd.produtos = _.sortBy(prd.produtos,'id_item');
 				$.each(prd.produtos,function(x,i){
-					i.qtd_pedida = aux[i.id_produto];
+					i.qtd_pedida = aux[i.id_produto].qtd_pedida;
+					i.qtd_transferida = aux[i.id_produto].qtd_transferida;
+					i.id_deposito_saida = ""+aux[i.id_produto].id_deposito_saida;
 					i.load_estoque = false;
 					i.add = 0 ;
 					ng.addProduto(i);
@@ -465,6 +476,117 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
         eModal
             .iframe({message:caminho, title:title,size:'lg'})
             .then(function () { t8.success('iFrame loaded!!!!', title) });
+	}
+
+	ng.openNovaTransferencia = function(){
+		ng.enviarNovaTransferencia = true;
+		ng.showBoxNovo();
+	}
+
+	ng.salvarNovaTransferencia = function(id_status_transferencia,event){
+		$($(".has-error").find(".form-control")).tooltip('destroy');
+		$(".has-error").removeClass("has-error");
+		var btn = $(event.target);
+		if(!btn.is(':button')) btn = $(event.target).parent();
+		btn.button('loading');
+		var error = 0 ;
+
+		if(!$.isNumeric(ng.transferencia.id_empreendimento_pedido)){
+			$("#id_empreendimento_transferencia").addClass("has-error");
+			var formControl = $('#id_empreendimento_transferencia .input-group')
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "top")
+				.attr("title", 'Informe o empreendimento que deseja enviar a transferência')
+				.attr("data-original-title", 'Informe o empreendimento que deseja enviar a transferência');
+			formControl.tooltip();
+			if(error == 0){
+				$('html,body').animate({scrollTop: 0},'slow');
+				formControl.tooltip('show');
+			} 
+			error ++ ;
+		}
+
+		if(ng.transferencia.produtos.length == 0){
+			$("#produtos").addClass("has-error");
+			var formControl = $('#produtos')
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "top")
+				.attr("title", 'Informe os produtos para transferência')
+				.attr("data-original-title", 'Informe os produtos para transferência');
+			formControl.tooltip();
+			if(error == 0){
+				$('html,body').animate({scrollTop: 0},'slow');
+				formControl.tooltip('show');
+			} 
+			error ++ ;
+		}	
+
+		$.each(ng.transferencia.produtos,function(key,item){
+			if(!($.isNumeric(item.qtd_transferida))){
+				$('#td-prd-'+item.id).addClass('has-error');
+				$('#td-prd-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade para transferência não poder ser vazio').attr("data-original-title", 'A quantidade para transferência não poder ser vazia'); 
+				if(error == 0) {
+					$('#td-prd-'+item.id).find('input').tooltip('show');
+					$('html,body').animate({scrollTop: $('#td-prd-'+item.id).offset().top - 100 },'slow');
+				}else {
+					$('#td-prd-'+item.id).find('input').tooltip();
+				}
+				error ++ ;
+			}
+			if(!($.isNumeric(item.id_deposito_saida))){
+				$('#td-prd-deposito-saida-'+item.id).addClass('has-error');
+				$('#td-prd-deposito-saida-'+item.id).find('.chosen-single').attr("data-placement", "top").attr("title", 'Informe o deposito de saida').attr("data-original-title", 'A quantidade para transferência não poder ser vazia'); 
+				$('#td-prd-deposito-saida-'+item.id).find('.chosen-single').attr('style','border: 1px solid #A94442;');
+				$('#td-prd-deposito-saida-'+item.id).find('.chosen-single').find('span').attr('style','color:#A94442;');
+				if(error == 0) {
+					$('#td-prd-deposito-saida-'+item.id).find('.chosen-single').tooltip('show');
+					$('html,body').animate({scrollTop: $('#td-prd-deposito-saida-'+item.id).offset().top - 100 },'slow');
+				}else {
+					$('#td-prd-deposito-saida-'+item.id).find('.chosen-single').tooltip();
+				}
+				error ++ ;
+			}
+
+		});
+
+		if(error > 0){
+			btn.button('reset'); 
+			return ;
+		}
+		if(id_status_transferencia == 2) ng.transferencia.dta_transferencia = moment().format('YYYY-MM-DD HH:mm:ss');
+		ng.transferencia.id_status_transferencia = id_status_transferencia ;
+		var post = angular.copy(ng.transferencia);
+
+		var url ;
+		if($.isNumeric(ng.transferencia.id))
+			url = 'estoque/pedido/transferencia/edit';
+		else
+			url = 'estoque/pedido/transferencia';
+
+		aj.post(baseUrlApi()+url,post)
+		.success(function(data, status, headers, config) {
+			btn.button('reset'); 
+			ng.transferencia = angular.copy(transferenciaTO);
+			ng.showBoxNovo();
+			ng.mensagens('alert-success','<b>Pedido de transferência realizado com sucesso</b>','.alert-transferencia-lista');
+			$('html,body').animate({scrollTop: 0},'slow');
+			ng.loadtransferencias(0,10);
+
+		})
+		.error(function(data, status, headers, config) {
+			btn.button('reset'); 
+			if(status == 406){
+				$.each(data.out_estoque,function(i,x){	
+					var msg = 'A quantidade a ser transferêncida ( '+x.qtd_transferida+' ) é maior que a em estoque ( '+x.qtd_estoque+' )';			
+					$('#tr-prd-'+i).addClass('tr-out-estoque');
+					$('#tr-prd-'+i).find('input').eq(0).attr("data-placement", "top").attr("title", msg).attr("data-original-title", msg); 
+					$('#tr-prd-'+i).find('input').eq(0).tooltip();
+				});
+			}else{
+				ng.mensagens('alert-danger','<b>Ocorreu um erro ao realizar o pedido</b>','.alert-transferencia-form');
+				$('html,body').animate({scrollTop: 0},'slow');
+			}
+		});
 	}
 
 	ng.loadtransferencias(0,10);
