@@ -144,47 +144,8 @@
 					</div>
 				</div><!-- /user-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
-
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-
-					<!-- Exemplos de Alerta -->
-					<!-- <div class="alert alert-info">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-danger">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-warning">Welcome to Endless Admin. Do not forget to check all my pages.</div> -->
-				</div><!-- /main-menu -->
+				<?php include_once('menu-modulos.php') ?>
+				
 			</div><!-- /sidebar-inner -->
 		</aside>
 
@@ -584,7 +545,6 @@
 											<div class="row">
 												<div class="col-sm-12">
 													<div class="empreendimentos form-group" id="empreendimentos">
-														
 															<table class="table table-bordered table-condensed table-striped table-hover">
 																<thead>
 																	<tr>

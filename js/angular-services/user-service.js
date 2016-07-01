@@ -18,6 +18,7 @@ app.service('UserService', function($http, $window) {
 		 		user.id_perfil 				= usuario.id_perfil;
 		 		user.nome_empreendimento 	= usuario.nome_empreendimento;
 		 		user.nme_logo 				= usuario.nme_logo;
+		 		user.flg_dispositivo 		= (!empty(usuario.flg_dispositivo) ? usuario.flg_dispositivo : null );
 
 		 	},
 		 	error: function(error) {

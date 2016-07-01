@@ -507,6 +507,8 @@ function round(vlr,dec){
 }
 
 function _in(str_compare,str_values){
+    if(typeof str_values == "object")
+        str_values = str_values.join();
     str_compare = str_compare+"";
     var  arr =  str_values.split(',');
     var ret = false ;
@@ -520,6 +522,8 @@ function _in(str_compare,str_values){
     return ret ;       
 }
 function not_in(str_compare,str_values){
+    if(typeof str_values == "object")
+        str_values = str_values.join();
     str_compare = str_compare+"";
     var  arr =  str_values.split(',');
     var ret = true ;
@@ -558,4 +562,36 @@ function getIndex(campo,vlr,obj){
         }
     });
     return index ;
+}
+
+
+function pick(obj,arrNames,isArr,valuesAdd){
+    isArr = empty(isArr) ?  false : isArr ;
+    valuesAdd = empty(valuesAdd) ?  false : valuesAdd ;
+    if(isArr){
+        var arr = [] ;
+        $.each(obj,function(i,v){
+            var objSaida = {} ;
+            $.each(v,function(y,z){
+               if(_in(y,arrNames)){
+                objSaida[y] = z ;
+               }
+            });
+            if(valuesAdd){
+                $.each(valuesAdd,function(a,b){
+                    objSaida[a] = b ;
+                });
+            }
+            arr.push(objSaida);
+        });
+        return  arr ;
+    }else{
+        var objSaida = {} ;
+        $.each(obj,function(y,z){
+            if(_in(y,arrNames)){
+                objSaida[y] = z ;
+            }
+        });
+        return objSaida ;
+    }
 }

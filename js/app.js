@@ -343,6 +343,21 @@ angular.module('filters', [])
 	    	}
 	    }
 	}).directive('initPopover', function ($compile,$filter) {
+		$(document).on('click',':not(.popover > *)' , function(event){
+		   var close = true ;
+		   if($(this).hasClass('popover') || $(this).parents('.popover').hasClass('popover')){
+		   		close = false ;
+		   }
+		   var attrInitPopOver = $(this).attr('init-popover') ;
+		   var parentAttrInitPopOver = $(this).parents('[init-popover]').attr('init-popover')
+		   if ( (typeof attrInitPopOver !== typeof undefined && attrInitPopOver !== false) || (typeof parentAttrInitPopOver !== typeof undefined && parentAttrInitPopOver !== false) ) {
+		   		close = false ;
+		   }
+		   if(close) $('[init-popover]').popover('hide')
+		   else{
+		   	event.stopPropagation()
+		   }
+		});
 	    return {
 	    	link:function(scope,element,attrs,ctrl){
 		    		var trigger = empty(attrs.trigger) ? 'click' : attrs.trigger ;

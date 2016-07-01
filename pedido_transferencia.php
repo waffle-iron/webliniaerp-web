@@ -140,47 +140,8 @@
 					</div>--><!-- /input-group -->
 				<!--</div>--><!-- /search-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
-
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-
-					<!-- Exemplos de Alerta -->
-					<!-- <div class="alert alert-info">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-danger">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-warning">Welcome to Endless Admin. Do not forget to check all my pages.</div> -->
-				</div><!-- /main-menu -->
+				<?php include_once('menu-modulos.php') ?>
+				
 			</div><!-- /sidebar-inner -->
 		</aside>
 
@@ -970,7 +931,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/pedido_transferencia-controller.js"></script>
+	<script src="js/angular-controller/pedido_transferencia-controller.js?version=<?php echo date("dmY-His", filemtime("js/angular-controller/pedido_transferencia-controller.js")) ?>"></script>
 	<script type="text/javascript"></script>>
 	<?php include("google_analytics.php"); ?>
   </body>

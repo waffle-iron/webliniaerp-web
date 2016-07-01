@@ -1,4 +1,4 @@
-app.controller('LoginController', function($scope, $http, $window){
+app.controller('LoginController', function($scope, $http, $window,$dialogs){
 
 	var ng = $scope
 		aj = $http;
@@ -65,6 +65,7 @@ app.controller('LoginController', function($scope, $http, $window){
 	ng.loadEmpreendimentos = function(id_usuario) {
 		ng.reset();
 		var btn = $('#btn-logar');
+		$('#alert-acesso-negado').hide();
 		aj.get(baseUrlApi() + "empreendimentos?id_usuario="+id_usuario)
 			.success(function(data, status, headers, config) {
 				if(data.length == 1){
@@ -102,19 +103,13 @@ app.controller('LoginController', function($scope, $http, $window){
 
 		aj.get(url)
 			.success(function(data, status, headers, config) {
-				if(id_perfil_user == 1){
-					window.location.href = "dashboard.php";
-				}
-				else if(id_perfil_user == 7 || id_perfil_user == 6 || id_perfil_user == 5){
-					window.location.href = item.nickname;
-				}else if(id_perfil_user == 8 || id_perfil_user == 4){
-					window.location.href = "pdv.php";
-				}else if(id_perfil_user == 11){
-					window.location.href = "controle-atendimento.php";
-				}
+				window.location.href = data.pagina_principal;
 			})
 			.error(function(data, status, headers, config) {
-				alert('Desculpe, ocorreu um erro inesperado !!!');
+				if(status == 404)
+					$('#alert-acesso-negado').show();
+				else
+					alert('Desculpe, ocorreu um erro inesperado !!!');
 			});
 		return false;
 	}

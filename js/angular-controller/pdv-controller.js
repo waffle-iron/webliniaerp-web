@@ -52,6 +52,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.promessas_pagamento      = [{status_pagamento:0,data_pagamento:null,valor_pagamento:0}] ;
 	ng.dsc_formas_pagamento     = [] ;
 	ng.dadosOrcamento           = null ;
+	ng.margemAplicada           = {atacado:false,intermediario:false,varejo:true,parceiro:false} ;
 
 
 	ng.formas_pagamento = [
@@ -235,25 +236,25 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.incluirCarrinho = function(produto){
 		produto = angular.copy(produto);
-		if(ng.cliente.nome_perfil == "atacado"){
+		if(ng.margemAplicada.atacado){
 
 			produto.vlr_unitario    	 = produto.vlr_venda_atacado;
 			produto.vlr_real        	 = produto.vlr_venda_atacado;
 			produto.perc_margem_aplicada = produto.margem_atacado;
 
-		}else if(ng.cliente.nome_perfil == "varejo"){
+		}else if(ng.margemAplicada.varejo){
 
 			produto.vlr_unitario		 = produto.vlr_venda_varejo;
 			produto.vlr_real       		 = produto.vlr_venda_varejo;
 			produto.perc_margem_aplicada = produto.margem_varejo;
 
-		}else if(ng.cliente.nome_perfil == "vendedor externo"){
+		}else if(ng.margemAplicada.intermediario){
 
 			produto.vlr_unitario		 = produto.vlr_venda_intermediario;
 			produto.vlr_real       		 = produto.vlr_venda_intermediario;
 			produto.perc_margem_aplicada = produto.margem_intermediario;
 
-		}else if(ng.cliente.nome_perfil == 'parceiro'){
+		}else if(ng.margemAplicada.parceiro){
 
 			produto.vlr_unitario    	 = produto.vlr_custo_real;
 			produto.vlr_real       		 = produto.vlr_custo_real;
@@ -263,6 +264,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			produto.vlr_unitario    	 = produto.vlr_venda_varejo;
 			produto.vlr_real        	 = produto.vlr_venda_varejo;
 			produto.perc_margem_aplicada = produto.margem_varejo;
+			ng.margemAplicada.varejo = true ;
 		}
 		produto.valor_desconto = empty(produto.valor_desconto) ?  0 : produto.valor_desconto ; 
 
@@ -899,7 +901,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	ng.aplicarDesconto = function(index,$event,checkebox,calc){
 		var vlr_real     = parseFloat(accounting.toFixed(ng.carrinho[index].vlr_real,2));
+		ng.carrinho[index].tipo_desconto = 'perc' ;
 		if(calc == true){
+			ng.carrinho[index].tipo_desconto = 'vlr' ;
 			var prc_dsc =((ng.carrinho[index].valor_desconto_real * 100)/vlr_real)*100;
 			prc_dsc = parseFloat(accounting.toFixed(prc_dsc,2))/100;
 			ng.carrinho[index].valor_desconto = prc_dsc ;
@@ -960,20 +964,76 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				item.nome = 'CNPJ: '+item.cnpj ;
 		}
 		ng.cliente = item;
+		ng.setMargemAplicada();
 		$("#list_clientes").modal("hide");
 		aj.get(baseUrlApi()+"usuarios/saldodevedor/"+ ng.userLogged.id_empreendimento+"?usu->id="+item.id)
-			.success(function(data, status, headers, config) {
-				ng.cliente.vlr_saldo_devedor = data.vlr_saldo_devedor;
-			})
-			.error(function(data, status, headers, config) {
-				console.log('erro ao consultar saldo do cliente');
+		.success(function(data, status, headers, config) {
+			ng.cliente.vlr_saldo_devedor = data.vlr_saldo_devedor;
+		})
+		.error(function(data, status, headers, config) {
+			console.log('erro ao consultar saldo do cliente');
+		});
+	}
+	ng.changeMargemAplicada = function(obj){
+		ng.margemAplicada = obj ;
+		ng.changeValorProdutos();
+	}
+	ng.setMargemAplicada = function(){
+		ng.margemAplicada   = {atacado:false,intermediario:false,varejo:false,parceiro:false} ;
+		if(ng.cliente.nome_perfil == "atacado") 				ng.margemAplicada.atacado 			= true ;
+		else if(ng.cliente.nome_perfil == "varejo") 			ng.margemAplicada.varejo 			= true ;
+		else if(ng.cliente.nome_perfil == "vendedor externo") 	ng.margemAplicada.intermediario 	= true ;
+		else if(ng.cliente.nome_perfil == 'parceiro') 			ng.margemAplicada.parceiro   		= true ;
+		else 													ng.margemAplicada.varejo   			= true ;
+		ng.changeValorProdutos();
+	}
+	ng.changeValorProdutos = function(){
+		if(ng.carrinho.length > 0){
+			$.each(ng.carrinho,function(i,produto){
+				produto = angular.copy(produto);
+				if(ng.margemAplicada.atacado){
+					produto.vlr_unitario    	 = produto.vlr_venda_atacado;
+					produto.vlr_real        	 = produto.vlr_venda_atacado;
+					produto.perc_margem_aplicada = produto.margem_atacado;
+				}else if(ng.margemAplicada.varejo){
+					produto.vlr_unitario		 = produto.vlr_venda_varejo;
+					produto.vlr_real       		 = produto.vlr_venda_varejo;
+					produto.perc_margem_aplicada = produto.margem_varejo;
+				}else if(ng.margemAplicada.intermediario){
+					produto.vlr_unitario		 = produto.vlr_venda_intermediario;
+					produto.vlr_real       		 = produto.vlr_venda_intermediario;
+					produto.perc_margem_aplicada = produto.margem_intermediario;	
+				}else if(ng.margemAplicada.parceiro){
+					produto.vlr_unitario    	 = produto.vlr_custo_real;
+					produto.vlr_real       		 = produto.vlr_custo_real;
+					produto.perc_margem_aplicada = 0 ;
+				}else{
+					ng.margemAplicada.varejo = true ;
+					produto.vlr_unitario		 = produto.vlr_venda_varejo;
+					produto.vlr_real       		 = produto.vlr_venda_varejo;
+					produto.perc_margem_aplicada = produto.margem_varejo;
+				}
+				produto.valor_desconto = empty(produto.valor_desconto) ?  0 : produto.valor_desconto ; 
+
+				produto.qtd_total = !$.isNumeric(produto.qtd_total) || Number(produto.qtd_total) < 1 ? 1 : Number(produto.qtd_total) ;
+				produto.sub_total = produto.qtd_total * produto.vlr_unitario;
+
+				ng.carrinho[i] = produto ;
+				if(produto.tipo_desconto == 'perc')
+					ng.aplicarDesconto(i,null,false,false);
+				else if(produto.tipo_desconto == 'vlr')
+					ng.aplicarDesconto(i,null,false,true);
 			});
+			ng.calcTotalCompra();
+			ng.totalPagamento();
+			ng.calculaTroco();
+		}
 	}
 	ng.removeCliente = function(){
 		ng.cliente = {id:''} ;
+		ng.setMargemAplicada();
 	}
 	
-
 	ng.loadCliente= function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
@@ -2406,6 +2466,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.showCadastroRapido = function(){
+		ng.new_cliente          = {tipo_cadastro: 'pf', id_perfil: 6} ;
 		$("#modal_cadastro_rapido_cliente").modal({
 		  backdrop: 'static',
 		  keyboard: false
@@ -2426,19 +2487,34 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			return ng.cliente.nome;
 	}
 
+	ng.perfisCadastroRapido = [
+		{
+			id: 5,
+			dsc_perfil: "vendedor externo"
+		},
+		{
+			id: 6,
+			dsc_perfil: "varejo"
+		},
+		{
+			id: 7,
+			dsc_perfil: "atacado"
+		}
+	]
+
 	ng.salvarCliente = function(){
 		$(".has-error").removeClass('has-error');
 		ng.new_cliente.empreendimentos = [{id:ng.userLogged.id_empreendimento}];
 		ng.new_cliente.id_empreendimento = ng.userLogged.id_empreendimento;
 		var btn = $('#btn-salvar-cliente');
 		btn.button('loading');
-		ng.new_cliente.id_perfil = 6 ;
+		//ng.new_cliente.id_perfil = 6 ;
 		var new_cliente = angular.copy(ng.new_cliente);
 		if(!empty(new_cliente.dta_nacimento))
 			new_cliente.dta_nacimento = moment(new_cliente.dta_nacimento,'DD-MM-YYYY').format('YYYY-MM-DD');
 		aj.post(baseUrlApi()+"cliente/cadastro/rapido",new_cliente)
 		.success(function(data, status, headers, config) {
-			ng.cliente = data.dados;
+			ng.addCliente(data.dados);
 			ng.cancelarModal('modal_cadastro_rapido_cliente');
 			btn.button('reset');
 			ng.new_cliente          = {tipo_cadastro:'pf'} ;
@@ -3054,7 +3130,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						vlr_desc = round((vlr_desc+0.01),2);
 						res = round((res - 0.01),2);
 					}
-					item.valor_desconto_real = vlr_desc ;
+					item.valor_desconto_real = vlr_desc/item.qtd_total
 					ng.aplicarDesconto(i,null,false,true);
 					if(vlr <= 0)
 						item.flg_desconto = 0 ;
@@ -3074,6 +3150,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	function closeWindow(){
 		$(window).bind('beforeunload', function(){ 
+			   //return "Se você fechar o navegador, seus dados serão perdidos. Desena Realmente sair?";
 			  if(/Firefox[\/\s](\d+)/.test(navigator.userAgent) && new Number(RegExp.$1) >= 4) {
 				if(typeof ng.caixa_open == 'object' &&  Number(ng.caixa_open.flg_imprimir_sat_cfe) == 1){
 					 $.ajax({url: baseUrlApi() + "websocket/update/sessionid",async: false,type:'POST',data:{id_ws_web:'null',id_empreendimento:ng.userLogged.id_empreendimento,pth_local:ng.pth_local},
@@ -3183,6 +3260,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.vezes_valor = null
 		ng.imgProduto = 'img/imagem_padrao_produto.gif';
 		ng.cliente  = {id:""};
+		ng.setMargemAplicada();
 		ng.nome_ultimo_produto = null ;
 		$('button').button('reset');
 	}
@@ -3228,12 +3306,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 			aj.post(baseUrlApi()+"email/send",post)
 			.success(function(data, status, headers, config) {
-				ng.mensagens('alert-success','<b>E-amail enviado com sucesso</b>','#alert-enviar-email-comprovante-pdf');
+				ng.mensagens('alert-success','<b>Email enviado com sucesso</b>','#alert-enviar-email-comprovante-pdf');
 				ng.emailSendPdfVenda = [] ;
 				btn.button('reset');
 			})
 			.error(function(data, status, headers, config) {
-				ng.mensagens('alert-danger','<b>Ocorreu um erro ao enviar o E-amail</b>','#alert-enviar-email-comprovante-pdf');
+				ng.mensagens('alert-danger','<b>Ocorreu um erro ao enviar o email</b>','#alert-enviar-email-comprovante-pdf');
 				btn.button('reset');
 			});
 		}
@@ -3284,7 +3362,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.not_in = function(z,y){
 		return not_in(z,y);
 	}
-
 	ng.resizeScreen(); 
 });
 app.directive('bsTooltip', function ($timeout) {

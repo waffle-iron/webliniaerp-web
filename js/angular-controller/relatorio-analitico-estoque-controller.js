@@ -21,7 +21,7 @@ app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $w
 	ng.aplicarFiltro = function() {
 		ng.reset();
 
-		$(".modal").modal('show');
+		$("#modal-loading").modal('show');
 
 		ng.loadItens(0);
 	}
@@ -32,11 +32,11 @@ app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $w
 				ng.reset();
 				ng.itens = data.dados;
 				ng.paginacao.itens = data.paginacao;
-				$(".modal").modal('hide');
+				$("#modal-loading").modal('hide');
 			})
 			.error(function(data, status, headers, config) {
 				ng.reset();
-				$(".modal").modal('hide');
+				$("#modal-loading").modal('hide');
 			});
 	}
 

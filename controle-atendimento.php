@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8">
     <title>WebliniaERP</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -153,47 +153,8 @@
 					</div>--><!-- /input-group -->
 				<!--</div>--><!-- /search-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
-
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-
-					<!-- Exemplos de Alerta -->
-					<!-- <div class="alert alert-info">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-danger">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-warning">Welcome to Endless Admin. Do not forget to check all my pages.</div> -->
-				</div><!-- /main-menu -->
+				<?php include_once('menu-modulos.php') ?>
+				
 			</div><!-- /sidebar-inner -->
 		</aside>
 

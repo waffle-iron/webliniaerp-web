@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8">
     <title>Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -97,6 +97,9 @@
 						<p>Selecione o empreendimento que deseja trabalhar</p>
       				</div>
 				    <div class="modal-body" style="overflow-y: auto; max-height: 500px;">
+				    	<div class="alert alert-warning" id="alert-acesso-negado" style="display:block">
+				    		Acesso negado
+				    	</div>
 				   		<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>

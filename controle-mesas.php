@@ -278,42 +278,8 @@
 					</div>
 				</div><!-- /user-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
-
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-				</div><!-- /main-menu -->
+				<?php include_once('menu-modulos.php') ?>
+				
 			</div><!-- /sidebar-inner -->
 		</aside>
 
@@ -374,7 +340,7 @@
 									<button ng-click="changeTela('mesas')" type="button" class="btn btn-xs btn-primary">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
 
-									<button ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-xs"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
+									<button ng-if="userLogged.flg_dispositivo==1" ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-xs"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
 									
 									<button ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
 								</div>
@@ -567,14 +533,14 @@
 								<div class="pull-right">
 									<button ng-click="changeTela('detMesa')" type="button" class="btn btn-xs btn-primary">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
-									<button  type="button" class="btn btn-xs btn-default" ng-click="goChangeCliente()">
+									<button ng-if="userLogged.flg_dispositivo==1"  type="button" class="btn btn-xs btn-default" ng-click="goChangeCliente()">
 										<i class="fa fa-user"></i>
 										<span class="hidden-xs">Informar Cliente</span>
 									</button>
-									<button type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg" ng-click="changeTela('escTipoProduto')">
+									<button ng-if="userLogged.flg_dispositivo==1" type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg" ng-click="changeTela('escTipoProduto')">
 										<i class="fa fa-plus-circle"></i>
 									</button>
-									<button type="button" class="btn btn-xs btn-info hidden-xs" ng-click="openModalProdutos()">
+									<button ng-if="userLogged.flg_dispositivo==1" type="button" class="btn btn-xs btn-info hidden-xs" ng-click="openModalProdutos()">
 										<i class="fa fa-plus-circle"></i>
 										Adicionar Produto
 									</button>
@@ -596,8 +562,8 @@
 											<th class="text-middle text-center hidden-xs">Cor/Sabor</th>
 											<th class="text-middle text-center">Qtd.</th>
 											<th class="text-middle text-center">Valor</th>
-											<th class="text-middle text-right hidden-xs" width="100">Ações</th>
-											<th class="text-middle text-right hidden-sm hidden-sm hidden-lg" width="50">Ações</th>
+											<th class="text-middle text-right hidden-xs" width="100" ng-if="userLogged.flg_dispositivo==1">Ações</th>
+											<th class="text-middle text-right hidden-sm hidden-sm hidden-lg" ng-if="userLogged.flg_dispositivo==1" width="50">Ações</th>
 										</thead>
 										<tbody>
 											<tr ng-repeat="item in comandaSelecionada.comanda.itens">
@@ -607,7 +573,7 @@
 												<td class="text-middle text-center hidden-xs">{{ item.sabor }}</td>
 												<td class="text-middle text-center">{{ item.qtd_total }}</td>
 												<td class="text-middle text-center">R$ {{ item.vlr_venda_varejo | numberFormat:2 : ',' : '.' }}</td>
-												<td class="text-middle text-right">
+												<td class="text-middle text-right" ng-if="userLogged.flg_dispositivo==1">
 													<button ng-click="selProduto(item,true)" type="button" class="btn btn-sm btn-warning">
 														<i class="fa fa-edit"></i>
 														<span class="hidden-xs">Alterar item</span>

@@ -1,5 +1,27 @@
 <?php
 	include_once '../constants.php';
+	function getPaginaPrincipal($modulos){
+		$pages = array();
+		foreach ($modulos as $key => $value) {
+			$pages[] = $value['url_modulo'] ;
+		}
+		if(in_array('dashboard.php', $pages))
+			return 'dashboard.php';
+		elseif (in_array('pdv.php', $pages))
+			return 'pdv.php';
+		elseif (in_array('produtos.php', $pages))
+			return 'produtos.php';
+		elseif (in_array('lancamentos.php', $pages))
+			return 'lancamentos.php';
+		elseif (in_array('clientes.php', $pages))
+			return 'clientes.php';
+		elseif (in_array('vendas.php', $pages))
+			return 'vendas.php';
+		else{
+			return empty($pages[0]) ? $pages[1] : $pages[0] ;
+		}
+		
+	}
 	function validaEmpreendimentoPeriodoTeste($id_empreendimento){
 		$url = URL_API.'empreendimentos?id'.$id_empreendimento;
 		$ch = curl_init();
@@ -48,6 +70,16 @@
 	if($_SERVER['REQUEST_METHOD'] == "POST"){
 		$senha = isset($_POST['senha']) ? $_POST['senha'] : "" ;
 		$login = isset($_POST['login']) ? $_POST['login'] : "" ;
+
+		if(isset($_POST['dispositivo'])){
+			$_SESSION['dispositivo'] = $_POST['dispositivo'];
+		}
+
+		/*$_SESSION['dispositivo'] = array(
+			'num_serie' => 'RQ1H601NWMD',
+			'num_imei' => '357097074984860|357098074984868',
+			'num_mac_address' => '30:CB:F8:6D:4F:29'
+		);*/
 
 		$ch = curl_init();
 		$url = $url;
@@ -100,19 +132,44 @@
 			header("HTTP/1.1 500");
 		}
 
-		/*$ch = curl_init();
+		$ch = curl_init();
 		$url = $url;
-		curl_setopt($ch, CURLOPT_URL,URL_API.'modulos/'.$saida['id_empreendimento'].'/'.$saida['id_perfil']);
+		$paramsGetModulos = array("cplSql"=>" WHERE flg_permissao = 1  ORDER BY psc_menu_modulo ASC");
+		curl_setopt($ch, CURLOPT_URL,URL_API.'modulos/'.$saida['id_empreendimento'].'/null/'.$saida['id'].'?'.http_build_query($paramsGetModulos));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$modulos  = curl_exec($ch);
 		$info 	 = curl_getinfo($ch);
-		curl_close ($ch);*/
+		curl_close ($ch);
 
-		if($info['http_code'] == 200) $saida['modulos'] = json_decode($modulos,true);
-		else $saida['modulos'] = array();
+		if($info['http_code'] == 200){ 
+			$saida['modulos'] = json_decode($modulos,true);
+			$saida['pagina_principal'] = getPaginaPrincipal($saida['modulos']);
+		}
+		else{
+			header("HTTP/1.1 404");
+			die;
+		} 
 
-		//unset($_SESSION['user_emp']);
+		$ch = curl_init();
+		$url = $url;
+		curl_setopt($ch, CURLOPT_URL,URL_API.'modulos/menu/by_user/'.$saida['id_empreendimento'].'/'.$saida['id']);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$menu  = curl_exec($ch);
+
+		$info 	 = curl_getinfo($ch);
+		curl_close ($ch);
+
+		if($info['http_code'] == 200) $saida['menu'] = json_decode($menu,true);
+		else $saida['menu'] = array();
+
+		if(isset($_SESSION['dispositivo']))
+			$saida['dispositivo'] = $_SESSION['dispositivo'] ;
+
 		$_SESSION['user'] = $saida;
+
+		header('Content-type: application/json');
+		header("HTTP/1.1 200");
+		echo json_encode(array("pagina_principal"=>$saida['pagina_principal']));
 
 	}else{
 		header("HTTP/1.1 500");

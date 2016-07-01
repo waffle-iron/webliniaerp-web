@@ -17,6 +17,9 @@
 	<!-- Font Awesome -->
 	<link href="css/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
 
+	 <!-- ui treeview -->
+    <link rel="stylesheet" href="css/bootstrap-treeview.css"/>
+
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
@@ -137,47 +140,8 @@
 					</div>--><!-- /input-group -->
 				<!--</div>--><!-- /search-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
+				<?php include_once('menu-modulos.php') ?>
 
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-
-					<!-- Exemplos de Alerta -->
-					<!-- <div class="alert alert-info">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-danger">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-warning">Welcome to Endless Admin. Do not forget to check all my pages.</div> -->
-				</div><!-- /main-menu -->
 			</div><!-- /sidebar-inner -->
 		</aside>
 
@@ -686,15 +650,13 @@
 								</div>
 								<div class="tab-pane fade" id="dados_acesso">
 									<div class="row">
-										<div class="col-sm-4">
+										<div class="col-sm-3">
 											<div id="id_perfil" class="form-group">
 												<label class="control-label">Perfil  <i style="font-size: 10px;color: #FF0000;" class="fa fa-asterisk"></i></label>
-												<select chosen class="form-control input-sm" ng-model="cliente.id_perfil" ng-options="a.id as a.nome for a in perfis"></select>
+												<select chosen class="form-control input-sm" ng-model="cliente.id_perfil" ng-options="a.id as a.nome for a in perfis"  ng-change="loadModulosByPerfil(cliente.id_perfil)" ></select>
 											</div>
 										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-4">
+										<div class="col-sm-3">
 											<div id="login" class="form-group">
 												<label class="control-label">Login</label>
 												<input type="text" class="form-control input-sm" ng-model="cliente.login">
@@ -702,7 +664,7 @@
 										</div>
 										<div class="col-sm-3">
 											<div id="senha" class="form-group">
-												<label class="control-label">senha</label>
+												<label class="control-label">Senha</label>
 												<input class="form-control input-sm" type="password" id="input_senha" ng-model="cliente.senha">
 												
 											</div>
@@ -717,6 +679,23 @@
 														 mostrar senha<br>
 													</label>
 												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row" ng-show="isNumeric(cliente.id_perfil)">
+										<div class="col-sm-12">
+											<div class="padding-md" style="padding:0 !important">
+												<div class="panel panel-default" id="modulos">
+													<div class="panel-heading"><i class="fa fa-th fa-lg"></i>&nbsp;Módulos
+															<span ng-show="cliente.modulos.length > 0" class="pull-right">Selecionados: <span style="background:#504f63" class="badge badge-primary">{{ cliente.modulos.length }}</span></span>
+													</div>
+													<div ng-show="loadingModulos" style="max-height:305px;min-height:305px;overflow:auto" class="panel-body">
+														<div class="text-center" style="height: 100%px;line-height: 120px;vertical-align:middle;width: 100%;font-size: 15px;">
+												    		<i class='fa fa-refresh fa-spin'></i> Aguarde, carregando Módulos...
+												    	</div>
+											        </div>
+											        <div ng-show="!loadingModulos" style="max-height:305px;min-height:305px;overflow:auto" class="panel-body" id="treeview-modulos"></div>
+											    </div>
 											</div>
 										</div>
 									</div>
@@ -1105,6 +1084,8 @@
 
 	<!-- Google Maps API -->
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+	<script src="js/bootstrap-treeview.js"></script>
 
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>

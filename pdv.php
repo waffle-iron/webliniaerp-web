@@ -148,47 +148,8 @@
 					</div>--><!-- /input-group -->
 				<!--</div>--><!-- /search-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
-
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-
-					<!-- Exemplos de Alerta -->
-					<!-- <div class="alert alert-info">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-danger">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-warning">Welcome to Endless Admin. Do not forget to check all my pages.</div> -->
-				</div><!-- /main-menu -->
+				<?php include_once('menu-modulos.php') ?>
+				
 			</div><!-- /sidebar-inner -->
 		</aside>
 
@@ -954,6 +915,43 @@
 
 											>
 												<i class="fa fa-minus-square-o fa-lg fa-align-justify"></i>
+											</button>
+											<button  class="btn btn-xs btn-default" id="popover-mudar-margem" title="Selecione a margem" type="button" init-popover placement="bottom" 
+											content='
+												<div class="row">
+													<div class="col-sm-12">
+														<button ng-click="changeMargemAplicada({atacado:true,intermediario:false,varejo:false,parceiro:false})" class="btn btn-sm btn-primary btn-block " type="button">
+															<i ng-if="margemAplicada.atacado" class="fa fa-check-circle-o" aria-hidden="true"></i>
+															Atacado
+														</button>
+													</div>
+												</div>
+												<div class="row" style="margin-top:5px">
+													<div class="col-sm-12">
+														<button  ng-click="changeMargemAplicada({atacado:false,intermediario:true,varejo:false,parceiro:false})" class="btn btn-sm btn-primary btn-block" type="button">
+															<i ng-if="margemAplicada.intermediario" class="fa fa-check-circle-o" aria-hidden="true"></i>
+															Intermediario
+														</button>
+													</div>
+												</div>
+												<div class="row" style="margin-top:5px">
+													<div class="col-sm-12">
+														<button ng-click="changeMargemAplicada({atacado:false,intermediario:false,varejo:true,parceiro:false})" class="btn btn-sm btn-primary btn-block" type="button">
+															<i ng-if="margemAplicada.varejo" class="fa fa-check-circle-o" aria-hidden="true"></i>
+															Varejo
+														</button>
+													</div>
+												</div>
+												<div class="row" style="margin-top:5px">
+													<div class="col-sm-12">
+														<button ng-click="changeMargemAplicada({atacado:false,intermediario:false,varejo:false,parceiro:true})" class="btn btn-sm btn-primary btn-block" type="button">
+															<i ng-if="margemAplicada.parceiro"  class="fa fa-check-circle-o" aria-hidden="true"></i> 
+															Parceiro
+														</button>
+													</div>
+												</div>'
+											>
+											<i class="fa fa-usd" aria-hidden="true"></i>
 											</button>
 											
 										</div>
@@ -2014,6 +2012,18 @@
 												</div>
 											</div>
 										</div>
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group" id="regimeTributario">
+													<label for="" class="control-label">Perfil </label>
+													<select chosen
+												    option="perfisCadastroRapido"
+												    ng-model="new_cliente.id_perfil"
+												    ng-options="perfil.id as perfil.dsc_perfil for perfil in perfisCadastroRapido">
+													</select>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -2512,7 +2522,7 @@
   	<script src="js/angular-chosen.js"></script>
   	<script src="js/ng-tags-input.min.js"></script>
     <script type="text/javascript">
-    	var addParamModule = ['angular.chosen','ngTagsInput'] ;
+   	 var addParamModule = ['angular.chosen','ngTagsInput'] ;
     </script>
     <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>
     <script src="js/auto-complete/AutoComplete.js?version=<?php echo date("dmY-His", filemtime("js/auto-complete/AutoComplete.js")) ?>"></script>

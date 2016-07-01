@@ -171,47 +171,8 @@
 					</div>--><!-- /input-group -->
 				<!--</div>--><!-- /search-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
-
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-
-					<!-- Exemplos de Alerta -->
-					<!-- <div class="alert alert-info">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-danger">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-warning">Welcome to Endless Admin. Do not forget to check all my pages.</div> -->
-				</div><!-- /main-menu -->
+				<?php include_once('menu-modulos.php') ?>
+				
 			</div><!-- /sidebar-inner -->
 		</aside>
 
@@ -227,14 +188,15 @@
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa  fa-user"></i> Perfis</h3>
 					<br/>
-					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Perfil</a>
+					<a class="btn btn-info" id="btn-novo" ng-if="!isNumeric(perfil.id)" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Perfil</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
 				<div class="alert alert-sistema" style="display:none"></div>
 				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Perfil</div>
+					<div class="panel-heading" ng-if="!isNumeric(perfil.id)"><i class="fa fa-plus-circle"></i> Novo Perfil</div>
+					<div class="panel-heading" ng-if="isNumeric(perfil.id)"><i class="fa fa-edit"></i> Editando Perfil #{{ perfil.id }}</div>
 					<div class="panel-body">
 						<form name="myForm">
 							<div class="row">
@@ -251,9 +213,38 @@
 										<switch id="enabled" name="enabled" ng-model="perfil.status" class="small"></switch>
 									</div> 	
 									
+								</div>		
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="empreendimentos form-group" id="empreendimentos">
+										<table class="table table-bordered table-condensed table-striped table-hover">
+											<thead>
+												<tr>
+													<td><i class="fa fa-building-o"></i> Empreendimentos</td>
+													<td width="60" align="center">
+														<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()"><i class="fa fa-plus-circle"></i></button>
+													</td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-show="(perfil.empreendimentos.length == 0)">
+													<td colspan="2" align="center">Nenhum empreendimento selecionado</td>
+												</tr>
+												<tr ng-repeat="item in perfil.empreendimentos">
+													<td>{{ item.nome_empreendimento }}</td>
+													<td align="center">
+														<button class="btn btn-xs btn-danger" ng-if="userLogged.id_empreendimento != item.id_empreendimento" ng-click="delEmpreendimento($index,item)"><i class="fa fa-trash-o"></i></button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
-								<div class="col-sm-5">
-									<div class="padding-md">
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="padding-md" style="padding:0 !important">
 										<div class="panel panel-default" id="modulos">
 											<div class="panel-heading"><i class="fa fa-th fa-lg"></i> Módulos
 													<span ng-show="perfil.modulos.length > 0" class="pull-right">Selecionados: <span style="background:#504f63" class="badge badge-primary">{{ perfil.modulos.length }}</span></span>
@@ -263,7 +254,7 @@
 									        </div>
 									    </div>
 									</div>
-								</div>		
+								</div>
 							</div>
 						</form>
 					</div>
@@ -310,7 +301,7 @@
 									<td ng-if="item.status == 0" class="text-center"><i data-toggle="tooltip" title="Inativo" style="color: #EF3232;" class="fa fa-circle fa-lg"></i></td>
 									<td ng-if="item.status == 1" class="text-center"><i  data-toggle="tooltip" style="color: #27A719;" title="Ativo" class="fa fa-circle fa-lg"></i></td>
 									<td align="center">
-										<button type="button" ng-click="editar(item)" title="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
+										<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" ng-click="editar(item,$event)" title="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
 										<button ng-if="false" type="button" ng-click="delete(item)" title="Excluir" class="btn btn-xs btn-danger delete" data-toggle="tooltip">
@@ -334,6 +325,73 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal empreendimento-->
+		<div class="modal fade" id="list_empreendimentos" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Empreendimentos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.empreendimento" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadAllEmpreendimentos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(empreendimentos.itens.length != 0)">
+										<tr>
+											<th colspan="2">Nome</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(empreendimentos.itens.length == 0)">
+											<td colspan="2">Não há empreendimentos cadastrados</td>
+										</tr>
+										<tr ng-repeat="item in empreendimentos.itens">
+											<td>{{ item.nome_empreendimento }}</td>
+											<td width="50" align="center">
+												<button type="button" class="btn btn-xs btn-success" ng-if="!empreendimentoSelected(item)" ng-click="addEmpreendimento(item,$event)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+												<button type="button" class="btn btn-xs btn-primary" ng-if="empreendimentoSelected(item)">
+													<i class="fa fa-check-square-o"></i> Selecionado
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="empreendimentos.paginacao.length > 1">
+									<li ng-repeat="item in empreendimentos.paginacao" ng-class="{'active': item.current}">
+										<a href="" ng-click="loadAllEmpreendimentos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+				    		</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->

@@ -3,7 +3,7 @@
 	restrito(array(1,8));
 ?>
 <!DOCTYPE html>
-<html lang="en" ng-app="HageERP">
+<html lang="en" ng-app="HageERP" >
   <head>
     <meta charset="utf-8">
     <title>WebliniaERP</title>
@@ -23,6 +23,7 @@
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
+	<link href="css/custom.css" rel="stylesheet">
 	<style type="text/css">
 
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
@@ -59,7 +60,7 @@
 	</style>
   </head>
 
-  <body class="overflow-hidden" ng-controller="relMovimentacaoCaixaController">
+  <body class="overflow-hidden ng-cloak" ng-controller="relMovimentacaoCaixaController">
 
 	<div id="wrapper" class="preload">
 		<div id="top-nav" class="fixed skin-1">
@@ -127,47 +128,8 @@
 					</div>--><!-- /input-group -->
 				<!--</div>--><!-- /search-block -->
 
-				<div class="main-menu">
-					<ul>
-						<!-- Dashboard (index) -->
-						<li>
-							<a href="dashboard.php">
-								<span class="menu-icon"><i class="fa fa-dashboard fa-lg"></i></span>
-								<span class="text">Dashboard</span>
-								<span class="menu-hover"></span>
-							</a>
-						</li>
-
-						<!-- Módulos -->
-						<li class="active openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-th fa-lg"></i></span>
-								<span class="text">Módulos</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-modulos.php") ?>
-							</ul>
-						</li>
-
-						<!-- Relatórios -->
-						<li class="openable">
-							<a href="#">
-								<span class="menu-icon"><i class="fa fa-copy fa-lg"></i></span>
-								<span class="text">Relatórios</span>
-								<span class="menu-hover"></span>
-							</a>
-							<ul class="submenu">
-								<?php include("menu-relatorios.php"); ?>
-							</ul>
-						</li>
-					</ul>
-
-					<!-- Exemplos de Alerta -->
-					<!-- <div class="alert alert-info">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-danger">Welcome to Endless Admin. Do not forget to check all my pages.</div>
-					<div class="alert alert-warning">Welcome to Endless Admin. Do not forget to check all my pages.</div> -->
-				</div><!-- /main-menu -->
+				<?php include_once('menu-modulos.php') ?>
+				
 			</div><!-- /sidebar-inner -->
 		</aside>
 

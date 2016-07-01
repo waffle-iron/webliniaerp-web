@@ -8,7 +8,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	var clienteTO 	= { 
 						tipo_cadastro: "pf",empreendimentos:[],cod_regime_tributario:null,cod_regime_pis_cofins:null,
 						cod_tipo_empresa:null,flg_contribuinte_icms:0,flg_contribuinte_ipi:0,cod_zoneamento:null ,regime_especial:[],
-						empreendimentos: [{id:ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento}]
+						empreendimentos: [{id:ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,modulos:[]}]
 				  	};
 	ng.cliente = angular.copy(clienteTO);
     ng.clientes	= [];
@@ -39,6 +39,10 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 			});
 		}
 		$("select").trigger("chosen:updated");
+	}
+
+	ng.isNumeric = function(vlr_numeric){
+		return $.isNumeric(vlr_numeric);
 	}
 
 	ng.consultaCep = function(){
@@ -178,7 +182,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.loadPerfil = function () {
 		ng.perfis = [];
 
-		aj.get(baseUrlApi()+"perfis")
+		aj.get(baseUrlApi()+"perfis?tpue->id_empreendimento="+ng.userLogged.id_empreendimento)
 		.success(function(data, status, headers, config) {
 			var perfis = [] ;
 			$.each(data,function(i,v){
@@ -331,11 +335,35 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 
 		 }
 
-		 /*cliente.cod_regime_tributario = cliente.cod_regime_tributario == 0 ? null : cliente.cod_regime_tributario ;
-		 cliente.cod_regime_pis_cofins = cliente.cod_regime_pis_cofins == 0 ? null : cliente.cod_regime_pis_cofins ;
-		 cliente.cod_tipo_empresa = cliente.cod_tipo_empresa 		   == 0 ? null : cliente.cod_tipo_empresa ;
-		 cliente.cod_zoneamento = cliente.cod_zoneamento 			   == 0 ? null : cliente.cod_zoneamento ;*/
+		var usuarioModulos = null 
+		if(!empty($checkableTree)){
+			var treeview = $checkableTree.treeview('getUnselected', null);
+			var usuarioModulos = [] ;
 
+			if(treeview.length > 0){
+				$.each(treeview, function(i,v){
+					if(v.id_modulo == 38){
+						console.log(v);
+					}
+					if(v.state.checked){
+						usuarioModulos.push({
+							id_empreendimento : ng.userLogged.id_empreendimento ,
+							id_modulo: v.id_modulo ,
+							flg_permissao : 1 
+						});
+					}else{
+						usuarioModulos.push({
+							id_empreendimento : ng.userLogged.id_empreendimento ,
+							id_modulo: v.id_modulo ,
+							flg_permissao : 0 
+						});
+					}
+				});
+			}
+		}
+		cliente.modulos = null ;
+		cliente.usuarioModulos = usuarioModulos ;
+		
 		if((!empty(ng.cliente.id_estado) && !empty(ng.cliente.id_cidade) && !empty(ng.cliente.endereco) && !empty(ng.cliente.numero) && !empty(ng.cliente.bairro))){
 		 	 var estado_selecionado = ng.getEstadoByidIBGE(ng.cliente.id_estado);
 			 var cidade_selecionada = ng.getCidadeByIBGE(ng.cliente.id_cidade);
@@ -458,20 +486,15 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		$('a',$('#tab-cliente .tab-bar li').eq(0)).tab('show');
 		ng.load_empreendimentos = true ;
 		ng.cliente = angular.copy(item);
-
-		/*ng.cliente.cod_regime_pis_cofins = ng.cliente.cod_regime_pis_cofins  === null ? 0 : ng.cliente.cod_regime_pis_cofins ;
-		ng.cliente.cod_tipo_empresa      = ng.cliente.cod_tipo_empresa       === null ? 0 : ng.cliente.cod_tipo_empresa  ;
-		ng.cliente.cod_zoneamento        = ng.cliente.cod_zoneamento         === null ? 0 : ng.cliente.cod_zoneamento ;
-		ng.cliente.cod_regime_tributario = ng.cliente.cod_regime_tributario  === null ? 0 : ng.cliente.cod_regime_tributario ;*/
-		
 		ng.cliente.regime_especial = [] ;
-	ng.loadRegimeCliente(ng.cliente.id);
-
+		ng.loadRegimeCliente(ng.cliente.id);
 		if(ng.cliente.empreendimentos == false)
 			ng.cliente.empreendimentos = [] ;
 		ng.loadEmpreendimentoCliente();
 		ng.loadCidadesByEstado();
 		ng.showBoxNovo(true);
+		if(!empty(item.id_perfil))
+			ng.loadModulosByUser(angular.copy(item));
 	}
 
 	ng.delete = function(item){
@@ -682,6 +705,236 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		})
 		.error(function(data, status, headers, config) {
 			ng.cliente.regime_especial = [];
+		});
+	}
+
+	// Bloco de modulos
+
+	var $checkableTree  ;
+	ng.cliente.modulos = [] ;
+	function treeviewCheckChildren(node){
+		if(!empty(node.nodes && node.nodes.length > 0)){
+			treeviewExpanded(node);
+			$.each(node.nodes,function(i,v){
+		        if(!v.state.checked){
+			        $scope.$apply(function () {
+			           ng.cliente.modulos.push(v.id_modulo);
+			        });
+					$checkableTree.treeview('checkNode', [v.nodeId, {silent: true}]);
+				}
+				treeviewCheckChildren(v);
+			});
+		}
+	}
+
+	function treeviewExpanded(node){
+		if(!node.state.expanded)
+			$('#treeview-modulos').treeview('toggleNodeExpanded', [ node.nodeId, { silent: true } ]);
+	}
+
+	function treeviewCollapsing (node){
+		if(node.state.expanded)
+			$('#treeview-modulos').treeview('toggleNodeExpanded', [ node.nodeId, { silent: true } ]);
+	}
+
+	function treeviewUnCheckChildren(node){
+		if(!empty(node.nodes && node.nodes.length > 0)){
+			$.each(node.nodes,function(i,v){
+		        if(v.state.checked){
+		        	var index = ng.cliente.modulos.indexOf(v.id_modulo);
+		            $scope.$apply(function () {
+		           	   ng.cliente.modulos.splice(index,1);
+		        	});
+					$checkableTree.treeview('uncheckNode', [v.nodeId, {silent: true}]);
+				}
+				treeviewUnCheckChildren(v);
+			});
+		}
+	}
+
+	function checkPai(node){
+		var parent = $checkableTree.treeview('getParent', node);
+		if(!empty(parent.state)){
+			if(!parent.state.checked){
+				 $scope.$apply(function () {
+		           ng.cliente.modulos.push(parent.id_modulo);
+		        });
+				$checkableTree.treeview('checkNode', [parent.nodeId, {silent: true}]);
+			}
+		}
+	}
+	
+	ng.treeviewConstruct = function(data){
+		$checkableTree = $('#treeview-modulos').treeview({
+          data: data,
+          showIcon: false,
+          expandIcon: 'glyphicon glyphicon-chevron-right',
+          collapseIcon: 'glyphicon glyphicon-chevron-down',
+          showCheckbox: true,
+          showBorder: false,
+          selectedBackColor: "white",
+          selectedColor: "#777",
+          onhoverColor:false,
+          onNodeChecked: function(event, node) {
+          	$scope.$apply(function () {
+	           ng.cliente.modulos.push(node.id_modulo);
+	        });	
+	        checkPai(node);
+	        treeviewCheckChildren(node);
+          },
+          onNodeUnchecked: function (event, node) {
+            var index = ng.cliente.modulos.indexOf(node.id_modulo);
+            $scope.$apply(function () {
+           	   ng.cliente.modulos.splice(index,1);
+        	});
+        	treeviewUnCheckChildren(node);
+          },
+        }).treeview('collapseAll', { silent: true });
+        var a =$checkableTree.treeview('search',
+        [
+          4,
+          'data.cod_modulo',
+          {
+            ignoreCase: true,
+            exactMatch: true,
+            revealResults: false
+          }
+        ]
+      );
+	}
+
+	ng.subMenuConstruct = function(arrpai,arr){
+		var menu = [] ;
+		$.each(arr,function(key,value){
+			if(arrpai.id_modulo == value.id_modulo_pai){
+				var item = {
+					id_modulo : value.id_modulo,
+					id_pai : value.id_modulo_pai,
+					data : {id_modulo:value.id_modulo.toString()},
+					text : value.nme_modulo,
+					nodes : ng.subMenuConstruct(value,arr),
+					icone : value.icn_modulo
+				};	
+				if(item.nodes.length == 0) delete item.nodes ;
+				menu.push(item);	
+			}
+		});
+
+		return menu ;
+	}
+
+	ng.menuConstruct = function(Modulos){
+		var menu = [] ;
+		$.each(Modulos,function(key,value){
+			if(empty(value.id_modulo_pai)){
+				var itens = ng.subMenuConstruct(value,Modulos)
+				if(itens.length > 0){
+					menu.push({
+						id_modulo : value.id_modulo,
+						data : {id_modulo:value.id_modulo.toString()},
+						text : value.nme_modulo,
+						nodes : ng.subMenuConstruct(value,Modulos),
+						icone : "fa-signal",
+						selectable:false
+					});	
+				}else{
+					menu.push({
+						id_modulo : value.id_modulo,
+						data : {id_modulo:value.id_modulo.toString()},
+						text : value.nme_modulo,
+						icone : "fa-signal",
+						selectable:false
+					});			
+				}
+				
+			}
+		});
+
+		return menu ;
+	}
+
+	ng.loadModulos = function() {
+		aj.get(baseUrlApi()+"modulos/"+ng.userLogged.id_empreendimento+"?cplSql= ORDER BY tm.psc_menu_modulo ASC")
+		.success(function(data, status, headers, config) {
+			var menu = ng.menuConstruct(data);
+			ng.treeviewConstruct(menu);
+			//console.log(menu);
+		})
+		.error(function(data, status, headers, config) {
+			if(status == 404){
+
+			}
+			
+		});
+	}
+	ng.loadingModulos = false ;
+	ng.loadModulosByPerfil = function(id_perfil){
+		ng.loadingModulos = true ;
+		if(!empty($checkableTree))
+			$checkableTree.treeview('remove');
+		ng.cliente.modulos = [] ;
+		aj.get(baseUrlApi()+"modulos/"+ng.userLogged.id_empreendimento+"?cplSql= ORDER BY tm.psc_menu_modulo ASC")
+		.success(function(empreendimentoModulos, status, headers, config) {
+			var menu = ng.menuConstruct(empreendimentoModulos);
+			ng.treeviewConstruct(menu);
+
+			aj.get(baseUrlApi()+"modulos/"+ng.userLogged.id_empreendimento+"/"+id_perfil+"?cplSql= ORDER BY tm.psc_menu_modulo ASC")
+			.success(function(usuarioModulos, status, headers, config) {
+
+				var treeview = $checkableTree.treeview('getUnselected', null);;
+				$.each(treeview,function(i,v){
+					if($.isNumeric(getIndex('id_modulo',v.id_modulo,usuarioModulos))){
+						$checkableTree.treeview('checkNode', [v.nodeId, {silent: true}]);
+						treeviewExpanded(v);
+				        ng.cliente.modulos.push(v.id_modulo);
+					}else{
+						$checkableTree.treeview('uncheckNode', [v.nodeId, {silent: true}]);
+						treeviewCollapsing(v);
+					}
+				});
+				ng.loadingModulos = false ;
+
+			})
+			.error(function(data, status, headers, config) {
+				ng.loadingModulos = false ;
+			});
+			
+		})
+		.error(function(data, status, headers, config) {
+			ng.loadingModulos = false ;
+		});
+	}
+
+	ng.loadModulosByUser = function(user){
+		ng.loadingModulos = true ;
+		if(!empty($checkableTree))
+			$checkableTree.treeview('remove');
+		ng.cliente.modulos = [] ;
+		aj.get(baseUrlApi()+"modulos/"+ng.userLogged.id_empreendimento+"?cplSql= ORDER BY tm.psc_menu_modulo ASC")
+		.success(function(empreendimentoModulos, status, headers, config) {
+			var menu = ng.menuConstruct(empreendimentoModulos);
+			ng.treeviewConstruct(menu);
+			aj.get(baseUrlApi()+"modulos/"+ng.userLogged.id_empreendimento+"/null/"+user.id+"?cplSql= WHERE flg_permissao = 1  ORDER BY psc_menu_modulo ASC")
+			.success(function(usuarioModulos, status, headers, config) {
+				var treeview = $checkableTree.treeview('getUnselected', null);;
+				$.each(treeview,function(i,v){
+					if($.isNumeric(getIndex('id_modulo',v.id_modulo,usuarioModulos))){
+						$checkableTree.treeview('checkNode', [v.nodeId, {silent: true}]);
+						treeviewExpanded(v);
+				        ng.cliente.modulos.push(v.id_modulo);
+					}else{
+						$checkableTree.treeview('uncheckNode', [v.nodeId, {silent: true}]);
+						treeviewCollapsing(v);
+					}
+				});
+				ng.loadingModulos = false ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.loadingModulos = false ;
+			});
+		})
+		.error(function(data, status, headers, config) {
+			ng.loadingModulos = false ;
 		});
 	}
 

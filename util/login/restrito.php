@@ -1,42 +1,12 @@
 <?php
-	@session_start();
-    date_default_timezone_set('America/Sao_Paulo');
-	function restrito($perfis = array(),$page=null){
-		if(isset($_SESSION['user'])){
-			if($_SESSION['user']['flg_teste'] == 1 && $_SESSION['user']['status_teste'] == false){
-				include_once('dashboard_static.php');
-				die;
-			}
-				
-			if($_SESSION['user']['id_empreendimento'] != 75){
-				if(!in_array($_SESSION['user']['id_perfil'], $perfis) && count($perfis) > 0){
-					if($_SESSION['user']['id_perfil'] == 1)
-						header('location:index.php');
-					elseif($_SESSION['user']['id_perfil'] == 4 ||
-							$_SESSION['user']['id_perfil'] == 5 ||
-							$_SESSION['user']['id_perfil'] == 6 ||
-							$_SESSION['user']['id_perfil'] == 7)
-						header('location:'.$_SESSION['user']['nickname']);
-					else
-						header('location:produtos.php');
-				}
-			}else{
-				$page = substr($_SERVER['SCRIPT_NAME'],strripos($_SERVER['SCRIPT_NAME'],'/')+1) ;
-				if($_SESSION['user']['id_perfil'] != 1 && ($page != 'controle-atendimento.php' && $page != 'agendamento-consulta.php' && $page != 'ficha-paciente.php')){
-					header('location:controle-atendimento.php');
-				}
-			}
-
-		}else{
-			header('location:login.php');
-		}
-	}
-	/*
 	include_once 'util/constants.php';
     @session_start();
     date_default_timezone_set('America/Sao_Paulo');
 	function restrito($perfis = array(),$page=null){
-		$pages = getPages($_SESSION['user']['modulos']);
+		if(isset($_SESSION['user']['modulos']) && is_array($_SESSION['user']['modulos']))
+			$pages = getPages($_SESSION['user']['modulos']);
+		else
+			$pages = array();
 		if(isset($_SESSION['user'])){
 			if($_SESSION['user']['flg_teste'] == 1 && $_SESSION['user']['status_teste'] == false){
 				include_once('dashboard_static.php');
@@ -47,6 +17,31 @@
 				include_once('acesso_negado.php');
 				die;
 			}
+
+			if(PAGE == 'controle-mesas.php'){
+				if(isset($_SESSION['user']['dispositivo'])){
+					$num_serie = isset($_SESSION['user']['dispositivo']['num_serie']) ? $_SESSION['user']['dispositivo']['num_serie'] : 'null'  ;
+					$num_imei = isset($_SESSION['user']['dispositivo']['num_imei']) ? $_SESSION['user']['dispositivo']['num_imei'] : 'null' ;
+					$num_mac_address = isset($_SESSION['user']['dispositivo']['num_mac_address']) ? $_SESSION['user']['dispositivo']['num_mac_address'] : 'null'  ;
+
+					$ch = curl_init();
+					$url = URL_API."dispositivo/".$num_serie."/".$num_imei."/".$num_mac_address ;
+					curl_setopt($ch, CURLOPT_URL,$url);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					$modulos  = curl_exec($ch);
+					$info 	 = curl_getinfo($ch);
+					curl_close ($ch);
+
+					if($info['http_code'] != 200){
+						$_SESSION['user']['flg_dispositivo'] = 0 ;
+					}else
+						$_SESSION['user']['flg_dispositivo'] = 1 ;
+
+				}else{
+					$_SESSION['user']['flg_dispositivo'] = 0 ;
+				}
+			}
+
 		}else{
 			header('location:login.php');
 		}
@@ -59,5 +54,4 @@
 		}
 		return $pages ;
 	}
-	*/
 ?>

@@ -30,7 +30,7 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 			element = $(event.target).parent();
 		element.button('loading');
 
-		aj.get(baseUrlApi()+"nota_fiscal/"+cod_nota_fiscal+"/atualizar/status")
+		aj.get(baseUrlApi()+"nota_fiscal/"+cod_nota_fiscal+"/"+ng.userLogged.id_empreendimento+"/atualizar/status")
 			.success(function(data, status, headers, config) {
 				element.html('<i class="fa fa-check-circle-o"></i> Atualizado');
 				if(!(ng.notas[index].status == data.status))
