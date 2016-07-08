@@ -986,48 +986,126 @@
 				    	<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-enter="loadFornecedor(0,10)" ng-model="busca.fornecedores" type="text" class="form-control input-sm">
+						            <input type="text" class="form-control input-sm" 
+						            	ng-enter="loadFornecedor(0,10)" 
+						            	ng-model="busca.fornecedores" 
+						            	ng-disabled="enableNewFormFornecedor">
 						            <div class="input-group-btn">
-						            	<button ng-click="loadFornecedor(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            	<button type="button" class="btn btn-sm btn-primary" 
+						            		ng-click="loadFornecedor(0,10)" 
+						            		ng-disabled="enableNewFormFornecedor">
 						            		<i class="fa fa-search"></i> Buscar
 						            	</button>
 
-						            	<a href="fornecedores.php" target="_blank" class="btn btn-sm btn-info">
-						            		<i class="fa fa-plus-circle"></i> Cadastrar
-						            	</a>
+						            	<button type="button" class="btn btn-sm btn-info" ng-click="enableNewFormFornecedor = !enableNewFormFornecedor">
+						            		<i class="fa {{ (!enableNewFormFornecedor) ? 'fa-plus-circle' : 'fa-minus-circle' }} "></i> Cadastrar
+						            	</button>
 						            </div> <!-- /input-group-btn -->
 						        </div> <!-- /input-group -->
 							</div><!-- /.col -->
 						</div>
-						<br/></br>
-				   		<table class="table table-bordered table-condensed table-striped table-hover">
-							<thead ng-show="(fornecedores.length != 0)">
-								<tr>
-									<th>Nome</th>
-									<th>Nome Fant.</th>
-									<th>CNPJ</th>
-									<th>CPF</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-show="(fornecedores.length == 0)">
-									<td colspan="5">Nenhum fornecedor encontrado</td>
-								</tr>
-								<tr ng-repeat="item in fornecedores">
-									<td>{{ item.nome_fornecedor }}</td>
-									<td>{{ item.nme_fantasia }}</td>
-									<td>{{ item.num_cnpj | cnpjFormat }}</td>
-									<td>{{ item.num_cpf | cpfFormat }}</td>
-									<td width="80">
-										<button ng-click="addFornecedor(item)" class="btn btn-success btn-xs" type="button">
-												<i class="fa fa-check-square-o"></i> Selecionar
-										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="row">
+						<br/>
+						
+						<div class="row" ng-show="enableNewFormFornecedor">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="" class="control-label">Tipo de Cadastro</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="new_fornecedor.tipo_cadastro" value="pf" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Pessoa Física</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="new_fornecedor.tipo_cadastro" value="pj" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Pessoa Jurídica</span>
+										</label>
+									</div>
+
+									<div class="row">
+										<div class="col-lg-6" ng-if="new_fornecedor.tipo_cadastro">
+											<div id="nome_fornecedor" class="form-group">
+												<label class="control-label">{{ (new_fornecedor.tipo_cadastro == 'pj' ? 'Razão Social' : 'Nome') }}</label>
+												<input class="form-control" ng-model="new_fornecedor.nome_fornecedor">
+											</div>
+										</div>
+
+										<div class="col-sm-6" ng-if="new_fornecedor.tipo_cadastro == 'pj'">
+											<div id="nme_fantasia" class="form-group">
+												<label class="control-label">Nome Fantasia</label>
+												<input class="form-control" ng-model="new_fornecedor.nme_fantasia">
+											</div>
+										</div>
+
+										<div class="col-sm-3" ng-if="new_fornecedor.tipo_cadastro == 'pf'">
+											<div id="num_cpf" class="form-group">
+												<label class="control-label">CPF</label>
+												<input class="form-control" ui-mask="999.999.999-99" ng-model="new_fornecedor.num_cpf"/>
+											</div>
+										</div>
+
+										<div class="col-sm-3" ng-if="new_fornecedor.tipo_cadastro == 'pf'">
+											<div id="celular" class="form-group">
+												<label for="" class="control-label">Telefone</label>
+												<input type="text" ui-mask="(99) 99999999?9" class="form-control" ng-model="new_fornecedor.telefones[0].num_telefone">
+											</div>
+										</div>
+									</div>
+
+									<div class="row" ng-if="new_fornecedor.tipo_cadastro == 'pj'">
+										<div class="col-sm-3">
+											<div id="num_cnpj" class="form-group">
+												<label class="control-label">CNPJ</label>
+												<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="new_fornecedor.num_cnpj">
+											</div>
+										</div>
+
+										<div class="col-sm-3">
+											<div id="num_inscricao_estadual" class="form-group">
+												<label class="control-label">I.E. </label>
+												<input class="form-control" ng-model="new_fornecedor.num_inscricao_estadual">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" ng-show="!enableNewFormFornecedor">
+							<div class="col-sm-12">
+						   		<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(fornecedores.length != 0)">
+										<tr>
+											<th>Nome</th>
+											<th>Nome Fant.</th>
+											<th>CNPJ</th>
+											<th>CPF</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(fornecedores.length == 0)">
+											<td colspan="5">Nenhum fornecedor encontrado</td>
+										</tr>
+										<tr ng-repeat="item in fornecedores">
+											<td>{{ item.nome_fornecedor }}</td>
+											<td>{{ item.nme_fantasia }}</td>
+											<td>{{ item.num_cnpj | cnpjFormat }}</td>
+											<td>{{ item.num_cpf | cpfFormat }}</td>
+											<td width="80">
+												<button ng-click="addFornecedor(item)" class="btn btn-success btn-xs" type="button">
+														<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="row" ng-show="!enableNewFormFornecedor">
 				    		<div class="col-sm-12">
 				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_fornecedores.length > 1">
 									<li ng-repeat="item in paginacao_fornecedores" ng-class="{'active': item.current}">
@@ -1036,6 +1114,12 @@
 								</ul>
 				    		</div>
 				    	</div>
+				    </div>
+				    <div class="modal-footer clearfix" ng-show="enableNewFormFornecedor && new_fornecedor.tipo_cadastro">
+				    	<button type="button" id="btn-salvar-fornecedor" class="btn btn-primary btn-sm"
+				    		ng-click="salvarFornecedor()">
+				    		<i class="fa fa-save"></i> Salvar e selecionar
+			    		</button>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -1054,20 +1138,135 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.clientes" type="text" class="form-control input-sm">
+						            <input type="text" class="form-control input-sm"
+						            	ng-enter="loadCliente(0,10)" 
+						            	ng-model="busca.clientes" 
+						            	ng-disabled="enableNewFormCliente">
 						            <div class="input-group-btn">
-						            	<button ng-click="loadCliente(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            	<button type="button" class="btn btn-sm btn-primary" 
+						            		ng-click="loadCliente(0,10)" 
+						            		ng-disabled="enableNewFormCliente">
 						            		<i class="fa fa-search"></i> Buscar
 						            	</button>
-						            	<a href="clientes.php" target="_blank" class="btn btn-sm btn-info">
-						            		<i class="fa fa-plus-circle"></i> Cadastrar
-						            	</a>
+						            	<button type="button" class="btn btn-sm btn-info" ng-click="enableNewFormCliente = !enableNewFormCliente">
+						            		<i class="fa {{ (!enableNewFormCliente) ? 'fa-plus-circle' : 'fa-minus-circle' }} "></i> Cadastrar
+						            	</button>
 						            </div> <!-- /input-group-btn -->
 						        </div> <!-- /input-group -->
 							</div><!-- /.col -->
 						</div>
 						<br />
-						<div class="row">
+
+						<div class="row" ng-show="enableNewFormCliente">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<label for="" class="control-label">Tipo de Cadastro</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="new_cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Pessoa Física</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="new_cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Pessoa Jurídica</span>
+										</label>
+									</div>
+
+									<div class="row">
+										<div class="col-lg-6" ng-if="new_cliente.tipo_cadastro == 'pj'">
+											<div id="razao_social" class="form-group">
+												<label class="control-label">Razão Social</label>
+												<input class="form-control" ng-model="new_cliente.razao_social">
+											</div>
+										</div>
+
+										<div class="col-sm-6" ng-if="new_cliente.tipo_cadastro == 'pj'">
+											<div id="nome_fantasia" class="form-group">
+												<label class="control-label">Nome Fantasia</label>
+												<input class="form-control" ng-model="new_cliente.nome_fantasia">
+											</div>
+										</div>
+
+										<div class="col-sm-9" ng-if="new_cliente.tipo_cadastro == 'pf'">
+											<div id="nome" class="form-group">
+												<label for="nome" class="control-label">Nome</label>
+												<input type="text" class="form-control" id="nome" ng-model="new_cliente.nome">
+											</div>
+										</div>
+
+										<div class="col-sm-3" ng-if="new_cliente.tipo_cadastro == 'pf'">
+											<div id="dta_nacimento" class="form-group">
+												<label class="control-label">Data de Nacimento</label>
+												<input class="form-control" ui-mask="99/99/9999" id="dta_nacimento" ng-model="new_cliente.dta_nacimento">
+											</div>
+										</div>
+									</div>
+
+									<div class="row" ng-if="new_cliente.tipo_cadastro == 'pj'">
+										<div class="col-sm-4">
+											<div id="cnpj" class="form-group">
+												<label class="control-label">CNPJ</label>
+												<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="new_cliente.cnpj">
+											</div>
+										</div>
+
+										<div class="col-sm-4">
+											<div id="inscricao_estadual" class="form-group">
+												<label class="control-label">I.E. </label>
+												<input class="form-control" ng-model="new_cliente.inscricao_estadual">
+											</div>
+										</div>
+									</div>
+
+								    <div class="row" ng-if="new_cliente.tipo_cadastro == 'pf'">
+										<div class="col-sm-3">
+											<div id="cpf" class="form-group">
+												<label class="control-label">CPF</label>
+												<input class="form-control" ui-mask="999.999.999-99" ng-model="new_cliente.cpf"/>
+											</div>
+										</div>
+
+										<div class="col-sm-3">
+											<div id="rg" class="form-group">
+												<label class="control-label">RG</label>
+												<input class="form-control" ng-model="new_cliente.rg"/>
+											</div>
+										</div>
+
+										<div class="col-sm-3">
+											<div id="celular" class="form-group">
+												<label for="" class="control-label">Telefone</label>
+												<input type="text" ui-mask="(99) 99999999?9" class="form-control" ng-model="new_cliente.celular">
+											</div>
+										</div>
+									</div>
+
+									<div class="row" ng-if="new_cliente.tipo_cadastro">
+										<div class="col-sm-8">
+											<div id="email" class="form-group">
+												<label for="email" class="control-label">E-mail</label>
+												<input type="text" class="form-control" id="email" ng-model="new_cliente.email">
+											</div>
+										</div>
+
+										<div class="col-md-4">
+											<div id="id_perfil" class="form-group" id="regimeTributario">
+												<label for="" class="control-label">Perfil</label>
+												<select chosen option="perfisNewCliente"
+											    	ng-model="new_cliente.id_perfil"
+											    	ng-options="perfil.id as perfil.nome for perfil in perfisNewCliente">
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" ng-show="!enableNewFormCliente">
 							<div class="col-sm-12">
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<tr ng-if="clientes.length <= 0 || clientes == null">
@@ -1095,7 +1294,7 @@
 							</div>
 						</div>
 
-						<div class="row">
+						<div class="row" ng-show="!enableNewFormCliente">
 				    		<div class="col-sm-12">
 				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_clientes.length > 1">
 									<li ng-repeat="item in paginacao_clientes" ng-class="{'active': item.current}">
@@ -1104,6 +1303,12 @@
 								</ul>
 				    		</div>
 				    	</div>
+				    </div>
+				    <div class="modal-footer clearfix" ng-show="enableNewFormCliente && new_cliente.tipo_cadastro">
+				    	<button type="button" id="btn-salvar-cliente" class="btn btn-primary btn-sm"
+				    		ng-click="salvarCliente()">
+				    		<i class="fa fa-save"></i> Salvar e selecionar
+			    		</button>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
