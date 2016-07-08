@@ -17,7 +17,6 @@ app.controller('PedidosFornecedoresController', function($scope, $http, $window,
     ng.busca 			    = {fornecedores:""};
 
     ng.nome_produto_form = null;
-    currenItem = null ;
 
     ng.vl_btn =  {salvar_pedido:"Salvar pedido"} ;
 
@@ -179,22 +178,21 @@ app.controller('PedidosFornecedoresController', function($scope, $http, $window,
 	//Funções para o modal de produtos
     var pesquisa_produto = ng.pesquisa.produto;
 
-    ng.selProduto = function(index){
-    	currenItem = index ;
+    ng.selProduto = function(){
     	ng.pesquisa.produto = "";
     	pesquisa_produto    = "";
     	ng.loadProdutos();
-
     	$("#list_produtos").modal("show");
-
     }
 
     ng.addProduto = function(item){
-    	ng.novoPedido[currenItem].nome_produto      = item.nome;
-    	ng.novoPedido[currenItem].id_produto        = item.id;
-    	ng.novoPedido[currenItem].custo_compra      = item.custo_compra;
-    	ng.novoPedido[currenItem].nome_fabricante   = item.nome_fabricante;
-    	ng.novoPedido[currenItem].peso   			= item.peso;
+    	var itemList = {};
+	    	itemList.nome_produto      = item.nome;
+	    	itemList.id_produto        = item.id;
+	    	itemList.custo_compra      = item.custo_compra;
+	    	itemList.nome_fabricante   = item.nome_fabricante;
+	    	itemList.peso   			= item.peso;
+	    ng.novoPedido.push(itemList);
     	ng.atualizaTotal();
     	$("#list_produtos").modal("hide");
     }
