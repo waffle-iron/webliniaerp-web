@@ -261,7 +261,28 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 		});
 	}
 
+	ng.loadPlanoContas = function() {
+		aj.get(baseUrlApi() + "planocontas?tpc->id_empreendimento=" + ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				$.each(data, function(i, item){
+					data[i].cod_plano 			= (!empty(item.cod_plano)) ? parseInt(item.cod_plano, 10) : null;
+					data[i].cod_plano_pai 		= (!empty(item.cod_plano_pai)) ? parseInt(item.cod_plano_pai, 10) : null;
+					data[i].id 					= (!empty(item.id)) ? parseInt(item.id, 10) : null;
+					data[i].id_empreendimento 	= (!empty(item.id_empreendimento)) ? parseInt(item.id_empreendimento, 10) : null;
+					data[i].id_plano_pai 		= (!empty(item.id_plano_pai)) ? parseInt(item.id_plano_pai, 10) : null;
+				});
+
+				ng.plano_contas = data;
+				ng.plano_contas.unshift({id: null, dsc_completa: ' '});
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.plano_contas = [];
+			});
+	}
+
 	ng.load();
 	ng.loadConfig();
 	ng.loadBancos();
+	ng.loadPlanoContas();
 });

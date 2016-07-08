@@ -280,27 +280,37 @@
 										</select>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-12">
+							
+								<div class="col-sm-7">
 									<div id="complemento" class="form-group">
 										<label class="control-label">Complemento:</label>
 										<input type="text" class="form-control input-sm" ng-model="fornecedor.end_complemento">
 									</div>
 								</div>
 							</div>
+
 							<div class="row">
-								<div class="col-sm-4">
+								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Telefone 1</label>
 										<input ui-mask="(99) 99999999?9" id="num_cnpj" type="text" class="form-control input-sm"  ng-model="fornecedor.telefones[0].num_telefone">
 									</div>
 								</div>
 
-								<div class="col-sm-4">
+								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Telefone 2</label>
 										<input ui-mask="(99) 99999999?9" id="num_cnpj" type="text" class="form-control input-sm"  ng-model="fornecedor.telefones[1].num_telefone">
+									</div>
+								</div>
+
+								<div class="col-sm-6">
+									<div id="id_plano_contas_padrao" class="form-group">
+										<label class="control-label">Natureza Padrão (Contas a Pagar/Receber)</label>
+										<select chosen class="form-control input-sm" 
+											ng-model="fornecedor.id_plano_contas_padrao" 
+											ng-options="a.id as a.dsc_completa for a in plano_contas">
+										</select>
 									</div>
 								</div>
 							</div>	

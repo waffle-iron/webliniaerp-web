@@ -190,13 +190,13 @@
 													<label class="label-radio inline">
 														<input ng-model="cliente.cliente_tipo_cadastro" ng-click="setTipoCadastro('cliente','pf')" value="cliente_pf" type="radio" class="inline-radio"/>
 														<span class="custom-radio"></span>
-														<span>cliente Pessoa Física</span>
+														<span>Cliente - Pessoa Física</span>
 													</label>
 
 													<label class="label-radio inline">
 														<input ng-model="cliente.cliente_tipo_cadastro" ng-click="setTipoCadastro('cliente','pj')" value="cliente_pj" type="radio" class="inline-radio"/>
 														<span class="custom-radio"></span>
-														<span>Cliente Pessoa Jurídica</span>
+														<span>Cliente - Pessoa Jurídica</span>
 													</label>
 													<label class="label-radio inline">
 														<input ng-model="cliente.cliente_tipo_cadastro" ng-click="setTipoCadastro('usuario','pf')" value="usuario_pf" type="radio" class="inline-radio"/>
@@ -442,11 +442,22 @@
 												</div>
 											</div>
 										</div>
+
 										<div class="col-sm-4">
 											<div id="id_finalidade" class="form-group">
 												<label class="control-label">Grupo de Comissionamento</label>
 												<select chosen class="form-control input-sm" ng-model="cliente.id_grupo_comissionamento" ng-options="a.id as a.nme_grupo_comissao for a in grupo_comissionamento">
 
+												</select>
+											</div>
+										</div>
+
+										<div class="col-sm-6">
+											<div id="id_plano_contas_padrao" class="form-group">
+												<label class="control-label">Natureza Padrão (Contas a Pagar/Receber)</label>
+												<select chosen class="form-control input-sm" 
+													ng-model="cliente.id_plano_contas_padrao" 
+													ng-options="a.id as a.dsc_completa for a in plano_contas">
 												</select>
 											</div>
 										</div>

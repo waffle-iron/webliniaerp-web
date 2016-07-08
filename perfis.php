@@ -147,9 +147,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="btn btn-sm pull-right logoutConfirm_open"  href="#logoutConfirm">
-						<i class="fa fa-power-off"></i>
-					</a>
+					<?php include("menu-bar-buttons.php"); ?>
 				</div><!-- /size-toggle -->
 				<div class="user-block clearfix">
 					<img src="img/hage.png" alt="User Avatar">

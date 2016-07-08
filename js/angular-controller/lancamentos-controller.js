@@ -273,6 +273,13 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 		ng.plano_contas = [{id:"",dsc_completa:"--- Selecione ---"}];
 		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+				$.each(data, function(i, item){
+					data[i].cod_plano 			= (!empty(item.cod_plano)) ? parseInt(item.cod_plano, 10) : null;
+					data[i].cod_plano_pai 		= (!empty(item.cod_plano_pai)) ? parseInt(item.cod_plano_pai, 10) : null;
+					data[i].id 					= (!empty(item.id)) ? parseInt(item.id, 10) : null;
+					data[i].id_empreendimento 	= (!empty(item.id_empreendimento)) ? parseInt(item.id_empreendimento, 10) : null;
+					data[i].id_plano_pai 		= (!empty(item.id_plano_pai)) ? parseInt(item.id_plano_pai, 10) : null;
+				});
 				ng.roleList = data;
 				ng.plano_contas = ng.plano_contas.concat(data);
 			})
@@ -297,6 +304,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
     	ng.pagamento.agencia_transferencia = angular.copy(item.agencia);
     	ng.pagamento.conta_transferencia = angular.copy(item.conta);
     	ng.pagamento.proprietario_conta_transferencia = angular.copy(item.nome);
+    	ng.pagamento.id_plano_conta = angular.copy(item.id_plano_contas_padrao);
     	ng.loadSaldoDevedorCliente();
     	ng.pagamento.id_cliente = item.id;
     	$("#list_clientes").modal("hide");
@@ -350,6 +358,11 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 	ng.addFornecedor = function(item){
     	ng.fornecedor 				= item;
     	ng.pagamento.id_fornecedor  = item.id;
+    	ng.pagamento.id_banco = ""+angular.copy(item.id_banco);
+    	ng.pagamento.agencia_transferencia = angular.copy(item.num_agencia);
+    	ng.pagamento.conta_transferencia = angular.copy(item.num_conta);
+    	ng.pagamento.proprietario_conta_transferencia = angular.copy(item.nme_fantasia);
+    	ng.pagamento.id_plano_conta = angular.copy(item.id_plano_contas_padrao);
     	$("#list_fornecedores").modal("hide");
 	}
 
