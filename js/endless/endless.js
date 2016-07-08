@@ -51,7 +51,7 @@ $(function	()	{
 	//Preloading
 	paceOptions = {
 		ajax: true, // disabled
-		document: true, // disabled
+		document: false, // disabled
 		eventLag: false, // disabled
 		elements: false
 	};
