@@ -179,6 +179,7 @@
 							<th class="text-center">Produto</th>
 							<th class="text-center">Fabricante</th>
 							<th class="text-center">Tamanho</th>
+							<th class="text-center">Sabor/cor</th>
 							<th class="text-center">Validade</th>
 							<th class="text-center">Qtd. Estoque</th>
 							<th class="text-center">Dias Vencidos</th>
@@ -189,7 +190,8 @@
 							<td>{{ item.nme_deposito }}</td>
 							<td>{{ item.nome }}</td>
 							<td>{{ item.nome_fabricante }}</td>
-							<td class="text-center">{{ item.peso }}</td>
+							<td>{{ item.peso }}</td>
+							<td>{{ item.sabor }}</td>
 							<td class="text-center">{{ item.dta_validade }}</td>
 							<td class="text-center">{{ item.qtd_item }}</td>
 							<td class="text-center">{{ item.qtd_dias_vencido }}</td>

@@ -266,7 +266,7 @@
 								<div class="pull-right">
 									<ul class="pagination pagination-sm m-top-none">
 										<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
-											<a href="" ng-click="aplicarFiltro(item.offset, item.limit)">{{ item.index }}</a>
+											<a href="" ng-click="aplicarFiltro(item.offset, item.limit,item)">{{ item.index }}</a>
 										</li>
 									</ul>
 								</div>

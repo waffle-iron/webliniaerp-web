@@ -162,7 +162,7 @@
 					<div class="panel-body">
 						<form role="form">
 							<div class="row">
-								<div class="col-sm-2">
+								<div class="col-sm-3">
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
@@ -172,7 +172,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-2">
+								<div class="col-sm-3">
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
@@ -182,7 +182,7 @@
 									</div>
 								</div>
 
-								<div class="col-lg-6">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<label class="control-label">Produto</label>
 										<div class="input-group">
@@ -456,27 +456,9 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/relatorio-total-produto-estoque-controller.js"></script>
+	<script src="js/angular-controller/rel-movimentacao-estoque-controller.js"></script>
 
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.datepicker').datepicker();
-			$("#cld_pagameto").on("click", function(){ $("#pagamentoData").trigger("focus"); });
-			$("#cld_dtaInicial").on("click", function(){ $("#dtaInicial").trigger("focus"); });
-			$("#cld_dtaFinal").on("click", function(){ $("#dtaFinal").trigger("focus"); });
-
-			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
-		});
-
-		$('.datepicker').datepicker();
-		$("#cld_pagameto").on("click", function(){ $("#pagamentoData").trigger("focus"); });
-		$("#cld_dtaInicial").on("click", function(){ $("#dtaInicial").trigger("focus"); });
-		$("#cld_dtaFinal").on("click", function(){ $("#dtaFinal").trigger("focus"); });
-
-		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-		$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
-		
 		function printDiv(id, pg) {
 			var contentToPrint, printWindow;
 

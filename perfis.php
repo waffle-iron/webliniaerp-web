@@ -26,6 +26,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Chosen -->
+	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -33,9 +36,7 @@
 	<link href="css/custom.css" rel="stylesheet">
 
 	<style type="text/css">
-
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
-
 		.modal {
 			display: block;
 		}
@@ -94,8 +95,6 @@
 		.switch.checked small {
 		    left: 13px;
 		}
-
-
 	</style>
   </head>
 
@@ -207,6 +206,12 @@
 
 									</div>
 								</div>
+								<div class="col-sm-5">
+									<div id="per_venda" class="form-group">
+											<label class="control-label">Valor de Venda</label>
+											<select chosen id="id_select_estado" class="form-control input-sm" readonly="readonly" ng-model="perfil.perc_venda" ng-options="item.vlr as item.dsc for item in chosen_perc_venda" ></select>
+										</div>
+									</div>
 								<div class="col-sm-1">
 									<label for="descricao" class="control-label">&nbsp&nbsp</label>
 									<div class="control-label">
@@ -297,7 +302,7 @@
 								</tr>
 								<tr ng-repeat="item in perfis.perfis" bs-tooltip>
 									<td width="80">{{ item.id }}</td>
-									<td>{{ item.nome }}</td>
+									<td>{{ item.nome | uppercase }}</td>
 									<td ng-if="item.status == 0" class="text-center"><i data-toggle="tooltip" title="Inativo" style="color: #EF3232;" class="fa fa-circle fa-lg"></i></td>
 									<td ng-if="item.status == 1" class="text-center"><i  data-toggle="tooltip" style="color: #27A719;" title="Ativo" class="fa fa-circle fa-lg"></i></td>
 									<td align="center">
@@ -442,6 +447,9 @@
 	<!-- Endless -->
 	<script src="js/endless/endless.js"></script>
 
+	<!-- Chosen -->
+	<script src='js/chosen.jquery.min.js'></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -456,8 +464,9 @@
     <script src="js/angular-ui-switch.min.js"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
+     <script src="js/angular-chosen.js"></script>
     <script type="text/javascript">
-    	var addParamModule = ['uiSwitch'] ;
+    	var addParamModule = ['uiSwitch','angular.chosen'] ;
     </script>
     <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>
     <script src="js/auto-complete/AutoComplete.js?version=<?php echo date("dmY-His", filemtime("js/auto-complete/AutoComplete.js")) ?>"></script>

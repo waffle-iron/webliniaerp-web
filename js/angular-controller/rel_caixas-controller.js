@@ -1,4 +1,4 @@
-app.controller('relCaixasController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('relCaixasController', function($scope, $http, $window, $dialogs, UserService,FuncionalidadeService){
 
 	var ng = $scope
 		aj = $http;
@@ -11,6 +11,10 @@ app.controller('relCaixasController', function($scope, $http, $window, $dialogs,
     ng.conta                        = {} ;
 
     ng.editing = false;
+
+     ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+    	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+    }
 
     ng.showBoxNovo = function(onlyShow){
     	if(onlyShow) {
@@ -61,7 +65,7 @@ app.controller('relCaixasController', function($scope, $http, $window, $dialogs,
 		ng.contas = [] ;
 
 		var query_string = "";
-		if(ng.userLogged.id_perfil != 1)
+		if(!ng.funcioalidadeAuthorized('listar_todos_caixas'))
 		    query_string += "&id_operador="+ng.userLogged.id;
 
 		if(!empty(ng.busca.caixas_string)){

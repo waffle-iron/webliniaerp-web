@@ -1,4 +1,4 @@
-app.controller('RelatorioTotalVendasVendedorController', function($scope, $http, $window, UserService) {
+app.controller('RelatorioTotalVendasVendedorController', function($scope, $http, $window, UserService,FuncionalidadeService) {
 	var ng 				= $scope,
 		aj 				= $http;
 	ng.userLogged 		= UserService.getUserLogado();
@@ -8,6 +8,10 @@ app.controller('RelatorioTotalVendasVendedorController', function($scope, $http,
 	ng.busca			= {}
 	ng.busca.vendedores  = '';
 	ng.vendedor          = {};
+
+	ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+}
 
 	ng.reset = function() {
 		 $("#dtaInicial").val('');
@@ -31,7 +35,8 @@ app.controller('RelatorioTotalVendasVendedorController', function($scope, $http,
 		var dtaInicial  = $("#dtaInicial").val();
 		var dtaFinal    = $("#dtaFinal").val();
 		var queryString = "?ven->id_empreendimento="+ng.userLogged.id_empreendimento;
-		queryString += ng.userLogged.id_perfil != 1 ? '&ven->id_usuario='+ng.userLogged.id : '' ;
+
+		queryString += !ng.funcioalidadeAuthorized('listar_todas_vendas_vendedores') ? '&ven->id_usuario='+ng.userLogged.id : '' ;
 
 		if(dtaInicial != "" && dtaFinal != ""){
 			dtaInicial = formatDate(dtaInicial);
@@ -83,7 +88,7 @@ app.controller('RelatorioTotalVendasVendedorController', function($scope, $http,
 		ng.vendedores = [];
 		query_string = "?tue->id_empreendimento="+ng.userLogged.id_empreendimento;
 
-		query_string += "&" + $.param({'(usu->id_perfil':{exp:"= '1' OR usu.id_perfil= '8')"}});
+		query_string += "&usu->flg_tipo=usuario" ;
 
 		if(ng.busca.vendedores != ""){
 			query_string += "&" + $.param({'(usu->nome':{exp:"like'%"+ng.busca.vendedores+"%')"}});

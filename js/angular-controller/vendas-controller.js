@@ -1,4 +1,4 @@
-app.controller('VendasController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('VendasController', function($scope, $http, $window, $dialogs, UserService, FuncionalidadeService){
 
 	var ng = $scope
 		aj = $http;
@@ -14,6 +14,9 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 	$scope.popover = {content: ''};
 	var params      = getUrlVars();
 
+	ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+		return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+	}
 
 	ng.sucessoSeparacao = function(){
 		if(params.alert != null){

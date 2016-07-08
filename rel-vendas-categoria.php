@@ -22,7 +22,7 @@
 	<link href="css/pace.css" rel="stylesheet">
 
 	<!-- Datepicker -->
-	<link href="css/datepicker.css" rel="stylesheet"/>
+	<link href="css/datepicker/bootstrap-datepicker.css" rel="stylesheet"/>
 
 	<!-- Timepicker -->
 	<link href="css/bootstrap-timepicker.css" rel="stylesheet"/>
@@ -141,27 +141,27 @@
 						<div class="alert-sistema alert errorBusca" style="display:none"></div>
 						<form role="form">
 							<div class="row">
-								<div class="col-sm-2">
+								<div class="col-sm-3">
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
+											<input stardate="" date-picker ng-model="busca.dtaInicial" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="form-control text-center">
 											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
 								</div>
 
-								<div class="col-sm-2">
+								<div class="col-sm-3">
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control text-center">
+											<input ng-model="busca.dtaFinal" date-picker readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="form-control text-center">
 											<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
 								</div>
 
-								<div class="col-lg-6">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<label class="control-label">Categoria</label>
 										<div class="input-group">
@@ -216,7 +216,7 @@
 							<td class="text-right">R$ {{ item.vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
 						</tr>
 					</tbody>
-					<tfoot>
+					<tfoot ng-if="items != null" >
 						<td colspan="2"><strong>TOTAL</strong></td>
 						<td class="text-center">{{ qtd_total_vendida }}</td>
 						<td class="text-right">R$ {{ vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
@@ -333,7 +333,8 @@
 	<script src='js/jquery.maskMoney.js'></script>
 
 	<!-- Datepicker -->
-	<script src='js/bootstrap-datepicker.min.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.pt-BR.js'></script>
 
 	<!-- Timepicker -->
 	<script src='js/bootstrap-timepicker.min.js'></script>
@@ -370,6 +371,9 @@
 	<script src="js/endless/endless_form.js"></script>
 	<script src="js/endless/endless.js"></script>
 
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -379,8 +383,8 @@
 	<!-- UnderscoreJS -->
 	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
-<!-- AngularJS -->
-	<script type="text/javascript" src="js/js-ui-popover/angular.min.js"></script>
+	<!-- AngularJS -->
+	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-ui-utils/mask.min.js"></script>
     <script src="js/angular-sanitize.min.js"></script>
@@ -421,17 +425,6 @@
 			});
 		});
 
-	</script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.datepicker').datepicker();
-			$("#cld_pagameto").on("click", function(){ $("#pagamentoData").trigger("focus"); });
-			$("#cld_dtaInicial").on("click", function(){ $("#dtaInicial").trigger("focus"); });
-			$("#cld_dtaFinal").on("click", function(){ $("#dtaFinal").trigger("focus"); });
-
-			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
-		});
 	</script>
 	<?php include("google_analytics.php"); ?>
   </body>

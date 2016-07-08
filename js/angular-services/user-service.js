@@ -6,26 +6,29 @@ app.service('UserService', function($http, $window) {
 
 	this.getUserLogado = function() {
 		var user = {};
+		if(empty(sessionStorage.user)){
+			 $.ajax({
+			 	url: baseUrl() + "get_session.php",
+			 	async: false,
+			 	success: function(usuario) {
+			 		user.id 					= usuario.id;
+			 		user.id_empreendimento 		= usuario.id_empreendimento;
+			 		user.nme_usuario 			= usuario.nome;
+			 		user.end_email 				= usuario.email;
+			 		user.id_perfil 				= usuario.id_perfil;
+			 		user.nome_empreendimento 	= usuario.nome_empreendimento;
+			 		user.nme_logo 				= usuario.nme_logo;
+			 		user.modulosAssociatePage 	= usuario.modulosAssociatePage;
+			 		user.flg_dispositivo 		= (!empty(usuario.flg_dispositivo) ? usuario.flg_dispositivo : null );
 
-		 $.ajax({
-		 	url: baseUrl() + "get_session.php",
-		 	async: false,
-		 	success: function(usuario) {
-		 		user.id 					= usuario.id;
-		 		user.id_empreendimento 		= usuario.id_empreendimento;
-		 		user.nme_usuario 			= usuario.nome;
-		 		user.end_email 				= usuario.email;
-		 		user.id_perfil 				= usuario.id_perfil;
-		 		user.nome_empreendimento 	= usuario.nome_empreendimento;
-		 		user.nme_logo 				= usuario.nme_logo;
-		 		user.flg_dispositivo 		= (!empty(usuario.flg_dispositivo) ? usuario.flg_dispositivo : null );
-
-		 	},
-		 	error: function(error) {
-		 		console.log(error);
-		 	}
-		 });
-		sessionStorage.user = angular.toJson(user);
+			 	},
+			 	error: function(error) {
+			 		console.log(error);
+			 	}
+			 });
+			sessionStorage.user = angular.toJson(user);
+		}else
+			user = parseJSON(sessionStorage.user) ;
 		return user;
 	}
 
@@ -66,6 +69,49 @@ app.service('UserService', function($http, $window) {
 	this.clearSessionData = function() {
 		$window.sessionStorage.removeItem(this.KEY_USER_LOGGED);
 		$window.sessionStorage.removeItem(this.KEY_MEUS_EMPREENDIMENTOS);
+		$window.sessionStorage.removeItem('user');
+		$window.sessionStorage.removeItem('funcionalidades');
+	}
+});
+
+app.service('FuncionalidadeService', function($http) {
+	this.getIdModulo = function(){
+		var aux = parseJSON(sessionStorage.user) ;
+		modulos = aux.modulosAssociatePage ;
+		var page = location.pathname.substring(location.pathname.lastIndexOf("/") + 1) ;
+		if(!empty(modulos[page])){
+			return modulos[page].id_modulo;
+		}
+		else return null
+	}
+	this.getIdsPerfisAuthorizedByModulo = function(id_empreendimento,associativo) {
+		associativo = empty(associativo) ? 'false' : (associativo === true ? 'true' : 'false' ) ; 
+		id_modulo = this.getIdModulo();
+		var modulosFuncionalidades = (empty(sessionStorage.funcionalidades) ? [] : parseJSON(sessionStorage.funcionalidades)) ;
+		var funcionalidades = empty(modulosFuncionalidades[id_modulo]) ? null : modulosFuncionalidades[id_modulo] ; 
+		if(funcionalidades == null) {
+			$.ajax({
+				url: baseUrlApi() + "modulo/funcionalidades/id_perfis/"+id_modulo+"/"+id_empreendimento+"/"+associativo,
+				async: false,
+				success: function(items) {
+					funcionalidades = items ;
+				},
+				error: function(error) {
+					funcionalidades = [-1] ;
+					console.log(error);
+				}
+			});
+			modulosFuncionalidades[id_modulo] = funcionalidades ;
+			sessionStorage.funcionalidades = angular.toJson(modulosFuncionalidades) ;
+		}
+		return funcionalidades;
+	};
+
+	this.Authorized = function(cod_funcionalidade,id_perfil,id_empreendimento){
+		var funcionalidades = this.getIdsPerfisAuthorizedByModulo(id_empreendimento,true);
+		funcionalidades = empty(funcionalidades) ? [] : funcionalidades ;
+		var funcionalidade = empty(funcionalidades[cod_funcionalidade]) ? [] : funcionalidades[cod_funcionalidade] ;
+		return _in(id_perfil,funcionalidade) ;
 	}
 });
 

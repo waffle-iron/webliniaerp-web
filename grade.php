@@ -163,7 +163,6 @@
 						</div>
 
 						<br>
-
 						<div class="row">
 							<div class="col-sm-12">
 								<table class="table table-bordered table-condensed table-striped table-hover">
@@ -173,6 +172,7 @@
 											<th class="text-center">Descrição</th>
 											<th class="text-center">Fabricante</th>
 											<th class="text-center" width="80">Tamanho</th>
+											<th class="text-center" >Sabor/Cor</th>
 											<th class="text-center" width="100">Vlr. Atacado</th>
 											<th class="text-center" width="100">Vlr. Interm.</th>
 											<th class="text-center" width="100">Vlr. Varejo</th>
@@ -185,6 +185,7 @@
 											<td>{{ item.nome}}</td>
 											<td>{{ item.nome_fabricante }}</td>
 											<td class="text-center">{{ item.peso }}</td>
+											<td class="text-center">{{ item.sabor }}</td>
 											<td class="text-right">R$ {{ item.vlr_venda_atacado | numberFormat: 2 : ',' : '.' }}</td>
 											<td class="text-right">R$ {{ item.vlr_venda_intermediario | numberFormat: 2 : ',' : '.' }}</td>
 											<td class="text-right">R$ {{ item.vlr_venda_varejo | numberFormat: 2 : ',' : '.' }}</td>
@@ -209,6 +210,7 @@
 							</ul>
 						</div>
 					</div>
+
 				</div>
 			</div>
 		</div><!-- /main-container -->
@@ -223,10 +225,9 @@
       				</div>
 				    <div class="modal-body">
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-sm-12">
 								<div class="input-group">
 						            <input ng-model="busca.produtosModal" type="text" class="form-control input-sm">
-
 						            <div class="input-group-btn">
 						            	<button ng-click="loadProdutosModal(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
 						            </div> <!-- /input-group-btn -->
@@ -245,19 +246,24 @@
 											<th>#</th>
 											<th>Nome</th>
 											<th>Fabricante</th>
-											<th>Tamanho</th>
+											<th class="text-center" >Tamanho</th>
+											<th class="text-center" >Sabor/Cor</th>
 											<th width="80"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr ng-show="(produtosModal.length == 0)">
-											<td colspan="3">Não a Produtos cadastrados</td>
+											<td colspan="6">Não a Produtos cadastrados</td>
+										</tr>
+										<tr ng-show="produtosModal.length == null">
+											<td colspan="6" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
 										</tr>
 										<tr ng-repeat="item in produtosModal">
 											<td>{{ item.id }}</td>
 											<td>{{ item.nome }}</td>
 											<td>{{ item.nome_fabricante }}</td>
-											<td>{{ item.peso }}</td>
+											<td class="text-center">{{ item.peso }}</td> 
+											<td class="text-center">{{ item.sabor }}</td>
 											<td>
 												<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
 													<i class="fa fa-check-square-o"></i> Adicionar

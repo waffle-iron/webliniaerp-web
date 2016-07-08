@@ -177,9 +177,9 @@
 							<th rowspan="2" class="text-center" style="line-height: 46px;">Tipo</th>
 							<th rowspan="2" class="text-center" style="line-height: 46px;width: 300px;">Descrição</th>
 							<th rowspan="2" class="text-center" style="line-height: 46px;">Valor</th>
-							<th rowspan="1" class="text-center" colspan="3" ng-if="userLogged.id_perfil == 1">Taxa Maquineta</th>
+							<th rowspan="1" class="text-center" colspan="3" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">Taxa Maquineta</th>
 						</tr>
-						<tr ng-if="userLogged.id_perfil == 1">
+						<tr ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 							<th class="text-center" rowspan="1">% Perc.</th>
 							<th class="text-center" rowspan="1">R$ Desc.</th>
 							<th class="text-center" rowspan="1">Valor c/ Desc.</th>
@@ -234,13 +234,13 @@
 							<td ng-if="item.id_tipo_movimentacao == 5" style="color:rgb(208, 216, 22);" class="text-right">
 								<strong>R$ {{ item.para_receber | numberFormat:2:',':'.' }}</strong>
 							</td>
-							<td class="text-right" ng-if="userLogged.id_perfil == 1" >
+							<td class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')" >
 								 {{ item.taxa_maquineta * 100 | numberFormat:2:',':'.' }}%
 							</td>
-							<td class="text-right" ng-if="userLogged.id_perfil == 1">
+							<td class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 								 R$ {{ item.vlr_taxa_maquineta | numberFormat:2:',':'.' }}
 							</td>
-							<td class="text-right" ng-if="userLogged.id_perfil == 1">
+							<td class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 								 R$ {{ item.valor_desconto_maquineta | numberFormat:2:',':'.' }}
 							</td>
 						</tr>
@@ -250,21 +250,21 @@
 							<td style="color:#000;" class="text-right">
 								<strong>R$ {{ totais.total | numberFormat:2:',':'.'}}</strong>
 							</td>
-							<td ng-if="userLogged.id_perfil == 1">
+							<td ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 
 							</td>
-							<td  style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
+							<td  style="color:#000;" class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 								<strong>R$ {{ total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
 							</td>
-							<td colspan="2" style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
+							<td colspan="2" style="color:#000;" class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 								<strong>R$ {{ totais.total - total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
 							</td>
 						</tr>
 						<tr colspan="4" ng-if="movimentacoes.length > 0">
-							<td style="background: #D5D5D5;" colspan="8" class="text-uppercase text-center" ng-if="userLogged.id_perfil == 1">
+							<td style="background: #D5D5D5;" colspan="8" class="text-uppercase text-center" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 								<span style="font-size: 14px;">Total por Forma de Pagamento</span>
 							</td>
-							<td style="background: #D5D5D5;" colspan="5" class="text-uppercase text-center" ng-if="userLogged.id_perfil != 1">
+							<td style="background: #D5D5D5;" colspan="5" class="text-uppercase text-center" ng-if="!funcioalidadeAuthorized('ver_taxa_maquineta')">
 								<span style="font-size: 14px;">Total por Forma de Pagamento</span>
 							</td>
 						</tr>
@@ -275,26 +275,26 @@
 							<td class="text-right" style="color:#000;">
 								<strong>R$ {{  item.dsc == 'Dinheiro' && (item.valor - total_reforco_caixa | numberFormat:2:',':'.') || (item.valor | numberFormat:2:',':'.')  }}</strong>
 							</td>
-							<td ng-if="userLogged.id_perfil == 1">
+							<td ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 
 							</td>
-							<td ng-if="key == 'cartao_debito' && userLogged.id_perfil == 1" style="color:#000;" class="text-right">
+							<td ng-if="key == 'cartao_debito' && funcioalidadeAuthorized('ver_taxa_maquineta')" style="color:#000;" class="text-right">
 								<strong>R$ {{ total_desconto_taxa_maquineta_debito | numberFormat:2:',':'.'}}</strong>
 							</td>
-							<td ng-if="key == 'cartao_credito' && userLogged.id_perfil == 1" style="color:#000;" class="text-right">
+							<td ng-if="key == 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" style="color:#000;" class="text-right">
 								<strong>R$ {{ total_desconto_taxa_maquineta_credito | numberFormat:2:',':'.'}}</strong>
 							</td>
-							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && userLogged.id_perfil == 1" class="text-right" style="color:#000;">
+							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" class="text-right" style="color:#000;">
 								<strong>R$ {{ 0 | numberFormat:2:',':'.'}}</strong>
 							</td>
 
-							<td ng-if="key == 'cartao_debito' && userLogged.id_perfil == 1" style="color:#000;" class="text-right">
+							<td ng-if="key == 'cartao_debito' && funcioalidadeAuthorized('ver_taxa_maquineta')" style="color:#000;" class="text-right">
 								<strong>R$ {{ item.valor - total_desconto_taxa_maquineta_debito | numberFormat:2:',':'.'}}</strong>
 							</td>
-							<td ng-if="key == 'cartao_credito' && userLogged.id_perfil == 1" style="color:#000;" class="text-right">
+							<td ng-if="key == 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" style="color:#000;" class="text-right">
 								<strong>R$ {{ item.valor - total_desconto_taxa_maquineta_credito | numberFormat:2:',':'.'}}</strong>
 							</td>
-							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && userLogged.id_perfil == 1" class="text-right" style="color:#000;">
+							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" class="text-right" style="color:#000;">
 								<strong>R$ {{ item.valor | numberFormat:2:',':'.'}}</strong>
 							</td>
 						</tr>
@@ -302,8 +302,8 @@
 							<td colspan="4" class="text-right">Dinheiro(Reforços)</td>
 							<td class="text-right" style="color:#000;"><strong>R$ {{ (total_reforco_caixa | numberFormat:2:',':'.') }}</strong> </td>
 							<td ></td>
-							<td class="text-right" style="color:#000;"><strong>R$ {{ (0 | numberFormat:2:',':'.') }}</strong> </td>
-							<td class="text-right" style="color:#000;"><strong>R$ {{ (0 | numberFormat:2:',':'.') }}</strong> </td>
+							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" class="text-right" style="color:#000;"><strong>R$ {{ (0 | numberFormat:2:',':'.') }}</strong> </td>
+							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" class="text-right" style="color:#000;"><strong>R$ {{ (0 | numberFormat:2:',':'.') }}</strong> </td>
 						</tr>
 					</tbody>
 				</table>

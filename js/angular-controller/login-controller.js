@@ -1,5 +1,5 @@
-app.controller('LoginController', function($scope, $http, $window,$dialogs){
-
+app.controller('LoginController', function($scope, $http, $window,$dialogs,UserService){
+	UserService.clearSessionData();
 	var ng = $scope
 		aj = $http;
 
@@ -91,27 +91,32 @@ app.controller('LoginController', function($scope, $http, $window,$dialogs){
 
 		ng.reset();
 
-		var url = "util/login/login.php?";
-			url += "id_empreendimento=" + item.id;
-			url += "&nome_empreendimento=" + item.nome_empreendimento;
-			url += "&nickname=" + item.nickname;
-			url += "&nme_logo=" + item.nme_logo;
-			url += "&id=" + id_usuario;
-			url += "&id_perfil=" + id_perfil_user;
-			url += "&nme_usuario=" + nome_user;
-			url += "&end_email=" + email_user;
+		aj.get(baseUrlApi()+'usuario/'+item.id+'/'+id_usuario)
+			.success(function(usuario, status, headers, config) {
+				var url = "util/login/login.php?";
+				url += "id_empreendimento=" + item.id;
+				url += "&nome_empreendimento=" + item.nome_empreendimento;
+				url += "&nickname=" + item.nickname;
+				url += "&nme_logo=" + item.nme_logo;
+				url += "&id=" + id_usuario;
+				url += "&id_perfil=" + usuario.id_perfil;
+				url += "&nme_usuario=" + nome_user;
+				url += "&end_email=" + email_user;
 
-		aj.get(url)
-			.success(function(data, status, headers, config) {
-				window.location.href = data.pagina_principal;
+			aj.get(url)
+				.success(function(data, status, headers, config) {
+					window.location.href = data.pagina_principal;
+				})
+				.error(function(data, status, headers, config) {
+					if(status == 404)
+						$('#alert-acesso-negado').show();
+					else
+						alert('Desculpe, ocorreu um erro inesperado !!!');
+				});
 			})
 			.error(function(data, status, headers, config) {
-				if(status == 404)
-					$('#alert-acesso-negado').show();
-				else
 					alert('Desculpe, ocorreu um erro inesperado !!!');
 			});
-		return false;
 	}
 
 });

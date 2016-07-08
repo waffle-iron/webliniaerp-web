@@ -167,7 +167,7 @@
 								</div>
 							</div>
 
-							<div class="empreendimentos form-group">
+							<div ng-if="funcioalidadeAuthorized('add_empreendimentos')" class="empreendimentos form-group">
 								<div class="col-sm-12">
 									<table class="table table-bordered table-condensed table-striped table-hover">
 										<thead>
@@ -185,7 +185,7 @@
 											<tr ng-repeat="item in empreendimentosAssociados">
 												<td>{{ item.nome_empreendimento }}</td>
 												<td align="center">
-													<button class="btn btn-xs btn-danger" ng-click="delEmpreendimento(item)"><i class="fa fa-trash-o"></i></button>
+													<button ng-if="item.id != userLogged.id_empreendimento" class="btn btn-xs btn-danger" ng-click="delEmpreendimento(item)"><i class="fa fa-trash-o"></i></button>
 												</td>
 											</tr>
 										</tbody>
@@ -280,7 +280,10 @@
 										<tr ng-repeat="item in empreendimentos">
 											<td>{{ item.nome_empreendimento }}</td>
 											<td width="50" align="center">
-												<button type="button" class="btn btn-xs btn-success" ng-click="addEmpreendimento(item)">
+												<button ng-if="empreendimentoIsSelected(item)" type="button" class="btn btn-xs btn-primary">
+													<i class="fa fa-check-square-o"></i> Selecionado
+												</button>
+												<button ng-if="!empreendimentoIsSelected(item)" type="button" class="btn btn-xs btn-success" ng-click="addEmpreendimento(item)">
 													<i class="fa fa-check-square-o"></i> Selecionar
 												</button>
 											</td>

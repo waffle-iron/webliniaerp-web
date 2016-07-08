@@ -307,6 +307,8 @@ angular.module('filters', [])
 	            	if(data.length == 10)
 	            		return formatDate(data) ;
 	            });
+	            if(!empty(attrs.stardate))
+	           	 $(element).datepicker('setDate', attrs.stardate);
 	        }
 	    };
 	}).directive('tooltip', function ($filter) {

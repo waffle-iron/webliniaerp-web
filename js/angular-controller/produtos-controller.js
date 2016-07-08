@@ -1,5 +1,4 @@
-app.controller('ProdutosController', function($scope, $http, $window, $dialogs, UserService){
-
+app.controller('ProdutosController', function($scope, $http, $window, $dialogs, UserService,FuncionalidadeService){
 	var ng = $scope
 		aj = $http;
 
@@ -24,7 +23,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.campos_extras_produto  = [] ;
     ng.produtos		= null;
-    //ng.fabricantes	= [];
     ng.importadores	= [];
     ng.categorias	= [];
     ng.valor_tabela = "";
@@ -40,6 +38,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
     ng.chosen_origem_mercadoria   = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
     ng.chosen_tipo_tributacao_ipi = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
     ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:null,dsc_especializacao_ncm:'Selecione'}] ;
+
+    ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+    	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+    }
 
     ng.showBoxNovo = function(onlyShow){
     	if(onlyShow) {
@@ -485,7 +487,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.delete = function(item){
 		dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Tem certeza que deseja excluir este produto?</strong>');
-
+		$('#confirmModal').parent('.modal').show();
 		dlg.result.then(function(btn){
 			aj.get(baseUrlApi()+"produto/delete/"+item.id)
 				.success(function(data, status, headers, config) {

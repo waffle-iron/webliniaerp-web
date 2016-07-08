@@ -885,7 +885,7 @@
 
 									<div class="row">
 										<div class="col-sm-6">
-											<button ng-click="showVlrReal()" class="btn btn-xs btn-success" type="button" ng-show="userLogged.id_perfil == 1">
+											<button ng-click="showVlrReal()" class="btn btn-xs btn-success" type="button" ng-if="funcioalidadeAuthorized('ver_valor_custo_produto')">
 												<i ng-if="show_vlr_real == false" class="fa fa-eye fa-lg"></i>
 												<i ng-if="show_vlr_real == true" class="fa fa-eye-slash fa-lg"></i>
 											</button>
@@ -955,7 +955,7 @@
 											</button>
 											
 										</div>
-										<div class="col-sm-6" ng-show="userLogged.id_perfil == 1">
+										<div class="col-sm-6">
 											<div style="float: right;font-weight: bold;font-size: 15px;" ng-if="cliente.vlr_saldo_devedor>0">
 												<span style="color:#000">Saldo Devedor :</span> <span style="color:green">R$ {{ cliente.vlr_saldo_devedor | numberFormat:2:',':'.' }}</span>
 											</div>

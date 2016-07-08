@@ -1,4 +1,4 @@
-app.controller('ControleMesasController', function($scope, $http, $window, UserService,ConfigService,$dialogs) {
+app.controller('ControleMesasController', function($scope, $http, $window, UserService,ConfigService,$dialogs,FuncionalidadeService) {
 	var ng = $scope,
 		aj = $http;
 	ng.userLogged = UserService.getUserLogado();
@@ -14,6 +14,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 		selTipoProduto:false,
 		escProduto:false
 	} ;
+	ng.userLogged.flg_dispositivo=1;
 	ng.telaAnterior = null ;
 	ng.mesas = [];
 	ng.mesaSelecionada = {mesa:{},comandas:[]} ;
@@ -34,6 +35,10 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 	var timeOutWaitingResponseTestConection = null ;
 
 	$('#sizeToggle').trigger("click");
+
+	ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+		return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+	}
 
 	ng.changeTela = function(tela,changeValue){
 		if(!empty(tela)){

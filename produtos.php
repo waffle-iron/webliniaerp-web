@@ -35,9 +35,9 @@
 		.panel.panel-default {
 		    overflow: visible !important;
 		}
-		/*.modal {
+		.modal {
 			display: block;
-		}*/
+		}
 
 		/* Custom dialog/modal headers */
 
@@ -175,7 +175,7 @@
 								<div class="panel-tab clearfix">
 									<ul class="tab-bar">
 										<li class="active"><a href="#informacoes_basicas" data-toggle="tab"><i class="fa fa-archive"></i>  Informações Básicas</a></li>
-										<li><a href="#preco" data-toggle="tab"><i class="fa fa-archive"></i>  Preço</a></li>
+										<li ng-if="funcioalidadeAuthorized('alterar_preco')"><a href="#preco" data-toggle="tab"><i class="fa fa-archive"></i>  Preço</a></li>
 										<li><a href="#estoque" data-toggle="tab"><i class="fa fa-list-ol"></i> Estoque</a></li>
 										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
 										<li><a href="#Empreendimentos" data-toggle="tab"><i class="fa fa-building-o"></i> Empreendimentos</a></li>
@@ -310,7 +310,7 @@
 												</div>
 											</div>
 										</div>
-										<div ng-show="!(userLogged.id_perfil == 8)" class="tab-pane fade" id="preco">
+										<div ng-if="funcioalidadeAuthorized('alterar_preco')" class="tab-pane fade" id="preco">
 											<div class="table-responsive">
 												<table class="table table-bordered table-condensed table-striped table-hover">
 													<thead>
@@ -381,7 +381,7 @@
 											</div>
 										</div>
 										<div class="tab-pane fade" id="estoque">
-											<div ng-show="userLogged.id_perfil==1" class="row">
+											<div ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="row">
 												<div class="col-sm-5" id="inventario_novo_deposito">
 													<label class="control-label">Deposito</label>
 													<div class="input-group">
@@ -408,7 +408,7 @@
 												<div class="col-sm-2">
 													<label class="control-label">&nbsp;</label>
 													<div class="form-group" >
-														<button data-loading-text="Aguarde..." ng-click="addNovoInventario()"type="submit" id="btn-novo_inventario" class="btn btn-success btn-xs">
+														<button data-loading-text="Aguarde..." ng-click="addNovoInventario()" type="submit" id="btn-novo_inventario" class="btn btn-success btn-xs">
 															Adicionar
 														</button>
 													</div>
@@ -429,8 +429,8 @@
 																<td>{{ value.nome_deposito }}</td>
 																<td class="text-center" ng-if="value.dta_validade != '2099-12-31'">{{ value.dta_validade | dateFormat:'date' }}</td>
 																<td class="text-center" ng-if="value.dta_validade == '2099-12-31'"></td>
-																<td ng-show="(userLogged.id_perfil == 1)" class="text-center" ><input type="text"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" ></td>
-																<td ng-show="!(userLogged.id_perfil == 1)" class="text-center">{{ value.qtd_ivn }} </td>
+																<td  ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="text-center" ><input type="text"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" ></td>
+																<td ng-if="!funcioalidadeAuthorized('alterar_quantidade')" class="text-center">{{ value.qtd_ivn }} </td>
 															</tr>
 														</tbody>
 													</table>
@@ -792,13 +792,14 @@
 											</td>
 										</tr>
 										<tr ng-repeat="item in produtos" title="{{ configuracao.id_produto_debito_anterior_cliente == item.id_produto && 'este produto não pode ser deletado, ele faz parte das confurações internas do sistema' || '' }}">
-											<td class="text-center" width="80" 
+											<!--<td class="text-center" width="80" 
 												upload-File
 												uploadextradata = '{"id_produto": {{ item.id }} }'
 												deleteextradata = '{"id_produto": {{ item.id }} }'
 												defaultPreviewContent = 'img/sem-imagem-produto.jpg'
 												dataimg="{{ (item.img == null || item.img == '' ? null : 'assets/imagens/produtos/'+item.img) }}"
-											>
+											>-->
+											<td class="text-center" width="80">
 											{{ item.id_produto }}
 											</td>
 											<td class="text-center">{{ item.codigo_barra }}</td>
@@ -1489,12 +1490,12 @@
 	<script type="text/javascript">
 		//$(".chzn-select").chosen();
 		 $('[data-toggle="tooltip"]').tooltip()
-		$('.foto-produto').change(function()	{
+		/*$('.foto-produto').change(function()	{
 			var filename = $(this).val().split('\\').pop();
 			$(this).parent().find('span').attr('data-title',filename);
 			$(this).parent().find('label').attr('data-title','Trocar foto');
 			$(this).parent().find('label').addClass('selected');
-		});
+		});*/
 	</script>
 	<?php include("google_analytics.php"); ?>
   </body>

@@ -170,6 +170,7 @@
 							<th class="text-center">Produto</th>
 							<th class="text-center">Fabricante</th>
 							<th class="text-center">Tamanho</th>
+							<th class="text-center">Sabor/cor</th>
 							<th class="text-center">Qtd. Estoque</th>
 							<th class="text-center">Qtd. Mínima</th>
 						</tr>
@@ -179,6 +180,7 @@
 							<td>{{ item.nome }}</td>
 							<td>{{ item.nome_fabricante }}</td>
 							<td class="text-center">{{ item.peso }}</td>
+							<td class="text-center">{{ item.sabor }}</td>
 							<td class="text-center">{{ item.qtd_atual_estoque }}</td>
 							<td class="text-center">{{ item.qtd_minima_estoque }}</td>
 						</tr>

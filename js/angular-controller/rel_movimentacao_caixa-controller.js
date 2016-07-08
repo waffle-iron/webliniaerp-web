@@ -1,4 +1,4 @@
-app.controller('relMovimentacaoCaixaController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('relMovimentacaoCaixaController', function($scope, $http, $window, $dialogs, UserService, FuncionalidadeService){
 
 	var ng = $scope
 		aj = $http;
@@ -13,7 +13,9 @@ app.controller('relMovimentacaoCaixaController', function($scope, $http, $window
     ng.movimentacoes 				= [];
     var params      = getUrlVars();
 
-    console.log(params);
+   ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+   }
 
     ng.showBoxNovo = function(onlyShow){
     	if(onlyShow) {

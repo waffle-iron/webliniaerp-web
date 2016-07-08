@@ -342,7 +342,7 @@
 
 									<button ng-if="userLogged.flg_dispositivo==1" ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-xs"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
 									
-									<button ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
+									<button ng-if="userLogged.flg_dispositivo==1"  ng-click="changeTela('SelCliente')" type="button" class="btn btn-xs btn-info hidden-sm hidden-md hidden-lg"><i class="fa fa-plus-circle"></i> Abrir Comanda</button>
 								</div>
 							</h3>
 						</div>
@@ -604,7 +604,7 @@
 								</div>
 							</div>
 
-							<div class="row" ng-if="getPermission('1,8')">
+							<div class="row" ng-if="funcioalidadeAuthorized('fechar_comanda')">
 								<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
 									<a href="pdv.php?id_orcamento={{ comandaSelecionada.comanda.id }}" target="_blank"a class="btn btn-danger pull-right"><i class="fa fa-dollar"></i> Fechar Comanda</a>
 								</div>
@@ -634,8 +634,8 @@
 						<div class="panel-footer">
 							<div class="row">
 								<div class="col-sm-12 col-md-12 col-lg-12 hidden-sm hidden-md hidden-lg"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
-									<button ng-disabled="produto.id_ordem_producao!=null" ng-click="editItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-primary btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Atualizar Item</button>
-									<button ng-click="excluirItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-danger btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Excluir Item</button>
+									<button ng-disabled="produto.id_ordem_producao!=null" ng-click="editItemComanda($event)" ng-if="EditProduto && funcioalidadeAuthorized('editar_item_comanda')" type="button" class="btn btn-primary btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Atualizar Item</button>
+									<button ng-click="excluirItemComanda($event)" ng-if="EditProduto && funcioalidadeAuthorized('excluir_item_comanda')" type="button" class="btn btn-danger btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i> Excluir Item</button>
 
 									<button ng-if="!EditProduto"  ng-click="incluirItemComanda($event)"  type="button" class="btn btn-primary btn-block" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-cart-plus "></i>&nbsp;Incluir no carrinho</button>
 									<button  ng-click="cancelarProduto()"  type="button" class="btn btn-default btn-block"><i class="fa fa-ban"></i>&nbsp;Cancelar</button>
@@ -645,9 +645,9 @@
 							<div class="row">
 								<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs clearfix"> <!-- EXIBIR APENAS AO PERFIL DE CAIXA -->
 									<div class="pull-right">
-										<button ng-click="excluirItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-danger" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Excluir Item</button>
+										<button ng-click="excluirItemComanda($event)" ng-if="EditProduto && funcioalidadeAuthorized('excluir_item_comanda')" type="button" class="btn btn-danger" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Excluir Item</button>
 
-										<button ng-disabled="produto.id_ordem_producao!=null" ng-click="editItemComanda($event)" ng-if="EditProduto && getPermission('1,8')" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Atualizar Item</button>
+										<button ng-disabled="produto.id_ordem_producao!=null" ng-click="editItemComanda($event)" ng-if="EditProduto && funcioalidadeAuthorized('editar_item_comanda')" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Atualizar Item</button>
 
 										<button ng-if="!EditProduto" ng-click="incluirItemComanda($event)" type="button" class="btn btn-primary" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..."><i class="fa fa-trash-o"></i>&nbsp;Incluir no carrinho</button>
 										<button ng-click="cancelarProduto()" type="button" class="btn btn-default"><i class="fa fa-ban"></i>&nbsp;Cancelar</button>
@@ -664,7 +664,7 @@
 							<fieldset>
 								<legend style="height: 30px;">
 									Incluir Produto
-									<button ng-click="changeTela('detComanda')" type="button" class="btn btn-xs btn-primary pull-right">
+									<button  ng-click="changeTela('detComanda')" type="button" class="btn btn-xs btn-primary pull-right">
 									<i class="fa fa-chevron-circle-left fa-2 yexy" aria-hidden="true"></i> Voltar</button>
 								</legend>
 

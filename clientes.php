@@ -188,15 +188,20 @@
 												<label for="" class="control-label">Tipo de Cadastro</label>
 												<div class="form-group">
 													<label class="label-radio inline">
-														<input ng-model="cliente.tipo_cadastro" value="pf" type="radio" class="inline-radio"/>
+														<input ng-model="cliente.cliente_tipo_cadastro" ng-click="setTipoCadastro('cliente','pf')" value="cliente_pf" type="radio" class="inline-radio"/>
 														<span class="custom-radio"></span>
-														<span>Pessoa Física</span>
+														<span>cliente Pessoa Física</span>
 													</label>
 
 													<label class="label-radio inline">
-														<input ng-model="cliente.tipo_cadastro" value="pj" type="radio" class="inline-radio"/>
+														<input ng-model="cliente.cliente_tipo_cadastro" ng-click="setTipoCadastro('cliente','pj')" value="cliente_pj" type="radio" class="inline-radio"/>
 														<span class="custom-radio"></span>
-														<span>Pessoa Jurídica</span>
+														<span>Cliente Pessoa Jurídica</span>
+													</label>
+													<label class="label-radio inline">
+														<input ng-model="cliente.cliente_tipo_cadastro" ng-click="setTipoCadastro('usuario','pf')" value="usuario_pf" type="radio" class="inline-radio"/>
+														<span class="custom-radio"></span>
+														<span>Usuário do Sistema</span>
 													</label>
 												</div>
 											</div>

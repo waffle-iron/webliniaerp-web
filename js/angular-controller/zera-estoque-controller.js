@@ -43,7 +43,6 @@ app.controller('ZeraEstoqueController', function($scope, $http, $window, $dialog
 		ng.itens 		= [];
 		ng.paginacao 	= {};
 		$(".has-error").removeClass("has-error");
-		ng.loadProdutos(0);
 	}
 
 	ng.resetFilter = function() {
@@ -52,6 +51,7 @@ app.controller('ZeraEstoqueController', function($scope, $http, $window, $dialog
 		ng.deposito 		= ng.depositos[0];
 		ng.fabricante 		= ng.fabricantes[0];
 		ng.fabricante 		= ng.fabricantes[0];
+		ng.loadProdutos(0);
 	}
 
 	ng.aplicarFiltro = function(offset,limit) {

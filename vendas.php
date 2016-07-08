@@ -248,7 +248,7 @@
 										<tr bs-tooltip ng-repeat="item in vendas">
 											<td class="text-center">{{ item.id }}</td>
 											<td class="text-center">{{ item.dta_venda }}</td>
-											<td>{{ item.nme_vendedor }} <i ng-if="userLogged.id_perfil == 1" tooltip="Finalizar Produção" data-toggle="tooltip" title="Alterar Vendedor" style="cursor:pointer ;float: right;color: green;" ng-click="selVendedor(item)" class="fa fa-retweet fa-lg"></i></td>
+											<td>{{ item.nme_vendedor }} <i ng-if="funcioalidadeAuthorized('mudar_vendedor')" ng-if="userLogged.id_perfil == 1" tooltip="Finalizar Produção" data-toggle="tooltip" title="Alterar Vendedor" style="cursor:pointer ;float: right;color: green;" ng-click="selVendedor(item)" class="fa fa-retweet fa-lg"></i></td>
 											<td>{{ item.nme_cliente }}</td>
 											<td class="text-center">
 												{{ item.dsc_status }}
@@ -277,7 +277,7 @@
 													<i class="fa fa-edit"></i>
 												</button>-->
 
-												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1"  title="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-danger">
+												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1"  title="Excluir Orçamento" data-toggle="tooltip" class="btn btn-xs btn-danger">
 													<i class="fa fa-trash-o"></i>
 												</button>
 												<a ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar/Editar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">

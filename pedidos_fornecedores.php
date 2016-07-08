@@ -331,7 +331,8 @@
 										<tr>
 											<th>Nome</th>
 											<th>Fabricante</th>
-											<th>Tamanho</th>
+											<th >Tamanho</th>
+											<th >Sabor/cor</th>
 											<th width="80"></th>
 										</tr>
 									</thead>
@@ -340,6 +341,7 @@
 											<td>{{ item.nome }}</td>
 											<td>{{ item.nome_fabricante }}</td>
 											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
 											<td>
 												<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
 													<i class="fa fa-check-square-o"></i> Selecionar
@@ -441,6 +443,9 @@
 								<tr>
 									<th>#</th>
 									<th>Produto</th>
+									<th>Fabricante</th>
+									<th>Tamanho</th>
+									<th>Sabor/cor</th>
 									<th>Quantidade</th>
 									<th>valor</th>
 								</tr>
@@ -452,6 +457,9 @@
 								<tr ng-repeat="item in itensPedido">
 									<td>{{ item.id }}</td>
 									<td>{{ item.nome_produto }}</td>
+									<td>{{ item.nome_fabricante }}</td>
+									<td>{{ item.peso }}</td>
+									<td>{{ item.sabor }}</td>
 									<td>{{ item.qtd}}</td>
 									<td>R$ {{ item.vlr_custo_produto | numberFormat:2:',':'.'}}</td>
 								</tr>

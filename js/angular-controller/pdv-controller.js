@@ -1,4 +1,4 @@
-app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService,CaixaService,$timeout) {
+app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService,CaixaService,$timeout,FuncionalidadeService) {
 	var ng = $scope,
 		aj = $http;
 	ng.userLogged 	 		= UserService.getUserLogado();
@@ -93,6 +93,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}
 	}
 
+	ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+		return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+	}
+
 	if(params.id_orcamento == undefined)
 		ng.finalizarOrcamento = false ;
 	else{
@@ -169,11 +173,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.findProductByBarCode = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
+    	var id_deposito = ng.caixa.id_deposito ;
     	var codigo  = ng.busca.codigo ;
 		if(ng.busca.codigo != "") {
 			ng.msg = "";
 			ng.busca.ok = !ng.busca.ok;
-			$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+ng.busca.codigo+"%20OR%20prd.id="+ng.busca.codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
+			$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+ng.busca.codigo+"%20OR%20prd.id="+ng.busca.codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&getQtdProduto("+ng.userLogged.id_empreendimento+",prd->id,null,"+id_deposito+",null)[exp]=>0")
 			.success(function(data, status, headers, config) {
 				ng.busca.codigo = "" ;
 				if(data.produtos.length == 1){
@@ -980,11 +985,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 	ng.setMargemAplicada = function(){
 		ng.margemAplicada   = {atacado:false,intermediario:false,varejo:false,parceiro:false} ;
-		if(ng.cliente.nome_perfil == "atacado") 				ng.margemAplicada.atacado 			= true ;
-		else if(ng.cliente.nome_perfil == "varejo") 			ng.margemAplicada.varejo 			= true ;
-		else if(ng.cliente.nome_perfil == "vendedor externo") 	ng.margemAplicada.intermediario 	= true ;
-		else if(ng.cliente.nome_perfil == 'parceiro') 			ng.margemAplicada.parceiro   		= true ;
-		else 													ng.margemAplicada.varejo   			= true ;
+		if(ng.cliente.perc_venda == "perc_venda_atacado") 				ng.margemAplicada.atacado 			= true ;
+		else if(ng.cliente.perc_venda == "perc_venda_varejo") 			ng.margemAplicada.varejo 			= true ;
+		else if(ng.cliente.perc_venda == "perc_venda_intermediario") 	ng.margemAplicada.intermediario 	= true ;
+		else if(ng.cliente.perc_venda == 'vlr_custo') 					ng.margemAplicada.parceiro   		= true ;
+		else 															ng.margemAplicada.varejo   			= true ;
 		ng.changeValorProdutos();
 	}
 	ng.changeValorProdutos = function(){
@@ -1098,9 +1103,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
     	var id_deposito = ng.caixa.id_deposito ;
 
     	if(ng.cdb_busca.status == false)
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&qtd->id_deposito="+id_deposito;
+    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&qtd->id_deposito="+id_deposito+"&getQtdProduto("+ng.userLogged.id_empreendimento+",prd->id,null,"+id_deposito+",null)[exp]=>0";
     	else{
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&qtd->id_deposito="+id_deposito+"&prd->codigo_barra="+ng.cdb_busca.codigo;
+    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&qtd->id_deposito="+id_deposito+"&prd->codigo_barra="+ng.cdb_busca.codigo+"&getQtdProduto("+ng.userLogged.id_empreendimento+",prd->id,null,"+id_deposito+",null)[exp]=>0";
     	}
 
     	if(ng.busca.produtos != ""){
@@ -1759,6 +1764,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					.attr("title", 'Selecione o banco')
 					.attr("data-original-title", 'Selecione o banco');
 				formControl.tooltip();
+				error ++ ;
 			}
 			/*if(empty(ng.pagamento.agencia_transferencia)){
 				$("#pagamento_agencia_transferencia").addClass("has-error");
@@ -1786,8 +1792,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					.attr("title", 'Informe o Proprietário da conta')
 					.attr("data-original-title", 'Informe o Proprietário da conta');
 				formControl.tooltip();
+				error ++ ;
 			}
-			if(empty(ng.pagamento.id_conta_bancaria)){
+			if(empty(ng.pagamento.id_conta_transferencia_destino)){
 				$("#pagamento_id_conta_transferencia_destino").addClass("has-error");
 				var formControl = $("#pagamento_id_conta_transferencia_destino")
 					.attr("data-toggle", "tooltip")
@@ -1795,6 +1802,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					.attr("title", 'Informe a conta de origem')
 					.attr("data-original-title", 'Informe a conta de origem');
 				formControl.tooltip();
+				error ++ ;
 			}
 		}
 

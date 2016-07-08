@@ -182,7 +182,7 @@
 									</div>
 								</div>
 
-								<div class="col-lg-6">
+								<div class="col-sm-6" ng-if="funcioalidadeAuthorized('listar_todas_vendas_vendedores')">
 									<div class="form-group">
 										<label class="control-label">Vendedor</label>
 										<div class="input-group">
@@ -194,7 +194,7 @@
 									</div>
 								</div>
 
-								<div class="col-lg-2">
+								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Itens por Página</label>
 										<select class="form-control" ng-model="itensPorPagina">

@@ -143,6 +143,12 @@
 
 		if($info['http_code'] == 200){ 
 			$saida['modulos'] = json_decode($modulos,true);
+			$saida['modulosAssociatePage'] = array();
+			foreach ($saida['modulos'] as $key => $value) {
+				if(!isset($saida['modulosAssociatePage'][$value['url_modulo']]))
+					$saida['modulosAssociatePage'][trim($value['url_modulo'])] = array();
+				$saida['modulosAssociatePage'][trim($value['url_modulo'])] = $value;
+			}
 			$saida['pagina_principal'] = getPaginaPrincipal($saida['modulos']);
 		}
 		else{

@@ -1,4 +1,4 @@
-app.controller('DepositosController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('DepositosController', function($scope, $http, $window, $dialogs, UserService,FuncionalidadeService){
 
 	var ng = $scope
 		aj = $http;
@@ -8,11 +8,14 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 	ng.deposito 					= {};
     ng.depositos					= [];
     ng.empreendimentos 				= [];
-    ng.empreendimentosAssociados 	= [];
     ng.paginacao           			= {} ;
     ng.busca               			= {empreendimento:""} ;
-
+    ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento }];
     ng.editing = false;
+
+    ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+		return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+	}
 
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
@@ -54,7 +57,7 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 
 	ng.reset = function() {
 		ng.deposito = {};
-		ng.empreendimentosAssociados = [];
+		 ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento }];
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
@@ -125,6 +128,17 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 		}
 	}
 
+	ng.empreendimentoIsSelected = function(item){
+		var r = false ;
+		$.each(ng.empreendimentosAssociados,function(i,v){
+			if(Number(item.id)==Number(v.id)){
+				r = true ;
+				return;
+			}
+		});
+		return r ;
+	}
+
 	ng.delEmpreendimento = function(item) {
 		ng.empreendimentosAssociados.pop(item);
 	}
@@ -146,11 +160,7 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 			url += 'false';
 
 		itemPost.nme_deposito 		= ng.deposito.nme_deposito;
-
-		if(ng.userLogged.id_perfil == 1)
-			itemPost.empreendimentos = ng.empreendimentosAssociados;
-		else
-			itemPost.empreendimentos = [{ id : userLogged.id_empreendimento }];
+		itemPost.empreendimentos = ng.empreendimentosAssociados;
 
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {

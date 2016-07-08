@@ -320,8 +320,9 @@
 								<tr>
 									<th>#</th>
 									<th>Produto</th>
-									<th>Peso</th>
 									<th>Fabricante</th>
+									<th >Tamanho</th>
+									<th >Sabor/cor</th>
 									<th>Quantidade</th>
 									<th>Dta validade</th>
 								</tr>
@@ -330,8 +331,9 @@
 								<tr ng-repeat="item in detalhes">
 									<td>{{ item.id }}</td>
 									<td>{{ item.nome }}</td>
-									<td>{{ item.peso }}</td>
 									<td>{{ item.nome_fabricante }}</td>
+									<td>{{ item.peso }}</td>
+									<td>{{ item.sabor }}</td>
 									<td>{{ item.qtd_contagem }}</td>
 									<td ng-if="item.dta_validade == '2099-12-31'"></td>
 									<td ng-if="item.dta_validade != '2099-12-31'">{{ item.dta_validade | dateFormat:'date'}}</td>

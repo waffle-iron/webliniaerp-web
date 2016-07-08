@@ -178,6 +178,9 @@
 							<tr>
 								<th class="text-center" width="80">id</th>
 								<th class="text-center">Produto</th>
+								<th class="text-center">Fabricante</th>
+								<th >Tamanho</th>
+								<th >Sabor/cor</th>
 								<th class="text-center" colspan="2" style="width:100px">Quantidade</th>
 							</tr>
 						</thead>
@@ -185,6 +188,9 @@
 							<tr ng-repeat="item in itens">
 								<td class="text-center">#{{ item.id_produto }}</td>
 								<td>{{ item.nome_produto }}</td>
+								<td>{{ item.nome_fabricante }}</td>
+								<td>{{ item.peso }}</td>
+								<td>{{ item.sabor }}</td>
 								<td style="width:60px;text-align:center">{{ item.qtd }}</td>
 								<td style="width:40px">
 									<!-- <button type="buttn" class="btn btn-xs btn-primary dropdown-toggle"  data-toggle="dropdown" ng-click="findProductByid(item)">

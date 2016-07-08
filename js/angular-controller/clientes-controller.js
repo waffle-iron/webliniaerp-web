@@ -7,8 +7,8 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.userLogged 	= UserService.getUserLogado();
 	var clienteTO 	= { 
 						tipo_cadastro: "pf",empreendimentos:[],cod_regime_tributario:null,cod_regime_pis_cofins:null,
-						cod_tipo_empresa:null,flg_contribuinte_icms:0,flg_contribuinte_ipi:0,cod_zoneamento:null ,regime_especial:[],
-						empreendimentos: [{id:ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,modulos:[]}]
+						cod_tipo_empresa:null,flg_contribuinte_icms:0,flg_contribuinte_ipi:0,cod_zoneamento:null ,regime_especial:[],cliente_tipo_cadastro:'cliente_pf',flg_tipo:'cliente',modulos:[],
+						empreendimentos: [{id:ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento}]
 				  	};
 	ng.cliente = angular.copy(clienteTO);
     ng.clientes	= [];
@@ -363,6 +363,9 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		}
 		cliente.modulos = null ;
 		cliente.usuarioModulos = usuarioModulos ;
+		if(cliente.tipo_cadastro=='pj'){
+			cliente.nome = cliente.razao_social;
+		}
 		
 		if((!empty(ng.cliente.id_estado) && !empty(ng.cliente.id_cidade) && !empty(ng.cliente.endereco) && !empty(ng.cliente.numero) && !empty(ng.cliente.bairro))){
 		 	 var estado_selecionado = ng.getEstadoByidIBGE(ng.cliente.id_estado);
@@ -486,6 +489,23 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		$('a',$('#tab-cliente .tab-bar li').eq(0)).tab('show');
 		ng.load_empreendimentos = true ;
 		ng.cliente = angular.copy(item);
+
+		if(ng.cliente.flg_tipo=='cliente' && ng.cliente.tipo_cadastro=='pf') ng.cliente.cliente_tipo_cadastro = 'cliente_pf';
+		else if(ng.cliente.flg_tipo=='cliente' && ng.cliente.tipo_cadastro=='pj') ng.cliente.cliente_tipo_cadastro = 'cliente_pj';
+		else if(ng.cliente.flg_tipo=='usuario' && ng.cliente.tipo_cadastro=='pf') ng.cliente.cliente_tipo_cadastro = 'usuario_pf';
+		else if(ng.cliente.tipo_cadastro=='pf'){
+			ng.cliente.cliente_tipo_cadastro = 'cliente_pf';
+			ng.cliente.flg_tipo = 'cliente';
+		}
+		else if(ng.cliente.tipo_cadastro=='pj'){
+			ng.cliente.cliente_tipo_cadastro = 'cliente_pj';
+			ng.cliente.flg_tipo = 'cliente';
+		}
+		else{
+			ng.cliente.cliente_tipo_cadastro = 'cliente_pf';
+			ng.cliente.flg_tipo = 'cliente';
+		}
+
 		ng.cliente.regime_especial = [] ;
 		ng.loadRegimeCliente(ng.cliente.id);
 		if(ng.cliente.empreendimentos == false)
@@ -495,6 +515,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		ng.showBoxNovo(true);
 		if(!empty(item.id_perfil))
 			ng.loadModulosByUser(angular.copy(item));
+		$('html,body').animate({scrollTop: 0},'slow');
 	}
 
 	ng.delete = function(item){
@@ -936,6 +957,14 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		.error(function(data, status, headers, config) {
 			ng.loadingModulos = false ;
 		});
+	}
+
+	ng.setTipoCadastro = function(tipo1,tipo2){
+		ng.cliente.flg_tipo= tipo1 ;
+		ng.cliente.tipo_cadastro = tipo2;
+		if(tipo1=='cliente' && tipo2=='pf') ng.cliente.cliente_tipo_cadastro = 'cliente_pf';
+		else if(tipo1=='cliente' && tipo2=='pj') ng.cliente.cliente_tipo_cadastro = 'cliente_pj';
+		else if(tipo1=='usuario' && tipo2=='pf') ng.cliente.cliente_tipo_cadastro = 'usuario_pf';
 	}
 
 	ng.mensagens = function(classe , msg){

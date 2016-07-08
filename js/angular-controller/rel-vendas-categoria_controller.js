@@ -27,6 +27,7 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 
 	ng.qtd_total_vendida = 0;
 	ng.vlr_total_vendida = 0;
+	
 	ng.loadVendas = function(_id_categoria, _dtaInicial, _dtaFinal) {
 		ng.qtd_total_vendida = 0;
 		ng.vlr_total_vendida = 0;
@@ -38,17 +39,6 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 		
 		var queryString 	= "?id_empreendimento="+ ng.userLogged.id_empreendimento;
 
-		if(dtaInicial != "" && dtaFinal != ""){
-			dtaInicial = formatDate(dtaInicial);
-			dtaFinal   = formatDate(dtaFinal);
-			if(dtaInicial > dtaFinal){
-				$("#modal-aguarde").modal('hide');
-				ng.mensagens('alert-danger','<strong>A data inicial deve ser menor que a final</strong>','.errorBusca');
-				return;
-			}
-			queryString += "&dtaInicial="+ dtaInicial +"&dtaFinal="+ dtaFinal;
-		}
-		
 		queryString += "&id_categoria="+ id_categoria;
 		
 		aj.get(baseUrlApi()+"relatorio/vendas/consolidado/categoria/"+ queryString)
@@ -111,14 +101,18 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 	}
 
 	ng.reset();
-	$("#modal-aguarde").modal('show');
-	ng.loadVendas(getUrlVars().id_categoria, getUrlVars().dtaInicial, getUrlVars().dtaFinal);
+		$("#modal-aguarde").modal('show');
+		ng.loadVendas(getUrlVars().id_categoria, getUrlVars().dtaInicial, getUrlVars().dtaFinal);
 
-	ng.categoria.id = getUrlVars().id_categoria;
-	ng.categoria.descricao_categoria = decodeURI(getUrlVars().nme_categoria);
-	$("#dtaInicial").val(getUrlVars().dtaInicial);
-	$("#dtaFinal").val(getUrlVars().dtaFinal);
-});
+		ng.categoria.id = getUrlVars().id_categoria;
+		if(!empty(getUrlVars().nme_categoria)){
+			ng.categoria.descricao_categoria = decodeURI(getUrlVars().nme_categoria);
+		}
+		else
+			ng.categoria.descricao_categoria = '';
+		$("#dtaInicial").val(getUrlVars().dtaInicial);
+		$("#dtaFinal").val(getUrlVars().dtaFinal);
+	});
 
 app.directive('bsPopover', function () {
     return function (scope, element, attrs) {

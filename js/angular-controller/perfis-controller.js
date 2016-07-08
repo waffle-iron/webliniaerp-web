@@ -21,6 +21,10 @@ app.controller('PerfisController', function($scope, $http, $window, $dialogs, Us
     	}
     }
 
+    ng.chosen_perc_venda = [
+    	{dsc:'Selecione',vlr:null},{dsc:'Tabela',vlr:'vlr_custo'}, {dsc:'Atacado',vlr:'perc_venda_atacado'}, {dsc:'Intermediario',vlr:'perc_venda_intermediario'}, {dsc:'Varejo',vlr:'perc_venda_varejo'}
+    ]
+
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
 
@@ -278,7 +282,7 @@ app.controller('PerfisController', function($scope, $http, $window, $dialogs, Us
 		ng.currentPag.perfis.limit  = limit ;
 		var queryString = "?id_empreendimento="+ng.userLogged;
 		queryString += empty(ng.busca) ? '' : '&nome='+ng.busca ;
-		aj.get(baseUrlApi()+"perfis/"+offset+"/"+limit+"?tpue->id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"perfis/"+offset+"/"+limit+"?tpue->id_empreendimento="+ng.userLogged.id_empreendimento+"&cplSql= ORDER BY tp.nome ASC")
 			.success(function(data, status, headers, config) {
 				ng.perfis = data;
 			})
@@ -310,6 +314,7 @@ app.controller('PerfisController', function($scope, $http, $window, $dialogs, Us
 					treeviewCollapsing(v);
 				}
 			});
+			$('html,body').animate({scrollTop: 0},'slow');
 			aj.get(baseUrlApi()+"perfil/empreendimentos?tpue->id_perfil="+item.id)
 			.success(function(data, status, headers, config) {
 				ng.perfil.empreendimentos = data;
@@ -321,8 +326,13 @@ app.controller('PerfisController', function($scope, $http, $window, $dialogs, Us
 			});
 		})
 		.error(function(data, status, headers, config) {
-			$dialogs.notify('','<strong>Ocorreu um erro ao carregar os dados</strong>');
 			btn.button('reset');
+			if(status != 404)
+				$dialogs.notify('','<strong>Ocorreu um erro ao carregar os dados</strong>');
+			else{
+				ng.showBoxNovo(true);
+				$('html,body').animate({scrollTop: 0},'slow');
+			}
 		});	
 	}
 

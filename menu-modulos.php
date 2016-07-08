@@ -12,21 +12,19 @@
 				<span class="text"><?php  echo $n1['nme_modulo'] ?></span>
 				<span class="menu-hover"></span>
 			 </a>
+			<?php if(isset($n1['itens']) && count($n1['itens'])>0){ ?>
 			<ul class="submenu">
-			<?php
-				foreach ($n1['itens'] as $n2) {
-				?>
-					<li>
-						<a href="<?php  echo $n2['url_modulo'] ?>">
-							<span class="submenu-label">
-								<i class="fa <?php  echo $n2['icn_modulo'] ?>"></i> <?php  echo $n2['nme_modulo'] ?>
-							</span>
-						</a>
-					</li>
-				<?php
-				}
-				?>
+				<?php foreach ($n1['itens'] as $n2) { ?>
+						<li>
+							<a href="<?php  echo $n2['url_modulo'] ?>">
+								<span class="submenu-label">
+									<i class="fa <?php  echo $n2['icn_modulo'] ?>"></i> <?php  echo $n2['nme_modulo'] ?>
+								</span>
+							</a>
+						</li>
+				<?php } ?>
 			</ul>
+			<?php } ?>
 		</li>
 	<?php
 		}

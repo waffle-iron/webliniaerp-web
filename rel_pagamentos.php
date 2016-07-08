@@ -265,9 +265,9 @@
 								<th rowspan="2" class="text-center" style="line-height: 46px;">Descrição</th>
 								<th rowspan="2" class="text-center" style="line-height: 46px;">Status</th>
 								<th rowspan="2" class="text-center" style="line-height: 46px;width: 100px;">Valor</th>
-								<th rowspan="" class="text-center" colspan="3" ng-if="userLogged.id_perfil == 1">Taxa Maquineta</th>
+								<th rowspan="" class="text-center" colspan="3" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">Taxa Maquineta</th>
 							</tr>
-							<tr ng-if="userLogged.id_perfil == 1">
+							<tr ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 								<th class="text-center" rowspan="1" style="width: 75px;">% Perc.</th>
 								<th class="text-center" rowspan="1" style="width: 75px;">R$ Desc.</th>
 								<th class="text-center" style="width: 100px;" rowspan="1">Valor c/ Desc.</th>
@@ -325,13 +325,13 @@
 									<strong>R$ {{ item.valor_pagamento | numberFormat:2:',':'.' }}</strong>
 								</td>
 
-								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}"  class="text-right" ng-if="userLogged.id_perfil == 1" >
+								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}"  class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')" >
 									 {{ item.taxa_maquineta * 100 | numberFormat:2:',':'.' }}%
 								</td>
-								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="userLogged.id_perfil == 1">
+								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 									 R$ {{ item.vlr_taxa_maquineta | numberFormat:2:',':'.' }}
 								</td>
-								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="userLogged.id_perfil == 1">
+								<td ng-attr-rowspan="{{ item.id_forma_pagamento == 6 && ccDetalhes ? item.parcelas.length + 1 : 1 }}" ng-style="{ 'line-height': ((item.id_forma_pagamento == 6 && ccDetalhes) && item.parcelas.length * 36.5+'px' || '' )}" class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 									 R$ {{ item.valor_desconto_maquineta | numberFormat:2:',':'.' }}
 								</td>
 							</tr>
@@ -343,13 +343,13 @@
 								<td style="color:#000;" class="text-right">
 									<strong>R$ {{ totais.total | numberFormat:2:',':'.'}}</strong>
 								</td>
-								<td ng-if="userLogged.id_perfil == 1">
+								<td ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 
 								</td>
-								<td  style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
+								<td  style="color:#000;" class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 									<strong>R$ {{ total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
 								</td>
-								<td colspan="3" style="color:#000;" class="text-right" ng-if="userLogged.id_perfil == 1">
+								<td colspan="3" style="color:#000;" class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 									<strong>R$ {{ totais.total - total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
 								</td>
 							</tr>

@@ -108,14 +108,15 @@ app.controller('GradeController', function($scope, $http, $window, $dialogs, Use
 
     	console.log(query_string);
 
-		ng.produtosModal = [];
+		ng.produtosModal = null;
 		aj.get(baseUrlApi()+"produtos/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
 				ng.produtosModal           = data.produtos ;
 				ng.paginacao.produtosModal = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
-				ng.produtosModal = [];
+				ng.produtosModal           = [];
+				ng.paginacao.produtosModal = [];
 			});
 	}
 

@@ -219,6 +219,7 @@
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Produto</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Fabricante</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Tamanho</th>
+							<th class="text-center" style="line-height: 78px;" rowspan="3">Sabor/cor</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Validade</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Qtd</th>
 							<th class="text-center" style="line-height: 60px;" rowspan="2" colspan="2">Custo</th>
@@ -245,6 +246,7 @@
 							<td>{{ item.nome }}</td>
 							<td>{{ item.nome_fabricante }}</td>
 							<td>{{ item.peso }}</td>
+							<td>{{ item.sabor }}</td>
 							<td>{{ item.dta_validade | dateFormat: 'date' }}</td>
 							<td class="text-center">{{ item.qtd_item }}</td>
 							<td class="valor">R$ {{ item.vlr_custo_real | numberFormat: 2 : ',' : '.' }}</td>
