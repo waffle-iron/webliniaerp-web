@@ -43,7 +43,7 @@ function uiDateFormat(dta,format){
 }
 
 function formatDateBR(dta) {
-    var arr_date_first = dta.split(' ');
+    var arr_date_first = (dta.indexOf(' ') >=0 ) ? dta.split(' ') : [ dta ] ;
     arr_date_first = arr_date_first[0];
     arr_date_first = arr_date_first.split('-');
     var date= arr_date_first[2]+'/'+arr_date_first[1]+'/'+arr_date_first[0];

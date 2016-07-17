@@ -6,8 +6,8 @@
 	<?php
 		foreach ($menu as $n1) {
 	?>
-		<li class="openable">
-			<a href="#">
+		<li class="<?php  echo (!isset($n1['itens']) || ( count($n1['itens'])<=0 || !empty($n1['url_modulo']) ) ) ? '' : 'openable' ?>">
+			<a href="<?php  echo (!isset($n1['itens']) || ( count($n1['itens'])<=0 || !empty($n1['url_modulo']) ) ) ? $n1['url_modulo'] : '#' ?>" >
 				<span class="menu-icon"><i class="fa <?php  echo $n1['icn_modulo'] ?> fa-lg"></i></span>
 				<span class="text"><?php  echo $n1['nme_modulo'] ?></span>
 				<span class="menu-hover"></span>

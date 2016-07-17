@@ -162,7 +162,7 @@
 					<div class="panel-body">
 						<form role="form">
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-3" ng-show="false">
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
@@ -172,7 +172,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-3" ng-show="false">
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
@@ -215,52 +215,38 @@
 							<th class="text-center">Usuário Responsável</th>
 							<th>Descrição do Evento</th>
 							<th>Depósito</th>
-							<th class="text-center" width="100">Entrada</th>
-							<th class="text-center" width="100">Saída</th>
-							<th class="text-center" width="100">Saldo</th>
+							<th class="text-center" width="80">Validade</th>
+							<th class="text-center" width="80">Saldo Ant.</th>
+							<th class="text-center" width="60">Entrada</th>
+							<th class="text-center" width="60">Saída</th>
+							<th class="text-center" width="60">Saldo</th>
+							<th class="text-center" width="60">Total</th>
 						</tr>
 					</thead>
 					<tr ng-if="saldo_anterior && lengthObj(movimentacoes) > 0">
-						<td colspan="6" style="border-right: none;">Saldo</td>
+						<td colspan="9" style="border-right: none;">Saldo</td>
 						<td class="text-center" style="border-left: none;" >{{ saldo_anterior }}</td>
 					</tr>
 					<tbody ng-repeat="(dta,mov) in movimentacoes" >
 						<tr class="info text-bold">
 							<td class="text-center"></td>
-							<td colspan="5">{{ dta | dateFormat:'date' }}</td>
-							<td class="text-right">
-								<span class="badge">{{ mov.length }} eventos</span>
-							</td>
+							<td colspan="9">{{ dta | dateFormat:'date' }} <span class="badge" style="float: right;">{{ mov.length }} eventos</span></td>
 						</tr>
 
 						<tr ng-repeat="item in mov">
-							<td class="text-center" width="100">{{ item.dta_movimentacao | dateFormat : 'time' }}</td>
-							<td class="text-center">{{ item.nome_usuario }}</td>
+							<td class="text-center" width="100">{{ item.dta_movimentacao | dateFormat : 'time-HH:mm' }}</td>
+							<td class="text-center">{{ item.nome_responsavel }}</td>
+							<td> {{ item.nme_tipo_movimentacao_estoque }}</td>
+							<td>{{ item.nme_deposito }}</td>
 
-							<td ng-if="item.acao == 'entrada' && item.tipo == 'inventario'">Inventário <span ng-if="item.flg_tela_produto == 1">Via Tela de Produtos</span> </td>
-							<td ng-if="item.acao == 'entrada' && item.tipo == 'ordem_producao'">Ordem de Produção</td>
-							<td ng-if="item.acao == 'entrada' && item.tipo == 'pedido_fornecedor'">Pedido a Fornecedor</td>
-							<td ng-if="item.acao == 'entrada' && item.tipo == 'pedido_venda'">Pedido de Venda</td>
-							<td ng-if="item.acao == 'entrada' && item.tipo == 'transferencia_estoque'">Transferência de Estoque</td>
-							<td ng-if="item.acao == 'entrada' && item.tipo == 'devolucao'">Devolucao</td>
-							<td ng-if="item.acao == 'entrada' && item.tipo == 'normal'">Normal</td>
+							<td class="text-center" ng-if="item.dta_validade != '2099-12-31'">{{ item.dta_validade | dateFormat:'date' }}</td>
+							<td class="text-center" ng-if="item.dta_validade == '2099-12-31'"></td>
 
-							<td ng-if="item.acao == 'saida' && item.tipo == 'venda'">Venda</td>
-							<td ng-if="item.acao == 'saida' && item.tipo == 'ordem_producao'">Ordem de Produção</td>
-							<td ng-if="item.acao == 'saida' && item.tipo == 'pedido_venda'">Pedido  de Venda</td>
-							<td ng-if="item.acao == 'saida' && item.tipo == 'transferencia_estoque'">Transferência de Estoque</td>
-							<td ng-if="item.acao == 'saida' && item.tipo == 'normal'">Saida Manual</td>
-							<td ng-if="item.acao == 'saida' && item.tipo == 'limpeza_estoque'">Limpeza de Estoque</td>
-
-							<td>{{ item.nome_deposito }}</td>
-
-							<td class="text-center text-success" ng-if="item.acao == 'entrada'">{{ item.qtd_item }}</td>
-							<td class="text-center text-success" ng-if="item.acao != 'entrada'"></td
-							>
-							<td class="text-center text-danger" ng-if="item.acao == 'saida'">{{ item.qtd_item }}</td>
-							<td class="text-center text-danger" ng-if="item.acao != 'saida'"></td>
-
-							<td class="text-center text-info">{{ item.saldo }}</td>
+							<td class="text-center">{{ item.old_qtd }}</td>
+							<td class="text-center text-success">{{ item.qtd_entrada }}</td>
+							<td class="text-center text-danger">{{ item.qtd_saida }}</td>
+							<td class="text-center text-info">{{ item.new_qtd }}</td>
+							<td class="text-center text-info">{{ item.total }}</td>
 						</tr>
 
 						<!-- <tr>
@@ -359,7 +345,10 @@
 								</thead>
 								<tbody>
 									<tr ng-show="(produtos_modal.length == 0)">
-										<td colspan="3">Não a resultados para a busca</td>
+										<td colspan="6" class="text-center">Não a resultados para a busca</td>
+									</tr>
+									<tr ng-show="(produtos_modal == null)">
+										<td colspan="6" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
 									</tr>
 									<tr ng-repeat="item in produtos_modal">
 										<td>{{ item.id_produto }}</td>

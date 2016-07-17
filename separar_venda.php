@@ -181,7 +181,8 @@
 								<th class="text-center">Fabricante</th>
 								<th >Tamanho</th>
 								<th >Sabor/cor</th>
-								<th class="text-center" colspan="2" style="width:100px">Quantidade</th>
+								<th class="text-center">Qtd. Solicitada</th>
+								<th class="text-center" colspan="2" style="width:100px">Qtd. Separada</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -191,7 +192,8 @@
 								<td>{{ item.nome_fabricante }}</td>
 								<td>{{ item.peso }}</td>
 								<td>{{ item.sabor }}</td>
-								<td style="width:60px;text-align:center">{{ item.qtd }}</td>
+								<td>{{ item.qtd }}</td>
+								<td style="width:60px;text-align:center">{{ calQtdAdd(item.estoques) }}</td>
 								<td style="width:40px">
 									<!-- <button type="buttn" class="btn btn-xs btn-primary dropdown-toggle"  data-toggle="dropdown" ng-click="findProductByid(item)">
 										<i class="fa fa-bell fa-lg"></i>
@@ -308,9 +310,9 @@
 				    							<td colspan="3" class="info">{{ key }}</td>
 				    						</tr>
 				    						<tr ng-repeat="item in value">
-				    							<td class="text-center">{{ item.qtd_item }}</td>
+				    							<td class="text-center" >{{ item.qtd_item }}</td>
 				    							<td class="text-center">
-				    								<input ng-blur="virificarQuantidade(key,$index,$event)" ng-model="item.qtd_saida" type="text" class="form-control input-xs">
+				    								<input onKeyPress="return SomenteNumero(event);" ng-blur="virificarQuantidade(key,$index,$event)" ng-model="item.qtd_saida" type="text" class="form-control input-xs">
 				    							</td>
 				    						</tr>
 				    					</tbody>

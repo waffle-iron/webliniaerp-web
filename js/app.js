@@ -106,6 +106,10 @@ angular.module('filters', [])
 		  	var minutos = d.getMinutes() < 10 ? '0'+d.getMinutes() : d.getMinutes() ;
 		  	var segundos = d.getSeconds() < 10 ? '0'+d.getSeconds() : d.getSeconds() ;
 		  	return hora+':'+minutos+':'+segundos;
+		  }else if(tipo=='time-HH:mm'){
+		  	var hora = d.getHours() < 10 ? '0'+d.getHours() : d.getHours() ;
+		  	var minutos = d.getMinutes() < 10 ? '0'+d.getMinutes() : d.getMinutes() ;
+		  	return hora+':'+minutos;
 		  }
 	      else
 	      	return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
@@ -287,6 +291,10 @@ angular.module('filters', [])
 	.directive('datePicker', function ($filter) {
 	    return {
 	        require: 'ngModel',
+	       	  scope: {
+	            options: '=',
+	           	 model: '=ngModel'
+	       		},
 	            link: function (scope, element, attrs, ctrl) {
 	            $(element).datepicker(
 	            	{	
@@ -309,6 +317,11 @@ angular.module('filters', [])
 	            });
 	            if(!empty(attrs.stardate))
 	           	 $(element).datepicker('setDate', attrs.stardate);
+
+	           	 scope.$watch('model', function(newValue, oldValue) {
+	           	 	if(!empty(newValue))
+	           	 		$(element).datepicker('setDate', formatDateBR(newValue));
+           		 }, true);
 	        }
 	    };
 	}).directive('tooltip', function ($filter) {
@@ -317,7 +330,46 @@ angular.module('filters', [])
 	           	$(element).tooltip()
 	        }
 	    };
-	}).directive('controlSizeString', function ($filter) {
+	}).directive('controllTooltip', function ($filter) {
+	    return {
+	       	 	scope: {
+		            options: '=',
+		           	 controllTooltip: '='
+		       	},
+	            link: function (scope, element, attrs, ctrl) {
+	            if(typeof scope.controll == 'object' &&  scope.controll.init === true)
+	           		$(element).tooltip((attrs.controllTooltip=='show' ? 'show' : null ));
+
+	           	scope.$watch('controllTooltip', function(newValue, oldValue) {
+	           	 	if(typeof newValue == 'object' && newValue.init === true){
+	           	 		$(element).tooltip('destroy');
+	           			$(element).tooltip( {
+	           				placement : newValue.placement,
+							title : newValue.title,
+							trigger : newValue.trigger
+	           			} );
+	           			if(newValue.show === true){
+	           				$(element).trigger("focus");
+	           			}
+	           	 	}else{
+	           	 		$(element).tooltip('destroy');
+	           	 	}
+	       		}, true);
+	        }
+	    };
+	}).filter("emptyToEnd", function () {
+	    return function (array, key) {
+	        if(!angular.isArray(array)) return;
+	        var present = array.filter(function (item) {
+	            return item[key];
+	        });
+	        var empty = array.filter(function (item) {
+	            return !item[key]
+	        });
+	        return present.concat(empty);
+	    };
+	}).
+	directive('controlSizeString', function ($filter) {
 	    return {
 	    	link:function(scope,element,attrs,ctrl){
 	    		var size = Number(attrs.size);
@@ -587,6 +639,19 @@ app.directive('ngEnter', function () {
 
                 event.preventDefault();
             }
+        });
+    };
+});
+
+app.directive('somenteNumeros', function () {
+    return function (scope, element, attrs) {
+        element.bind("keypress", function (event) {
+           var tecla=(window.event)?event.keyCode:e.which;
+		    if((tecla>47 && tecla<58)) return true;
+		    else{
+		        if (tecla==8 || tecla==0) return true;
+		    else  return false;
+		    }
         });
     };
 });

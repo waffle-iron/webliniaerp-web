@@ -150,7 +150,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-sm-6">
 									<div class="form-group">
 										<label class="control-label">Produtos</label>
 										<div class="input-group">
@@ -186,7 +186,8 @@
 							<th width="50"></th>
 							<th>Produto</th>
 							<th>Fabricante</th>
-							<th class="text-center" width="60">Tamanho</th>
+							<th >Tamanho</th>
+							<th >Sabor/cor</th>
 							<th class="text-center">Qtd. Vendida</th>
 							<th class="text-right" width="100">Custo Total</th>
 							<th class="text-right" width="100">Total Vendido</th>
@@ -195,7 +196,7 @@
 						</tr>
 					</thead>
 						<tr ng-if="vendas == null">
-							<td colspan="10" class="text-center" style="font-size:15px">
+							<td colspan="11" class="text-center" style="font-size:15px">
 								Escolha as datas para montar o relatório 
 							</td>
 						</tr>
@@ -205,19 +206,20 @@
 							</td>
 						</tr>
 						<tr ng-if="vendas == false && vendas.length != 0">
-							<td colspan="10">
+							<td colspan="11">
 								Nenhuma movimentação encontrada para este caixa.
 							</td>
 						</tr>
 						<tbody ng-repeat="(key, item) in vendas">
 							<tr class="info">
-								<td colspan="9">{{ key | dateFormat:'date-m/y' }} - <span class="badge ">{{ item.itens.length }}</span><span class="badge pull-right"><a style="cursor:pointer" ng-click="ancoraSaldo(key)">Ir ao saldo do periodo</a></span></td>
+								<td colspan="10">{{ key | dateFormat:'date-m/y' }} - <span class="badge ">{{ item.itens.length }}</span><span class="badge pull-right"><a style="cursor:pointer" ng-click="ancoraSaldo(key)">Ir ao saldo do periodo</a></span></td>
 							</tr>
 							<tr ng-repeat="venda in item.itens" bs-popover>
 								<td class="text-cente">{{ venda.cod_produto }}</td>
 								<td>{{ venda.nme_produto }}</td>
 								<td>{{ venda.nome_fabricante }}</td>
-								<td class="text-center">{{ venda.peso }}</td>
+								<td>{{ venda.peso }}</td>
+								<td>{{ venda.sabor }}</td>
 								<td class="text-center">{{ venda.qtd_vendida }}</td>
 								<td class="text-right">
 									 <div class="cardBody"><a style="cursor:pointer;text-decoration: underline;" style="font-size: 12px;color: #777" ng-click="detalCustoProduto(venda)" href="#" id="pop{{venda.nme_produto }}" rel="popover" data-content="<i class='fa fa-refresh fa-spin'></i> Aguarde, carregando itens..." data-trigger="focus">
@@ -230,7 +232,7 @@
 								<td class="text-right" ng-if="venda.vlr_lucro_bruto < 0"><a style="cursor:pointer;text-decoration: underline;" ng-click="showProdutoDebito(venda)">{{ venda.vlr_lucro_bruto | numberFormat:2:',':'.' }}</a></td>
 							</tr>
 							<tr class="warning" id="saldo_{{key}}">
-							<td class="text-right" colspan="5"><strong class="ng-binding">Saldo</strong></td>
+							<td class="text-right" colspan="6"><strong class="ng-binding">Saldo</strong></td>
 							<td class="text-right">
 								<span class="label label-success ng-binding ng-scope" ng-if="item.saldo_vlr_custo_total >= 0">
 									R$ {{ item.saldo_vlr_custo_total | numberFormat:2:',':'.' }}

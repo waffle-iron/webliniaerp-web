@@ -165,7 +165,7 @@
 									<div class="form-group">
 										<label class="control-label">Categoria</label>
 										<div class="input-group">
-											<input ng-click="showCategorias(0,10)" type="text" class="form-control" ng-model="categoria.descricao_categoria" readonly="readonly" style="cursor: pointer;"></input>
+											<input ng-click="showCategorias(0,10)" type="text" class="form-control" ng-model="busca.descricao_categoria" readonly="readonly" style="cursor: pointer;"></input>
 											<span class="input-group-btn">
 												<button ng-enter="showCategorias(0,10)" ng-click="showCategorias(0,10)" type="button" class="btn">
 													<i class="fa fa-tags"></i>
@@ -194,30 +194,36 @@
 						<tr>
 							<th>Categoria</th>
 							<th>Produto</th>
+							<th>Fabricante</th>
+							<th>Tamanho</th>
+							<th>Sabor/cor</th>
 							<th class="text-center">Qtd. Vendida</th>
 							<th class="text-right" width="100">Total Vendido</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-if="items.length == 0 && items != null">
-							<td class="text-center" colspan="4">
+							<td class="text-center" colspan="7">
 								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
 							</td>
 						</tr>
 						<tr ng-if="items == null">
-							<td colspan="4" class="text-center">
+							<td colspan="7" class="text-center">
 								Nenhum registro encontrado.
 							</td>
 						</tr>
 						<tr ng-repeat="item in items" bs-popover>
 							<td>{{ item.nme_categoria }}</td>
 							<td>{{ item.nme_produto }}</td>
+							<td>{{ item.nome_fabricante }}</td>
+							<td>{{ item.peso }}</td>
+							<td>{{ item.sabor }}</td>
 							<td class="text-center">{{ item.qtd_total_vendida }}</td>
 							<td class="text-right">R$ {{ item.vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
 						</tr>
 					</tbody>
 					<tfoot ng-if="items != null" >
-						<td colspan="2"><strong>TOTAL</strong></td>
+						<td colspan="5"><strong>TOTAL</strong></td>
 						<td class="text-center">{{ qtd_total_vendida }}</td>
 						<td class="text-right">R$ {{ vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
 					</tfoot>

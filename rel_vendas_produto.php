@@ -197,7 +197,8 @@
 							<th width="50"></th>
 							<th>Produto</th>
 							<th>Fabricante</th>
-							<th class="text-center" width="60">Tamanho</th>
+							<th class="text-center">Tamanho</th>
+							<th class="text-center">Sabor/cor</th>
 							<th class="text-center">Qtd. Vendida</th>
 							<th class="text-right" width="100">Custo Total</th>
 							<th class="text-right" width="100">Total Vendido</th>
@@ -220,7 +221,8 @@
 							<td class="text-cente">{{ venda.cod_produto }}</td>
 							<td>{{ venda.nme_produto }}</td>
 							<td>{{ venda.nome_fabricante }}</td>
-							<td class="text-center">{{ venda.peso }}</td>
+							<td>{{ venda.peso }}</td>
+							<td>{{ venda.sabor }}</td>
 							<td class="text-center">{{ venda.qtd_vendida }}</td>
 							<td class="text-right">
 								 <div class="cardBody"><a style="cursor:pointer;text-decoration: underline;" style="font-size: 12px;color: #777" ng-click="detalCustoProduto(venda)" href="#" id="pop{{venda.nme_produto }}" rel="popover" data-content="<i class='fa fa-refresh fa-spin'></i> Aguarde, carregando itens..." data-trigger="focus">
