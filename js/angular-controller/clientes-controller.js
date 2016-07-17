@@ -184,15 +184,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 
 		aj.get(baseUrlApi()+"perfis?tpue->id_empreendimento="+ng.userLogged.id_empreendimento)
 		.success(function(data, status, headers, config) {
-			var perfis = [] ;
-			$.each(data,function(i,v){
-				if((v.id == 1 || v.id == 9 || v.id == 10 || v.id == 11) &&  (Number(ng.userLogged.id_empreendimento) == 75)){
-					perfis.push(v);
-				}else if((v.id != 9 && v.id != 10 && v.id != 11) && (Number(ng.userLogged.id_empreendimento) != 75)){
-					perfis.push(v);
-				}
-			});
-			ng.perfis = perfis;
+			ng.perfis = data;
 		})
 		.error(function(data, status, headers, config) {
 
@@ -962,9 +954,9 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.setTipoCadastro = function(tipo1,tipo2){
 		ng.cliente.flg_tipo= tipo1 ;
 		ng.cliente.tipo_cadastro = tipo2;
-		if(tipo1=='cliente' && tipo2=='pf') ng.cliente.cliente_tipo_cadastro = 'cliente_pf';
-		else if(tipo1=='cliente' && tipo2=='pj') ng.cliente.cliente_tipo_cadastro = 'cliente_pj';
-		else if(tipo1=='usuario' && tipo2=='pf') ng.cliente.cliente_tipo_cadastro = 'usuario_pf';
+		if 		(tipo1 == 'cliente' && tipo2 == 'pf') ng.cliente.cliente_tipo_cadastro = 'cliente_pf';
+		else if (tipo1 == 'cliente' && tipo2 == 'pj') ng.cliente.cliente_tipo_cadastro = 'cliente_pj';
+		else if (tipo1 == 'usuario' && tipo2 == 'pf') ng.cliente.cliente_tipo_cadastro = 'usuario_pf';
 	}
 
 	ng.mensagens = function(classe , msg){
@@ -975,6 +967,25 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		},5000);
 	}
 
+	ng.loadPlanoContas = function() {
+		aj.get(baseUrlApi() + "planocontas?tpc->id_empreendimento=" + ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				$.each(data, function(i, item){
+					data[i].cod_plano 			= (!empty(item.cod_plano)) ? parseInt(item.cod_plano, 10) : null;
+					data[i].cod_plano_pai 		= (!empty(item.cod_plano_pai)) ? parseInt(item.cod_plano_pai, 10) : null;
+					data[i].id 					= (!empty(item.id)) ? parseInt(item.id, 10) : null;
+					data[i].id_empreendimento 	= (!empty(item.id_empreendimento)) ? parseInt(item.id_empreendimento, 10) : null;
+					data[i].id_plano_pai 		= (!empty(item.id_plano_pai)) ? parseInt(item.id_plano_pai, 10) : null;
+				});
+				ng.plano_contas = data;
+				ng.plano_contas.unshift({id: null, dsc_completa: ' '});
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.plano_contas = [];
+			});
+	}
+
 	ng.loadEstados();
 	ng.loadComoEncontrou();
 	ng.loadPerfil();
@@ -983,6 +994,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.loadConfig();
 	ng.loadGrupoComissionamento();
 	ng.loadZoneamento();
+	ng.loadPlanoContas();
 	ng.loadControleNfe('regime_tributario','regimeTributario');
 	ng.loadControleNfe('regime_tributario_pis_cofins','regimePisCofins');
 	ng.loadControleNfe('tipo_empresa','tipoEmpresa');

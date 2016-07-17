@@ -273,12 +273,78 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 		ng.plano_contas = [{id:"",dsc_completa:"--- Selecione ---"}];
 		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+				$.each(data, function(i, item){
+					data[i].cod_plano 			= (!empty(item.cod_plano)) ? parseInt(item.cod_plano, 10) : null;
+					data[i].cod_plano_pai 		= (!empty(item.cod_plano_pai)) ? parseInt(item.cod_plano_pai, 10) : null;
+					data[i].id 					= (!empty(item.id)) ? parseInt(item.id, 10) : null;
+					data[i].id_empreendimento 	= (!empty(item.id_empreendimento)) ? parseInt(item.id_empreendimento, 10) : null;
+					data[i].id_plano_pai 		= (!empty(item.id_plano_pai)) ? parseInt(item.id_plano_pai, 10) : null;
+				});
 				ng.roleList = data;
 				ng.plano_contas = ng.plano_contas.concat(data);
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
 					ng.roleList = [];
+			});
+	}
+
+	ng.loadPerfil = function () {
+		ng.perfisNewCliente = [];
+
+		aj.get(baseUrlApi()+"perfis?tpue->id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				ng.perfisNewCliente = data;
+			});
+	}
+
+	ng.salvarCliente = function(){
+		$("#list_clientes .has-error")
+			.removeClass('has-error')
+			.removeAttr("data-toggle")
+			.removeAttr("data-placement")
+			.removeAttr("title")
+			.removeAttr("data-original-title");
+
+		ng.new_cliente.empreendimentos = [{ id: ng.userLogged.id_empreendimento }];
+		ng.new_cliente.id_empreendimento = ng.userLogged.id_empreendimento;
+		var btn = $('#btn-salvar-cliente');
+		btn.button('loading');
+		
+		var postData = angular.copy(ng.new_cliente);
+
+		if(!empty(postData.dta_nacimento))
+			postData.dta_nacimento = moment(postData.dta_nacimento, 'DD-MM-YYYY').format('YYYY-MM-DD');
+		
+		aj.post(baseUrlApi() + "cliente/cadastro/rapido", postData)
+			.success(function(data, status, headers, config) {
+				ng.addCliente(data.dados);
+				btn.button('reset');
+				ng.new_cliente = {};
+				ng.enableNewFormCliente = false;
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+
+				if(status == 406) {
+		 			var errors = data;
+		 			var count = 0;
+
+		 			$.each(errors, function(i, item) {
+		 				$("#"+i).addClass("has-error");
+		 				var formControl = $($("#"+i))
+		 					.attr("data-toggle", "tooltip")
+		 					.attr("data-placement", "bottom")
+		 					.attr("title", item)
+		 					.attr("data-original-title", item);
+		 				formControl.tooltip('show');
+		 				count ++ ;
+		 			});
+
+		 			if(count == 0)
+		 				ng.mensagens('alert-warning','<strong>Informe ao menos o nome ou CPF do cliente</strong>','.alert-cadastro-rapido-error');
+			 	} else
+			 		ng.mensagens('alert-danger','<strong>Ocorreu um erro fatal</strong>','.alert-cadastro-rapido');
 			});
 	}
 
@@ -297,6 +363,7 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
     	ng.pagamento.agencia_transferencia = angular.copy(item.agencia);
     	ng.pagamento.conta_transferencia = angular.copy(item.conta);
     	ng.pagamento.proprietario_conta_transferencia = angular.copy(item.nome);
+    	ng.pagamento.id_plano_conta = angular.copy(item.id_plano_contas_padrao);
     	ng.loadSaldoDevedorCliente();
     	ng.pagamento.id_cliente = item.id;
     	$("#list_clientes").modal("hide");
@@ -338,6 +405,56 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 			});
 	}
 
+	ng.salvarFornecedor = function(){
+		$("#list_fornecedores .has-error")
+			.removeClass('has-error')
+			.removeAttr("data-toggle")
+			.removeAttr("data-placement")
+			.removeAttr("title")
+			.removeAttr("data-original-title");
+
+		ng.new_fornecedor.empreendimentos = [{ id: ng.userLogged.id_empreendimento }];
+		ng.new_fornecedor.id_empreendimento = ng.userLogged.id_empreendimento;
+		var btn = $('#btn-salvar-fornecedor');
+		btn.button('loading');
+		
+		var postData = angular.copy(ng.new_fornecedor);
+
+		if(!empty(postData.dta_nacimento))
+			postData.dta_nacimento = moment(postData.dta_nacimento, 'DD-MM-YYYY').format('YYYY-MM-DD');
+		
+		aj.post(baseUrlApi() + "fornecedor", postData)
+			.success(function(data, status, headers, config) {
+				ng.addFornecedor(data.dados);
+				btn.button('reset');
+				ng.new_fornecedor = {};
+				ng.enableNewFormFornecedor = false;
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+
+				if(status == 406) {
+		 			var errors = data;
+		 			var count = 0;
+
+		 			$.each(errors, function(i, item) {
+		 				$("#"+i).addClass("has-error");
+		 				var formControl = $($("#"+i))
+		 					.attr("data-toggle", "tooltip")
+		 					.attr("data-placement", "bottom")
+		 					.attr("title", item)
+		 					.attr("data-original-title", item);
+		 				formControl.tooltip('show');
+		 				count ++ ;
+		 			});
+
+		 			if(count == 0)
+		 				ng.mensagens('alert-warning','<strong>Informe ao menos o nome ou CPF do cliente</strong>','.alert-cadastro-rapido-error');
+			 	} else
+			 		ng.mensagens('alert-danger','<strong>Ocorreu um erro fatal</strong>','.alert-cadastro-rapido');
+			});
+	}
+
 	ng.selFornecedor = function(){
 		var offset = 0  ;
     	var limit  =  10;
@@ -350,6 +467,11 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 	ng.addFornecedor = function(item){
     	ng.fornecedor 				= item;
     	ng.pagamento.id_fornecedor  = item.id;
+    	ng.pagamento.id_banco = ""+angular.copy(item.id_banco);
+    	ng.pagamento.agencia_transferencia = angular.copy(item.num_agencia);
+    	ng.pagamento.conta_transferencia = angular.copy(item.num_conta);
+    	ng.pagamento.proprietario_conta_transferencia = angular.copy(item.nme_fantasia);
+    	ng.pagamento.id_plano_conta = angular.copy(item.id_plano_contas_padrao);
     	$("#list_fornecedores").modal("hide");
 	}
 
@@ -1407,5 +1529,6 @@ app.controller('LancamentosController', function($scope, $http, $window, $dialog
 	ng.loadBancos();
 	ng.loadMaquinetas();
 	ng.loadConfig();
+	ng.loadPerfil();
 
 });

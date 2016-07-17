@@ -201,7 +201,7 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label class="control-label"><br></label>
-									<button type="button" class="btn btn-default form-control" ng-click="addItem()">
+									<button type="button" class="btn btn-default form-control" ng-click="selProduto()">
 										<i class="fa fa-plus-circle"></i> Adicionar Produto
 									</button>
 								</div>
@@ -226,10 +226,7 @@
 										<td colspan="4">Adicione itens para o novo pedido</td>
 									<tr>
 									<tr ng-repeat="item in novoPedido">
-										<td>
-											{{ item.nome_produto }}
-											<button style="float:right" tooltip="Selecionar produto" class="btn btn-xs btn-primary" type="button" ng-click="selProduto($index)"><i class="fa fa-tasks"></i></button>
-										</td>
+										<td>{{ item.nome_produto }}</td>
 										<td>{{ item.nome_fabricante }}</td>
 										<td>{{ item.peso }}</td>
 										<td><input ng-model="item.qtd" ng-keyup="changeQtd()" style="text-align: center;" type="text" class="form-control input-xs"/></td>
