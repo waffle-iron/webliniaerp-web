@@ -199,6 +199,9 @@
 	<!-- Endless -->
 	<script src="<?php echo URL_BASE ?>js/endless/endless.js"></script>
 
+	<!- COnstants-!>
+	<script src="<?php echo URL_BASE ?>js/constants.js"></script>
+
 	<!-- Extras -->
 	<script src="<?php echo URL_BASE ?>js/extras.js"></script>
 

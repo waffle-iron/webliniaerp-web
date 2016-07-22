@@ -162,7 +162,7 @@
 					<div class="panel-body">
 						<form role="form">
 							<div class="row">
-								<div class="col-sm-3" ng-show="false">
+								<div class="col-sm-2" ng-show="false">
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
@@ -172,7 +172,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3" ng-show="false">
+								<div class="col-sm-2" ng-show="false">
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
@@ -182,13 +182,24 @@
 									</div>
 								</div>
 
-								<div class="col-sm-6">
+								<div class="col-sm-4">
 									<div class="form-group">
 										<label class="control-label">Produto</label>
 										<div class="input-group">
 											<input ng-click="modalProdutos()" type="text" class="form-control" ng-model="busca.nome_produto" readonly="readonly" style="cursor: pointer;">
 											<span class="input-group-btn">
 												<button ng-click="modalProdutos(0,10)" ng-click="modalProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label">Deposito</label>
+										<div class="input-group">
+											<input ng-click="modalDepositos()" type="text" class="form-control" ng-model="busca.deposito.nme_deposito" readonly="readonly" style="cursor: pointer;">
+											<span class="input-group-btn">
+												<button ng-click="modalDepositos()" ng-click="modalDepositos()" type="button" class="btn"><i class="fa fa-sitemap"></i></button>
 											</span>
 										</div>
 									</div>
@@ -379,6 +390,77 @@
 						</div><!-- /.col -->
 					</div>
 				</div>
+		  	</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+	<!-- /Modal depositos-->
+	<div class="modal fade" id="modal-depositos" style="display:none">
+			<div class="modal-dialog">
+			<div class="modal-content">
+  				<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4>Depositos</span></h4>
+  				</div>
+			    <div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="input-group">
+					            <input ng-model="busca.depositos" ng-enter="loadDepositos(0,10)" type="text" class="form-control input-sm">
+					            <div class="input-group-btn">
+					            	<button ng-click="loadDepositos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+					            		<i class="fa fa-search"></i> Buscar
+					            	</button>
+					            </div> <!-- /input-group-btn -->
+					        </div> <!-- /input-group -->
+						</div><!-- /.col -->
+					</div>
+
+					<br/>
+
+			   		<div class="row">
+			   			<div class="col-sm-12">
+			   				<div class="alert" id="alert-modal-deposito" style="display:none" ></div>
+			   				<table class="table table-bordered table-condensed table-striped table-hover">
+								<thead ng-show="(depositos.length != 0)">
+									<tr>
+										<th class="text-center">#</th>
+										<th>Nome</th>
+										<th width="50"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-show="(depositos.itens == null)">
+										<td colspan="4" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
+									</tr>
+									<tr ng-show="(depositos.itens == 0)">
+										<td colspan="4" class="text-center">Nenhum Deposito encontrado</td>
+									</tr>
+									<tr ng-repeat="item in depositos.itens">
+										<td class="text-center">{{ item.id }}</td>
+										<td>{{ item.nme_deposito }}</td>
+										<td align="center">
+											<button  type="button" class="btn btn-xs btn-success" ng-click="addDeposito(item)">
+												<i class="fa fa-check-square-o"></i> Selecionar
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+			   			</div>
+			   		</div>
+
+			   		<div class="row">
+				    	<div class="col-sm-12">
+				    		<ul class="pagination pagination-xs m-top-none pull-right" ng-show="depositos.paginacao.length > 1">
+								<li ng-repeat="item in depositos.paginacao" ng-class="{'active': item.current}">
+									<a href="" h ng-click="loadDepositos(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
+				    	</div>
+			    	</div>
+			    </div>
 		  	</div><!-- /.modal-content -->
 		</div><!-- /.modal-dialog -->
 	</div>

@@ -280,7 +280,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.nome_ultimo_produto      = produto.nome_produto ;
 
 		if(produto.img != null)
-			ng.imgProduto = produto.img ;
+			ng.imgProduto = 'assets/imagens/produtos/'+produto.img ;
 		else
 			ng.imgProduto = 'img/imagem_padrao_produto.gif';
 
@@ -1101,23 +1101,23 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
    	ng.loadProdutos = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
-    	var depositos = $.param({depositos:ng.caixa.depositos}) ;
+    	var depositos = $.param({'te->id_deposito':{'exp':' IN('+ng.caixa.depositos.join()+')'}}) ;
 
     	if(ng.cdb_busca.status == false)
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&"+depositos;
+    		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&"+depositos;
     	else{
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&prd->codigo_barra="+ng.cdb_busca.codigo+"&"+depositos;
+    		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&tp->codigo_barra="+ng.cdb_busca.codigo+"&"+depositos;
     	}
 
     	if(ng.busca.produtos != ""){
     		if(isNaN(Number(ng.busca.produtos)))
-    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
+    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+ng.busca.produtos+"%' OR tf.nome_fabricante like'%"+ng.busca.produtos+"%' OR tp.codigo_barra like '%"+ng.busca.produtos+"%'"}})+")";
     		else
-    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%' OR prd.id = "+ng.busca.produtos+""}})+")";
+    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+ng.busca.produtos+"%' OR tf.nome_fabricante like'%"+ng.busca.produtos+"%' OR tp.id = "+ng.busca.produtos+"  OR tp.codigo_barra like '%"+ng.busca.produtos+"%'"}})+")";
     	}
 
 		ng.produtos =  null;
-		aj.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
+		aj.get(baseUrlApi()+"estoque_produtos/1/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
 				ng.produtos        = data.produtos ;
 				ng.paginacao.produtos = data.paginacao;
@@ -2581,19 +2581,18 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
         }
         interval_produto = window.setTimeout(function(){  
 
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0";  	
-
+    		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0";  	
 	    	if(busca != ""){
 	    		if(isNaN(Number(busca)))
-	    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+busca+"%' OR fab.nome_fabricante like'%"+busca+"%' OR prd.codigo_barra like '%"+busca+"%' OR prd.peso like '%"+busca+"%' "}})+")";
+	    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+busca+"%' OR tf.nome_fabricante like'%"+busca+"%' OR tp.codigo_barra like '%"+busca+"%' OR tt.nome_tamanho like '%"+busca+"%' "}})+")";
 	    		else
-	    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+busca+"%' OR fab.nome_fabricante like'%"+busca+"%' OR prd.id = "+busca+" OR prd.codigo_barra like '%"+busca+"%' OR prd.peso like '%"+busca+"%' "}})+")";
+	    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+busca+"%' OR tf.nome_fabricante like'%"+busca+"%' OR tp.id = "+busca+" OR tp.codigo_barra like '%"+busca+"%' OR tt.nome_tamanho like '%"+busca+"%' "}})+")";
 	    	}
 
-			aj.get(baseUrlApi()+"estoque/"+query_string)
+			aj.get(baseUrlApi()+"estoque_produtos/1/"+query_string)
 				.success(function(data, status, headers, config) {
 					
-					ng.produtos_auto_complete = data.produtos;
+					ng.produtos_auto_complete = data;
 
 				})
 				.error(function(data, status, headers, config) {

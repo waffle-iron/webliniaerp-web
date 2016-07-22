@@ -183,6 +183,11 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 		//ng.movimentacoes = null ;
 		var query_string = " tme.id_produto="+ng.busca.id_produto+"" ;
 		var dta_saldo_anterior = "";
+
+		if(!empty(ng.busca.deposito)){
+			query_string += " AND tme.id_deposito="+ng.busca.deposito.id;
+		}
+
 		if(!empty(ng.busca.dta_inicial) && empty(ng.busca.dta_final)){
 			dta_saldo_anterior = ng.busca.dta_inicial ;
 			query_string = empty(query_string) ? 'WHERE '  : query_string ;
@@ -240,6 +245,34 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 			ng.movimentacoes = [] ;
 			$("#modal-aguarde").modal('hide');
 		});
+	}
+
+	ng.modalDepositos = function(){
+		$('#modal-depositos').modal('show');
+		ng.loadDepositos(0,10);
+	}
+
+	ng.depositos = {itens:null,paginacao:[]};
+	ng.loadDepositos = function(offset, limit) {
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+		ng.depositos = {itens:null,paginacao:[]};
+		var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento ;
+		if(!empty(ng.busca.depositos))
+			query_string  += "&"+$.param({nme_deposito:{exp:"like '%"+ng.busca.depositos+"%'"}});
+
+    	aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+query_string)
+		.success(function(data, status, headers, config) {
+			ng.depositos = {itens:data.depositos,paginacao:data.paginacao};
+		})
+		.error(function(data, status, headers, config) {
+			ng.depositos = {itens:[],paginacao:[]};
+		});
+	}
+
+	ng.addDeposito = function(item){
+		ng.busca.deposito = item ;
+		$('#modal-depositos').modal('hide');
 	}
 
 	ng.configuracao = null ;

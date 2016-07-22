@@ -5,8 +5,9 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 	ng.itensPorPagina 	= 10;
 	ng.paginacao 	   	= {};
 	ng.busca			= {}
-	ng.busca.categorias  	= '';
+	ng.busca.categorias = '';
 	ng.items 			= null;
+	ng.busca.arrCategorias  = [] ;
 
 	ng.reset = function() {
 		 $("#dtaInicial").val('');
@@ -31,17 +32,23 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 	ng.qtd_total_vendida = 0;
 	ng.vlr_total_vendida = 0;
 
-	ng.loadVendas = function(_id_categoria, _dtaInicial, _dtaFinal) {
+	ng.loadVendas = function() {
 		ng.qtd_total_vendida = 0;
 		ng.vlr_total_vendida = 0;
 		ng.items = [];
 
-		var id_categoria 	= (_id_categoria != "" && !isNaN(_id_categoria)) ? _id_categoria : (!isNaN(ng.categoria.id) ? ng.categoria.id : "");
+		//var id_categoria 	= (_id_categoria != "" && !isNaN(_id_categoria)) ? _id_categoria : (!isNaN(ng.categoria.id) ? ng.categoria.id : "");
 
 			
 		var queryString 	= "?id_empreendimento="+ ng.userLogged.id_empreendimento;
 
-		queryString += "&id_categoria="+ ng.busca.id_categoria;
+		if(ng.busca.arrCategorias.length > 0){
+			var in_id_cat = [];
+			$.each(ng.busca.arrCategorias,function(i,x){
+				in_id_cat.push(x.id_categoria) ;
+			});
+			queryString += "&"+$.param({'id_categoria':in_id_cat});
+		}
 		if(moment(ng.busca.dtaInicial).isValid() && !empty(ng.busca.dtaInicial) )
 			queryString += "&dtaInicial="+ng.busca.dtaInicial;
 
@@ -68,8 +75,27 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 
 	ng.showCategorias = function(){
    		ng.busca.categorias = "" ;
-   		ng.loadCategorias(0,10);
-   		$('#list_categorias').modal('show');
+   		if(ng.openModalCategoras){
+   			ng.loadCategorias(0,10);
+   			$('#list_categorias').modal('show');
+   			$('#list_categorias').on('shown.bs.modal', function (e) {
+			    $('#busca-modal-categorias').focus();
+			});
+   		}else
+   			ng.openModalCategoras = true ;
+   	}
+
+   	ng.categoriaIsSelected = function(id_categoria){
+   		if(typeof ng.busca.arrCategorias != 'object')
+   			return ;
+   		var r = false ;
+   		$.each(ng.busca.arrCategorias,function(i,x){
+   			if(Number(x.id_categoria) == Number(id_categoria)){
+   				r = true ;
+   				return ;
+   			}
+   		});
+   		return r ;
    	}
 
    	ng.loadCategorias = function(offset,limit) {
@@ -95,11 +121,19 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 	}
 
 	ng.selectCategoria = function(item){
-		ng.categoria = item ;
-		ng.busca.id_categoria =item.id;
-		ng.busca.descricao_categoria = item.descricao_categoria ;
-		$('#list_categorias').modal('hide');
+		ng.busca.arrCategorias.push({ id_categoria : item.id, text: item.descricao_categoria});
+		//$('#list_categorias').modal('hide');
 	}
+
+	ng.openModalCategoras = true ;
+	$scope.$watch('busca.arrCategorias', function(newValue, oldValue) {
+	 	if(oldValue.length > newValue.length ){
+	 		ng.openModalCategoras = false ;
+	 		setTimeout(function(){
+				ng.openModalCategoras = true ;
+			},100);
+	 	}
+     }, true);
 
 	ng.mensagens = function(classe , msg,alertClass){
 		alertClass = alertClass == null  ? '.alert-sistema' : alertClass ;
@@ -112,8 +146,7 @@ app.controller('RelatorioVendasCategoriaCtrl', function($scope, $http, $window, 
 	ng.reset();
 		if(!empty(getUrlVars().nme_categoria) && (moment(getUrlVars().dtaInicial,'DD-MM-YYYY').isValid() && moment(getUrlVars().dtaFinal,'DD-MM-YYYY').isValid() ) ) {
 			$("#modal-aguarde").modal('show');
-			ng.busca.id_categoria = getUrlVars().id_categoria;
-			ng.busca.descricao_categoria = decodeURI(getUrlVars().nme_categoria);
+			ng.busca.arrCategorias.push({ id_categoria : getUrlVars().id_categoria, text: decodeURI(getUrlVars().nme_categoria)});
 			ng.busca.dtaInicial = moment(getUrlVars().dtaInicial,'DD-MM-YYYY').format('YYYY-MM-DD');
 			ng.busca.dtaFinal = moment(getUrlVars().dtaFinal,'DD-MM-YYYY').format('YYYY-MM-DD') ;
 			ng.loadVendas(getUrlVars().id_categoria, getUrlVars().dtaInicial, getUrlVars().dtaFinal);

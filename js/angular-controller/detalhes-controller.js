@@ -15,12 +15,14 @@ app.controller('DetalhesController', function($scope, $http, $window, $dialogs, 
 
 		aj.get(baseUrlApi()+"grade/produto/" + params.produto + "?grd->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {				
-				if(ng.userLogged.id_perfil == 7){
+				if(ng.userLogged.perc_venda == "perc_venda_atacado"){
 					data.valor_produto = data.vlr_venda_atacado;
-				}else if(ng.userLogged.id_perfil == 6){
+				}else if(ng.userLogged.perc_venda == "perc_venda_varejo"){
 					data.valor_produto	= data.vlr_venda_varejo;
-				}else if(ng.userLogged.id_perfil == 4 || ng.userLogged.id_perfil == 5){
+				}else if(ng.userLogged.perc_venda == "perc_venda_intermediario"){
 					data.valor_produto	= data.vlr_venda_intermediario;
+				}else{
+					data.valor_produto = data.vlr_venda_atacado;
 				}
 
 				if(data.img == null){

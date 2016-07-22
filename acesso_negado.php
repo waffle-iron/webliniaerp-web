@@ -55,7 +55,7 @@
 				    	<div class="row">
 				    		<div class="col-sm-12">
 				    			<p style="font-size: 13px;" ng-if="solitacao_enviada == false">
-								Voçê não tem acesso ao modulo solicitado. <br/>
+								Você não tem acesso ao modulo solicitado. <br/>
  								</p>
 				    		</div>				
 				    	</div>

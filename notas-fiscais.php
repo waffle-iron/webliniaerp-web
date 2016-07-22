@@ -237,6 +237,7 @@
 								<div class="row">
 									<div class="col-lg-12">
 										<div class="table-responsive">
+											<div class="alert alert-list-notas" style="display:none"></div>
 											<table class="table table-bordered table-condensed table-striped table-hover">
 												<thead>
 													<th class="text-middle text-center" width="50"></th>
@@ -247,6 +248,7 @@
 													<th class="text-middle text-center">Data de Emissão</th>
 													<th class="text-middle text-center">Data de Saída</th>
 													<th class="text-middle text-center">Status</th>
+													<th class="text-middle text-center" width="60px"></th>
 												</thead>
 												<tbody>
 													<tr ng-show="(!notas)">
@@ -268,6 +270,9 @@
 																	</li>
 																	<li ng-show="(nota.status == 'autorizado')">
 																		<a href="{{ nota.caminho_xml_nota_fiscal }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar DANFE (XML)</a>
+																	</li>
+																	<li ng-show="(nota.status == 'cancelado')">
+																		<a href="{{ nota.caminho_xml_cancelamento }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar XML de Cancelamento </a>
 																	</li>
 																	<li ng-show="(nota.status == 'processando_autorizacao')">
 																		<a href="" target="_blank" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Atualizando" ng-click="atualzarStatus(nota.cod_nota_fiscal,$index,$event)"><i class="fa fa-refresh"></i> Atualizar Status</a>
@@ -297,6 +302,15 @@
 																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
 																Erro na Autorização
 															</span>
+															<span class="label" ng-show="(nota.status == 'cancelado')" 
+																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
+																Cancelada
+															</span>
+															
+														</td>
+
+														<td>
+															<button type="button" class="btn btn-xs btn-danger" ng-click="modalCancelar(nota)"><i class="fa fa-ban"></i></button>
 														</td>
 													</tr>
 												</tbody>
@@ -366,6 +380,7 @@
 								</div>
 
 								<div class="row">
+									
 									<div class="col-lg-12">
 										<div class="table-responsive">
 											<table class="table table-bordered table-condensed table-striped table-hover">
@@ -425,6 +440,90 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal novo tamanho-->
+		<div class="modal fade" id="modal-cencelar-nota" style="display:none">
+  			<div class="modal-dialog modal">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Cancelar Nota N°{{ notaCancelar.dados_emissao.num_documento_fiscal }}</span></h4>
+      				</div>
+				    <div class="modal-body">
+				    	<fieldset>
+							<legend class="clearfix"><span class="">Nota</span></legend>
+							<div class="row">
+					    		<div class="col-sm-3">
+					    			<label class="control-label">Data de Emissão:</label>
+					    			<div class="form-group ">
+					    					<input ng-disabled="true" ng-model="notaCancelar.dados_emissao.data_emissao" type="text"  class="form-control input-sm" >
+					    			</div>
+					    		</div>
+					    		<div class="col-sm-9">
+					    			<label class="control-label">Chave NF-e:</label>
+					    			<div class="form-group ">
+					    					<input ng-disabled="true" ng-model="notaCancelar.dados_emissao.chave_nfe" type="text"  class="form-control input-sm" >
+					    			</div>
+					    		</div>
+					    	</div>
+					    	<div class="row">
+					    		<div class="col-sm-3">
+					    			<label class="control-label">Total:</label>
+					    			<div class="form-group ">
+					    					<input ng-disabled="true" ng-model="notaCancelar.dados_emissao.valor_total" thousands-formatter type="text"  class="form-control input-sm" >
+					    			</div>
+					    		</div>
+					    	</div>
+						<function>
+				    	<fieldset>
+							<legend class="clearfix"><span class="">Destinatário</span></legend>
+							<div class="row">
+								<div class="col-sm-12">
+					    			<label class="control-label">{{ notaCancelar.destinatario.tipo_cadastro == 'pj' && 'Razão Social:' || 'Nome:' }}</label>
+					    			<div class="form-group ">
+					    					<input ng-disabled="true" ng-model="notaCancelar.destinatario.xNome" type="text"  class="form-control input-sm" >
+					    			</div>
+								</div>
+							</div>
+							<div class="row">
+					    		<div class="col-sm-6" ng-if="notaCancelar.destinatario.tipo_cadastro == 'pf'">
+					    			<label class="control-label">CPF:</label>
+					    			<div class="form-group ">
+					    					<input ng-disabled="true" ui-mask="999.999.999-99" ng-model="notaCancelar.destinatario.CPF" type="text"  class="form-control input-sm" >
+					    			</div>
+					    		</div>
+					    		<div class="col-sm-6" ng-if="notaCancelar.destinatario.tipo_cadastro == 'pj'">
+					    			<label class="control-label">CNPJ:</label>
+					    			<div class="form-group ">
+					    					<input ng-disabled="true" ui-mask="99.999.999/9999-99"  ng-model="notaCancelar.destinatario.CNPJ" type="text"  class="form-control input-sm" >
+					    			</div>
+					    		</div>
+				    		</div>
+						</fieldset>
+						<fieldset>
+							<legend class="clearfix"><span class="">Justificativa para o cancelamento</span></legend>
+							<div class="row">
+								<div class="col-sm-12">
+					    			<div class="form-group ">
+					    					<input ng-model="notaCancelar.justificativa" type="text"  class="form-control input-sm" >
+					    			</div>
+								</div>
+							</div>
+						</fieldset>
+				    </div>
+				    <div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-novo-tamanho')" id="btn-aplicar-sangria">
+				    		<i class="fa fa-times-circle"></i> Cancelar Operação
+				    	</button>
+				    	<button type="button" id="btn-cancelar-nota" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." class="btn btn-md btn-success" ng-click="cacelarNfe()">
+				    		<i class="fa fa-ban"></i> Cancelar Nota
+				    	</button>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->

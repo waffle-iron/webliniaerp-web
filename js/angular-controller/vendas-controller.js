@@ -345,7 +345,7 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 		ng.usuarios = [];
 		ng.busca.tipo_usuario = tipo ;
 		if(tipo == 'vendedor')
-			query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+") AND (usu.id_perfil IN (1,4,5,8))";
+			query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+") AND (usu.flg_tipo='usuario')";
 		else
 			query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+")";
 
@@ -438,8 +438,7 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 		ng.clientes = [];
-		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+")";
-		query_string += "&"+$.param({'usu->id_perfil':{exp:" IN(1,4,5,8)"}});
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND (usu.flg_tipo='usuario'))";
 
 		if(ng.busca.vendedor != ""){
 			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.vendedor+"%' OR usu.apelido LIKE '%"+ng.busca.vendedor+"%')"}});
