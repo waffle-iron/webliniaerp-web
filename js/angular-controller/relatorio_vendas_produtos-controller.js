@@ -1,31 +1,3 @@
- /* app.controller('RelatorioTotalVendasCliente', function ($scope, $http, $window, UserService) {
-            $scope.all_countries = [{
-                "id": 28,
-                    "title": "Sweden"
-            }, {
-                "id": 56,
-                    "title": "USA"
-            }, {
-                "id": 89,
-                    "title": "England"
-            }];
-
-
-        });
-
-        function deleteCountry(id) {
-            alert("Do something");
-        }
-
-        app.directive('bsPopover', function () {
-            return function (scope, element, attrs) {
-                element.find("a[rel=popover]").popover({
-                    placement: 'bottom',
-                    html: 'true'
-                });
-            };
-        });*/
-
 app.controller('RelatorioTotalVendasCliente', function($scope, $http, $window, UserService) {
 	var ng 				= $scope;
 		aj 				= $http;
@@ -84,30 +56,28 @@ app.controller('RelatorioTotalVendasCliente', function($scope, $http, $window, U
 	}
 
 	ng.loadVendas = function() {
-		var dtaInicial  = $("#dtaInicial").val();
-		var dtaFinal    = $("#dtaFinal").val();
+		dtaInicial = ng.busca.dtaInicial;
+		dtaFinal   = ng.busca.dtaFinal;
 		var queryString = "";
 
-		if(dtaInicial != "" && dtaFinal != ""){
-			dtaInicial = formatDate(dtaInicial);
-			dtaFinal   = formatDate(dtaFinal);
+		if(!empty(dtaInicial) && !empty(dtaFinal)){
 			if(dtaInicial > dtaFinal){
 				$("#modal-aguarde").modal('hide');
 				ng.mensagens('alert-danger','<strong>A data inicial deve ser menor que a final</strong>','.errorBusca');
 				return;
 			}
 			queryString = "?"+$.param({'ven->dta_venda':{exp:"BETWEEN '"+dtaInicial+" 00:00:00' AND '"+dtaFinal+" 23:59:59'"}});
-		}else if(dtaInicial != ""){
-			dtaInicial = formatDate(dtaInicial);
+		}else if(!empty(dtaInicial)){
 			queryString = "?"+$.param({'ven->dta_venda':{exp:">='"+dtaInicial+" 00:00:00'"}});
-		}else if(dtaFinal != ""){
-			dtaFinal = formatDate(dtaFinal);
+		}else if(!empty(dtaFinal)){
 			queryString = "?"+$.param({'ven->dta_venda':{exp:"<='"+dtaFinal+" 23:59:59'"}});
 		}
 
 		if(!isNaN(ng.produto.id_produto)){
-			queryString = queryString == "" ? "?pro->id="+ng.produto.id_produto : "&pro->id="+ng.produto.id_produto ;
+			queryString += queryString == "" ? "?pro->id="+ng.produto.id_produto : "&pro->id="+ng.produto.id_produto ;
 		}
+
+		ng.vendas = null ;
 
 		/*if(ng.cliente.id != "" && ng.cliente.id != null){
 			queryString = queryString == "" ? "?usu->id="+ng.cliente.id : "&usu->id="+ng.cliente.id ;
@@ -137,20 +107,16 @@ app.controller('RelatorioTotalVendasCliente', function($scope, $http, $window, U
    	}
 
    	ng.detalCustoProduto = function(item){
-   		var dtaInicial  = $("#dtaInicial").val();
-		var dtaFinal    = $("#dtaFinal").val();
+   		var dtaInicial  = ng.busca.dtaInicial;
+		var dtaFinal    = ng.busca.dtaFinal;
 		queryString = "" ;
-		if(dtaInicial != "" && dtaFinal != ""){
-			dtaInicial = formatDate(dtaInicial);
-			dtaFinal   = formatDate(dtaFinal);
+		if(!empty(dtaInicial) && !empty(dtaFinal)){
 			if(!dtaInicial > dtaFinal){
 				queryString = "?"+$.param({'tv->dta_venda':{exp:"BETWEEN '"+dtaInicial+" 00:00:00' AND '"+dtaFinal+" 23:59:59'"}});
 			}
-		}else if(dtaInicial != ""){
-			dtaInicial = formatDate(dtaInicial);
+		}else if(!empty(dtaInicial)){
 			queryString = "?"+$.param({'tv->dta_venda':{exp:">='"+dtaInicial+" 00:00:00'"}});
-		}else if(dtaFinal != ""){
-			dtaFinal = formatDate(dtaFinal);
+		}else if(!empty(dtaFinal)){
 			queryString = "?"+$.param({'tv->dta_venda':{exp:"<='"+dtaFinal+" 23:59:59'"}});
 		}
 
@@ -196,20 +162,16 @@ app.controller('RelatorioTotalVendasCliente', function($scope, $http, $window, U
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit ;
 
-    	var dtaInicial  = $("#dtaInicial").val();
-		var dtaFinal    = $("#dtaFinal").val();
+    	var dtaInicial  = ng.busca.dtaInicial;
+		var dtaFinal    = ng.busca.dtaFinal;
 		queryString = "" ;
 		if(dtaInicial != "" && dtaFinal != ""){
-			dtaInicial = formatDate(dtaInicial);
-			dtaFinal   = formatDate(dtaFinal);
 			if(!dtaInicial > dtaFinal){
 				queryString = "?"+$.param({'tv->dta_venda':{exp:"BETWEEN '"+dtaInicial+" 00:00:00' AND '"+dtaFinal+" 23:59:59'"}});
 			}
 		}else if(dtaInicial != ""){
-			dtaInicial = formatDate(dtaInicial);
 			queryString = "?"+$.param({'tv->dta_venda':{exp:">='"+dtaInicial+" 00:00:00'"}});
 		}else if(dtaFinal != ""){
-			dtaFinal = formatDate(dtaFinal);
 			queryString = "?"+$.param({'tv->dta_venda':{exp:"<='"+dtaFinal+" 23:59:59'"}});
 		}
 

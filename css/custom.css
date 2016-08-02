@@ -333,3 +333,37 @@ button:focus{
 .switch {
 	margin-top: 7px !important;
 }
+
+input[type=radio]:checked+.custom-radio.text-success:before {
+	background-color: #65cea7;
+}
+
+input[type=radio]:checked+.custom-radio.text-warning:before {
+	background-color: #f3ce85;
+}
+
+input[type=radio]:checked+.custom-radio.text-danger:before {
+	background-color: #fc8675;
+}
+
+legend {
+	color: #777;
+}
+
+.table-bordered>thead>tr>th, 
+.table-bordered>tbody>tr>th, 
+.table-bordered>tfoot>tr>th, 
+.table-bordered>thead>tr>td, 
+.table-bordered>tbody>tr>td, 
+.table-bordered>tfoot>tr>td {
+	border: 1px solid #eee;
+}
+
+.chosen-container-single .chosen-single {
+	line-height: 30px;
+	height: 30px;
+}
+
+.chosen-container-single .chosen-single div {
+	top: 3px;
+}

@@ -1,4 +1,4 @@
-app.controller('NotasFiscaisController', function($scope, $http, $window, $dialogs, UserService,ConfigService,$timeout){
+app.controller('NotasFiscaisController', function($scope, $http, $window, $dialogs, UserService,ConfigService,$timeout,NFService){
 
 	var ng = $scope
 		aj = $http;
@@ -62,6 +62,66 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
             .then(function(){
             	t8.success('iFrame loaded!!!!', title)
         	});
+	}
+
+	ng.notaCancelar = null ;
+	ng.modalCancelar = function(item){
+		aj.get(baseUrlApi()+"nota_fiscal/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&cod_venda="+item.cod_venda)
+			.success(function(data, status, headers, config) {
+				data.dados_emissao.data_emissao = formatDateBR(data.dados_emissao.data_emissao);
+				ng.notaCancelar = data ;
+				ng.notaCancelar.dados_emissao.chave_nfe = item.chave_nfe ;
+				ng.notaCancelar.dados_emissao.valor_total = item.valor_total ;
+				ng.notaCancelar.dados_emissao.id_ref = item.cod_nota_fiscal
+				
+				$('#modal-cencelar-nota').modal('show');
+			})
+			.error(function(data, status, headers, config) {
+				ng.notaCancelar = [] ;
+		});
+	}
+
+	ng.cacelarNfe = function(){
+		if(ng.configuracoes.flg_ambiente_nfe == 0){
+			var server = 'http://homologacao.acrasnfe.acras.com.br/';
+			var token  =  ng.configuracoes.token_focus_homologacao ;
+		}
+		else if(ng.configuracoes.flg_ambiente_nfe == 1){
+			var server = 'http://producao.acrasnfe.acras.com.br/';
+			var token  =  ng.configuracoes.token_focus_producao ;
+		}else{
+			return ;
+		}
+		var btn = $('#btn-cancelar-nota');
+		btn.button('loading');
+		aj.post(server+'nfe2/cancelar?token='+token+'&ref='+ng.notaCancelar.dados_emissao.id_ref+'&justificativa='+ng.notaCancelar.justificativa)
+			.success(function(data, status, headers, config) {
+				$('#modal-cencelar-nota').modal('hide');
+				ng.mensagens('alert-success','<b>Nota cancelada com Sucesso</b>','.alert-list-notas');
+				btn.button('reset');
+					/*aj.post(server+'nfe2/consultar.json?token='+token+'&ref='+ng.notaCancelar.dados_emissao.id_ref)
+					.success(function(data, status, headers, config) {
+						if(data.status == 'cancelado'){
+							ng.mensagens('alert-success','<b>Nota cancelada com Sucesso</b>','.alert-list-notas');
+						}else if(data.status == 'erro_cancelamento'){
+							ng.mensagens('alert-success','<b>'+data.mensagem_sefaz_cancelamento+'</b>','.alert-list-notas');
+						}
+					})
+					.error(function(data, status, headers, config) {});*/
+			})
+			.error(function(data, status, headers, config) {
+				$('#modal-cencelar-nota').modal('hide');
+				ng.mensagens('alert-danger','<b>Erro ao cacelar nota</b>','.alert-list-notas');
+				btn.button('reset');
+		});
+	}
+
+	ng.mensagens = function(classe , msg, alertClass){
+		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
+		$(alertClass).fadeIn().removeClass('alert-success alert-danger alert-warning').addClass(classe).html(msg);
+		setTimeout(function(){
+			$(alertClass).fadeOut('slow');
+		},5000);
 	}
 
 	ng.loadNotas(0,10);

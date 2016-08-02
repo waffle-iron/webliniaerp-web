@@ -7,16 +7,18 @@
 		}
 		if(in_array('dashboard.php', $pages))
 			return 'dashboard.php';
-		elseif (in_array('pdv.php', $pages))
-			return 'pdv.php';
 		elseif (in_array('produtos.php', $pages))
 			return 'produtos.php';
+		elseif (in_array('pdv.php', $pages))
+			return 'pdv.php';
 		elseif (in_array('lancamentos.php', $pages))
 			return 'lancamentos.php';
 		elseif (in_array('clientes.php', $pages))
 			return 'clientes.php';
 		elseif (in_array('vendas.php', $pages))
 			return 'vendas.php';
+		elseif (in_array('controle-atendimento.php', $pages))
+			return 'controle-atendimento.php';
 		else{
 			return empty($pages[0]) ? $pages[1] : $pages[0] ;
 		}
@@ -111,13 +113,29 @@
 		$dados_teste = validaEmpreendimentoPeriodoTeste($_GET['id_empreendimento']);
 
 		$saida['id']   					= (int)$_GET['id'];
-		$saida['id_perfil'] 			= (int)$_GET['id_perfil'];
 		$saida['id_empreendimento'] 	= (int)$_GET['id_empreendimento'];
 		$saida['end_email']   			= $_GET['end_email'];
 		$saida['nme_usuario']   		= $_GET['nme_usuario'];
 		$saida['nome_empreendimento'] 	= $_GET['nome_empreendimento'];
 		$saida['nickname'] 				= $_GET['nickname'];
 		$saida['nme_logo'] 				= $_GET['nme_logo'];
+		$nickname						= isset($_GET['nickname']) ? $_GET['nickname'] : null ;
+
+		$ch = curl_init();
+		$url = $url;
+		curl_setopt($ch, CURLOPT_URL,URL_API.'usuario/'.$saida['id_empreendimento'].'/'.$saida['id']);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$usuario  = curl_exec($ch);
+		$usuarioInfo 	 = curl_getinfo($ch);
+		curl_close ($ch);
+
+		if($usuarioInfo['http_code'] != 200){
+			header("HTTP/1.1 404");
+			return ;
+		}
+
+		$usuario = json_decode($usuario,true);
+		$saida['id_perfil'] = $usuario['id_perfil'];
 
 		if($dados_teste['flg_teste'] == 1){
 			$saida['flg_teste']              = 1 ;
@@ -152,21 +170,28 @@
 			$saida['pagina_principal'] = getPaginaPrincipal($saida['modulos']);
 		}
 		else{
-			header("HTTP/1.1 404");
-			die;
+			if($usuario['flg_tipo'] == 'usuario'){
+				header("HTTP/1.1 404");
+				die;
+			}else{
+				$saida['pagina_principal'] = $nickname;
+				$saida['perc_venda'] = $usuario['perc_venda'];
+			}
 		} 
 
-		$ch = curl_init();
-		$url = $url;
-		curl_setopt($ch, CURLOPT_URL,URL_API.'modulos/menu/by_user/'.$saida['id_empreendimento'].'/'.$saida['id']);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$menu  = curl_exec($ch);
+		if($info['http_code'] == 200){
+			$ch = curl_init();
+			$url = $url;
+			curl_setopt($ch, CURLOPT_URL,URL_API.'modulos/menu/by_user/'.$saida['id_empreendimento'].'/'.$saida['id']);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$menu  = curl_exec($ch);
 
-		$info 	 = curl_getinfo($ch);
-		curl_close ($ch);
+			$info 	 = curl_getinfo($ch);
+			curl_close ($ch);
 
-		if($info['http_code'] == 200) $saida['menu'] = json_decode($menu,true);
-		else $saida['menu'] = array();
+			if($info['http_code'] == 200) $saida['menu'] = json_decode($menu,true);
+			else $saida['menu'] = array();
+		}
 
 		if(isset($_SESSION['dispositivo']))
 			$saida['dispositivo'] = $_SESSION['dispositivo'] ;

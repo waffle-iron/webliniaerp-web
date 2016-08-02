@@ -27,6 +27,11 @@
 	<!-- Timepicker -->
 	<link href="css/bootstrap-timepicker.css" rel="stylesheet"/>
 
+	<!-- Tags Input -->
+	<link href="css/ng-tags-input.min.css" rel="stylesheet"/>
+	<link href="css/ng-tags-input.bootstrap.min.css" rel="stylesheet"/>
+	
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -141,7 +146,7 @@
 						<div class="alert-sistema alert errorBusca" style="display:none"></div>
 						<form role="form">
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
@@ -151,7 +156,7 @@
 									</div>
 								</div>
 
-								<div class="col-sm-3">
+								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
@@ -161,17 +166,15 @@
 									</div>
 								</div>
 
-								<div class="col-sm-6">
+								<div class="col-sm-8">
 									<div class="form-group">
 										<label class="control-label">Categoria</label>
-										<div class="input-group">
-											<input ng-click="showCategorias(0,10)" type="text" class="form-control" ng-model="categoria.descricao_categoria" readonly="readonly" style="cursor: pointer;"></input>
-											<span class="input-group-btn">
-												<button ng-enter="showCategorias(0,10)" ng-click="showCategorias(0,10)" type="button" class="btn">
-													<i class="fa fa-tags"></i>
-												</button>
-											</span>
-										</div>
+										<tags-input
+										 ng-model="busca.arrCategorias"
+										 ng-focus="showCategorias()";
+										 key-press-false-tags-input-categorias
+										 placeholder="Add Categoria" >
+										</tags-input>
 									</div>
 								</div>
 							</div>
@@ -181,7 +184,7 @@
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
 							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
-							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
+							<button ng-if="false" type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
 							<button class="btn btn-sm btn-success hidden-print" ng-show="items.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
@@ -194,30 +197,36 @@
 						<tr>
 							<th>Categoria</th>
 							<th>Produto</th>
+							<th>Fabricante</th>
+							<th>Tamanho</th>
+							<th>Sabor/cor</th>
 							<th class="text-center">Qtd. Vendida</th>
 							<th class="text-right" width="100">Total Vendido</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-if="items.length == 0 && items != null">
-							<td class="text-center" colspan="4">
+							<td class="text-center" colspan="7">
 								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
 							</td>
 						</tr>
 						<tr ng-if="items == null">
-							<td colspan="4" class="text-center">
+							<td colspan="7" class="text-center">
 								Nenhum registro encontrado.
 							</td>
 						</tr>
 						<tr ng-repeat="item in items" bs-popover>
 							<td>{{ item.nme_categoria }}</td>
 							<td>{{ item.nme_produto }}</td>
+							<td>{{ item.nome_fabricante }}</td>
+							<td>{{ item.peso }}</td>
+							<td>{{ item.sabor }}</td>
 							<td class="text-center">{{ item.qtd_total_vendida }}</td>
 							<td class="text-right">R$ {{ item.vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
 						</tr>
 					</tbody>
 					<tfoot ng-if="items != null" >
-						<td colspan="2"><strong>TOTAL</strong></td>
+						<td colspan="5"><strong>TOTAL</strong></td>
 						<td class="text-center">{{ qtd_total_vendida }}</td>
 						<td class="text-right">R$ {{ vlr_total_vendida | numberFormat : 2 : ',' : '.' }}</td>
 					</tfoot>
@@ -251,7 +260,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="input-group">
-					            <input ng-model="busca.categorias" ng-enter="loadCategorias(0,10)" type="text" class="form-control input-sm">
+					            <input ng-model="busca.categorias" id="busca-modal-categorias" ng-enter="loadCategorias(0,10)" type="text" class="form-control input-sm">
 
 					            <div class="input-group-btn">
 					            	<button ng-click="loadCategorias(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
@@ -281,8 +290,11 @@
 										<td>{{ item.id }}</td>
 										<td>{{ item.descricao_categoria }}</td>
 										<td>
-											<button ng-click="selectCategoria(item)" class="btn btn-success btn-xs" type="button">
+											<button ng-if="!categoriaIsSelected(item.id)" ng-click="selectCategoria(item)" class="btn btn-success btn-xs" type="button">
 												<i class="fa fa-check-square-o"></i> Selecionar
+											</button>
+											<button ng-if="categoriaIsSelected(item.id)"  class="btn btn-primary btn-xs" type="button">
+												<i class="fa fa-check-square-o"></i> Selecionado
 											</button>
 										</td>
 									</tr>
@@ -390,7 +402,11 @@
     <script src="js/angular-sanitize.min.js"></script>
     <script src='js/js-ui-popover/ui-bootstrap-tpls.min.js'></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
-     <script src="js/auto-complete/ng-sanitize.js"></script>
+    <script src="js/auto-complete/ng-sanitize.js"></script>
+    <script src="js/ng-tags-input.min.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['ngTagsInput'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>

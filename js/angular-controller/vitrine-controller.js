@@ -33,12 +33,14 @@ app.controller('VitrineController', function($scope, $http, $window, $dialogs, U
 			.success(function(data, status, headers, config) {	
 						
 				$.each(data.produtos,function(index,value){
-					if(ng.userLogged.id_perfil == 7){
+					if(ng.userLogged.perc_venda == "perc_venda_atacado"){
 						value.valor_produto = value.vlr_venda_atacado;
-					}else if(ng.userLogged.id_perfil == 6){
+					}else if(ng.userLogged.perc_venda == "perc_venda_varejo"){
 						value.valor_produto	= value.vlr_venda_varejo;
-					}else if(ng.userLogged.id_perfil == 4 || ng.userLogged.id_perfil == 5){
+					}else if(ng.userLogged.perc_venda == "perc_venda_intermediario"){
 						value.valor_produto	= value.vlr_venda_intermediario;
+					}else{
+						value.valor_produto = value.vlr_venda_atacado;
 					}
 
 					if(value.img == null){

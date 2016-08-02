@@ -22,10 +22,7 @@
 	<link href="css/pace.css" rel="stylesheet">
 
 	<!-- Datepicker -->
-	<link href="css/datepicker.css" rel="stylesheet"/>
-
-	<!-- Timepicker -->
-	<link href="css/bootstrap-timepicker.css" rel="stylesheet"/>
+	<link href="css/datepicker/bootstrap-datepicker.css" rel="stylesheet"/>
 
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
@@ -145,7 +142,7 @@
 									<div class="form-group">
 										<label class="control-label">Inicial</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control">
+											<input readonly="readonly" ng-model="busca.dtaInicial" date-picker style="background:#FFF;cursor:pointer" type="text"  class=" form-control">
 											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
@@ -155,8 +152,8 @@
 									<div class="form-group">
 										<label class="control-label">Final</label>
 										<div class="input-group">
-											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control">
-											<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
+											<input readonly="readonly" ng-model="busca.dtaFinal" date-picker style="background:#FFF;cursor:pointer" type="text"  class="form-control">
+											<span class="input-group-addon" ><i class="fa fa-calendar"></i></span>
 										</div>
 									</div>
 								</div>
@@ -197,8 +194,9 @@
 							<th width="50"></th>
 							<th>Produto</th>
 							<th>Fabricante</th>
-							<th class="text-center" width="60">Tamanho</th>
-							<th class="text-center">Quantidade Vendida</th>
+							<th class="text-center">Tamanho</th>
+							<th class="text-center">Sabor/Cor</th>
+							<th class="text-center">Qtd. Vendida</th>
 							<th class="text-right" width="100">Custo Total</th>
 							<th class="text-right" width="100">Total Vendido</th>
 							<th class="text-right">Margem Lucro</th>
@@ -206,21 +204,22 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-if="vendas.length == 0 && vendas != null">
+						<tr ng-if="vendas == null">
 							<td class="text-center" colspan="10">
 								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
 							</td>
 						</tr>
-						<tr ng-if="vendas.length < 0 && vendas == null">
-							<td colspan="10">
-								Nenhuma movimentação encontrada para este caixa.
+						<tr ng-if="vendas.length==0">
+							<td colspan="10" class="text-center">
+								Nenhuma registro encontrado
 							</td>
 						</tr>
 						<tr ng-repeat="venda in vendas" bs-popover>
 							<td class="text-cente">{{ venda.cod_produto }}</td>
 							<td>{{ venda.nme_produto }}</td>
 							<td>{{ venda.nome_fabricante }}</td>
-							<td class="text-center">{{ venda.peso }}</td>
+							<td>{{ venda.peso }}</td>
+							<td>{{ venda.sabor }}</td>
 							<td class="text-center">{{ venda.qtd_vendida }}</td>
 							<td class="text-right">
 								 <div class="cardBody"><a style="cursor:pointer;text-decoration: underline;" style="font-size: 12px;color: #777" ng-click="detalCustoProduto(venda)" href="#" id="pop{{venda.nme_produto }}" rel="popover" data-content="<i class='fa fa-refresh fa-spin'></i> Aguarde, carregando itens..." data-trigger="focus">
@@ -414,7 +413,8 @@
 	<script src='js/jquery.maskMoney.js'></script>
 
 	<!-- Datepicker -->
-	<script src='js/bootstrap-datepicker.min.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.pt-BR.js'></script>
 
 	<!-- Timepicker -->
 	<script src='js/bootstrap-timepicker.min.js'></script>
@@ -461,7 +461,7 @@
 	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
 <!-- AngularJS -->
-	<script type="text/javascript" src="js/js-ui-popover/angular.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-ui-utils/mask.min.js"></script>
     <script src="js/angular-sanitize.min.js"></script>
@@ -502,17 +502,6 @@
 			});
 		});
 
-	</script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.datepicker').datepicker();
-			$("#cld_pagameto").on("click", function(){ $("#pagamentoData").trigger("focus"); });
-			$("#cld_dtaInicial").on("click", function(){ $("#dtaInicial").trigger("focus"); });
-			$("#cld_dtaFinal").on("click", function(){ $("#dtaFinal").trigger("focus"); });
-
-			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
-		});
 	</script>
 	<?php include("google_analytics.php"); ?>
   </body>

@@ -183,7 +183,7 @@
 															<div class="form-group" id="form_dta_inicial">
 																<label class="control-label">Inicial</label>
 																<div class="input-group">
-																	<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker1 form-control">
+																	<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="busca.dataInicial" date-picker type="text" id="dtaInicial" class="form-control">
 																	<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
 																</div>
 															</div>
@@ -193,7 +193,7 @@
 															<div class="form-group" id="form_dta_final">
 																<label class="control-label">Final</label>
 																<div class="input-group">
-																	<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker1 form-control">
+																	<input readonly="readonly" style="background:#FFF;cursor:pointer" ng-model="busca.dataFinal" date-picker type="text" id="dtaFinal" class="form-control">
 																	<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
 																</div>
 															</div>
@@ -231,7 +231,7 @@
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
 							<button type="button" class="btn btn-sm btn-primary" ng-click="getExtrato()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
-							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
+							<button ng-if="false" type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
 							<button class="btn btn-sm btn-success" ng-show="dadosExtrato.extrato.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
@@ -463,7 +463,7 @@
 	<script src='js/uncompressed/bootstrap-wysihtml5.js'></script>
 
 <!-- AngularJS -->
-	<script type="text/javascript" src="js/js-ui-popover/angular.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-ui-utils/mask.min.js"></script>
     <script src="js/angular-sanitize.min.js"></script>
@@ -506,7 +506,7 @@
 	</script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-				var options =  {
+			/*	var options =  {
 		        format: "dd/mm/yyyy",
 		        language: "pt-BR",
 		        clearBtn:true,
@@ -517,7 +517,7 @@
 			$("#cld_dtaFinal").on("click", function(){ $("#dtaFinal").trigger("focus"); });
 
 			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
-			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});*/
 		});
 	</script>
 	<?php include("google_analytics.php"); ?>

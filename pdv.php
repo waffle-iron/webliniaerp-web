@@ -770,7 +770,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="form-group text-center">
-												<img src="{{ imgProduto }}" style="max-height: 50%;">
+												<img pre-load-img="imgProduto" src="{{ imgProduto }}" imgpreload="img/imagem_padrao_produto.gif" notimg="img/imagem_padrao_produto.gif" style="max-height: 50%;">
 											</div>
 										</div>
 									</div>
@@ -1521,30 +1521,37 @@
 						   		<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(produtos.length != 0)">
 										<tr>
-											<th>#</th>
-											<th>Nome</th>
-											<th>Fabricante</th>
-											<th>Quantidade</th>
-											<th>Tamanho</th>
-											<th>Sabor/Cor</th>
-											<th width="80">Quantidade</th>
-											<th width="80"></th>
+											<th rowspan="2" style="line-height: 46px;" class="text-center">#</th>
+											<th rowspan="2" style="line-height: 46px;" class="text-center">Nome</th>
+											<th rowspan="2" style="line-height: 46px;" class="text-center">Fabricante</th>
+											<th rowspan="2" style="line-height: 46px;" class="text-center">Tamanho</th>
+											<th rowspan="2" style="line-height: 46px;" class="text-center">Sabor/Cor</th>
+											<th colspan="3" class="text-center">Disponibilidade de Estoque</th>
+											<th rowspan="2" width="80" class="text-center" style="line-height: 46px;">Quantidade</th>
+											<th rowspan="2" width="80" style="line-height: 46px;"></th>
+										</tr>
+										<tr>
+											<td width="50">Estoque</td>
+											<td width="50">Reservado</td>
+											<td width="50">Disponível</td>
 										</tr>
 									</thead>
 									<tbody>
 										<tr ng-if="produtos == null">
-											<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+											<th class="text-center" colspan="10" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
 										</tr>
 										<tr ng-show="(produtos.length == 0)">
-											<td colspan="3">Nenhum Cliente encontrado</td>
+											<td colspan="10">Nenhum produto encontrado</td>
 										</tr>
 										<tr ng-repeat="item in produtos">
-											<td>{{ item.id_produto }}</td>
+											<td class="text-center">{{ item.id_produto }}</td>
 											<td>{{ item.nome_produto }}</td>
-											<td>{{ item.nome_fabricante }}</td>
-											<td>{{ item.qtd_real_estoque }}</td>
-											<td>{{ item.peso }}</td>
-											<td>{{ item.sabor }}</td>
+											<td class="text-center">{{ item.nome_fabricante }}</td>
+											<td class="text-center">{{ item.peso }}</td>
+											<td class="text-center">{{ item.sabor }}</td>
+											<td class="text-center">{{ item.qtd_item }}</td>
+											<td class="text-center">{{ item.qtd_reservada }}</td>
+											<td class="text-center">{{ item.qtd_item - item.qtd_reservada  }}</td>
 											<td><input onKeyPress="return SomenteNumero(event);" ng-keyUp="" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" /></td>
 											<td>
 											<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">

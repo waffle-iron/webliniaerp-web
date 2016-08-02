@@ -71,6 +71,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 
 	 	var inventario       = cloneArray(ng.inventario,['$$hashKey','validades','itens']);
 	 	inventario['itens']  = itens ;
+	 	inventario.id_empreendimento = ng.userLogged.id_empreendimento ;
 
 	 	$http.post(baseUrlApi()+'inventario',inventario)
 			.success(function(data, status, headers, config) {

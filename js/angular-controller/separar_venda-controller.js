@@ -146,6 +146,18 @@ app.controller('SepararVendaController', function($scope, $http, $window, $dialo
 		ng.itens[item_current].qtd_saida_total = ng.qtdTotalEstoque();
 	}
 
+	ng.calQtdAdd = function(estoques){
+		estoques = typeof estoques == 'object' ? estoques : {} ;
+		var total = 0 ;
+		$.each(estoques,function(a,b){
+			$.each(b,function(i,x){
+				if($.isNumeric(x.qtd_saida))
+					total += Number(x.qtd_saida) ;
+			});
+		});
+		return total ;
+	}
+
 	ng.salvar = function(){
 		var btn = $("#btn_separar_venda") ;
 		btn.button('loading');

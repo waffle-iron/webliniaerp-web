@@ -26,6 +26,7 @@
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
+	<link href="css/custom.css" rel="stylesheet">
 	<style type="text/css">
 
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
@@ -173,17 +174,75 @@
 										<input  ng-model="conta.pth_local" class="form-control"/>
 									</div>
 								</div>
-								<div class="col-sm-4">
-								<div class="form-group" id="cod_especializacao_ncm">
-									<label class="control-label">Depósito</label> 
-									<select ng-model="conta.id_deposito" chosen
-								    option="depositos"
-								    ng-model="produto.cod_especializacao_ncm"
-								    allow-single-deselect="true"
-								    ng-options="item.id as item.nme_deposito for item in depositos">
-									</select>
-								</div>
-								
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="panel panel-default" id="box-novo">
+										<div class="panel-heading"><i class="fa fa-sitemap"></i> Depositos</div>
+										<div class="panel-body">
+											<table class="table table-bordered table-condensed table-striped table-hover">
+												<thead>
+													<tr>
+														<td width="60" class="text-center">#</td>
+														<td>Deposito</td>
+														<td width="120" class="text-center">Ordem de saida</td>
+														<td width="60" align="center">
+															<button class="btn btn-xs btn-primary" ng-click="modalDepositos()"><i class="fa fa-plus-circle"></i></button>
+														</td>
+													</tr>
+													<tr ng-if="conta.depositos == null">
+														<td colspan="4" class="text-center">
+															<i class='fa fa-refresh fa-spin'></i> Carregando...
+														</td>
+													</tr>
+													<tr ng-if="conta.depositos.length == 0">
+														<td colspan="4" class="text-center">
+															Nenhum deposito vinculado ao caixa 
+														</td>
+													</tr>
+													<tr ng-repeat="item in conta.depositos | orderBy:'ordem_saida' | emptyToEnd:'ordem_saida'"> 
+														<td class="text-center">{{ item.id_deposito }} </td>
+														<td>{{ item.nme_deposito }} </td>
+														<td class="text-center" ng-class="{'has-error':item.tooltip.init}">
+															<input ng-model="item.ordem_saida" ng-blur="tirarErrorTooltip(item)"  controll-tooltip="item.tooltip" ng-change="verificarOrdemSaida(item,$index)" id="input-ordem-saida-{{ $index }}" somente-numeros style="width:60px;margin:0 auto" class="form-control input-xs text-center">
+														</td>
+														<td align="center">
+															<button class="btn btn-xs btn-danger" ng-click="delDeposito($index,item)"><i class="fa fa-trash-o"></i></button>
+														</td>
+													</tr>
+												</thead>
+											</table>	
+										</div>
+									</div>
+									<!--<div class="empreendimentos form-group" id="empreendimentos">
+											<table class="table table-bordered table-condensed table-striped table-hover">
+												<thead>
+													<tr>
+														<td><i class="fa fa-building-o"></i> Depositos</td>
+														<td width="60" align="center">
+															<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()"><i class="fa fa-plus-circle"></i></button>
+														</td>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td colspan="2">
+															<table class="table table-bordered table-condensed table-striped table-hover">
+																<thead>
+																	<tr>
+																		<td>Deposito</td>
+																		<td>Ordem de saida</td>
+																		<td width="60" align="center">
+																			
+																		</td>
+																	</tr>
+																</thead>
+															</table>	
+														</td>
+													</tr>
+												</tbody>
+											</table>
+									</div>-->
 								</div>
 							</div>
 							<div class="row">
@@ -246,19 +305,25 @@
 
 					<div class="panel-body">
 						<div class="alert alert-delete" style="display:none"></div>
+						
 						<table class="table table-bordered table-condensed table-striped table-hover">
-							<tr ng-hide="contas.length > 0 && conta != null">
-								<td colspan="6">
-									Não há contas cadastradas .
-								</td>
-							</tr>
-							<thead ng-show="contas.length > 0 && conta != null" >
+							<thead>
 								<tr>
 									<th>Descrição</th>
 									<th>Ip local</th>
 									<th width="80" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
+							<tr ng-show="contas.length == 0">
+								<td colspan="6" class="text-center">
+									Nenhum caixa encontrado.
+								</td>
+							</tr>
+							<tr ng-show="contas == null">
+								<td colspan="6" class="text-center">
+									<i class='fa fa-refresh fa-spin'></i> Carregando...
+								</td>
+							</tr>
 							<tbody>
 								<tr ng-repeat="item in contas">
 									<td>{{ item.dsc_conta_bancaria }}</td>
@@ -288,6 +353,82 @@
 			</div>
 		</div>
 		<!-- /main-container -->
+
+		<!-- /Modal depositos-->
+		<div class="modal fade" id="modal-depositos" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Depositos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.depositos" ng-enter="loadDepositos(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadDepositos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br/>
+
+				   		<div class="row">
+				   			<div class="col-sm-12">
+				   				<div class="alert" id="alert-modal-deposito" style="display:none" ></div>
+				   				<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(depositos.length != 0)">
+										<tr>
+											<th class="text-center">#</th>
+											<th>Nome</th>
+											<th width="120">Ordem de saida</th>
+											<th width="50"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(depositos.itens == null)">
+											<td colspan="4" class="text-center"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
+										</tr>
+										<tr ng-show="(depositos.itens == 0)">
+											<td colspan="4" class="text-center">Nenhum Deposito encontrado</td>
+										</tr>
+										<tr ng-repeat="item in depositos.itens">
+											<td class="text-center">{{ item.id }}</td>
+											<td>{{ item.nme_deposito }}</td>
+											<td><input style="width:60px;margin:0 auto" ng-model="item.ordem_saida" class="input-xs form-control text-center"> </td>
+											<td align="center">
+												<button ng-if="!depositoSelected(item)" type="button" class="btn btn-xs btn-success" ng-click="addDeposito(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+												<button ng-if="depositoSelected(item)" type="button" class="btn btn-xs btn-primary">
+													<i class="fa fa-check-square-o"></i> Selecionado
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+				   			</div>
+				   		</div>
+
+				   		<div class="row">
+					    	<div class="col-sm-12">
+					    		<ul class="pagination pagination-xs m-top-none pull-right" ng-show="depositos.paginacao.length > 1">
+									<li ng-repeat="item in depositos.paginacao" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadDepositos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+					    	</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->

@@ -8,7 +8,7 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
     ng.contas    					= [];
     ng.paginacao           			= {conta:null} ;
     ng.busca               			= {empreendimento:""} ;
-    ng.conta                        = {} ;
+    ng.conta                        = {depositos:[]} ;
     ng.impressoras                  = [
     	{ value: null					, dsc:'Selecione' 			},
     	{ value:'bematech_mp_2500_th'	, dsc:'BEMATECH MP-2500 TH' },
@@ -61,17 +61,19 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 			ng.showBoxNovo();
 	}
 
-	ng.loadContas = function(offset,limit) {
+	ng.contas = [];
+	ng.paginacao.conta = [];
+	ng.loadContas = function(offset,limit,overlay) {
+		overlay = overlay == null ? false : overlay ;
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
-		ng.contas = [] ;
-		aj.get(baseUrlApi()+"contas_bancarias/?id_tipo_conta=5&id_empreendimento="+ng.userLogged.id_empreendimento)
+		ng.contas = null ;
+		aj.get(baseUrlApi()+"contas_bancarias/"+offset+"/"+limit+"/?id_tipo_conta=5&id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.contas = data.contas;
 				ng.paginacao.conta = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
-				if(status == 404)
 					ng.contas = [];
 			});
 	}
@@ -108,6 +110,28 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 
 	ng.salvar = function() {
 
+		$($(".has-error").find(".form-control")).tooltip('destroy');
+		$($(".has-error-plano")).tooltip('destroy');
+		$($(".has-error").find("button")).tooltip('destroy');
+		$(".has-error").removeClass("has-error");
+		$($(".has-error-plano")).removeClass("has-error-plano");
+
+		var error = 0 ;
+
+		$.each(ng.conta.depositos,function(i,x){
+			if(empty(x.ordem_saida)){
+				$("#input-ordem-saida-"+i).parent().addClass("has-error");
+				var input = $("#input-ordem-saida-"+i).attr("data-toggle", "tooltip").attr("data-placement", "top").attr("title", 'Informe a ordem de saida');
+				if(error == 0) input.tooltip('show');
+				else input.tooltip();
+				error ++ ;
+				return ;
+			}
+		});
+
+		if(error > 0)
+			return ;
+
 		var url   = ng.editing ? "conta_bancaria/update" : "conta_bancaria";
 		var conta = angular.copy(ng.conta);
 
@@ -118,12 +142,6 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 		/*if(isNaN(conta.perc_taxa_maquineta))
 			conta.perc_taxa_maquineta = 0 ;
 		*/
-
-		$($(".has-error").find(".form-control")).tooltip('destroy');
-		$($(".has-error-plano")).tooltip('destroy');
-		$($(".has-error").find("button")).tooltip('destroy');
-		$(".has-error").removeClass("has-error");
-		$($(".has-error-plano")).removeClass("has-error-plano");
 
 		aj.post(baseUrlApi()+url, conta)
 			.success(function(data, status, headers, config) {
@@ -152,12 +170,14 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 
 	ng.editar = function(item) {
 		ng.editing = true;
+		ng.loadDepositosCaixa(item.id);
 		item.perc_taxa_maquineta = item.perc_taxa_maquineta * 100 ;
 		$('[name="perc_taxa_maquineta"]').val(numberFormat(item.perc_taxa_maquineta,'2',',','.'));
 		ng.conta = angular.copy(item);
 		if(!$('#box-novo').is(':visible')){
 			ng.showBoxNovo();
 		}
+		$('html,body').animate({scrollTop: 0},'slow');
 	}
 
 	ng.delete = function(item){
@@ -218,9 +238,106 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 			});
 	}
 
+	ng.loadDepositosCaixa = function(id_caixa) {
+		ng.conta.depositos = null ;
+		aj.get(baseUrlApi()+"caixa_deposito?tcd->id_caixa="+id_caixa)
+			.success(function(data, status, headers, config) {
+				ng.conta.depositos = data ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.conta.depositos = [] ;
+			});
+	}
+
+
+	ng.modalDepositos = function(){
+		$('#modal-depositos').modal('show');
+		ng.loadDepositos(0,10);
+	}
+
+	ng.depositos = {itens:null,paginacao:[]};
+	ng.loadDepositos = function(offset, limit) {
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+		ng.depositos = {itens:null,paginacao:[]};
+		var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento ;
+		if(!empty(ng.busca.depositos))
+			query_string  += "&"+$.param({nme_deposito:{exp:"like '%"+ng.busca.depositos+"%'"}});
+
+    	aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+query_string)
+		.success(function(data, status, headers, config) {
+			ng.depositos = {itens:data.depositos,paginacao:data.paginacao};
+		})
+		.error(function(data, status, headers, config) {
+			ng.depositos = {itens:[],paginacao:[]};
+		});
+	}
+
+	ng.addDeposito = function(item){
+		if(!empty(item.ordem_saida)){
+			if(ng.OrdemdepositoExists(item.ordem_saida)){
+				ng.mensagens('alert-warning','Já existe um deposito nessa ordem','#alert-modal-deposito');
+				return ;
+			}
+		}
+		var itemAdd = {
+			id_deposito: item.id,
+			ordem_saida: ( empty(item.ordem_saida) ? null : item.ordem_saida ) ,
+			nme_deposito: item.nme_deposito,
+			error_ordem_saida : false 
+		};
+		ng.conta.depositos.push(itemAdd);
+		item.ordem_saida = null ;
+	}
+
+	ng.delDeposito = function(index){
+		ng.conta.depositos.splice(index,1);
+	}
+	
+	ng.depositoSelected = function(item){
+		if(typeof ng.conta.depositos != 'object')
+			return ;
+		var saida = false ;
+		$.each(ng.conta.depositos,function(i,x){
+			if(Number(item.id) == Number(x.id_deposito)){
+				saida = true ;
+				return ;
+			}
+		});
+		return saida ;
+	}
+
+	ng.OrdemdepositoExists = function(ordem_saida,index){
+		index = index == null ? -1 : Number(index) ;
+		var saida = false ;
+		$.each(ng.conta.depositos,function(i,x){
+			if(i != index){
+				if(Number(ordem_saida) == Number(x.ordem_saida)){
+					saida = true ;
+					return ;
+				}
+			}
+		});
+		return saida ;
+	}
+
+	ng.verificarOrdemSaida = function(item,index){
+		if(ng.OrdemdepositoExists(item.ordem_saida,index) && !empty(item.ordem_saida)){
+			delete item.tooltip ;
+			item.tooltip = {init:true,show:true,placement:'top',trigger:'focus hover',title:'Já existe um deposito na ordem '+item.ordem_saida} ;
+			item.ordem_saida = null ;
+		}else{
+			delete item.tooltip ;
+		}
+	}
+
+	ng.tirarErrorTooltip = function(item){  
+		if(typeof item.tooltip == 'object' && item.tooltip.init === true) delete item.tooltip  ; 
+	}
+
 	ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
-		$(alertClass).fadeIn().addClass(classe).html(msg);
+		$(alertClass).fadeIn().removeClass('alert-success alert-warning alert-danger').addClass(classe).html(msg);
 		setTimeout(function(){
 			$(alertClass).fadeOut('slow');
 		},5000);
@@ -231,7 +348,7 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
 
-	ng.loadContas(0,30);
+	ng.loadContas(0,10);
 	ng.loadOperacaoCombo();
 	ng.loadBancos();
 	ng.loadtipos();

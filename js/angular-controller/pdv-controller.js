@@ -123,7 +123,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			ng.id_orcamento = orcamento.id ;
 			if(!empty(ng.config.id_deposito_padrao) && orcamento.flg_comanda == 1){
 				ng.dadosOrcamento = orcamento ;
-				ng.caixa.id_deposito = ng.config.id_deposito_padrao ;
+				ng.caixa.depositos = [ng.config.id_deposito_padrao] ;
 			}
 			if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa))
 				ng.cliente = data.cliente;
@@ -173,12 +173,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.findProductByBarCode = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
-    	var id_deposito = ng.caixa.id_deposito ;
+    	var depositos = ng.caixa.depositos ;
     	var codigo  = ng.busca.codigo ;
 		if(ng.busca.codigo != "") {
 			ng.msg = "";
 			ng.busca.ok = !ng.busca.ok;
-			$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+ng.busca.codigo+"%20OR%20prd.id="+ng.busca.codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&getQtdProduto("+ng.userLogged.id_empreendimento+",prd->id,null,"+id_deposito+",null)[exp]=>0")
+			$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+ng.busca.codigo+"%20OR%20prd.id="+ng.busca.codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
 			.success(function(data, status, headers, config) {
 				ng.busca.codigo = "" ;
 				if(data.produtos.length == 1){
@@ -280,7 +280,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.nome_ultimo_produto      = produto.nome_produto ;
 
 		if(produto.img != null)
-			ng.imgProduto = produto.img ;
+			ng.imgProduto = 'assets/imagens/produtos/'+produto.img ;
 		else
 			ng.imgProduto = 'img/imagem_padrao_produto.gif';
 
@@ -448,7 +448,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 							id_cliente 			: ng.cliente.id,
 							venda_confirmada 	: ng.orcamento ? 0 : 1,
 							id_empreendimento	: ng.userLogged.id_empreendimento,
-							id_deposito 		: ng.caixa.id_deposito,
+							id_deposito 		: ng.caixa.depositos,
 							id_status_venda 	: ng.orcamento ? 1 : 4,
 							dta_venda           : (empty(params.id_orcamento) ? null : moment().format('YYYY-MM-DD HH:mm:ss') )
 						};
@@ -594,7 +594,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		aj.post(baseUrlApi()+"venda/verificaEstoque",{
 														id_empreendimento:ng.userLogged.id_empreendimento,
-											        	id_deposito:ng.caixa.id_deposito,
+											        	id_deposito:ng.caixa.depositos,
 											        	produtos:item_enviar,
 											        	venda_confirmada : ng.venda_confirmada,
 											        	id_vendedor      : Number(ng.vendedor.id_vendedor),
@@ -766,7 +766,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 														produtos:item_enviar,
 														venda_confirmada 	: ng.orcamento ? 0 : 1,
 														id_empreendimento:ng.userLogged.id_empreendimento,
-											        	id_deposito:ng.caixa.id_deposito
+											        	id_deposito:ng.caixa.depositos,
+											        	id_caixa : ng.caixa.id
 											          }
 			)
 			.success(function(data, status, headers, config) {
@@ -809,7 +810,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		aj.post(baseUrlApi()+"venda/efetivarOrcamento",{id_venda:id_venda ,
 														produtos:item_enviar,
 														id_empreendimento:ng.userLogged.id_empreendimento,
-											        	id_deposito:ng.caixa.id_deposito
+											        	id_deposito:ng.caixa.depositos
 											          }
 			)
 			.success(function(data, status, headers, config) {
@@ -1100,23 +1101,23 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
    	ng.loadProdutos = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
-    	var id_deposito = ng.caixa.id_deposito ;
+    	var depositos = $.param({'te->id_deposito':{'exp':' IN('+ng.caixa.depositos.join()+')'}}) ;
 
     	if(ng.cdb_busca.status == false)
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&qtd->id_deposito="+id_deposito+"&getQtdProduto("+ng.userLogged.id_empreendimento+",prd->id,null,"+id_deposito+",null)[exp]=>0";
+    		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&"+depositos;
     	else{
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0&qtd->id_deposito="+id_deposito+"&prd->codigo_barra="+ng.cdb_busca.codigo+"&getQtdProduto("+ng.userLogged.id_empreendimento+",prd->id,null,"+id_deposito+",null)[exp]=>0";
+    		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&tp->codigo_barra="+ng.cdb_busca.codigo+"&"+depositos;
     	}
 
     	if(ng.busca.produtos != ""){
     		if(isNaN(Number(ng.busca.produtos)))
-    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
+    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+ng.busca.produtos+"%' OR tf.nome_fabricante like'%"+ng.busca.produtos+"%' OR tp.codigo_barra like '%"+ng.busca.produtos+"%'"}})+")";
     		else
-    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%' OR prd.id = "+ng.busca.produtos+""}})+")";
+    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+ng.busca.produtos+"%' OR tf.nome_fabricante like'%"+ng.busca.produtos+"%' OR tp.id = "+ng.busca.produtos+"  OR tp.codigo_barra like '%"+ng.busca.produtos+"%'"}})+")";
     	}
 
 		ng.produtos =  null;
-		aj.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
+		aj.get(baseUrlApi()+"estoque_produtos/1/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
 				ng.produtos        = data.produtos ;
 				ng.paginacao.produtos = data.paginacao;
@@ -1502,7 +1503,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 							id_cliente:parseInt(ng.cliente.id),
 							venda_confirmada:1,
 							id_empreendimento:ng.userLogged.id_empreendimento,
-							id_deposito : ng.caixa.id_deposito
+							id_deposito : ng.caixa.depositos
 						};
 
 		venda.id_cliente = isNaN(venda.id_cliente) ? "" : venda.id_cliente;
@@ -2580,19 +2581,18 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
         }
         interval_produto = window.setTimeout(function(){  
 
-    		var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0";  	
-
+    		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0";  	
 	    	if(busca != ""){
 	    		if(isNaN(Number(busca)))
-	    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+busca+"%' OR fab.nome_fabricante like'%"+busca+"%' OR prd.codigo_barra like '%"+busca+"%' OR prd.peso like '%"+busca+"%' "}})+")";
+	    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+busca+"%' OR tf.nome_fabricante like'%"+busca+"%' OR tp.codigo_barra like '%"+busca+"%' OR tt.nome_tamanho like '%"+busca+"%' "}})+")";
 	    		else
-	    			query_string += "&("+$.param({'prd->nome':{exp:"like'%"+busca+"%' OR fab.nome_fabricante like'%"+busca+"%' OR prd.id = "+busca+" OR prd.codigo_barra like '%"+busca+"%' OR prd.peso like '%"+busca+"%' "}})+")";
+	    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+busca+"%' OR tf.nome_fabricante like'%"+busca+"%' OR tp.id = "+busca+" OR tp.codigo_barra like '%"+busca+"%' OR tt.nome_tamanho like '%"+busca+"%' "}})+")";
 	    	}
 
-			aj.get(baseUrlApi()+"estoque/"+query_string)
+			aj.get(baseUrlApi()+"estoque_produtos/1/"+query_string)
 				.success(function(data, status, headers, config) {
 					
-					ng.produtos_auto_complete = data.produtos;
+					ng.produtos_auto_complete = data;
 
 				})
 				.error(function(data, status, headers, config) {

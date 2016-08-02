@@ -106,6 +106,10 @@ angular.module('filters', [])
 		  	var minutos = d.getMinutes() < 10 ? '0'+d.getMinutes() : d.getMinutes() ;
 		  	var segundos = d.getSeconds() < 10 ? '0'+d.getSeconds() : d.getSeconds() ;
 		  	return hora+':'+minutos+':'+segundos;
+		  }else if(tipo=='time-HH:mm'){
+		  	var hora = d.getHours() < 10 ? '0'+d.getHours() : d.getHours() ;
+		  	var minutos = d.getMinutes() < 10 ? '0'+d.getMinutes() : d.getMinutes() ;
+		  	return hora+':'+minutos;
 		  }
 	      else
 	      	return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
@@ -287,6 +291,10 @@ angular.module('filters', [])
 	.directive('datePicker', function ($filter) {
 	    return {
 	        require: 'ngModel',
+	       	  scope: {
+	            options: '=',
+	           	 model: '=ngModel'
+	       		},
 	            link: function (scope, element, attrs, ctrl) {
 	            $(element).datepicker(
 	            	{	
@@ -309,6 +317,11 @@ angular.module('filters', [])
 	            });
 	            if(!empty(attrs.stardate))
 	           	 $(element).datepicker('setDate', attrs.stardate);
+
+	           	 scope.$watch('model', function(newValue, oldValue) {
+	           	 	if(!empty(newValue))
+	           	 		$(element).datepicker('setDate', formatDateBR(newValue));
+           		 }, true);
 	        }
 	    };
 	}).directive('tooltip', function ($filter) {
@@ -317,7 +330,46 @@ angular.module('filters', [])
 	           	$(element).tooltip()
 	        }
 	    };
-	}).directive('controlSizeString', function ($filter) {
+	}).directive('controllTooltip', function ($filter) {
+	    return {
+	       	 	scope: {
+		            options: '=',
+		           	 controllTooltip: '='
+		       	},
+	            link: function (scope, element, attrs, ctrl) {
+	            if(typeof scope.controll == 'object' &&  scope.controll.init === true)
+	           		$(element).tooltip((attrs.controllTooltip=='show' ? 'show' : null ));
+
+	           	scope.$watch('controllTooltip', function(newValue, oldValue) {
+	           	 	if(typeof newValue == 'object' && newValue.init === true){
+	           	 		$(element).tooltip('destroy');
+	           			$(element).tooltip( {
+	           				placement : newValue.placement,
+							title : newValue.title,
+							trigger : newValue.trigger
+	           			} );
+	           			if(newValue.show === true){
+	           				$(element).trigger("focus");
+	           			}
+	           	 	}else{
+	           	 		$(element).tooltip('destroy');
+	           	 	}
+	       		}, true);
+	        }
+	    };
+	}).filter("emptyToEnd", function () {
+	    return function (array, key) {
+	        if(!angular.isArray(array)) return;
+	        var present = array.filter(function (item) {
+	            return item[key];
+	        });
+	        var empty = array.filter(function (item) {
+	            return !item[key]
+	        });
+	        return present.concat(empty);
+	    };
+	}).
+	directive('controlSizeString', function ($filter) {
 	    return {
 	    	link:function(scope,element,attrs,ctrl){
 	    		var size = Number(attrs.size);
@@ -383,24 +435,34 @@ angular.module('filters', [])
 	    }
 	}).directive('preLoadImg', function ($compile,$filter) {
 	    return {
+	    	scope: {
+	            options: '=',
+	           	 preLoadImg: '='
+	       		},
 	    	link:function(scope,element,attrs,ctrl){
-			   //Coloque no atributo IMG o caminho (src) da imagem clicada
-				$(element).attr('src',attrs.imgpreload);
-				//$(element).fadeIn(300);
-				//Agora faça a leitura do arquivo usando o atributo .load() da imagem
-				//$(element).load(function(response, status, xhr) {
-					//console.log(response);
-					//Após acabar a leitura faça a imagem aparecer
-					//$(element).fadeIn(300);
-				//});
-				$(element).after('<img style="display:none" class="pre-load-img-cache" src="'+attrs.datasrc+'"/>')
-				$(element).next('.pre-load-img-cache').on('load', function() {
-					$(element).attr('src',attrs.datasrc);
-					$(element).next('.pre-load-img-cache').remove();
-				})
-			    .on('error', function() {
-			    	$(element).attr('src',attrs.notimg);
-			    })
+			    if(empty(!attrs.preLoadImg)){
+			    	 scope.$watch('preLoadImg', function(newValue, oldValue) {
+		                	$(element).attr('src',attrs.imgpreload);
+							$(element).after('<img style="display:none" class="pre-load-img-cache" src="'+newValue+'"/>')
+							$(element).next('.pre-load-img-cache').on('load', function() {
+								$(element).attr('src',newValue);
+								$(element).next('.pre-load-img-cache').remove();
+							})
+						    .on('error', function() {
+						    	$(element).attr('src',attrs.notimg);
+						    })
+		            })
+			    }else{
+				    $(element).attr('src',attrs.imgpreload);
+					$(element).after('<img style="display:none" class="pre-load-img-cache" src="'+attrs.datasrc+'"/>')
+					$(element).next('.pre-load-img-cache').on('load', function() {
+						$(element).attr('src',attrs.datasrc);
+						$(element).next('.pre-load-img-cache').remove();
+					})
+				    .on('error', function() {
+				    	$(element).attr('src',attrs.notimg);
+				    })
+			    }
 	    	}
 	    }
 	}).directive('uploadFile', function ($compile,$filter) {
@@ -587,6 +649,29 @@ app.directive('ngEnter', function () {
 
                 event.preventDefault();
             }
+        });
+    };
+});
+
+app.directive('somenteNumeros', function () {
+    return function (scope, element, attrs) {
+        element.bind("keypress", function (event) {
+           var tecla=(window.event)?event.keyCode:e.which;
+		    if((tecla>47 && tecla<58)) return true;
+		    else{
+		        if (tecla==8 || tecla==0) return true;
+		    else  return false;
+		    }
+        });
+    };
+});
+
+app.directive('keyPressFalseTagsInputCategorias', function () {
+    return function (scope, element, attrs) {
+        element.bind("keypress", function (event) {
+          scope.showCategorias();
+		  return false;
+		    
         });
     };
 });

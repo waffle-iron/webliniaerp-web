@@ -25,10 +25,9 @@ app.controller('RelatorioContasPagar', function($scope, $http, $window, UserServ
 				ng.addError("#form_cliente","A escolha do cliente é obrigatória");
 				error_periodo ++ ;
 			}
-			var dataInicial = $("#dtaInicial").val();
-			var dataFinal   = $("#dtaFinal").val();
-			ng.busca.dataInicial = dataInicial;
-			ng.busca.dataFinal   = dataFinal ;
+
+			var dataInicial = ng.busca.dataInicial;
+			var dataFinal   = ng.busca.dataFinal ;
 			if(empty(dataInicial)){
 				ng.addError('#form_dta_inicial',"A data inicial é obrigatória");
 				if(empty(dataFinal)){
@@ -38,7 +37,7 @@ app.controller('RelatorioContasPagar', function($scope, $http, $window, UserServ
 			}else if(empty(dataFinal)){
 				ng.addError('#form_dta_final',"A data inicial é obrigatória");
 				error_periodo ++ ;
-			}else if(formatDate(dataInicial) > formatDate(dataFinal)){
+			}else if(dataInicial > dataFinal){
 				ng.addError('#form_dta_inicial',"A data inicial não pode ser maior que a data final");
 				error_periodo ++ ;
 			}
@@ -48,14 +47,14 @@ app.controller('RelatorioContasPagar', function($scope, $http, $window, UserServ
 			query_string += $.param(
 										{
 											sql:{
-													literal_exp:"dta_entrada between '"+formatDate(dataInicial)+"'  AND '"+formatDate(dataFinal)+" 23:59:59' ORDER BY dta_entrada ASC,id ASC"
+													literal_exp:"dta_entrada between '"+dataInicial+"'  AND '"+dataFinal+" 23:59:59' ORDER BY dta_entrada ASC,id ASC"
 												},
 											busca_saldo_anterior:{
 												dta_entrada:{
-													literal_exp: "dta_entrada < '"+formatDate(dataInicial)+"'"
+													literal_exp: "dta_entrada < '"+dataInicial+"'"
 												},
 												dta_venda:{
-													literal_exp: "dta_venda < '"+formatDate(dataInicial)+"'"
+													literal_exp: "dta_venda < '"+dataInicial+"'"
 												}
 											}
 										}

@@ -167,8 +167,8 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 				item_atual.desconto = item_atual.desconto / 100 ;
 				item_atual.imposto = item_atual.imposto / 100 ;
 
-				if(validade.validade == undefined)
-					validade.validade = "122009";
+				if(empty(validade.validade))
+					validade.validade = "122099";
 
 				var ano       = parseInt(validade.validade.substring(2,6));
 				var mes       = parseInt(validade.validade.substring(0,2)) -1;

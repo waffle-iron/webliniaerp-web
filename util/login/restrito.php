@@ -12,8 +12,9 @@
 				include_once('dashboard_static.php');
 				die;
 			}
-			
-			if(!in_array(PAGE, $pages)){
+				
+
+			if(!in_array(PAGE, $pages) && !isset($_SESSION['loja'])){
 				include_once('acesso_negado.php');
 				die;
 			}
