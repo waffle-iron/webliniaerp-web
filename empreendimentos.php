@@ -177,7 +177,7 @@
 								</div>
 								<div class="col-sm-3">
 									<div id="num_inscricao_estadual" class="form-group">
-										<label class="control-label">I.E. </label>
+										<label class="control-label">Inscrição Estadual</label>
 										<input class="form-control" ng-model="empreendimento.num_inscricao_estadual">
 									</div>
 								</div>
@@ -257,7 +257,7 @@
 								<div class="row">
 									<div class="col-sm-2">
 									<div class="form-group" id="qtd_dias_teste">
-										<label class="control-label">Qtd Dias</label>
+										<label class="control-label">Quantidade de Dias</label>
 											<input class="form-control text-center" ng-disabled="userLogged.id_empreendimento != 6" ng-show="empreendimento.flg_teste == 1" onKeyPress="return SomenteNumero(event);"  type="text" ng-model="empreendimento.qtd_dias_teste">
 											<input class="form-control text-center" ng-if="empreendimento.flg_teste != 1" ng-disabled="true" >
 									</div>	
@@ -361,7 +361,7 @@
 							<div class="row">
 								<div class="col-sm-3">
 									<div id="num_inscricao_estadual_st" class="form-group">
-										<label class="control-label">I.E ST </label>
+										<label class="control-label">Inscrição Estadual ST </label>
 										<input class="form-control" ng-model="empreendimento.num_inscricao_estadual_st">
 									</div>
 								</div>

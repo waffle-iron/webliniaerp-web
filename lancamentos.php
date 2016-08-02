@@ -385,7 +385,7 @@
 										</div>
 										<div class="col-sm-2">
 											<div class="form-group cheque_valor">
-												<label class="control-label">valor</label>
+												<label class="control-label">Valor</label>
 												<div class="form-group ">
 						    						<input ng-blur="pushCheques()" ng-keyUp="calTotalCheque()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
 						    					</div>
@@ -450,7 +450,7 @@
 										</div>
 										<div class="col-sm-2">
 											<div class="form-group boleto_valor">
-												<label class="control-label">valor</label>
+												<label class="control-label">Valor</label>
 												<div class="form-group ">
 						    						<input ng-blur="pushCheques()" ng-keyUp="calTotalBoleto()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
 						    					</div>
@@ -684,7 +684,7 @@
 								
 								<div class="col-sm-2">
 									<div class="form-group">
-										<label class="control-label">Forma de Pag.</label>
+										<label class="control-label">Forma de Pagamento</label>
 										<!--<select ng-options="item.id as item.nome for item in formas_pagamento"  class="form-control input-sm">
 										    
 										</select>-->

@@ -206,14 +206,14 @@
 				<table id="data" class="table table-bordered table-hover table-striped table-condensed">
 					<thead>
 						<tr>
-							<th class="text-center">Deposito</th>
+							<th class="text-center">Depósito</th>
 							<th class="text-center">Produto</th>
 							<th class="text-center">Fabricante</th>
 							<th class="text-center">Tamanho</th>
-							<th class="text-center">Sabor/cor</th>
+							<th class="text-center">Sabor/Cor</th>
 							<th class="text-center">Validade</th>
-							<th class="text-center">Qtd. Estoque</th>
-							<th class="text-center">Dias p/ Vencer</th>
+							<th class="text-center">Quantidade Estoque</th>
+							<th class="text-center">Dias para Vencer</th>
 						</tr>
 					</thead>
 					<tbody>

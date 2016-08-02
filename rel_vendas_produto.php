@@ -198,7 +198,7 @@
 							<th>Produto</th>
 							<th>Fabricante</th>
 							<th class="text-center" width="60">Tamanho</th>
-							<th class="text-center">Qtd. Vendida</th>
+							<th class="text-center">Quantidade Vendida</th>
 							<th class="text-right" width="100">Custo Total</th>
 							<th class="text-right" width="100">Total Vendido</th>
 							<th class="text-right">Margem Lucro</th>

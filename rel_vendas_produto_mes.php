@@ -122,7 +122,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório de Vendas por Produto</h3>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Vendas por Produto por Mês</h3>
 							<span class="text-muted">Margem de Lucro por Produto</span>
 						</div>
 					</div>
@@ -187,7 +187,7 @@
 							<th>Produto</th>
 							<th>Fabricante</th>
 							<th class="text-center" width="60">Tamanho</th>
-							<th class="text-center">Qtd. Vendida</th>
+							<th class="text-center">Quantidade Vendida</th>
 							<th class="text-right" width="100">Custo Total</th>
 							<th class="text-right" width="100">Total Vendido</th>
 							<th class="text-right">Margem Lucro</th>
@@ -206,7 +206,7 @@
 						</tr>
 						<tr ng-if="vendas == false && vendas.length != 0">
 							<td colspan="10">
-								Nenhuma movimentação encontrada para este caixa.
+								Nenhum registro encontrado
 							</td>
 						</tr>
 						<tbody ng-repeat="(key, item) in vendas">

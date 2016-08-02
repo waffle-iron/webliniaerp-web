@@ -184,7 +184,7 @@
 
 								<div class="col-lg-2">
 									<div class="form-group">
-										<label class="control-label">fornecedor</label>
+										<label class="control-label">Fornecedor</label>
 										<div class="input-group">
 											<input ng-click="selFornecedor()" type="text" class="form-control" ng-model="fornecedor.nome_fornecedor" readonly="readonly" style="cursor: pointer;" input/>
 											<span class="input-group-btn">
@@ -195,7 +195,7 @@
 								</div>
 								<div class="col-sm-2">
 									<div class="form-group">
-										<label class="control-label">Forma de Pag.</label>
+										<label class="control-label">Forma de Pagamento</label>
 										<select ng-model="busca.id_forma_pagamento" class="form-control">
 											<option value=""></option>
 											<option ng-repeat="item in formas_pagamento"  value="{{ item.id }}">{{ item.nome }}</option>
@@ -266,7 +266,7 @@
 						</tr>
 						<tr ng-if="pagamentos.length != null && pagamentos.length <= 0">
 							<td colspan="6" class="text-center">
-								<b>Nenhum Pagamento encontrado</b>
+								<b>Nenhum registro encontrado</b>
 							</td>
 						</tr>
 						<tr ng-repeat="item in pagamentos">

@@ -186,7 +186,7 @@
 								</div>-->
 								<div class="col-sm-4">
 									<div class="form-group">
-										<label class="control-label">Deposito</label>
+										<label class="control-label">Depósito</label>
 										<div class="input-group">
 											<input ng-click="selDeposito()" type="text" class="form-control" ng-model="estoqueSaida.nome_deposito" readonly="readonly" style="cursor: pointer;" />
 											<span class="input-group-btn">

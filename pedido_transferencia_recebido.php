@@ -208,12 +208,12 @@
 														<th>Produto</th>
 														<th>Fabricante</th>
 														<th>Peso</th>
-														<th>sabor</th>
+														<th>Sabor</th>
 														<th class="text-center" >Estoque</th>
-														<th class="text-center" >Qtd.Pedida</th>
-														<th>Qtd. transferir</th>
+														<th class="text-center" >Quantidade Pedida</th>
+														<th>Quantidade a Transferir</th>
 														<th width="250">
-															Deposito
+															Depósito
 															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
 														</th>
 														<th></th>
@@ -293,12 +293,12 @@
 														<th>Produto</th>
 														<th>Fabricante</th>
 														<th>Peso</th>
-														<th>sabor</th>
+														<th>Sabor</th>
 														<th class="text-center" >Estoque</th>
-														<th class="text-center" >Qtd.Pedida</th>
-														<th>Qtd. transferir</th>
+														<th class="text-center" >Quantidade Pedida</th>
+														<th>Quantidade a Transferir</th>
 														<th width="250">
-															Deposito
+															Depósito
 															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
 														</th>
 														<th></th>
@@ -363,12 +363,12 @@
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Dta. Pedido</th>
-									<th>Dta. transferência</th>
-									<th>Usuario</th>
+									<th>Data Pedido</th>
+									<th>Data transferência</th>
+									<th>Usuário</th>
 									<th>Empreendimento</th>
 									<th>Status</th>
-									<th width="80" style="text-align: center;">Opções</th>
+									<th width="80" style="text-align: center;">Ações</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -530,10 +530,10 @@
 											<th >Nome</th>
 											<th >Fabricante</th>
 											<th >Tamanho</th>
-											<th >Sabor/cor</th>
+											<th >Sabor/Cor</th>
 											<th >Estoque</th>
-											<th >qtd</th>
-											<th ></th>
+											<th >Quantidade</th>
+											<th >Ações</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -593,7 +593,7 @@
 							<div class="col-sm-12">
 								<b>ID: </b> {{view.transferencia.id}}<br/>
 								<b>Dta. Pedido: </b> {{view.transferencia.dta_pedido | dateFormat : 'dateTime'}}<br/>
-								<b>Usuario: </b> {{view.transferencia.nome_usuario_pedido}}<br/>
+								<b>Usuário: </b> {{view.transferencia.nome_usuario_pedido}}<br/>
 								<b>Empreendimento: </b> {{view.transferencia.nome_empreendimento_pedido}}<br/>
 								<b>Status: </b> {{view.transferencia.dsc_status_transferencia_estoque}}<br/><br/>
 							</div>
@@ -605,9 +605,9 @@
 										<tr>
 											<th >ID produto</th>
 											<th >Produto</th>
-											<th class="text-center" >Qtd. Pedida</th>
-											<th ng-show="item.id_status_transferencia == 2" class="text-center">Qtd. Transferida</th>
-											<th ng-show="item.id_status_transferencia == 3" class="text-center">Qtd. Entregue</th>
+											<th class="text-center" >Quantidade Pedida</th>
+											<th ng-show="item.id_status_transferencia == 2" class="text-center">Quantidade Transferida</th>
+											<th ng-show="item.id_status_transferencia == 3" class="text-center">Quantidade Entregue</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -634,7 +634,7 @@
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Depositos</span></h4>
+						<h4>Depósitos</span></h4>
       				</div>
 				    <div class="modal-body">
 						<div class="row">
