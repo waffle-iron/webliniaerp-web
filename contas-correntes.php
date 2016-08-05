@@ -595,7 +595,7 @@
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<i class="fa fa-random"></i> Lançamentos
+						<i class="fa fa-filter"></i> Opções de Filtro
 						<div class="pull-right">
 							<a class="btn btn-xs btn-{{(!editing) ? 'success' : 'danger'}} btn-novo" ng-click="showBoxNovo()" ng-hide="editing">
 								<i class="fa {{(!editing) ? 'fa-plus-circle' : 'fa-minus-circle'}}"></i> {{(!editing) ? 'Novo Lançamento' : 'Cancelar'}}

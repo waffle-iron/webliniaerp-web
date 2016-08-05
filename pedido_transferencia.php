@@ -398,7 +398,7 @@
 									<th>Solicitante</th>
 									<th>Empreendimento</th>
 									<th>Status</th>
-									<th width="80" style="text-align: center;">Opções</th>
+									<th width="80" style="text-align: center;">Ações</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -562,9 +562,9 @@
 											<th >Nome</th>
 											<th >Fabricante</th>
 											<th >Tamanho</th>
-											<th >Sabor/cor</th>
-											<th >qtd</th>
-											<th ></th>
+											<th >Sabor/Cor</th>
+											<th >Quantidade</th>
+											<th >Ações</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -755,7 +755,7 @@
 											<th >Nome</th>
 											<th >Apelido</th>
 											<th >Perfil</th>
-											<th colspan="2">selecionar</th>
+											<th colspan="2">Selecionar</th>
 										</tr>
 									</thead>
 									<tr ng-if="usuarios.itens == null">

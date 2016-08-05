@@ -64,10 +64,10 @@ if(isset($_GET) && !empty($_GET)) {
 							$value = $new_value;
 							break;
 						case 'INT':
-							$value = (int)str_replace(array("R$ ", ",", "."), "", $value);
+							$value = (int)str_replace(array("R$ ", ",", ".", '"'), "", $value);
 							break;
 						case 'DOUBLE':
-							$value = str_replace(array("R$ ","R$"), "", $value);
+							$value = str_replace(array("R$ ","R$", '"'), "", $value);
 							$value = (double)str_replace(",", ".", $value);
 							$value = number_format($value, 2);
 							break;

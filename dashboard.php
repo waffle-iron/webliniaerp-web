@@ -604,7 +604,7 @@
 								</span>
 								<div class="pull-right text-right">
 									<div class="value">{{ count.orcamentos }}</div>
-									<div class="title">Orcamentos</div>
+									<div class="title">Orçamentos</div>
 								</div>
 							</div>
 						</div>

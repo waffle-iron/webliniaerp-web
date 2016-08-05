@@ -336,7 +336,7 @@
 									<tbody>
 										<tr>
 											<td ng-if="itens_venda == null && view.busca_return_empty == false" class="text-center" colspan="6">
-												Nenhuma venda seleciona.
+												Nenhum registro encontrado
 											</td>
 											<th class="text-center" colspan="6" ng-if="itens_venda.length == 0 && view.busca_return_empty == false">
 												<i class="fa fa-refresh fa-spin"></i> Aguarde, buscando venda...
@@ -389,7 +389,7 @@
 						<table class="table table-bordered table-condensed table-striped table-hover">
 						<div class="loading-ajax" id="loading-ajax-lista-detalhes"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
 							<tr ng-show="(devolucoes.length == 0)">
-								<td colspan="4">Não há devoluçãoes cadastradas</td>
+								<td colspan="4">Nenhum registro encontrado</td>
 							<tr>
 							<thead ng-hide="devolucoes.length == 0">
 								<tr>

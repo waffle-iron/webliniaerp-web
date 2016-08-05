@@ -383,7 +383,7 @@
 										<div class="tab-pane fade" id="estoque">
 											<div ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="row">
 												<div class="col-sm-5" id="inventario_novo_deposito">
-													<label class="control-label">Deposito</label>
+													<label class="control-label">Depósito</label>
 													<div class="input-group">
 											            <input ng-model="inventario_novo.nome_deposito" ng-disabled="true" type="text" class="form-control input-xs" ng-enter="loadDepositos(0,10)">
 											            <div class="input-group-btn">
@@ -401,7 +401,7 @@
 												</div>
 												<div class="col-sm-2">
 													<div class="form-group" id="inventario_novo_qtd">
-														<label class="control-label">Qtd</label>
+														<label class="control-label">Quantidade</label>
 														<input ng-model="inventario_novo.qtd_ivn" onkeypress="return SomenteNumero(event);" type="text" class="form-control input-xs">
 													</div>
 												</div>
@@ -419,7 +419,7 @@
 													<table class="table table-bordered table-condensed table-striped table-hover">
 														<thead>
 															<tr>
-																<th class="text-center">Deposito</th>
+																<th class="text-center">Depósito</th>
 																<th class="text-center">Validade</th>
 																<th class="text-center" width="100">Quantidade</th>
 															</tr>
@@ -477,9 +477,9 @@
 												</div>
 												<div class="col-sm-4">
 													<div class="form-group" id="nme_arquivo_nutricional">
-														<label class="control-label" ng-show="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo nutricional</label>
+														<label class="control-label" ng-show="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo Nutricional</label>
 														<a href="assets/arquivos/produtos/{{ produto.nme_arquivo_nutricional }}"  target="_blanck">
-															<label style="cursor:pointer" class="control-label" ng-hide="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo nutricional</label>
+															<label style="cursor:pointer" class="control-label" ng-hide="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo Nutricional</label>
 														</a>
 														<div class="upload-file">
 															<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  id="arquivo-produto" name="arquivo-produto"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />

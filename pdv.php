@@ -248,7 +248,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<p>
-									As configuraçãoes necessarias para que o caixa funcione corretamente ainda não foram efetuadas.
+									As configuraçãoes necessárias para que o caixa funcione corretamente ainda não foram efetuadas.
 									<br/>
 									Solicite que seu administrador as faça.
 								</p>
@@ -417,7 +417,7 @@
 						    			</div>
 						    		</div>
 						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 2 || pagamento.id_forma_pagamento == 9 || pagamento.id_forma_pagamento == 4">
-						    			<label class="control-label">parcelas</label>
+						    			<label class="control-label">Parcelas</label>
 						    			<div class="form-group ">
 						    					<input ng-blur="pushCheques()" ng-focus="qtdCheque()" ng-model="pagamento.parcelas" type="text" class="form-control input-sm" >
 						    			</div>
@@ -432,7 +432,7 @@
 										</select>
 									</div>
 						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 6">
-						    			<label class="control-label">parcelas</label>
+						    			<label class="control-label">Parcelas</label>
 						    			<div class="form-group ">
 						    					<input ng-blur="pushCheques()" ng-focus="qtdCheque()" ng-model="pagamento.parcelas" type="text" class="form-control input-sm" >
 						    			</div>
@@ -471,7 +471,7 @@
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group cheque_valor">
-											<label class="control-label">valor</label>
+											<label class="control-label">Valor</label>
 											<div class="form-group ">
 					    						<input ng-blur="pushCheques()" ng-keyUp="calTotalCheque()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
 					    					</div>
@@ -534,7 +534,7 @@
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group boleto_valor">
-											<label class="control-label">valor</label>
+											<label class="control-label">Valor</label>
 											<div class="form-group ">
 					    						<input ng-blur="pushCheques()" ng-keyUp="calTotalBoleto()"  thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
 					    					</div>
@@ -598,7 +598,7 @@
 									</div>
 									<div class="col-sm-2">
 										<div class="form-group cheque_valor">
-											<label class="control-label">valor</label>
+											<label class="control-label">Valor</label>
 											<div class="form-group ">
 					    						<input  ng-keyUp="calTotalPromessa()" thousands-formatter ng-model="item.valor_pagamento" type="text" class="form-control" >
 					    					</div>
@@ -778,7 +778,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="form-group">
-												<label class="control-label"><i class="fa fa-barcode"></i> Pesquisa por Cód. Barras</label>
+												<label class="control-label"><i class="fa fa-barcode"></i> Pesquisa por Código Barras</label>
 												<div class="input-group">
 													<input id="buscaCodigo" type="text" class="form-control input-lg" ng-model="busca.codigo" sync-focus-with="!busca.ok" ng-enter="findProductByBarCode();">
 													<span class="input-group-btn">
@@ -843,7 +843,7 @@
 														<thead>
 																<tr>
 																	<th width="80" >ID</th>
-																	<th width="80" >Cod. Barra</th>
+																	<th width="80" >Código Barra</th>
 																	<th class="text-center">Nome</th>
 																	<th class="text-center">Fabricante</th>
 																	<th class="text-center"width="140">Tamanho</th>
@@ -877,7 +877,7 @@
 										<div class="col-sm-12">
 											<div class="alert alert-out alert-warning">
 												Desculpe, os produtos marcados em <span style="color:#FF9191">vermelho</span>,
-											    não estão mais disponivel em nosso estoque, para continuar a venda basta
+											    não estão mais disponível em nosso estoque, para continuar a venda basta
 											    retira-los do carrinho.
 											</div>
 										</div>
@@ -984,9 +984,9 @@
 															<th ng-show="show_aditional_columns">Fabricante</th>
 															<th ng-show="show_aditional_columns">Tamanho</th>
 															<th ng-show="show_aditional_columns">Sabor/Cor</th>
-															<th class="text-center" style="width: 80px;" >Qtd.</th>
+															<th class="text-center" style="width: 80px;" >Quantidade</th>
 															<th class="text-center" style="width: 100px;" ng-if="show_vlr_real" >RV</th>
-															<th class="text-center" style="width: 100px;">Vlr. Unit.</th>
+															<th class="text-center" style="width: 100px;">Valor Unit.</th>
 															<th class="text-center" style="width: 230px;" colspan="3">Desconto</th>
 															<th class="text-center" style="width: 100px;">Vlr. c/ Desc.</th>
 															<th class="text-center" style="width: 100px;">Subtotal</th>
@@ -1147,7 +1147,7 @@
 										</select>
 									</div>
 						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 6">
-						    			<label class="control-label">parcelas</label>
+						    			<label class="control-label">Parcelas</label>
 						    			<div class="form-group ">
 						    					<input ng-model="pagamento.parcelas" type="text" class="form-control input-sm" >
 						    			</div>
@@ -1441,7 +1441,7 @@
 											<th >Nome</th>
 											<th >Apelido</th>
 											<th >Perfil</th>
-											<th colspan="2">selecionar</th>
+											<th colspan="2">Selecionar</th>
 										</tr>
 									</thead>
 									<tr ng-if="clientes == null">
@@ -1504,7 +1504,7 @@
 											<th >ID</th>
 											<th >Data</th>
 											<th >valor</th>
-											<th colspan="2">selecionar</th>
+											<th colspan="2">Selecionar</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -1546,7 +1546,7 @@
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 ng-if="cdb_busca.status==false">Produtos</span></h4>
 						<h4 ng-if="cdb_busca.status==true" style="margin-bottom: 0px;">Produtos</span></h4>
-						<span ng-if="cdb_busca.status==true" class="text-muted">Produtos relaionados ao codigo de barra {{ cdb_busca.codigo }}</span>
+						<span ng-if="cdb_busca.status==true" class="text-muted">Produtos relacionados ao codigo de barra {{ cdb_busca.codigo }}</span>
       				</div>
 				    <div class="modal-body">
 						<div class="row">
@@ -1638,7 +1638,7 @@
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Transferências entre depositos</span></h4>
+						<h4>Transferências entre depósitos</span></h4>
       				</div>
 				    <div class="modal-body" style="min-height:500px">
 						<div class="row">
@@ -1667,12 +1667,12 @@
 											<th >Produto</th>
 											<th >Fabricante</th>
 											<th >Tamanho</th>
-											<th >Deposito</th>
-											<th style="width:40px">Qtd</th>
+											<th >Depósito</th>
+											<th style="width:40px">Quantidade</th>
 											<th >Validade</th>
 											<th style="width:30px">Qtd para tranferência</th>
 											<th style="width: 200px;">Dep. tranferência</th>
-											<th colspan="2">selecionar</th>
+											<th colspan="2">Selecionar</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -1680,10 +1680,10 @@
 											<td colspan="9" class="text-center"><i class='fa fa-refresh fa-spin'></i> Aguarde, carregando ... </td>
 										</tr>
 										<tr ng-show="(estoqueDep.length == 0 && transferencia == false)">
-											<td colspan="2">Nemhum produto foi encontrado.</td>
+											<td colspan="2">Nenhum produto foi encontrado.</td>
 										</tr>
 										<tr ng-show="(estoqueDep.length == 0 && transferencia == true)">
-											<td colspan="2" style="background: #FBFFA5;color: #000;"><i class='fa fa-refresh fa-spin'></i>Aguarde, a transferencia está sendo realizada ...</td>
+											<td colspan="2" style="background: #FBFFA5;color: #000;"><i class='fa fa-refresh fa-spin'></i>Aguarde, a transferência está sendo realizada ...</td>
 										</tr>
 										<tr ng-repeat="item in estoqueDep">
 											<td>{{ item.nome }}</td>
@@ -2044,7 +2044,7 @@
 
 											<div class="col-sm-2">
 												<div id="inscricao_estadual" class="form-group">
-													<label class="control-label">I.E. </label>
+													<label class="control-label">Inscrição Estadual</label>
 													<input class="form-control" ng-model="new_cliente.inscricao_estadual">
 												</div>
 											</div>
@@ -2137,7 +2137,7 @@
 											<th >Nome</th>
 											<th >Apelido</th>
 											<th >Perfil</th>
-											<th colspan="2">selecionar</th>
+											<th colspan="2">Selecionar</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -2439,7 +2439,7 @@
 											<th class="text-center">Nº Comanda</th>
 											<th class="text-center">Mesa</th>
 											<th class="text-center">Cliente</th>
-											<th class="text-center">Qtd. itens</th>
+											<th class="text-center">Quantidade itens</th>
 											<th width="100" class="text-center">Valor</th>
 											<th></th>
 										</tr>

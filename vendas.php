@@ -239,7 +239,7 @@
 												<th class="text-center" width="80">Data</th>
 												<th class="text-center">Vendedor</th>
 												<th class="text-center">Cliente</th>
-												<th class="text-center" width="80">status</th>
+												<th class="text-center" width="80">Status</th>
 												<th class="text-center" width="100">Total</th>
 												<th class="text-center" width="190">Ações</th>
 											</tr>

@@ -233,13 +233,13 @@
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<tr>
 								<td colspan="5" class="text-center" ng-if="ordem_producao.length == 0">
-									Nenhuma Ordem de produção encontrada
+									Nenhuma Ordem de Produção encontrada
 								</td>
 							</tr>
 							<thead>
 								<tr>
 									<th>#</th>
-									<th class="text-center" style="width: 170px;">Dta. Criação</th>
+									<th class="text-center" style="width: 170px;">Data Criação</th>
 									<th>Responsável</th>
 									<th class="text-center" style="width: 250px;">Status</th>
 									<th width="125" style="text-align: center;">Opções</th>
@@ -319,7 +319,7 @@
 											<th>#</th>
 											<th>Nome</th>
 											<th>Fabricante</th>
-											<th>Qtd.</th>
+											<th>Quantidade</th>
 											<th>Tamanho</th>
 											<th>Sabor/Cor</th>
 											<th width="80" >qtd</th>
@@ -436,7 +436,7 @@
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4>Detalhes da Ordem de Produção</h4>
-						<p class="muted" style="margin: 0px 0 1px;"><strong>Dta Criação </strong> : {{ viewOrdemProducao.dta_create  | dateFormat:"dateTime" }}</p>
+						<p class="muted" style="margin: 0px 0 1px;"><strong>Data Criação </strong> : {{ viewOrdemProducao.dta_create  | dateFormat:"dateTime" }}</p>
 						<p class="muted" style="margin: 0px 0 1px;"><strong>ID </strong> :  #{{ viewOrdemProducao.id }}</p>
 						<p class="muted" style="margin: 0px 0 1px;" ><strong>Responsável :</strong> {{ viewOrdemProducao.nome_responsavel }}</p>
       					<p class="muted" style="margin: 0px 0 1px;"><strong>Status: </strong>{{ viewOrdemProducao.nome_status }}</p>
@@ -503,7 +503,7 @@
 				   		<div class="row">
 				   			<div class="col-sm-12">
 				   				<div class="alert alert-detalhes alert-warning">
-				   					Os Insumos a baixo marcados em vermelho não tem estoque para continuar com o processo
+				   					Os Insumos abaixo marcados em vermelho não tem estoque para continuar com o processo
 				   				</div>
 				   			
 				   				<table class="table table-condensed">

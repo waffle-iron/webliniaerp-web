@@ -267,9 +267,9 @@
 							<thead ng-show="utimosInventarios.length > 0">
 								<tr>
 									<th width="50" class="text-center">#</th>
-									<th width="80">Dt. Contagem</th>
+									<th width="80">Data da Contagem</th>
 									<th>Depósito</th>
-									<th>Resp. Contagem</th>
+									<th>Responsável pela Contagem</th>
 									<th width="80" class="text-center">Opções</th>
 								</tr>
 							</thead>

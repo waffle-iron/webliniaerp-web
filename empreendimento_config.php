@@ -646,7 +646,7 @@
 								<div class="row">
 									<div class="col-sm-4">
 										<div class="form-group" id="regimeTributario">
-											<label class="ccontrol-label">Operacao Padrão</label> 
+											<label class="ccontrol-label">Operação Padrão</label> 
 											<select chosen
 										    option="lista_operacao"
 										    ng-model="configuracoes.id_operacao_padrao_venda"
@@ -679,7 +679,7 @@
 
 										<div class="col-sm-3" id="num_ultimo_documento_fiscal">
 											<div class="form-group">
-												<label class="control-label">Últ. Número Utilizado</label>
+												<label class="control-label">Último Número Utilizado</label>
 												<input ng-model="serie_documento_fiscal.num_ultimo_documento_fiscal" type="text" class="form-control input-sm">
 											</div>
 										</div>

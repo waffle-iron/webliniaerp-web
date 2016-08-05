@@ -528,7 +528,7 @@
 									<div class="row">
 										<div class="col-sm-4">
 											<div class="form-group" id="regimeTributario">
-												<label class="ccontrol-label">Regime Tributario </label> 
+												<label class="ccontrol-label">Regime Tributário </label> 
 												<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
 											    option="regimeTributario"
 											    no-results-text ="'Nenhum valor encontrado'"
@@ -692,7 +692,7 @@
 												    <label class="label-checkbox">
 														<input type="checkbox" onclick="if($(this).is(':checked')){$('#input_senha').attr('type','text')}else{$('#input_senha').attr('type','password')}">
 														<span class="custom-checkbox"></span>
-														 mostrar senha<br>
+														 Mostrar senha<br>
 													</label>
 												</div>
 											</div>
@@ -864,7 +864,7 @@
 									<thead>
 										<tr>
 											<th class="text-center" width="50">#</th>
-											<th class="text-center" width="80">dta. cadastro</th>
+											<th class="text-center" width="80">Data Cadastro</th>
 											<th class="text-center" width="100">Saldo</th>
 											<th class="text-center" style="min-width: 150px;">Nome/CPF</th>
 											<th class="text-center" width="130">Apelido</th>

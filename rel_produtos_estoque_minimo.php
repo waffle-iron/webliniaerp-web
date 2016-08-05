@@ -170,9 +170,9 @@
 							<th class="text-center">Produto</th>
 							<th class="text-center">Fabricante</th>
 							<th class="text-center">Tamanho</th>
-							<th class="text-center">Sabor/cor</th>
-							<th class="text-center">Qtd. Estoque</th>
-							<th class="text-center">Qtd. Mínima</th>
+							<th class="text-center">Sabor/Cor</th>
+							<th class="text-center">Quantidade Estoque</th>
+							<th class="text-center">Quantidade Mínima</th>
 						</tr>
 					</thead>
 					<tbody>
