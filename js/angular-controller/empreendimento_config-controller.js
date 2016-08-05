@@ -343,6 +343,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 						}
 			chaves.push(item2);
 		}
+		
 		if(ng.configuracoes.flg_emitir_nfe_pdv != undefined){
 			var item3 = {
 							nome 				:'flg_emitir_nfe_pdv',
@@ -405,6 +406,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 							id_empreendimento	:ng.userLogged.id_empreendimento
 						}
 			chaves.push(item9);
+		}
+
+		if(ng.configuracoes.flg_questionar_manutencao_precos_orcamento != undefined){
+			var item10 = {
+							nome 				:'flg_questionar_manutencao_precos_orcamento',
+							valor 				:ng.configuracoes.flg_questionar_manutencao_precos_orcamento , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item10);
 		}
 
 		btn.button('loading');

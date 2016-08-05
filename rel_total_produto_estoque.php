@@ -213,16 +213,17 @@
 				<table id="data" class="table table-bordered table-hover table-striped table-condensed" ng-if="agrupar == false">
 					<thead>
 						<tr>
-							<th width="100">ID</th>
+							<th class="text-center" width="100">ID</th>
+							<th>Cód. Barras</th>
 							<th>Produto</th>
 							<th width="100" class="text-center">Fabricante</th>
 							<th width="100" class="text-center">Tamanho</th>
 							<th width="100" class="text-center">Sabor/Cor</th>
+							<th width="100" class="text-center">R$ Custo Unit.</th>
 							<th width="100" class="text-center" >Depósito</th>
 							<th width="100" class="text-center" ng-if="grupo_tabela == 'validade'">Validade</th>
 							<th width="100" class="text-center">Estoque</th>
-							<th width="100" class="text-center" ng-if="false">Custo Uni.</th>
-							<th width="100" class="text-center" ng-if="false">Custo Total</th>
+							<th width="100" class="text-center hide">R$ Custo Total</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -237,22 +238,31 @@
 							</td>
 						</tr>
 						<tr ng-repeat="item in produtos">
-							<td class="">
+							<td class="text-center">
 								{{ item.id }}
 							</td>
+							<td class="text-center">{{ item.codigo_barra }}</td>
 							<td>{{ item.nome }}</td>
 							<td class="text-center">{{ item.nome_fabricante }}</td>
 							<td class="text-center">{{ item.peso }}</td>
 							<td class="text-center">{{ item.sabor }}</td>
+							
+							<td class="text-right">R$ {{ item.vlr_custo_real | numberFormat : 2 : ',' : '.' }}</td>
 
 							<td class="text-center" >{{ (grupo_tabela == 'validade' || grupo_tabela == 'deposito' || busca_deposito) &&  item.nome_deposito  || 'Todos' }}</td>
 							<td class="text-center" ng-if="grupo_tabela == 'validade'">{{ item.dta_validade != '2099-12-31' && (item.dta_validade | dateFormat:'date') || ' ' }}</td>
 
 							<td class="text-center">{{ item.qtd_item }}</td>
-							<td class="text-right" ng-if="false">R$ {{ item.vlr_custo_real|numberFormat:2:',':'.' }}</td>
-							<td class="text-right" ng-if="false">R$ {{ (item.vlr_custo_real*item.qtd_item)|numberFormat:2:',':'.' }}</td>
+							<td class="text-right hide">R$ {{ (item.vlr_custo_real * item.qtd_item) | numberFormat : 2 : ',' : '.' }}</td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td class="text-right text-bold" colspan="8">TOTAL</td>
+							<td class="text-center">{{ qtd_total_estoque }}</td>
+							<td class="text-right hide">R$ {{ vlr_total_estoque | numberFormat : 2 : ',' : '.'  }}</td>
+						</tr>
+					</tfoot>
 				</table>
 				<table id="data" class="table table-bordered table-hover table-striped table-condensed" ng-if="agrupar == 'produto' ">
 						<thead>

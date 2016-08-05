@@ -43,7 +43,11 @@
 				<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="<?php echo URL_BASE.NICKNAME ?>" class="top-link"><i class="fa fa-arrow-left"></i> Continuar Comprando</a></li>
-						<li><a href="<?php echo URL_BASE.NICKNAME ?>/carrinho" class="top-link"><i class="fa fa-shopping-cart"></i> Meu Carrinho</a></li>
+						<li>
+							<a href="<?php echo URL_BASE.NICKNAME ?>/carrinho" class="top-link">
+								<i class="fa fa-shopping-cart"></i> Meu Carrinho <span class="badge badge-danger"><?php echo count($_SESSION['carrinho']); ?></span>
+							</a>
+						</li>
 						<li><a href="<?php echo URL_BASE?>logout.php" class="top-link"><i class="fa fa-lock"></i> Sair</a></li>
 					</ul>
 				</nav>
@@ -57,7 +61,7 @@
 						<img src="<?php echo URL_BASE ?>{{produto.img}}"> <!--750x730-->
 						<div class="ribbon-wrapper" style="width: 100px;height: 100px;" ng-if="produto.qtd_real_estoque <= 0">
 							<div style="width: 134px;" class="ribbon-inner shadow-pulse bg-danger">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sem estoque
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Esgotado
 							</div>
 						</div>
 					</div>
@@ -70,13 +74,13 @@
 						</div>
 					</div>
 
-					<div class="row">
+					<div class="row" ng-show="(produto.nome_fabricante)">
 						<div class="col-sm-12">
 							<h5>Fabricante: {{ produto.nome_fabricante }}</h5>
 						</div>
 					</div>
 
-					<div class="row">
+					<div class="row" ng-show="(produto.peso)">
 						<div class="col-sm-12">
 							<h5>Tamanho: {{ produto.peso }}</h5>
 						</div>
@@ -91,14 +95,14 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<button type="button" ng-if="exists == false && produto.qtd_real_estoque > 0" ng-click="addCarrinho(produto.id_produto)" class="btn btn-lg btn-success btn-add-carrinho"><i class="fa fa-shopping-cart"></i> Adicionar no carrinho</button>
-							<button type="button" ng-if="exists == true && produto.qtd_real_estoque > 0"  ng-click="delCarrinho(produto.id_produto)" class="btn btn-lg btn-danger btn-del-carrinho"><i class="fa fa-shopping-cart"></i> retirar do carrinho</button>
+							<button type="button" ng-if="exists == true && produto.qtd_real_estoque > 0"  ng-click="delCarrinho(produto.id_produto)" class="btn btn-lg btn-danger btn-del-carrinho"><i class="fa fa-shopping-cart"></i> Retirar do carrinho</button>
 							<button type="button" ng-if="produto.qtd_real_estoque <= 0"  ng-click="semEstoque(produto)" class="btn btn-lg btn-primary btn-del-carrinho"><i class="fa fa-shopping-cart"></i> Solicite já</button>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="row" style="margin-top: 10px;">
+			<div class="row" style="margin-top: 10px;" ng-show="(produto.descricao)">
 				<div class="col-sm-12">
 					<h5>Descrição do Produto</h5>
 					<hr style="margin-top: 0px;">
@@ -107,11 +111,11 @@
 
 			<div class="row">
 				<div class="col-sm-12">
-					<p>
+					<p ng-show="(produto.descricao)">
 						{{ produto.descricao }}
 					</p>
 
-					<a target="_blanck" style="font-size:12px;color:#0e92c1;text-decoration: underline;" href="<?php echo URL_BASE ?>{{ produto.nme_arquivo_nutricional }}">Veja as informaçãoes nutricionais</a>
+					<a ng-show="(produto.nme_arquivo_nutricional)" target="_blanck" style="font-size:12px;color:#0e92c1;text-decoration: underline;" href="<?php echo URL_BASE ?>{{ produto.nme_arquivo_nutricional }}">Veja as informaçãoes nutricionais</a>
 				</div>
 			</div>
 		</div>
@@ -134,7 +138,7 @@
 				   		<div class="row">
 							<div class="col-sm-4">
 								<div class="form-group" id="sabor_desejado">
-									<label class="control-label">sabor</label>
+									<label class="control-label">Sabor/Cor</label>
 									<input ng-model="desejo.sabor_desejado" type="text"  class="form-control input-sm">
 								</div>
 							</div>
@@ -152,7 +156,7 @@
 											<i class="fa fa-plus-circle"></i> Detalhes
 										</a>
 										<button data-loading-text="Aguarde..." ng-click="salvarDesejo()" type="submit" id="btn-salvar-desejo" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
+											<i class="fa fa-save"></i> Incluir na lista de desejos
 										</button>
 									</div>
 								</div>
