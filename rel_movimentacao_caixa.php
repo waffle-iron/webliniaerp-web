@@ -210,7 +210,13 @@
 							</td>
 
 							<td ng-if="item.tipo_movimentacao == 'Sangria' || item.tipo_movimentacao == 'Reforco' ">
-								{{ item.dsc_movimentacao}} ({{ item.conta_saida }} >> {{ item.conta_entrada }} )
+								<a ng-if="item.tipo_movimentacao == 'Sangria'" style="cursor:pointer" init-popover content="
+								<div><b>Fornecedor:</b> {{ item.nome_fornecedor }} <br/> <b>Observação:</b> {{ item.obs_pagamento_saida }}<div/>
+								" >{{ item.dsc_movimentacao}} ({{ item.conta_saida }} >> {{ item.conta_entrada }} )</a>
+
+								<a ng-if="item.tipo_movimentacao == 'Reforco'" style="cursor:pointer" init-popover content="
+								<div><b>Observação:</b> {{ item.obs_pagamento_entrada }}<div/>
+								" >{{ item.dsc_movimentacao}} ({{ item.conta_saida }} >> {{ item.conta_entrada }} )</a>
 							</td>
 
 							<td ng-if="item.id_tipo_movimentacao == 5">

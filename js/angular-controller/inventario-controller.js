@@ -159,7 +159,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 			});
 		}
 
-		if(empty(ng.itemValidade.qtd)){
+		if(empty(ng.itemValidade.qtd) && Number(ng.itemValidade.qtd) != 0 ){
 			$("#item-qtd-add").addClass("has-error");
 			var formControl = $("#item-qtd-add")
 				.attr("data-toggle", "tooltip")

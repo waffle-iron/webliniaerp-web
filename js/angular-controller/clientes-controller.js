@@ -224,6 +224,9 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		ng.clientes = null ;
 		var query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+"&usu->id[exp]= NOT IN("+ng.configuracao.id_cliente_movimentacao_caixa+","+ng.configuracao.id_usuario_venda_vitrine+"))";
 
+		if(not_in(ng.userLogged.id,'222,498,1069,46')){
+			query_string += " AND (usu.id NOT IN (222,498,1069,46) OR ( usu.id IN (222,498,1069,46) AND emp.id = 6 ) )";
+		}
 		if(ng.busca.clientes != ""){
 			query_string += "&"+$.param({"(usu->nome":{exp:"like'%"+ng.busca.clientes+"%' OR apelido like '%"+ng.busca.clientes+"%')"}})+"";
 		}

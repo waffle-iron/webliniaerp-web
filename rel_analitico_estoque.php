@@ -165,7 +165,7 @@
 								<div class="col-lg-4">
 									<div class="form-group">
 										<label class="control-label">Depósito</label>
-										<select class="form-control" ng-model="deposito" ng-options="i.nme_deposito for i in depositos"></select>
+										<select class="form-control" ng-model="deposito.id" ng-options="i.id as i.nme_deposito for i in depositos"></select>
 									</div>
 								</div>
 

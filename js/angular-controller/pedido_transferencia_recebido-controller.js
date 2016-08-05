@@ -22,6 +22,12 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
     ng.editing = false;
     ng.enviarNovaTransferencia = false ;
 
+    ng.testeDep = [
+    	{ nome:'Deposito 1',validade:'2016-10-10',qtd:10 },
+    	{ nome:'Deposito 2',validade:'2016-10-05',qtd:5 }
+    ];
+    ng.teste="jheizer";
+
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
 
@@ -69,7 +75,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 
     	var query_string = "?id_usuario="+ng.userLogged.id+"&emp->id[exp]=<>"+ng.userLogged.id_empreendimento;
     	if(ng.busca.empreendimento != ""){
-    		query_string = "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
+    		query_string += "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
     	}
 
     	ng.empreendimentos = [];
@@ -104,8 +110,8 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 
-		var query_string = "?tpe->id_empreendimento="+ng.transferencia.id_empreendimento_pedido;
-		query_string +="&pro->id[exp]= IN(SELECT tp.id FROM tbl_produtos AS tp INNER JOIN tbl_produto_empreendimento AS tpe ON tp.id = tpe.id_produto WHERE tpe.id_empreendimento IN ("+ng.userLogged.id_empreendimento+"))";
+		var query_string = "?emp->id_empreendimento="+ng.userLogged.id_empreendimento;
+		query_string +="&prd->id[exp]= IN(SELECT tp.id FROM tbl_produtos AS tp INNER JOIN tbl_produto_empreendimento AS tpe ON tp.id = tpe.id_produto WHERE tpe.id_empreendimento IN ("+ng.transferencia.id_empreendimento_pedido+"))";
 
 		if($.isNumeric(ng.id_deposito_principal)){
 			query_string +="&id_deposito_estoque="+ng.id_deposito_principal;
@@ -114,12 +120,13 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			if(isNaN(Number(ng.busca.produto)))
 				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%'"}})+")";
 			else
-				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%' OR pro.id = "+ng.busca.produto+""}})+")";
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%' OR prd.id = "+ng.busca.produto+""}})+")";
 		}
 
-		aj.get(baseUrlApi()+"produtos/"+ offset +"/"+ limit +"/"+query_string)
+		aj.get(baseUrlApi()+"estoque/"+ offset +"/"+ limit +"/"+query_string)
 			.success(function(data, status, headers, config) {
-				ng.produtos = data.produtos;
+				ng.produtos = GroupBy(data.produtos, "id_produto");
+				console.log(ng.produtos);
 				ng.paginacao.produtos = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
@@ -150,6 +157,20 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 		produto.id_produto = item.id ;
 		produto.qtd_pedida = empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida  ;
 		produto.add 	   = item.add == 0 ? 0 : 1 ;
+
+		produto.vlr_custo_real = item.vlr_custo_real ;
+		produto.vlr_venda_atacado = item.vlr_venda_atacado ;
+		produto.vlr_venda_intermediario = item.vlr_venda_intermediario ;
+		produto.vlr_venda_varejo = item.vlr_venda_varejo ;
+
+		if(empty(item.tipo_vlr_custo)){
+			produto.vlr_custo = item.vlr_custo_real ;
+			produto.tipo_vlr_custo = 'vlr_custo_real' ;
+		}else{
+			produto.vlr_custo = item[item.tipo_vlr_custo] ;
+			produto.tipo_vlr_custo = item.tipo_vlr_custo ;
+		}
+	
 		if(ng.enviarNovaTransferencia) produto.qtd_pedida = 0 ;
 		ng.transferencia.produtos.push(produto);
 		item.qtd_pedida = null ;
@@ -420,7 +441,13 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			var prd_in = ''; aux = [];
 			$.each(data.itens,function(i,x){
 				prd_in += x.id_produto+",";
-				aux[x.id_produto] = { qtd_pedida : x.qtd_pedida, qtd_transferida : x.qtd_transferida ,id_deposito_saida : x.id_deposito_saida}  ;
+				aux[x.id_produto] = { 
+					qtd_pedida : x.qtd_pedida,
+					qtd_transferida : x.qtd_transferida ,
+					id_deposito_saida : x.id_deposito_saida,
+					vlr_custo : x.vlr_custo,
+					tipo_vlr_custo : x.tipo_vlr_custo
+				};
 			});
 			prd_in = prd_in.substring(0,prd_in.length-1);	
 			aj.get(baseUrlApi()+"produtos?pro->id[exp]=IN("+prd_in+")&tpe->id_empreendimento="+ng.userLogged.id_empreendimento)
@@ -443,6 +470,12 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 					i.qtd_pedida = aux[i.id_produto].qtd_pedida;
 					i.qtd_transferida = aux[i.id_produto].qtd_transferida;
 					i.id_deposito_saida = ""+aux[i.id_produto].id_deposito_saida;
+					i.vlr_custo =  Number(aux[i.id_produto].vlr_custo) ;
+					i.tipo_vlr_custo = aux[i.id_produto].tipo_vlr_custo ;
+					if(empty(i.tipo_vlr_custo)){
+						i.vlr_custo =  i.vlr_custo_real ;
+						i.tipo_vlr_custo = 'vlr_custo_real' ;
+					}
 					i.load_estoque = false;
 					i.add = 0 ;
 					ng.addProduto(i);
@@ -587,6 +620,18 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 				$('html,body').animate({scrollTop: 0},'slow');
 			}
 		});
+	}
+
+	ng.setarVlrCusto = function(item,tipo){
+		if(!empty(item)){
+			item.tipo_vlr_custo = tipo ;
+			item.vlr_custo = item[tipo] ;
+		}else if(empty(item)){
+			$.each(ng.transferencia.produtos,function(i,x){
+				ng.transferencia.produtos[i].tipo_vlr_custo = tipo ;
+				ng.transferencia.produtos[i].vlr_custo = x[tipo] ;
+			});
+		}
 	}
 
 	ng.loadtransferencias(0,10);

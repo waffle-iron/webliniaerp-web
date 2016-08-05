@@ -240,7 +240,8 @@
 													<td>{{ item.nome }}</td>
 													<td>{{ item.nome_fabricante }}</td>
 													<td class="text-center">{{ item.peso }}</td>
-													<td class="text-center">{{ item.dta_validade | dateFormat: 'date' }}</td>
+													<td class="text-center" ng-if="item.dta_validade != '2099-12-31' ">{{ item.dta_validade | dateFormat: 'date' }}</td>
+													<td class="text-center" ng-if="item.dta_validade == '2099-12-31' "></td>
 													<td class="text-center">{{ item.qtd_item }}</td>
 													<td class="text-center">
 														<label class="label-checkbox">

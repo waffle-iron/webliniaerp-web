@@ -45,7 +45,7 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 	}
 
 	ng.loadVendas = function(offset,limit) {
-		var query_string = "?ven->id_empreendimento="+ ng.userLogged.id_empreendimento;
+		var query_string = "?ven->id_empreendimento="+ ng.userLogged.id_empreendimento+"&ven->flg_excluido=0";
 		if(params.status == 'orcamento')
 			query_string += "&ven->venda_confirmada=0";
 
@@ -322,7 +322,7 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 		dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Tem certeza que deseja excluir este orçamento?</strong>');
 
 		dlg.result.then(function(btn){
-			aj.get(baseUrlApi()+"orcamento/delete/"+item.id)
+			aj.get(baseUrlApi()+"orcamento/delete/"+item.id+"/"+ng.userLogged.id_empreendimento+"/"+ng.userLogged.id)
 			.success(function(data, status, headers, config) {
 				ng.loadVendas(0,10);
 				ng.mensagens('alert-success','O orçamento foi excluido com sucesso','#alert-list-vendas');

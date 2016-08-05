@@ -173,6 +173,7 @@
 										<thead>
 											<tr>
 												<td>Empreendimentos Associados</td>
+												<td width="120" class="text-center">Visível?</td>
 												<td width="60" align="center">
 													<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()"><i class="fa fa-plus-circle"></i></button>
 												</td>
@@ -180,10 +181,24 @@
 										</thead>
 										<tbody>
 											<tr ng-show="(empreendimentosAssociados.length == 0)">
-												<td colspan="2" align="center">Nenhum empreendimento selecionado</td>
+												<td colspan="3" align="center">Nenhum empreendimento selecionado</td>
 											</tr>
 											<tr ng-repeat="item in empreendimentosAssociados">
 												<td>{{ item.nome_empreendimento }}</td>
+												<td>
+													<div class="form-group" style="margin:0 auto">
+														<label class="label-radio inline">
+															<input ng-model="item.flg_visivel" value="1" type="radio" class="inline-radio"/>
+															<span class="custom-radio"></span>
+															<span>Sim</span>
+														</label>
+														<label class="label-radio inline">
+															<input ng-model="item.flg_visivel" value="0" type="radio" class="inline-radio"/>
+															<span class="custom-radio"></span>
+															<span>Não</span>
+														</label>
+													</div>
+												</td>
 												<td align="center">
 													<button ng-if="item.id != userLogged.id_empreendimento" class="btn btn-xs btn-danger" ng-click="delEmpreendimento(item)"><i class="fa fa-trash-o"></i></button>
 												</td>
@@ -199,7 +214,7 @@
 										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 											<i class="fa fa-times-circle"></i> Cancelar
 										</button>
-										<button ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
+										<button ng-click="salvar()" id="btn-salvar-deposito" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." type="submit" class="btn btn-success btn-sm">
 											<i class="fa fa-save"></i> Salvar
 										</button>
 									</div>
@@ -237,6 +252,15 @@
 							</tbody>
 						</table>
 					</div>
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.depositos~.length > 1">
+								<li ng-repeat="item in paginacao.depositos" ng-class="{'active': item.current}">
+									<a href="" h ng-click="loadDepositos(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div><!-- /main-container -->
@@ -253,7 +277,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.empreendimento" type="text" class="form-control input-sm">
+						            <input ng-model="busca.empreendimento" ng-enter="loadAllEmpreendimentos(0,10)" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
 						            	<button ng-click="loadAllEmpreendimentos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar

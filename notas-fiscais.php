@@ -310,7 +310,7 @@
 														</td>
 
 														<td>
-															<button type="button" class="btn btn-xs btn-danger" ng-click="modalCancelar(nota)"><i class="fa fa-ban"></i></button>
+															<!-- <button type="button" class="btn btn-xs btn-danger" ng-click="modalCancelar(nota)"><i class="fa fa-ban"></i></button>-->
 														</td>
 													</tr>
 												</tbody>

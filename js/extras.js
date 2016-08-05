@@ -595,3 +595,18 @@ function pick(obj,arrNames,isArr,valuesAdd){
         return objSaida ;
     }
 }
+
+function GroupBy(arr,key){
+    var r = [] ;
+    $.each(arr,function(i_arr,obj){
+            var index = getIndex(key,obj[key],r) ;
+            if( index === null ){
+                var item = obj ;
+                item.group = [angular.copy(obj)] ;
+                r.push(item);
+            }else{
+                r[index].group.push(obj);
+            }
+    });
+    return r ;
+}

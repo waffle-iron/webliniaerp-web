@@ -151,7 +151,7 @@
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-building-o"></i> Empreendimentos</h3>
 					<br/>
-					<a ng-if="userLogged.id_empreendimento == 6" class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Empreendimento</a>
+					<a  class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Empreendimento</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -166,7 +166,7 @@
 								<div class="col-sm-3">
 									<div id="nome_empreendimento" class="form-group">
 										<label class="control-label">Descrição</label>
-										<input ng-disabled="userLogged.id_empreendimento != 6" class="form-control" type="text" id="descricao" ng-model="empreendimento.nome_empreendimento">
+										<input  class="form-control" type="text" id="descricao" ng-model="empreendimento.nome_empreendimento">
 									</div>
 								</div>	
 								<div class="col-sm-3">
@@ -242,12 +242,12 @@
 											<label class="control-label">Teste?</label>
 											<div class="col-lg">
 												<label class="label-radio inline">
-													<input ng-disabled="userLogged.id_empreendimento != 6" type="radio" ng-model="empreendimento.flg_teste"  value="1" name="empreendimeto_teste">
+													<input  type="radio" ng-model="empreendimento.flg_teste"  value="1" name="empreendimeto_teste">
 													<span class="custom-radio"></span>
 													Sim
 												</label>
 												<label class="label-radio inline">
-													<input ng-disabled="userLogged.id_empreendimento != 6" type="radio" ng-model="empreendimento.flg_teste"  value="0" name="empreendimeto_teste">
+													<input  type="radio" ng-model="empreendimento.flg_teste"  value="0" name="empreendimeto_teste">
 													<span class="custom-radio"></span>
 													Não
 												</label>
@@ -258,7 +258,7 @@
 									<div class="col-sm-2">
 									<div class="form-group" id="qtd_dias_teste">
 										<label class="control-label">Qtd Dias</label>
-											<input class="form-control text-center" ng-disabled="userLogged.id_empreendimento != 6" ng-show="empreendimento.flg_teste == 1" onKeyPress="return SomenteNumero(event);"  type="text" ng-model="empreendimento.qtd_dias_teste">
+											<input class="form-control text-center"  ng-show="empreendimento.flg_teste == 1" onKeyPress="return SomenteNumero(event);"  type="text" ng-model="empreendimento.qtd_dias_teste">
 											<input class="form-control text-center" ng-if="empreendimento.flg_teste != 1" ng-disabled="true" >
 									</div>	
 									</div>			
@@ -406,7 +406,7 @@
 											</div>
 										</div>
 							</div>					
-							<div class="form-group" ng-if="userLogged.id_empreendimento == 6">
+							<div class="form-group" >
 								<div class="col-sm-12">
 									<div class="pull-right">
 										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
@@ -431,7 +431,7 @@
 								<tr>
 									<th>#</th>
 									<th>Descrição</th>
-									<th width="80" style="text-align: center;">Opções</th>
+									<th width="100" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -439,10 +439,10 @@
 									<td width="80">{{ item.id }}</td>
 									<td>{{ item.nome_empreendimento }}</td>
 									<td align="center">
-										<button ng-if="userLogged.id_empreendimento == 6" type="button" ng-click="editar(item)" tooltip="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
+										<button  type="button" ng-click="editar(item)" tooltip="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button ng-if="userLogged.id_empreendimento == 6" type="button" ng-click="delete(item)" tooltip="Excluir" class="btn btn-xs btn-danger delete" data-toggle="tooltip">
+										<button  type="button" ng-click="delete(item)" tooltip="Excluir" class="btn btn-xs btn-danger delete" data-toggle="tooltip">
 											<i class="fa fa-trash-o"></i>
 										</button>
 										<button ng-if="userLogged.id_empreendimento != 6" type="button" ng-click="editar(item)" tooltip="Detalhes" data-toggle="tooltip" class="btn btn-xs btn-primary ng-scope" data-original-title="" title="">

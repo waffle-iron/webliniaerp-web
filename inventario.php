@@ -188,7 +188,7 @@
 
 								<div class="col-sm-6">
 									<label class="control-label">Responsável</label>
-									<input ng-model="inventario.nome_usuario" type="text" class="form-control input-sm" readonly="readonly" style="background-color: #FFF;" value="userLogged.nmeUsuario">
+									<input ng-model="inventario.nome_usuario" type="text" class="form-control input-sm" readonly="readonly" style="background-color: #FFF;">
 								</div>
 							</div>
 

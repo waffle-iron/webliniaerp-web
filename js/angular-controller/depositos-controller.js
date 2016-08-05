@@ -10,7 +10,7 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
     ng.empreendimentos 				= [];
     ng.paginacao           			= {} ;
     ng.busca               			= {empreendimento:""} ;
-    ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento }];
+    ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,flg_visivel:1 }];
     ng.editing = false;
 
     ng.funcioalidadeAuthorized = function(cod_funcionalidade){
@@ -69,7 +69,7 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 
     	var query_string = "?id_usuario="+ng.userLogged.id;
     	if(ng.busca.empreendimento != ""){
-    		query_string = "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
+    		query_string += "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
     	}
 
     	ng.empreendimentos = [];
@@ -96,15 +96,18 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 			});
 	}
 
-	ng.loadDepositos = function() {
+	ng.loadDepositos = function(offset,limit) {
+		offset = offset == null ? 0 : offset ;
+		limit  = limit == null ? 10 : limit ;
 		console.log(ng.userLogged.id_empreendimento);
-		aj.get(baseUrlApi()+"depositos?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+"?id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.depositos = data.depositos;
+				ng.paginacao.depositos = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
-				if(status == 404)
-					ng.depositos = [];
+				ng.depositos = [];
+				ng.paginacao.depositos = [];
 			});
 	}
 
@@ -144,8 +147,11 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 	}
 
 	ng.salvar = function() {
+		var btn = $('#btn-salvar-deposito');
+		btn.button('loading');
 		if(ng.empreendimentosAssociados == null || ng.empreendimentosAssociados.length == 0) {
 			ng.mensagens('alert-danger','<strong>Você deve selecionar ao menos um empreendimento</strong>');
+			btn.button('reset');
 			return false;
 		}
 
@@ -168,8 +174,10 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 				ng.showBoxNovo();
 				ng.reset();
 				ng.loadDepositos();
+				btn.button('reset');
 			})
 			.error(function(data, status, headers, config) {
+				btn.button('reset');
 				if(status == 406) {
 					var errors = data;
 

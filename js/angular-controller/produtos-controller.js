@@ -4,6 +4,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
+	ng.ids_empreendimento_usuario = [] ;
+	console.log(ng.ids_empreendimento_usuario);
 	ng.produto 		= {
 							id_tamanho : null,
 							id_cor     : null,
@@ -458,16 +460,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.removeErrorEstoque();
 		ng.del_empreendimentos = [] ;
 
-		/*$('[ng-model="produto.preco.vlr_custo"]')			  	 .val(numberFormat(item.vlr_custo					   ,2,',','.'));
-		$('[ng-model="produto.preco.perc_imposto_compra"]') 	 .val(numberFormat(item.perc_imposto_compra      * 100 ,2,',','.'));
-		$('[ng-model="produto.preco.perc_desconto_compra"]')	 .val(numberFormat(item.perc_desconto_compra     * 100 ,2,',','.'));
-		$('[ng-model="produto.preco.perc_venda_atacado"]')  	 .val(numberFormat(item.perc_venda_atacado       * 100 ,2,',','.'));
-		$('[ng-model="produto.preco.perc_venda_varejo"]')        .val(numberFormat(item.perc_venda_varejo        * 100 ,2,',','.'));
-		$('[ng-model="produto.preco.perc_venda_intermediario"]') .val(numberFormat(item.perc_venda_intermediario * 100 ,2,',','.'));
-		$('[ng-model="produto.valor_desconto_cliente"]')         .val(numberFormat(item.valor_desconto_cliente   * 100 ,2,',','.'));*/
-
 		ng.produto.precos = [] ;
-
 
 		ng.empreendimentosByProduto(item.id_produto);
 		ng.getEstoque(item.id_produto);
@@ -767,7 +760,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			nome_deposito : ng.inventario_novo.nome_deposito,
 			qtd_item      : 0,
 			dta_validade  : dta_validade,
-			qtd_ivn       : ng.inventario_novo.qtd_ivn
+			qtd_ivn       : ng.inventario_novo.qtd_ivn,
+			flg_visivel   : 1 
 		}
 
 		ng.produto.estoque.push(item);
@@ -819,6 +813,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.empreendimentosByProduto = function(id_produto){
 		var error = 0 ;
+		ids_empreendimento_usuario = [];
+		$.each(ng.userLogged.empreendimento_usuario,function(i,v){ ids_empreendimento_usuario.push(v.id); });
+		ids_empreendimento_usuario = ids_empreendimento_usuario.join();
 		aj.get(baseUrlApi()+"empreendimentos/"+id_produto)
 			.success(function(data, status, headers, config) {
 				ng.empreendimentosAssociados = data ;
@@ -827,7 +824,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					in_where = x.id_empreendimento+",";
 				});
 				in_where = in_where.substring(0,in_where.length-1);
-				aj.get(baseUrlApi()+"produto/precos?cplSql=tp.id="+id_produto)
+				aj.get(baseUrlApi()+"produto/precos?cplSql=tp.id="+id_produto+" AND te.id IN("+ids_empreendimento_usuario+")")
 				.success(function(dataPrc, statusPrc) {
 					$.each(dataPrc,function(i,x){
 						dataPrc[i].vlr_custo =  numberFormat( ( empty(x.vlr_custo) ? 0  : x.vlr_custo  )					  ,2,'.','');

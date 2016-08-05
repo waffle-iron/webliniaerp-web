@@ -114,6 +114,18 @@ angular.module('filters', [])
 	      else
 	      	return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
 	    };
+	}).filter('date', function () {
+		return function (inputFormat) {
+		  	function pad(s) { return (s < 10) ? '0' + s : s; }
+		  if (empty(inputFormat)) return "" ;
+		  if(inputFormat.length < 6){
+		  	return "" ;
+		  }
+
+		  inputFormat = inputFormat.replace(/-/g,"/");
+		  var d = new Date(inputFormat);
+	      return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
+	    };
 	})
 	.filter('maskCpf', function () {
 		return function (inputFormat) {
@@ -413,7 +425,12 @@ angular.module('filters', [])
 		   }
 		});
 	    return {
+	    	scope: {
+           		 options: '=',
+           	 		watch: '='
+       			},
 	    	link:function(scope,element,attrs,ctrl){
+	    		    $(element).addClass('initPopover');
 		    		var trigger = empty(attrs.trigger) ? 'click' : attrs.trigger ;
 		    		var container = empty(attrs.container) ? 'body' : attrs.container;
 		    		var title     = empty(attrs.title) ? false : attrs.title ;
@@ -430,7 +447,9 @@ angular.module('filters', [])
 		            if(title == false)
 		           	 config.template =  '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
 	    			$(element).popover(config).popover();
-	    		
+	    			$(element).on('show.bs.popover', function () {
+  						$('.initPopover').not(element).popover('hide');
+					})	    		
 	    	}
 	    }
 	}).directive('preLoadImg', function ($compile,$filter) {

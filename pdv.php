@@ -1219,7 +1219,7 @@
 
 		<!-- /Modal reforço-->
 				<div class="modal fade" id="modal-reforco" style="display:none">
-		  			<div class="modal-dialog error modal-sm">
+		  			<div class="modal-dialog error modal-md">
 		    			<div class="modal-content">
 		      				<div class="modal-header">
 								<h4>Reforço</h4>
@@ -1229,29 +1229,49 @@
 						    	<div class="alert alert-reforco" style="display:none"></div>
 
 						    	<div class="row">
-						    		<div class="col-sm-6" id="valor_pagamento">
+						    		<div class="col-sm-6" id="reforco_valor_pagamento">
 						    			<label class="control-label">Valor</label>
-						    			<div class="form-group ">
+						    			<div class="form-group">
 						    					<input ng-model="reforco.valor" thousands-formatter type="text"  class="form-control input-sm" >
 						    			</div>
 						    		</div>
-						    		<div class="col-sm-6" id="conta_origem">
+						    		<div class="col-sm-6" id="reforco_conta_origem">
 						    			<label class="control-label">Conta de origem</label>
 							    		<select class="form-control input-sm" ng-model="reforco.conta_origem">
 													<option ng-repeat="item in contas" value="{{ item.id }}">{{ item.dsc_conta_bancaria }}</option>
 										</select>
 									</div>
 						    	</div>
+						    	<div class="row">
+						    		<div class="col-sm-12">
+										<div class="form-group" id="reforco_id_plano_conta">
+											<label class="ccontrol-label">Plano de conta </label> 
+											<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+										    option="plano_contas"
+										    ng-model="reforco.id_plano_conta"
+										    ng-options="plano.id as plano.dsc_completa for plano in plano_contas">
+											</select>
+										</div>
+									</div>
+						    	</div>
+						    	<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+										  <label for="comment">Observação:</label>
+										  <textarea class="form-control" rows="3" ng-model="reforco.obs_pagamento" id="comment"></textarea>
+										</div>
+									</div>
+								</div>
 						    </div>
 
 						    <div class="modal-footer">
-						    	<button type="button" data-loading-text=" Aguarde..." id="btn-aplicar-reforco"
-						    		class="btn btn-md btn-block btn-success" ng-click="aplicarReforco()">
-						    		<i class="fa fa-plus-circle"></i> Aplicar reforço
-						    	</button>
-						    	<button type="button" data-loading-text=" Aguarde..." ng-click="cancelarModal('modal-reforco')" id="btn-aplicar-reforco"
-						    		class="btn btn-md btn-block btn-default fechar-modal">
+						    	<button type="button" data-loading-text=" Aguarde..." ng-click="cancelarModal('modal-reforco')"
+						    		class="btn btn-md  btn-default fechar-modal">
 						    		<i class="fa fa-times-circle"></i> Cancelar
+						    	</button>
+						    	<button type="button" data-loading-text=" Aguarde..." id="btn-aplicar-reforco"
+						    		class="btn btn-md  btn-success" ng-click="aplicarReforco()">
+						    		<i class="fa fa-plus-circle"></i> Aplicar reforço
 						    	</button>
 						    </div>
 					  	</div>
@@ -1316,7 +1336,7 @@
 
 		<!-- Modal Sangria  -->
 		<div class="modal fade" id="modal-sangria" style="display:none">
-  			<div class="modal-dialog error modal-sm">
+  			<div class="modal-dialog error modal-md">
     			<div class="modal-content">
       				<div class="modal-header">
 						<h4>Sangria</h4>
@@ -1340,17 +1360,48 @@
 							</div>
 
 				    	</div>
+				    	<div class="row">
+				    		<div class="col-sm-12">
+								<div class="form-group" id="sangria_id_plano_conta">
+									<label class="ccontrol-label">Favorecidos</label> 
+									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+								    option="favorecidos"
+								    ng-model="sangria.id_fornecedor"
+								    ng-options="favorecido.id as favorecido.nome_fornecedor for favorecido in favorecidos">
+									</select>
+								</div>
+							</div>
+				    	</div>
+				    	<div class="row">
+				    		<div class="col-sm-12">
+								<div class="form-group" id="sangria_id_plano_conta">
+									<label class="ccontrol-label">Plano de conta </label> 
+									<select chosen ng-change="ClearChosenSelect('cod_regime_tributario')"
+								    option="plano_contas"
+								    ng-model="sangria.id_plano_conta"
+								    ng-options="fornecedor.id as fornecedor.dsc_completa for fornecedor in plano_contas">
+									</select>
+								</div>
+							</div>
+				    	</div>
+				    	<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
+								  <label for="comment">Observação:</label>
+								  <textarea class="form-control" rows="3" ng-model="sangria.obs_pagamento" id="comment"></textarea>
+								</div>
+							</div>
+						</div>
 				    </div>
 
 				    <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-sangria')">
+				    		<i class="fa fa-times-circle"></i> Cancelar
+				    	</button>
+				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-md btn-success"
 				    		id="btn-aplicar-sangria" ng-click="aplicarSangria()">
 				    		<i class="fa fa-minus-circle"></i> Aplicar sangria
-				    	</button>
-
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-sangria')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
 				    	</button>
 				    </div>
 			  	</div>

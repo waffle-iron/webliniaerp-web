@@ -198,6 +198,9 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 	}
 
 	ng.addProduto = function(item){
+		if(typeof item.atualizar_custo == 'undefined'){
+			delete item.vlr_custo ;
+		}
 		var produto = angular.copy(item) ;
 		produto.id_produto = item.id ;
 		ng.transferencia.produtos.push(produto);
@@ -352,10 +355,15 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 			ng.addEmpreendimento(data.empreendimento_transferencia,event);
 			$.each(data.itens,function(i,x){
 				prd_in += x.id_produto+",";
-				aux[x.id_produto] = {qtd_pedida:x.qtd_pedida,qtd_transferida:x.qtd_transferida,id_item:x.id} ;
+				aux[x.id_produto] = {
+					qtd_pedida:x.qtd_pedida,
+					qtd_transferida:x.qtd_transferida,
+					id_item:x.id,
+					vlr_custo : x.vlr_custo
+				} ;
 			});
-			prd_in = prd_in.substring(0,prd_in.length-1);	
-			aj.get(baseUrlApi()+"produtos?pro->id[exp]=IN("+prd_in+")")
+			prd_in = prd_in.substring(0,prd_in.length-1);
+			aj.get(baseUrlApi()+"produtos?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&pro->id[exp]=IN("+prd_in+")")
 			.success(function(prd, status, headers, config) {
 				ng.transferencia.id = data.id ;
 				//ng.transferencia.id_empreendimento_pedido = data.id_empreendimento_pedido ;
@@ -372,6 +380,8 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 				$.each(prd.produtos,function(x,i){
 					i.qtd_pedida = aux[i.id_produto].qtd_pedida;
 					i.qtd_transferida = aux[i.id_produto].qtd_transferida;
+					i.vlr_custo_sugerido = aux[i.id_produto].vlr_custo;
+					i.atualizar_custo = 0 ;
 					ng.addProduto(i);
 				});
 				ng.loadDepositos(0,10,true);
@@ -451,6 +461,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 
 		$('.has-error').removeClass('has-error');
 		var error = 0 ;
+		var qtd_atualiza_custo = 0 ;
 		$.each(ng.transferencia.produtos,function(key,item){
 			if(!($.isNumeric(item.qtd_recebida))){
 				$('#td-trasnferencia-qtd-recebida-'+item.id).addClass('has-error');
@@ -486,6 +497,9 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 				}
 				error ++ ;
 			}
+			if(Number(item.atualizar_custo == 1)){
+				qtd_atualiza_custo ++ ;
+			}
 
 		});
 
@@ -494,43 +508,89 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 			return ;
 		}
 
-		ng.transferencia.dta_recebido = moment().format('YYYY-MM-DD HH:mm:ss');
-		ng.transferencia.id_usuario_recebeu = ng.userLogged.id ;
+		if(qtd_atualiza_custo==0){
+			dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Tem certeza que não deseja atualizar os valores de custo ?</strong>');
+			$('#confirmModal').parent('.modal').show();
+			dlg.result.then(function(){
+				ng.transferencia.dta_recebido = moment().format('YYYY-MM-DD HH:mm:ss');
+				ng.transferencia.id_usuario_recebeu = ng.userLogged.id ;
 
-		aj.post(baseUrlApi()+"estoque/pedido/transferencia/receber/",ng.transferencia)
-		.success(function(data, status, headers, config) {
-			aj.get(baseUrlApi()+"transferencias/estoque/?id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+"&tte->id="+ng.transferencia.id)
-			.success(function(data, status, headers, config) {
+				aj.post(baseUrlApi()+"estoque/pedido/transferencia/receber/",ng.transferencia)
+				.success(function(data, status, headers, config) {
+					aj.get(baseUrlApi()+"transferencias/estoque/?id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+"&tte->id="+ng.transferencia.id)
+					.success(function(data, status, headers, config) {
+						btn.button('reset');
+						ng.transferencia = angular.copy(transferenciaTO);
+						ng.showBoxNovo();
+						ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
+						$('html,body').animate({scrollTop: 0},'slow');
+						if(data.length == 1) 
+							ng.listaTransferencias.transferencias[index_current_edit] = data[0];
+						else
+							ng.loadtransferencias(0,10);
+					})
+					.error(function(data, status, headers, config) {
+						btn.button('reset');
+						ng.transferencia = angular.copy(transferenciaTO);
+						ng.showBoxNovo();
+						ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
+						$('html,body').animate({scrollTop: 0},'slow');
+			 			ng.loadtransferencias(0,10);
+					});
+				})
+				.error(function(data, status, headers, config) {
+					btn.button('reset');
+					if(status == 406){
+						$.each(data.out_estoque,function(i,x){	
+							var msg = 'A quantidade a ser transferêncida ( '+x.qtd_transferida+' ) é maior que a em estoque ( '+x.qtd_estoque+' )';			
+							$('#tr-prd-'+i).addClass('tr-out-estoque');
+							$('#tr-prd-'+i).find('input').eq(0).attr("data-placement", "top").attr("title", msg).attr("data-original-title", msg); 
+							$('#tr-prd-'+i).find('input').eq(0).tooltip();
+						});
+					}
+				});	
+			}, function(){
 				btn.button('reset');
-				ng.transferencia = angular.copy(transferenciaTO);
-				ng.showBoxNovo();
-				ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
-				$('html,body').animate({scrollTop: 0},'slow');
-				if(data.length == 1) 
-					ng.listaTransferencias.transferencias[index_current_edit] = data[0];
-				else
-					ng.loadtransferencias(0,10);
+			});
+		}else{
+			ng.transferencia.dta_recebido = moment().format('YYYY-MM-DD HH:mm:ss');
+			ng.transferencia.id_usuario_recebeu = ng.userLogged.id ;
+
+			aj.post(baseUrlApi()+"estoque/pedido/transferencia/receber/",ng.transferencia)
+			.success(function(data, status, headers, config) {
+				aj.get(baseUrlApi()+"transferencias/estoque/?id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+"&tte->id="+ng.transferencia.id)
+				.success(function(data, status, headers, config) {
+					btn.button('reset');
+					ng.transferencia = angular.copy(transferenciaTO);
+					ng.showBoxNovo();
+					ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
+					$('html,body').animate({scrollTop: 0},'slow');
+					if(data.length == 1) 
+						ng.listaTransferencias.transferencias[index_current_edit] = data[0];
+					else
+						ng.loadtransferencias(0,10);
+				})
+				.error(function(data, status, headers, config) {
+					btn.button('reset');
+					ng.transferencia = angular.copy(transferenciaTO);
+					ng.showBoxNovo();
+					ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
+					$('html,body').animate({scrollTop: 0},'slow');
+		 			ng.loadtransferencias(0,10);
+				});
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
-				ng.transferencia = angular.copy(transferenciaTO);
-				ng.showBoxNovo();
-				ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
-				$('html,body').animate({scrollTop: 0},'slow');
-	 			ng.loadtransferencias(0,10);
+				if(status == 406){
+					$.each(data.out_estoque,function(i,x){	
+						var msg = 'A quantidade a ser transferêncida ( '+x.qtd_transferida+' ) é maior que a em estoque ( '+x.qtd_estoque+' )';			
+						$('#tr-prd-'+i).addClass('tr-out-estoque');
+						$('#tr-prd-'+i).find('input').eq(0).attr("data-placement", "top").attr("title", msg).attr("data-original-title", msg); 
+						$('#tr-prd-'+i).find('input').eq(0).tooltip();
+					});
+				}
 			});
-		})
-		.error(function(data, status, headers, config) {
-			btn.button('reset');
-			if(status == 406){
-				$.each(data.out_estoque,function(i,x){	
-					var msg = 'A quantidade a ser transferêncida ( '+x.qtd_transferida+' ) é maior que a em estoque ( '+x.qtd_estoque+' )';			
-					$('#tr-prd-'+i).addClass('tr-out-estoque');
-					$('#tr-prd-'+i).find('input').eq(0).attr("data-placement", "top").attr("title", msg).attr("data-original-title", msg); 
-					$('#tr-prd-'+i).find('input').eq(0).tooltip();
-				});
-			}
-		});
+		}
 	}
 
 	ng.detalhesPedido = function(item){

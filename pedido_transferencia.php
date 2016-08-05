@@ -208,28 +208,36 @@
 										<table class="table table-bordered table-condensed table-striped table-hover">
 											<thead>
 												<tr>
-													<td colspan="{{ ( isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3 ) && 9 || 6 }}"><i class="fa fa-archive"></i> Produtos</td>
+													<td colspan="{{ ( isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3 ) && 12 || 6 }}"><i class="fa fa-archive"></i> Produtos</td>
 													<td width="60" align="center"  ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4">
 													<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
 													</td>
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
-													<th>ID</th>
-													<th>Produto</th>
-													<th>Fabricante</th>
-													<th>Peso</th>
-													<th>sabor</th>
-													<th>Qtd.Pedida</th>
-													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. transferida</th>
-													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. recebida</th>
-													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3" width="250">
-														Deposito
-														<button style="float:right" class="btn btn-xs btn-info" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
-													</th>
-													<th ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" ></th>
-												</tr>
+												<thead>
+													<tr>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} ">ID</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} ">Produto</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} ">Fabricante</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} ">Peso</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} ">sabor</th>
+														<th colspan="3" style="width:450px" class="text-center" ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Valor de Custo</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} ">Qtd.Pedida</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} ;width:100px" ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. transferida</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} " ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. recebida</th>
+														<th rowspan="2" style=" {{ (isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3) && 'line-height: 40px' || '' }} " ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3" width="150">
+															Deposito
+															<button style="float:right" class="btn btn-xs btn-info" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
+														</th>
+														<th rowspan="2" ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" ></th>
+													</tr>
+													<tr ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">
+														<th class="text-center">Atual</th>
+														<th class="text-center">Sugerido</th>
+														<th class="text-center">atualizar?</th>
+													</tr>
+												</thead>
 												<tr ng-show="(transferencia.produtos.length == 0)">
 													<td colspan="{{ ( isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3 ) && 7 || 8 }}" align="center">Nenhum produto selecionado</td>
 												</tr>
@@ -239,6 +247,22 @@
 													<td>{{ item.nome_fabricante }}</td>
 													<td>{{ item.peso }}</td>
 													<td>{{ item.sabor }}</td>
+													<td ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">R$ {{ item.vlr_custo_real | numberFormat:2:',':'.' }}</td>
+													<td ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">R$ {{ item.vlr_custo_sugerido | numberFormat:2:',':'.' }}</td>
+													<td ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3"> 
+														<div class="form-group">
+															<label class="label-radio inline">
+																<input ng-model="item.atualizar_custo" value="1" type="radio" class="inline-radio"/>
+																<span class="custom-radio"></span>
+																<span>Sim</span>
+															</label>
+															<label class="label-radio inline">
+																<input ng-model="item.atualizar_custo" value="0" type="radio" class="inline-radio"/>
+																<span class="custom-radio"></span>
+																<span>Não</span>
+															</label>
+														</div>
+													</td>
 													<td ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" width="75" id="td-trasnferencia-qtd-pedida-{{ item.id_produto }}">
 														<input onKeyPress="return SomenteNumero(event);"  ng-model="item.qtd_pedida" type="text" class="form-control input-xs" />
 													</td>

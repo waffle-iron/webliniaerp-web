@@ -429,7 +429,10 @@
 																<td>{{ value.nome_deposito }}</td>
 																<td class="text-center" ng-if="value.dta_validade != '2099-12-31'">{{ value.dta_validade | dateFormat:'date' }}</td>
 																<td class="text-center" ng-if="value.dta_validade == '2099-12-31'"></td>
-																<td  ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="text-center" ><input type="text"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" ></td>
+																<td  ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="text-center" >
+																	<input type="text" ng-if="value.flg_visivel == 1"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" >
+																	<span ng-if="value.flg_visivel != 1">{{ value.qtd_ivn }}</span>
+																</td>
 																<td ng-if="!funcioalidadeAuthorized('alterar_quantidade')" class="text-center">{{ value.qtd_ivn }} </td>
 															</tr>
 														</tbody>
