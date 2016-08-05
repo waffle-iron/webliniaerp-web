@@ -195,7 +195,7 @@
 							<th>Produto</th>
 							<th>Fabricante</th>
 							<th class="text-center">Tamanho</th>
-							<th class="text-center">Sabor/cor</th>
+							<th class="text-center">Sabor/Cor</th>
 							<th class="text-center">Qtd. Vendida</th>
 							<th class="text-right" width="100">Custo Total</th>
 							<th class="text-right" width="100">Total Vendido</th>

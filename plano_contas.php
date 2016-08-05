@@ -190,7 +190,7 @@
 										<div class="row">
 											<div class="col-sm-3">
 												<div class="form-group" id="cod_plano">
-													<label class="control-label">Cód. da Natureza</label>
+													<label class="control-label">Código da Natureza</label>
 													<input type="text" class="form-control input-sm" ng-model="planoConta.cod_plano" ng-disabled="editing">
 												</div>
 											</div>

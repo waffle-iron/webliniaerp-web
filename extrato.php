@@ -160,7 +160,7 @@
 								<div class="col-sm-12">
 									<div class="panel-tab clearfix">
 										<ul class="tab-bar">
-											<li class="active"><a href="#home1" data-toggle="tab" onclick="return false" ng-click="setBusca('periodo')"> Periodo</a></li>
+											<li class="active"><a href="#home1" data-toggle="tab" onclick="return false" ng-click="setBusca('periodo')"> Período</a></li>
 											<li><a href="#profile1" data-toggle="tab" onclick="return false" onclick="return false" ng-click="setBusca('intervalo')"> Intervalo</a></li>
 										</ul>
 									</div>
@@ -270,7 +270,7 @@
 								<th class="text-right">Saldo</th>
 							</tr>
 							<tr ng-if="dadosExtrato == null">
-								<th class="text-center" colspan="4">Selecione um periodo ou intervalo para a busca</th>
+								<th class="text-center" colspan="4">Selecione um período ou intervalo para a busca</th>
 							</tr>
 							<tr ng-if="dadosExtrato.length == 0">
 								<th class="text-center" colspan="4"><i class="fa fa-loading fa-sping"></i> Aguarde, carregando extrato...</th>

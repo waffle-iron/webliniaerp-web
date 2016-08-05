@@ -197,7 +197,7 @@
 												</tr>
 												<tr ng-if="faixa.usuarios.length <= 0" >
 													<td align="center" colspan="4" >
-														Não a nenhum usuário vinculado a está faixa.
+														Não há nenhum usuário vinculado a esta faixa.
 													</td>
 												</tr>
 											</tbody>
@@ -230,14 +230,14 @@
 								<tr>
 									<th class="text-center">id</th>
 									<th class="text-center">Desconto até</th>
-									<th class="text-center">Qtd usuários</th>
+									<th class="text-center">Quantidade usuários</th>
 									<th class="text-center" width="80">Opções</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-hide="faixas.length > 0">
 									<td colspan="4">
-										Não ha faixas cadastradas
+										Nenhum registro encontrado
 									</td>
 								</tr>
 								<tr ng-repeat="item in faixas">
@@ -266,7 +266,7 @@
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Usuarios</span></h4>
+						<h4>Usuários</span></h4>
       				</div>
 				    <div class="modal-body">
 						<div class="row">
@@ -287,14 +287,14 @@
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<tr ng-if="usuarios.length <= 0 || usuarios == null">
 										<th ng-if="emptyBusca.usuarios == false"  class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
-										<th ng-if="emptyBusca.usuarios == true"  class="text-center" colspan="9" style="text-align:center">Não a resultado para a busca</th>
+										<th ng-if="emptyBusca.usuarios == true"  class="text-center" colspan="9" style="text-align:center">Não há resultado para a busca</th>
 									</tr>
 									<thead ng-show="(usuarios.length != 0)">
 										<tr>
 											<th >Nome</th>
 											<th >Apelido</th>
 											<th >Perfil</th>
-											<th colspan="2">selecionar</th>
+											<th colspan="2">Selecionar</th>
 										</tr>
 									</thead>
 									<tbody>

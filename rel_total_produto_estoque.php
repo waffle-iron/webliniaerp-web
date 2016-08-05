@@ -175,7 +175,7 @@
 								</div>
 								<div class="col-lg-4">
 									<div class="form-group">
-										<label class="control-label">Depositos</label>
+										<label class="control-label">Depósitos</label>
 										<div class="input-group">
 											<input ng-click="modalDepositos()" type="text" class="form-control" ng-model="busca.nome_deposito" readonly="readonly" style="cursor: pointer;"></input>
 											<span class="input-group-btn">
@@ -190,7 +190,7 @@
 										<select class="form-control" ng-model="grupo_busca">
 											<option value=""></option>
 											<option value="produto">Produto</option>
-											<option value="deposito">Deposito</option>
+											<option value="deposito">Depósito</option>
 										</select>
 									</div>
 								</div>
@@ -218,7 +218,7 @@
 							<th width="100" class="text-center">Fabricante</th>
 							<th width="100" class="text-center">Tamanho</th>
 							<th width="100" class="text-center">Sabor/Cor</th>
-							<th width="100" class="text-center" >Deposito</th>
+							<th width="100" class="text-center" >Depósito</th>
 							<th width="100" class="text-center" ng-if="grupo_tabela == 'validade'">Validade</th>
 							<th width="100" class="text-center">Estoque</th>
 							<th width="100" class="text-center" ng-if="false">Custo Uni.</th>
@@ -257,7 +257,7 @@
 				<table id="data" class="table table-bordered table-hover table-striped table-condensed" ng-if="agrupar == 'produto' ">
 						<thead>
 							<tr>
-								<th class="text-right" >Deposito</th>
+								<th class="text-right" >Depósito</th>
 								<th width="100" class="text-center">Estoque</th>
 							</tr>
 						</thead>

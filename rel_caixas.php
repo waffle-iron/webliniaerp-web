@@ -166,7 +166,7 @@
 							<div class="row">
 								<div class="col-sm-3">
 									<div class="form-group">
-										<label class="control-label">Dta. abertura</label>
+										<label class="control-label">Data da abertura</label>
 										<div class="input-group">
 											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control">
 											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
@@ -176,7 +176,7 @@
 
 								<div class="col-sm-3">
 									<div class="form-group">
-										<label class="control-label">Dta. fechamento </label>
+										<label class="control-label">Data do fechamento </label>
 										<div class="input-group">
 											<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control">
 											<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
@@ -212,8 +212,8 @@
 								<tr>
 									<th>Caixa</th>
 									<th>Operador</th>
-									<th>Dta Abertura</th>
-									<th>Dta fechamento</th>
+									<th>Data da Abertura</th>
+									<th>Data da fechamento</th>
 									<th width="30" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>

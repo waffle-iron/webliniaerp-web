@@ -220,13 +220,13 @@
 													<th>Produto</th>
 													<th>Fabricante</th>
 													<th>Peso</th>
-													<th>sabor</th>
-													<th>Qtd.Pedida</th>
-													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. transferida</th>
-													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Qtd. recebida</th>
+													<th>Sabor</th>
+													<th>Quantidade Pedida</th>
+													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Quantidade transferida</th>
+													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3">Quantidade recebida</th>
 													<th ng-if="isNumeric(transferencia.id) && transferencia.id_status_transferencia == 3" width="250">
-														Deposito
-														<button style="float:right" class="btn btn-xs btn-info" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
+														Depósito
+														<button style="float:right" class="btn btn-xs btn-info" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar depósito para todos os itens"><i class="fa fa-sitemap"></i></button>
 													</th>
 													<th ng-if="!isNumeric(transferencia.id) || transferencia.id_status_transferencia == 4" ></th>
 												</tr>
@@ -374,7 +374,7 @@
 									<th>Solicitante</th>
 									<th>Empreendimento</th>
 									<th>Status</th>
-									<th width="80" style="text-align: center;">Opções</th>
+									<th width="80" style="text-align: center;">Ações</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -538,9 +538,9 @@
 											<th >Nome</th>
 											<th >Fabricante</th>
 											<th >Tamanho</th>
-											<th >Sabor/cor</th>
-											<th >qtd</th>
-											<th ></th>
+											<th >Sabor/Cor</th>
+											<th >Quantidade</th>
+											<th >Ações</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -731,7 +731,7 @@
 											<th >Nome</th>
 											<th >Apelido</th>
 											<th >Perfil</th>
-											<th colspan="2">selecionar</th>
+											<th colspan="2">Selecionar</th>
 										</tr>
 									</thead>
 									<tr ng-if="usuarios.itens == null">

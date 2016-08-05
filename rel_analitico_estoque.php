@@ -219,7 +219,7 @@
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Produto</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Fabricante</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Tamanho</th>
-							<th class="text-center" style="line-height: 78px;" rowspan="3">Sabor/cor</th>
+							<th class="text-center" style="line-height: 78px;" rowspan="3">Sabor/Cor</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Validade</th>
 							<th class="text-center" style="line-height: 78px;" rowspan="3">Qtd</th>
 							<th class="text-center" style="line-height: 60px;" rowspan="2" colspan="2">Custo</th>

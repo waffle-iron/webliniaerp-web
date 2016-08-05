@@ -383,7 +383,7 @@
 							<thead ng-show="ultimasEntradas.length > 0">
 								<tr>
 									<th>ID</th>
-									<th width="150">Dt. Recebimento</th>
+									<th width="150">Data do Recebimento</th>
 									<th>Usuário</th>
 									<th>Fornecedor</th>
 									<th>N° Nota Fiscal</th>

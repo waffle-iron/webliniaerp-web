@@ -155,7 +155,7 @@
 				<div class="alert alert-sistema" style="display:none"></div>
 
 				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Nova Grupo</div>
+					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Grupo</div>
 
 					<div class="panel-body">
 						<form class="form" role="form">
@@ -219,7 +219,7 @@
 							<tbody>
 								<tr ng-hide="faixas.length > 0">
 									<td colspan="4">
-										Não ha faixas cadastradas
+										Nenhum registro encontrado
 									</td>
 								</tr>
 								<tr ng-repeat="item in faixas">

@@ -260,7 +260,7 @@
 					<table class="table table-bordered table-condensed table-striped table-hover">
 						<thead>
 							<tr>
-								<th rowspan="2" style="line-height: 46px;">Dta. Lançamento</th>
+								<th rowspan="2" style="line-height: 46px;">Data Lançamento</th>
 								<th rowspan="2" class="text-center" style="line-height: 46px;">Cliente</th>
 								<th rowspan="2" class="text-center" style="line-height: 46px;">Descrição</th>
 								<th rowspan="2" class="text-center" style="line-height: 46px;">Status</th>
@@ -281,7 +281,7 @@
 							</tr>
 							<tr ng-if="movimentacoes.length <= 0">
 								<td colspan="7">
-									Nenhum pagamento encontrado.
+									Nenhum registro encontrado
 								</td>
 							</tr>
 							<tr ng-repeat-start="item in movimentacoes">
