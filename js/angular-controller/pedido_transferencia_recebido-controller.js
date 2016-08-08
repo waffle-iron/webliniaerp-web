@@ -1,9 +1,11 @@
-app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
 	var ng = $scope
 		aj = $http;
 
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
+	ng.configuracao = ConfigService.getConfig(ng.userLogged.id_empreendimento);
+	ng.configuracao.flg_controlar_validade_transferencia = 1 ;
 	ng.busca 		= {empreendimento:'',produto:'',depositos:''} ;
 	ng.paginacao    = {};
     ng.lista_emp    = [];
@@ -110,8 +112,8 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 
-		var query_string = "?emp->id_empreendimento="+ng.userLogged.id_empreendimento;
-		query_string +="&prd->id[exp]= IN(SELECT tp.id FROM tbl_produtos AS tp INNER JOIN tbl_produto_empreendimento AS tpe ON tp.id = tpe.id_produto WHERE tpe.id_empreendimento IN ("+ng.transferencia.id_empreendimento_pedido+"))";
+		var query_string = "?tpe->id_empreendimento="+ng.transferencia.id_empreendimento_pedido;
+		query_string +="&pro->id[exp]= IN(SELECT tp.id FROM tbl_produtos AS tp INNER JOIN tbl_produto_empreendimento AS tpe ON tp.id = tpe.id_produto WHERE tpe.id_empreendimento IN ("+ng.userLogged.id_empreendimento+"))";
 
 		if($.isNumeric(ng.id_deposito_principal)){
 			query_string +="&id_deposito_estoque="+ng.id_deposito_principal;
@@ -120,13 +122,12 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			if(isNaN(Number(ng.busca.produto)))
 				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%'"}})+")";
 			else
-				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%' OR prd.id = "+ng.busca.produto+""}})+")";
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%' OR pro.id = "+ng.busca.produto+""}})+")";
 		}
 
-		aj.get(baseUrlApi()+"estoque/"+ offset +"/"+ limit +"/"+query_string)
+		aj.get(baseUrlApi()+"produtos/"+ offset +"/"+ limit +"/"+query_string)
 			.success(function(data, status, headers, config) {
-				ng.produtos = GroupBy(data.produtos, "id_produto");
-				console.log(ng.produtos);
+				ng.produtos = data.produtos;
 				ng.paginacao.produtos = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
@@ -149,7 +150,10 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 	}
 
 	ng.excluirProdutoLista = function(index){
-		ng.transferencia.produtos.splice(index,1);
+		ng.testeDep = [
+	    	{ nome:'Deposito 1',validade:'2016-10-10',qtd:10 },
+    	];
+		//ng.transferencia.produtos.splice(index,1);
 	}
 
 	ng.addProduto = function(item){
@@ -633,6 +637,87 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			});
 		}
 	}
+
+
+	ng.showProdutosByValidade = function(){
+		$('#list_produtos').modal('show');
+		ng.busca.produto = "";
+		ng.loadProdutosByValidade(0,10);
+	}
+
+
+	ng.loadProdutosByValidade = function(offset, limit) {
+		ng.produtos = null;
+
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+
+		var query_string = "?emp->id_empreendimento="+ng.userLogged.id_empreendimento;
+		query_string +="&prd->id[exp]= IN(SELECT tp.id FROM tbl_produtos AS tp INNER JOIN tbl_produto_empreendimento AS tpe ON tp.id = tpe.id_produto WHERE tpe.id_empreendimento IN ("+ng.transferencia.id_empreendimento_pedido+"))";
+
+		if($.isNumeric(ng.id_deposito_principal)){
+			query_string +="&id_deposito_estoque="+ng.id_deposito_principal;
+		}
+		if(ng.busca.produto != ""){
+			if(isNaN(Number(ng.busca.produto)))
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%'"}})+")";
+			else
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.busca.produto+"%' OR codigo_barra like '%"+ng.busca.produto+"%' OR fab.nome_fabricante like '%"+ng.busca.produto+"%' OR prd.id = "+ng.busca.produto+""}})+")";
+		}
+
+		aj.get(baseUrlApi()+"estoque/"+ offset +"/"+ limit +"/"+query_string)
+			.success(function(data, status, headers, config) {
+				ng.produtos = GroupBy(data.produtos, "id_produto");
+				console.log(ng.produtos);
+				ng.paginacao.produtos = data.paginacao;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404) {
+					ng.produtos = [];
+					ng.paginacao.produtos = null;
+				}
+			});
+	}
+
+	ng.produtoSelectedByValidade = function(id){
+		var r = false ;
+		$.each(ng.transferencia.produtos,function(i,x){
+			if(Number(x.id) == Number(id)){
+				r = true ;
+				return false ;
+			}
+		});
+		return r ;
+	}
+
+	ng.excluirProdutoListaByValidade = function(index){
+		ng.transferencia.produtos.splice(index,1);
+	}
+
+	ng.addProdutoByValidade = function(item){
+		var produto = angular.copy(item) ;
+		produto.id_produto = item.id ;
+		produto.qtd_pedida = empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida  ;
+		produto.add 	   = item.add == 0 ? 0 : 1 ;
+
+		produto.vlr_custo_real = item.vlr_custo_real ;
+		produto.vlr_venda_atacado = item.vlr_venda_atacado ;
+		produto.vlr_venda_intermediario = item.vlr_venda_intermediario ;
+		produto.vlr_venda_varejo = item.vlr_venda_varejo ;
+
+		if(empty(item.tipo_vlr_custo)){
+			produto.vlr_custo = item.vlr_custo_real ;
+			produto.tipo_vlr_custo = 'vlr_custo_real' ;
+		}else{
+			produto.vlr_custo = item[item.tipo_vlr_custo] ;
+			produto.tipo_vlr_custo = item.tipo_vlr_custo ;
+		}
+	
+		if(ng.enviarNovaTransferencia) produto.qtd_pedida = 0 ;
+		ng.transferencia.produtos.push(produto);
+		item.qtd_pedida = null ;
+	}
+
 
 	ng.loadtransferencias(0,10);
 	ng.loadDepositosSelect();
