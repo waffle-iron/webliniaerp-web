@@ -419,7 +419,8 @@
 										<div class="col-sm-4">
 											<div id="id_finalidade" class="form-group">
 												<label class="control-label">Finalidade</label>
-												<select class="form-control input-sm" ng-model="cliente.id_finalidade" ng-options="a.id as a.nome for a in finalidades"></select>
+												<input type="text" class="form-control input-sm" ng-model="cliente.dsc_finalidade">
+												<!--<select class="form-control input-sm" ng-model="cliente.id_finalidade" ng-options="a.id as a.nome for a in finalidades"></select>-->
 											</div>
 										</div>
 									</div>

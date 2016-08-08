@@ -47,8 +47,16 @@
 
 				<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="<?php echo URL_BASE.NICKNAME ?>/carrinho" class="top-link"><i class="fa fa-shopping-cart"></i> Meu Carrinho</a></li>
-						<li><a href="<?php echo URL_BASE?>logout.php" class="top-link"><i class="fa fa-lock"></i> Sair</a></li>
+						<li>
+							<a href="<?php echo URL_BASE.NICKNAME ?>/carrinho" class="top-link">
+								<i class="fa fa-shopping-cart"></i> Meu Carrinho <span class="badge badge-danger"><?php echo count($_SESSION['carrinho']); ?></span>
+							</a>
+						</li>
+						<li>
+							<a href="<?php echo URL_BASE?>logout.php" class="top-link">
+								<i class="fa fa-lock"></i> Sair
+							</a>
+						</li>
 					</ul>
 				</nav>
 			</div>
@@ -131,7 +139,7 @@
 								<p>
 								<div class="ribbon-wrapper" style="width: 100px;height: 100px;" ng-if="item.qtd_real_estoque <= 0">
 									<div style="width: 134px;" class="ribbon-inner shadow-pulse bg-danger">
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sem estoque
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Esgotado
 									</div>
 								</div>
 							</div>
@@ -172,7 +180,7 @@
 				   		<div class="row">
 							<div class="col-sm-4">
 								<div class="form-group" id="sabor_desejado">
-									<label class="control-label">sabor</label>
+									<label class="control-label">Sabor/Cor</label>
 									<input ng-model="desejo.sabor_desejado" type="text"  class="form-control input-sm">
 								</div>
 							</div>
@@ -190,7 +198,7 @@
 											<i class="fa fa-plus-circle"></i> Detalhes
 										</a>
 										<button data-loading-text="Aguarde..." ng-click="salvarDesejo()" type="submit" id="btn-salvar-desejo" class="btn btn-success btn-sm">
-											<i class="fa fa-save"></i> Salvar
+											<i class="fa fa-save"></i> Incluir na lista de desejos
 										</button>
 									</div>
 								</div>

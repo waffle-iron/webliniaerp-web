@@ -97,25 +97,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
 	}
 
-	if(params.id_orcamento == undefined)
-		ng.finalizarOrcamento = false ;
-	else{
-		ng.finalizarOrcamento = true ;
-		var id_orcamento = params.id_orcamento;
-		if(!isNaN(Number(id_orcamento)) && !empty(id_orcamento)){
-			dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Deseja trabalhar com os valores de venda dos itens do momento do orçamento?</strong>');
-			dlg.result.then(function(btn){
-				ng.loadOrcamento('old');	
-			}, function(){
-				ng.loadOrcamento('new');
-			});
-		}else{
-			ng.finalizarOrcamento = false ;
-			alert('O ID do orçamento é invalido');
-			//window.location = "pdv.php";
-		}
-	}
-
 	ng.loadOrcamento = function(tipo_valor){
 		aj.get(baseUrlApi()+"venda/orcamento/"+id_orcamento+'/'+tipo_valor)
 		.success(function(data, status, headers, config) {
@@ -3454,6 +3435,30 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		return not_in(z,y);
 	}
 	ng.resizeScreen(); 
+
+	if(params.id_orcamento == undefined)
+		ng.finalizarOrcamento = false ;
+	else {
+		ng.finalizarOrcamento = true ;
+		var id_orcamento = params.id_orcamento;
+		if(!isNaN(Number(id_orcamento)) && !empty(id_orcamento)){
+			if(ng.config.flg_questionar_manutencao_precos_orcamento === 1) {
+				dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Deseja trabalhar com os valores de venda dos itens do momento do orçamento?</strong>');
+				dlg.result.then(function(btn){
+					ng.loadOrcamento('old');
+				}, function(){
+					ng.loadOrcamento('new');
+				});
+			}
+			else {
+				ng.loadOrcamento('old');
+			}
+		}else{
+			ng.finalizarOrcamento = false ;
+			alert('O ID do orçamento é invalido');
+			//window.location = "pdv.php";
+		}
+	}
 });
 app.directive('bsTooltip', function ($timeout) {
     return {
