@@ -245,7 +245,7 @@
 		</div><!-- /main-container -->
 	</div><!-- /wrapper -->
 
-	<div class="modal fade">
+	<div class="modal fade" id="modal-loading">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">

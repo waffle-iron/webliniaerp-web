@@ -48,7 +48,11 @@
 				<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="<?php echo URL_BASE.NICKNAME?>" class="top-link"><i class="fa fa-arrow-left"></i> Continuar Comprando</a></li>
-						<li><a href="<?php echo URL_BASE.NICKNAME?>/carrinho" class="top-link"><i class="fa fa-shopping-cart"></i> Meu Carrinho</a></li>
+						<li>
+							<a href="<?php echo URL_BASE.NICKNAME ?>/carrinho" class="top-link">
+								<i class="fa fa-shopping-cart"></i> Meu Carrinho <span class="badge badge-danger"><?php echo count($_SESSION['carrinho']); ?></span>
+							</a>
+						</li>
 						<li><a href="<?php echo URL_BASE?>logout.php" class="top-link"><i class="fa fa-lock"></i> Sair</a></li>
 					</ul>
 				</nav>
@@ -95,10 +99,14 @@
 								<td>{{item.nome_fabricante}}</td>
 								<td class="text-center">{{item.peso}}</td>
 								<td class="text-right">R$ {{ item.valor_produto | numberFormat:2:',':'.' }}</td>
-								<td class="text-center"><input ng-model="item.qtd" ng-keyUp="chageQtd(item)" style="width:80px" class="form-control input-xs ng-pristine" /></td>
+								<td class="text-center" width="80" style="vertical-align: middle">
+									<input ng-model="item.qtd" ng-keyUp="chageQtd(item)" class="form-control ng-pristine text-center">
+								</td>
 								<td class="text-right">R$ {{ item.qtd == '' && item.valor_produto || item.qtd * item.valor_produto | numberFormat:2:',':'.' }}</td>
 								<td class="text-center">
-									<button type="button" ng-click="delCarrinho(item.id_produto)" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
+									<button type="button" ng-click="delCarrinho(item.id_produto)" class="btn btn-danger">
+										<i class="fa fa-trash-o"></i> Remover
+									</button>
 								</td>
 							</tr>
 						</tbody>

@@ -134,8 +134,24 @@
 			return ;
 		}
 
+		$ch = curl_init();
+		$url = $url;
+		curl_setopt($ch, CURLOPT_URL,URL_API.'empreendimentos?id_usuario='.$saida['id']);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$empreendimentoUsuario  = curl_exec($ch);
+		$empreendimentoUsuarioInfo 	 = curl_getinfo($ch);
+		curl_close ($ch);
+
+		if($empreendimentoUsuarioInfo['http_code'] != 200){
+			header("HTTP/1.1 404");
+			return ;
+		}
+
 		$usuario = json_decode($usuario,true);
 		$saida['id_perfil'] = $usuario['id_perfil'];
+
+		$empreendimentoUsuario = json_decode($empreendimentoUsuario,true);
+		$saida['empreendimento_usuario'] = $empreendimentoUsuario;
 
 		if($dados_teste['flg_teste'] == 1){
 			$saida['flg_teste']              = 1 ;

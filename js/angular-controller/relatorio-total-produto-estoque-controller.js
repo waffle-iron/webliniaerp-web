@@ -10,6 +10,8 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 	ng.busca			= {nome_produto:null,id_produto:null,qtd_produto:null,produto_modal:null,depositos:null,id_deposito:null,nome_deposito:null}
 	ng.busca.clientes  	= '';
 	ng.cliente          = {};
+	ng.qtd_total_estoque = 0;
+	ng.vlr_total_estoque = 0;
 
 	ng.reset = function() {
 			ng.busca			= {nome_produto:null,id_produto:null,qtd_produto:null,produto_modal:null,depositos:null,id_deposito:null,nome_deposito:null};
@@ -76,13 +78,13 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 							});
 						});
 					}
-					ng.produtos = aux ;
-					console.log(aux);
+					ng.produtos = aux;
 				}else{
 					ng.grupo_tabela = ng.grupo_busca ;
 					ng.busca_deposito = empty(ng.busca.id_deposito) ? false : true ;
 					ng.produtos = data.produtos;
-					console.log(data.produtos);
+
+					calculaTotais();
 				}
 				ng.paginacao.produtos = data.paginacao ;
 				$("#modal-aguarde").modal('hide');
@@ -93,7 +95,6 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 				$("#modal-aguarde").modal('hide');
 			});
 	}
-
 
 	ng.modalProdutos = function(){
 		ng.busca.produto_modal = '' ;
@@ -161,6 +162,13 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 		ng.busca.id_deposito   = item.id;
 		ng.busca.nome_deposito = item.nme_deposito;
     	$('#modal-depositos').modal('hide');
+	}
+
+	function calculaTotais() {
+		$.each(ng.produtos, function(i, item) {
+			ng.qtd_total_estoque += parseInt(item.qtd_item);
+			ng.vlr_total_estoque += (parseFloat(item.vlr_custo_real) * parseInt(item.qtd_item));
+		});
 	}
 
 	ng.configuracao = null ;

@@ -326,6 +326,8 @@ app.controller('PerfisController', function($scope, $http, $window, $dialogs, Us
 			});
 		})
 		.error(function(data, status, headers, config) {
+			ng.perfil.modulos = [] ;
+			ng.perfil.empreendimentos = [{id_empreendimento:ng.userLogged.id_empreendimento}] ;
 			btn.button('reset');
 			if(status != 404)
 				$dialogs.notify('','<strong>Ocorreu um erro ao carregar os dados</strong>');

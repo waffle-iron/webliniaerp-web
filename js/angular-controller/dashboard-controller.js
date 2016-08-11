@@ -1,4 +1,4 @@
-app.controller('DashboardController', function($scope, $http, $window, UserService,ConfigService) {
+app.controller('DashboardController', function($scope, $http, $window, UserService,ConfigService,FuncionalidadeService) {
 	try {
 		var ng = $scope,
 			aj = $http;
@@ -25,6 +25,10 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 			vendas : null,
 			orcamentos : null
 		};
+
+		ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+    	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+    	}
 
 		// Gráfico de Acompanhamento de vendas Últimos 12 meses
 		/*var init = {
@@ -557,13 +561,11 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 		}
 
 		ng.loadConsolidadoEstoque = function() {
-			aj.get(baseUrlApi()+"relatorio/estoque/consolidado?id_empreendimento="+ng.userLogged.id_empreendimento)
+			var queryString = "?id_empreendimento="+ng.userLogged.id_empreendimento;
+			//queryString += !ng.funcioalidadeAuthorized('ver_estoque_todos_depositos') ? "&id_deposito="+ng.config.id_deposito_padrao  : "" ;
+			aj.get(baseUrlApi()+"relatorio/estoque/consolidado"+queryString)
 				.success(function(data, status, headers, config) {
 					ng.estoqueDepositos = data;
-
-					$.each(data, function(i, item) {
-						ng.total.vlrCustoTotalEstoque += item.qtd_item * item.vlr_custo_total;
-					});
 				})
 				.error(function(data, status, headers, config) {
 					ng.estoqueDepositos = [];
@@ -581,7 +583,8 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 		}
 
 		ng.loadCustoTotalEstoque = function() {
-			aj.get(baseUrlApi()+"custoTotalEstoque/dashboard/"+ng.userLogged.id_empreendimento)
+			var id_deposito = !ng.funcioalidadeAuthorized('ver_estoque_todos_depositos') ? '/'+ng.config.id_deposito_padrao : '' ;
+			aj.get(baseUrlApi()+"custoTotalEstoque/dashboard/"+ng.userLogged.id_empreendimento+id_deposito)
 				.success(function(data, status, headers, config) {
 					ng.total.vlrCustoTotalEstoque = data.vlrCustoTotalEstoque;
 

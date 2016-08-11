@@ -475,12 +475,17 @@
 								<div class="row">
 									<div class="col-sm-5">
 										<div class="form-group">
-										 <label for="txt_sign_ac">Formas de Pagamento Disponíveis no PDV:</label>
-										 	<div class="clearfix" ng-repeat="item in formas_pagamento_pdv">
-												 <label class="label-checkbox inline">
-													<input type="checkbox" ng-model="item.value"  ng-true-value="1" ng-false-value="0">
-													<span class="custom-checkbox"></span>
-													{{ item.descricao_forma_pagamento }}
+											<label for="" class="control-label">Questionar manutenção dos preços ao concluir orçamentos?</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_questionar_manutencao_precos_orcamento" value="1" name="flg_questionar_manutencao_precos_orcamento"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_questionar_manutencao_precos_orcamento" value="0" name="flg_questionar_manutencao_precos_orcamento"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Não</span>
 												</label>
 											</div>
 										</div>
@@ -490,6 +495,20 @@
 										<div class="form-group">
 										  <label for="txt_sign_ac">Assinatura AC (Hash Base64):</label>
 										  <textarea class="form-control" rows="5" ng-model="configuracoes.txt_sign_ac"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-5">
+										<div class="form-group">
+										 <label for="txt_sign_ac">Formas de Pagamento Disponíveis no PDV:</label>
+										 	<div class="clearfix" ng-repeat="item in formas_pagamento_pdv">
+												 <label class="label-checkbox inline">
+													<input type="checkbox" ng-model="item.value"  ng-true-value="1" ng-false-value="0">
+													<span class="custom-checkbox"></span>
+													{{ item.descricao_forma_pagamento }}
+												</label>
+											</div>
 										</div>
 									</div>
 								</div>

@@ -1,8 +1,9 @@
-app.controller('RelatorioFechamentoMensalController', function($scope, $http, $window, UserService) {
+app.controller('RelatorioFechamentoMensalController', function($scope, $http, $window, UserService,ConfigService,FuncionalidadeService) {
 	var ng = $scope,
 		aj = $http;
 
 	ng.userLogged = UserService.getUserLogado();
+	ng.config     = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.dados;
 
 	ng.qtdCompraTotal;
@@ -14,6 +15,10 @@ app.controller('RelatorioFechamentoMensalController', function($scope, $http, $w
 	ng.vlrVendaTotal;
 
 	ng.saldoTotal;
+
+	ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+    	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+    }
 
 	ng.reset = function() {
 		ng.dados = [];
@@ -77,9 +82,14 @@ app.controller('RelatorioFechamentoMensalController', function($scope, $http, $w
 		dtaFinal 	= dtaFinal.split("/");
 		dtaFinal 	= dtaFinal[2] + "-" + dtaFinal[1] + "-" + dtaFinal[0];
 
-		$(".modal").modal('show');
+		$("#modal-loading").modal('show');
 
-		aj.get(baseUrlApi()+"relatorio/mensal/"+ng.userLogged.id_empreendimento+"?di="+ dtaInicial +"&df="+ dtaFinal)
+		var id_deposito = "";
+		/*if(!ng.funcioalidadeAuthorized('buscar_venda_todos_depositos')){
+			var id_deposito = "&id_deposito="+ng.config.id_deposito_padrao;
+		}*/
+
+		aj.get(baseUrlApi()+"relatorio/mensal/"+ng.userLogged.id_empreendimento+"?di="+ dtaInicial +"&df="+ dtaFinal + id_deposito)
 			.success(function(data, status, headers, config) {
 				ng.reset();
 

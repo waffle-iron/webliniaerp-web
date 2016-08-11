@@ -57,7 +57,7 @@ function sanitizeString($str) {
 				<?php
 
 				$lines = array();
-				$pointer = fopen("planilha.csv", "r");
+				$pointer = fopen("precos.csv", "r");
 
 				?>
 				<table id="produtos" class="table table-hover table-condesed">
@@ -147,10 +147,10 @@ function sanitizeString($str) {
 												$value = (string)$value;
 												break;
 											case 'INT':
-												$value = (int)str_replace(array("R$ ", ",", "."), "", $value);
+												$value = (int)str_replace(array("R$ ", ",", ".", '"'), "", $value);
 												break;
 											case 'DOUBLE':
-												$value = str_replace(array("R$ ","R$"), "", $value);
+												$value = str_replace(array("R$ ","R$", '"'), "", $value);
 												$value = (double)str_replace(",", ".", $value);
 												$value = number_format($value, 2);
 												break;
@@ -195,10 +195,10 @@ function sanitizeString($str) {
 			$("button#exportToSQL").on("click", function() {
 				var data = {
 					fields: [],
-					input_filename: "planilha.csv",
+					input_filename: "precos.csv",
 					output_format: "sql",
-					output_filename: "planilha.sql",
-					table_name: "tmp_configuracao"
+					output_filename: "precos.sql",
+					table_name: "tmp_precos"
 				};
 				$.each($("select"), function(i, field){
 					data.fields.push({

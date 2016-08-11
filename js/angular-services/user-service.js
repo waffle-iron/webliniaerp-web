@@ -20,6 +20,7 @@ app.service('UserService', function($http, $window) {
 			 		user.nme_logo 				= usuario.nme_logo;
 			 		user.modulosAssociatePage 	= usuario.modulosAssociatePage;
 			 		user.perc_venda 			= usuario.perc_venda;
+			 		user.empreendimento_usuario = usuario.empreendimento_usuario;
 			 		user.flg_dispositivo 		= (!empty(usuario.flg_dispositivo) ? usuario.flg_dispositivo : null );
 
 			 	},

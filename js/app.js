@@ -114,6 +114,18 @@ angular.module('filters', [])
 	      else
 	      	return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
 	    };
+	}).filter('date', function () {
+		return function (inputFormat) {
+		  	function pad(s) { return (s < 10) ? '0' + s : s; }
+		  if (empty(inputFormat)) return "" ;
+		  if(inputFormat.length < 6){
+		  	return "" ;
+		  }
+
+		  inputFormat = inputFormat.replace(/-/g,"/");
+		  var d = new Date(inputFormat);
+	      return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();
+	    };
 	})
 	.filter('maskCpf', function () {
 		return function (inputFormat) {
@@ -402,18 +414,19 @@ angular.module('filters', [])
 		   if($(this).hasClass('popover') || $(this).parents('.popover').hasClass('popover')){
 		   		close = false ;
 		   }
-		   var attrInitPopOver = $(this).attr('init-popover') ;
-		   var parentAttrInitPopOver = $(this).parents('[init-popover]').attr('init-popover')
+		   var attrInitPopOver = $(this).attr('popover-control-angular') ;
+		   var parentAttrInitPopOver = $(this).parents('[popover-control-angular]').attr('popover-control-angular')
 		   if ( (typeof attrInitPopOver !== typeof undefined && attrInitPopOver !== false) || (typeof parentAttrInitPopOver !== typeof undefined && parentAttrInitPopOver !== false) ) {
 		   		close = false ;
 		   }
-		   if(close) $('[init-popover]').popover('hide')
+		   if(close) $('[popover-control-angular]').popover('hide')
 		   else{
 		   	event.stopPropagation()
 		   }
 		});
 	    return {
 	    	link:function(scope,element,attrs,ctrl){
+	    			$(element).attr('popover-control-angular','');
 		    		var trigger = empty(attrs.trigger) ? 'click' : attrs.trigger ;
 		    		var container = empty(attrs.container) ? 'body' : attrs.container;
 		    		var title     = empty(attrs.title) ? false : attrs.title ;
@@ -577,6 +590,50 @@ angular.module('filters', [])
 
 	            });
 	    		
+	    	}
+	    }
+	}).directive('popover2', function ($compile,$filter) {
+		$(document).on('click',':not(.popover > *)' , function(event){
+		   var close = true ;
+		   if($(this).hasClass('popover') || $(this).parents('.popover').hasClass('popover')){
+		   		close = false ;
+		   }
+		   var attrInitPopOver = $(this).attr('popover-control-angular') ;
+		   var parentAttrInitPopOver = $(this).parents('[popover-control-angular]').attr('popover-control-angular')
+		   if ( (typeof attrInitPopOver !== typeof undefined && attrInitPopOver !== false) || (typeof parentAttrInitPopOver !== typeof undefined && parentAttrInitPopOver !== false) ) {
+		   		close = false ;
+		   }
+		   if(close) $('[popover-control-angular]').popover('hide')
+		   else{
+		   	event.stopPropagation()
+		   }
+		});
+	    return {
+	    	scope: {
+	            options: '=',
+	           	model: '='
+	       	},
+	    	link:function(scope,element,attrs,ctrl){
+	    			scope.$watch("model", function(currentValue, previousValue) {
+	    				$(element).attr('popover-control-angular','');
+	    				$(element).popover('destroy');
+	    				var trigger = empty(attrs.trigger) ? 'click' : attrs.trigger ;
+			    		var container = empty(attrs.container) ? 'body' : attrs.container;
+			    		var title     = empty(attrs.title) ? false : attrs.title ;
+			    		var placement = empty(attrs.placement) ? 'top' : attrs.placement;
+
+			    		var config = {
+							title: ( title==false ? '' : title ) ,
+			                placement: placement ,
+			                content:  $compile($(attrs.content))(scope) ,
+			                html: true,
+			                container: container,
+			                trigger  :trigger
+			            }
+			            if(title == false)
+			           	 config.template =  '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
+		    			$(element).popover(config).popover();
+		            });
 	    	}
 	    }
 	})

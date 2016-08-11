@@ -97,25 +97,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
 	}
 
-	if(params.id_orcamento == undefined)
-		ng.finalizarOrcamento = false ;
-	else{
-		ng.finalizarOrcamento = true ;
-		var id_orcamento = params.id_orcamento;
-		if(!isNaN(Number(id_orcamento)) && !empty(id_orcamento)){
-			dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Deseja trabalhar com os valores de venda dos itens do momento do orçamento?</strong>');
-			dlg.result.then(function(btn){
-				ng.loadOrcamento('old');	
-			}, function(){
-				ng.loadOrcamento('new');
-			});
-		}else{
-			ng.finalizarOrcamento = false ;
-			alert('O ID do orçamento é invalido');
-			//window.location = "pdv.php";
-		}
-	}
-
 	ng.loadOrcamento = function(tipo_valor){
 		aj.get(baseUrlApi()+"venda/orcamento/"+id_orcamento+'/'+tipo_valor)
 		.success(function(data, status, headers, config) {
@@ -1190,13 +1171,17 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	/* funçãoes revorço */
 
 	ng.modalReforco = function(){
+		$('.has-error').find('.form-control').tooltip('destroy');
+		$('.has-error').removeClass('has-error');
+		//ng.reforco.id_plano_conta = ng.caixa.id_plano_caixa ; 
+		ng.reforco.obs_pagamento = null ;
 		$("#modal-reforco").modal('show');
 	}
 	var btn_reforco = $('#btn-aplicar-reforco');
 	ng.efetivarReforco = function(){
 		var movimentacao = {
 								id_abertura_caixa 		: ng.caixa_aberto.id,
-								id_plano_conta    		: ng.caixa.id_plano_caixa,
+								id_plano_conta    		: ( ( $.isNumeric(ng.reforco.id_plano_conta) ) ? ng.reforco.id_plano_conta : ng.caixa.id_plano_caixa ),
 								id_tipo_movimentacao	: 1,
 								id_cliente				: ng.caixa.id_cliente_movimentacao_caixa,
 								id_fornecedor			: ng.caixa.id_fornecedor_movimentacao_caixa,
@@ -1206,6 +1191,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 								id_empreendimento		: ng.userLogged.id_empreendimento,
 								id_conta_bancaria       : ng.caixa.id,
 								id_conta_bancaria_baixa : ng.reforco.conta_origem,
+								obs_pagamento           : ( empty(ng.reforco.obs_pagamento) ? null : ng.reforco.obs_pagamento ) ,
 								dsc_movimentacao        : 'Reforço de caixa'
 						   }
 
@@ -1217,6 +1203,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			ng.loadContas();
 			ng.reforco.valor = null ;
 			ng.reforco.conta_origem = null;
+			ng.reforco.id_plano_conta = null;
+			ng.reforco.obs_pagamento = null; 
 			$('.has-error').removeClass('has-error');
 
 		})
@@ -1238,6 +1226,34 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.aplicarReforco = function(){
+		var error = 0 ;
+		if(empty(ng.reforco.valor)){
+			$("#reforco_valor_pagamento").addClass("has-error");
+			var formControl = $("#reforco_valor_pagamento").find('.form-control')
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "top")
+				.attr("title", 'Informe o valor')
+				.attr("data-original-title", '');
+			if(error == 0) formControl.tooltip('show');
+			formControl.tooltip();
+			error ++ ;
+		}
+
+		if(empty(ng.reforco.conta_origem)){
+			$("#reforco_conta_origem").addClass("has-error");
+			var formControl = $("#reforco_conta_origem").find('.form-control')
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "top")
+				.attr("title", 'Informe a conta de origem')
+				.attr("data-original-title", '');
+			if(error == 0) formControl.tooltip('show');
+			formControl.tooltip();
+			error ++ ;
+		}
+
+		if(error > 0)
+			return ;
+
 		btn_reforco.button('loading');
 		aj.get(baseUrlApi()+"caixa/aberto/"+ng.userLogged.id_empreendimento+"/"+ng.pth_local+"/"+ng.userLogged.id)
 			.success(function(data, status, headers, config) {
@@ -1320,6 +1336,11 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 	/*funcões Sangria*/
 	ng.modalSangria = function(){
+		$('.has-error').tooltip('destroy');
+		$('.has-error').removeClass('has-error');
+		ng.sangria.obs_pagamento = null ;
+		ng.sangria.id_fornecedor = null ;
+		ng.sangria.id_plano_conta = null ;
 		$("#modal-sangria").modal('show');
 	}
 	var btn_sangria = $('#btn-aplicar-sangria'); ;
@@ -1328,15 +1349,16 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		var movimentacao = {
 								id_abertura_caixa 			: ng.caixa_aberto.id,
-								id_plano_conta    			: ng.caixa.id_plano_caixa,
+								id_plano_conta    			: ( ( $.isNumeric(ng.sangria.id_plano_conta) ) ? ng.sangria.id_plano_conta : ng.caixa.id_plano_caixa ),
 								id_tipo_movimentacao		: 2,
 								id_cliente					: ng.caixa.id_cliente_movimentacao_caixa,
-								id_fornecedor				: ng.caixa.id_fornecedor_movimentacao_caixa,
+								id_fornecedor				: ( $.isNumeric(ng.sangria.id_fornecedor) ? ng.sangria.id_fornecedor : ng.caixa.id_fornecedor_movimentacao_caixa ),
 								id_forma_pagamento			: 3,
 								valor_pagamento				: ng.sangria.valor,
 								status_pagamento			: 1,
 								id_empreendimento			: ng.userLogged.id_empreendimento,
 								id_conta_bancaria       	: ng.caixa.id,
+								obs_pagamento           	: ( empty(ng.sangria.obs_pagamento) ? null : ng.sangria.obs_pagamento ) ,
 								id_conta_bancaria_destino   : ng.sangria.conta_destino
 						   }
 		aj.post(baseUrlApi()+"caixa/sangria",movimentacao)
@@ -1347,6 +1369,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			ng.loadContas();
 			ng.sangria.valor = null ;
 			ng.sangria.conta_destino = null;
+			ng.sangria.obs_pagamento = null ;
+			ng.sangria.id_fornecedor = null ;
+			ng.sangria.id_plano_conta = null ;
 			$('.has-error').removeClass('has-error');
 
 		})
@@ -3346,6 +3371,43 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		});
 	}
 
+	ng.loadPlanoContas = function() {
+		ng.plano_contas = [{id:null,dsc_completa:"Selecione"}];
+		aj.get(baseUrlApi()+"planocontas?tpc->id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				$.each(data, function(i, item){
+					data[i].cod_plano 			= (!empty(item.cod_plano)) ? parseInt(item.cod_plano, 10) : null;
+					data[i].cod_plano_pai 		= (!empty(item.cod_plano_pai)) ? parseInt(item.cod_plano_pai, 10) : null;
+					data[i].id 					= (!empty(item.id)) ? parseInt(item.id, 10) : null;
+					data[i].id_empreendimento 	= (!empty(item.id_empreendimento)) ? parseInt(item.id_empreendimento, 10) : null;
+					data[i].id_plano_pai 		= (!empty(item.id_plano_pai)) ? parseInt(item.id_plano_pai, 10) : null;
+				});
+				ng.roleList = data;
+				ng.plano_contas = ng.plano_contas.concat(data);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				ng.plano_contas = [] ;
+			});
+	}
+
+	ng.loadFavorecidos = function() {
+		var url = "fornecedores?id_empreendimento="+ng.userLogged.id_empreendimento+'&cplSql= ORDER BY frn.nome_fornecedor ASC';
+		ng.favorecidos = [{id:null,nome_fornecedor:"Selecione"}];
+		aj.get(baseUrlApi()+url)
+			.success(function(data, status, headers, config) {
+				ng.favorecidos = ng.favorecidos.concat(data.fornecedores);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				ng.favorecidos = [];
+			});
+	}
+
 	ng.existsCookie();
 	ng.loadConfig();
 	ng.calcTotalCompra();
@@ -3357,6 +3419,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadPerfil();
 	ng.loadContas();
 	ng.loadFormasPagamento();
+	ng.loadPlanoContas();
+	ng.loadFavorecidos() ;
 	closeWindow();
 
 	ng.isNumeric = function(vlr){
@@ -3371,6 +3435,30 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		return not_in(z,y);
 	}
 	ng.resizeScreen(); 
+
+	if(params.id_orcamento == undefined)
+		ng.finalizarOrcamento = false ;
+	else {
+		ng.finalizarOrcamento = true ;
+		var id_orcamento = params.id_orcamento;
+		if(!isNaN(Number(id_orcamento)) && !empty(id_orcamento)){
+			if(ng.config.flg_questionar_manutencao_precos_orcamento === 1) {
+				dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Deseja trabalhar com os valores de venda dos itens do momento do orçamento?</strong>');
+				dlg.result.then(function(btn){
+					ng.loadOrcamento('old');
+				}, function(){
+					ng.loadOrcamento('new');
+				});
+			}
+			else {
+				ng.loadOrcamento('old');
+			}
+		}else{
+			ng.finalizarOrcamento = false ;
+			alert('O ID do orçamento é invalido');
+			//window.location = "pdv.php";
+		}
+	}
 });
 app.directive('bsTooltip', function ($timeout) {
     return {

@@ -1,12 +1,17 @@
-app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $window, UserService) {
+app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $window, UserService,FuncionalidadeService,ConfigService) {
 	var ng = $scope,
 		aj = $http;
 	ng.userLogged = UserService.getUserLogado();
+	ng.config     = ConfigService.getConfig(ng.userLogged.id_empreendimento);
 	ng.itensPorPagina = 10;
 	ng.deposito = {};
 	ng.depositos = [];
 	ng.itens = [];
 	ng.paginacao = {};
+
+	ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+    	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+    }
 
 	ng.reset = function() {
 		ng.itens = [];
@@ -41,7 +46,9 @@ app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $w
 	}
 
 	ng.loadDepositos = function() {
-		aj.get(baseUrlApi()+"depositos?id_empreendimento="+ng.userLogged.id_empreendimento)
+		var id_deposito = "";
+
+		aj.get(baseUrlApi()+"depositos?id_empreendimento="+ng.userLogged.id_empreendimento+id_deposito)
 			.success(function(data, status, headers, config) {
 				ng.depositos = data.depositos;
 			})
@@ -49,7 +56,10 @@ app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $w
 				console.log(data, status, headers, config);
 			});
 	}
-
+	if(!ng.funcioalidadeAuthorized('buscar_por_deposito')){
+    	ng.deposito.id = !empty(ng.config.id_deposito_padrao) ? ""+ng.config.id_deposito_padrao : 0 ;
+    	ng.loadItens();
+    }
 	ng.reset();
 	ng.loadDepositos();
 });
