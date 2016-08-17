@@ -1,6 +1,6 @@
 <?php
-	include_once "util/login/restrito.php";
-	restrito(array(1));
+	//include_once "util/login/restrito.php";
+	//restrito(array(1));
 ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="HageERP" ng-cloak>
