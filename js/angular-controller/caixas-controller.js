@@ -61,14 +61,27 @@ app.controller('CaixasController', function($scope, $http, $window, $dialogs, Us
 			ng.showBoxNovo();
 	}
 
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.loadContas(0,10);
+	}
+
 	ng.contas = [];
 	ng.paginacao.conta = [];
 	ng.loadContas = function(offset,limit,overlay) {
 		overlay = overlay == null ? false : overlay ;
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
+
+    	var query_string = "/?id_tipo_conta=5&id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({dsc_conta_bancaria:{exp:"like '%"+ng.busca.text+"%' OR pth_local = '"+ng.busca.text+"'"}})+")";
+
 		ng.contas = null ;
-		aj.get(baseUrlApi()+"contas_bancarias/"+offset+"/"+limit+"/?id_tipo_conta=5&id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"contas_bancarias/"+offset+"/"+limit+ query_string)
 			.success(function(data, status, headers, config) {
 				ng.contas = data.contas;
 				ng.paginacao.conta = data.paginacao;

@@ -195,13 +195,25 @@ app.controller('MaquinetasController', function($scope, $http, $window, $dialogs
 			});
 	}
 
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.loadMaquinetas(0,10);
+	}
+
 	ng.loadMaquinetas = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
 
+    	var query_string = "?maq->id_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0";
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({num_serie_maquineta:{exp:"like '%"+ng.busca.text+"%' OR id_maquineta = '"+ng.busca.text+"' OR dsc_conta_bancaria like '%"+ng.busca.text+"%'"}})+")";
+
 		ng.maquinetas = [];
 
-		aj.get(baseUrlApi()+"maquinetas/"+offset+"/"+limit+"?maq->id_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
+		aj.get(baseUrlApi()+"maquinetas/"+offset+"/"+limit+ query_string)
 			.success(function(data, status, headers, config) {
 				ng.maquinetas 			= data.maquinetas;
 				ng.paginacao.maquinetas = [] ;

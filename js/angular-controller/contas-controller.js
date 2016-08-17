@@ -55,11 +55,24 @@ app.controller('ContasController', function($scope, $http, $window, $dialogs, Us
 			ng.showBoxNovo();
 	}
 
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.loadContas(0,10);
+	}
+
 	ng.loadContas = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
+
+    	var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento+"&cnt->id_tipo_conta[exp]=!=5";
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({dsc_conta_bancaria:{exp:"like '%"+ng.busca.text+"%' OR bnc.nome like '%"+ng.busca.text+"%' OR cnt.num_agencia like '%"+ng.busca.text+"%' OR cnt.num_conta_corrente like '%"+ng.busca.text+"%' OR cnt.id = '"+ng.busca.text+"'"}})+")";
+
 		ng.contas = [] ;
-		aj.get(baseUrlApi()+"contas_bancarias/"+offset+"/"+limit+"?id_empreendimento="+ng.userLogged.id_empreendimento+"&cnt->id_tipo_conta[exp]=!=5")
+		aj.get(baseUrlApi()+"contas_bancarias/"+offset+"/"+limit+ query_string)
 			.success(function(data, status, headers, config) {
 				ng.contas = data.contas;
 				ng.paginacao.conta = data.paginacao;

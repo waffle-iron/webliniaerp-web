@@ -219,6 +219,23 @@
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Contas Cadastradas</div>
 
 					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-11">
+								<div class="input-group">
+						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="loadContas(0,10)">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadContas(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div>
+						        </div>
+							</div>
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
+							</div>
+						</div>
+
+						<br>
 						<div class="alert alert-delete" style="display:none"></div>
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<tr ng-hide="contas.length > 0 && conta != null">
@@ -228,6 +245,7 @@
 							</tr>
 							<thead ng-show="contas.length > 0 && conta != null" >
 								<tr>
+									<th class="text-center">#</th>
 									<th>Descrição</th>
 									<th>Banco</th>
 									<th>Agência</th>
@@ -237,6 +255,7 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="item in contas">
+									<td class="text-center">{{ item.id }}</td>
 									<td>{{ item.dsc_conta_bancaria }}</td>
 									<td>{{ item.nome_banco }}</td>
 									<td>{{ item.num_agencia }}</td>

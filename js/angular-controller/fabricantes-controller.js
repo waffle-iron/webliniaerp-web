@@ -44,11 +44,23 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 		$(".has-error").removeClass("has-error");
 	}
 
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.load(0,10);
+	}
+
 	ng.load = function(offset, limit) {
 		offset = offset == null ? 0 : offset ;
 		limit  = limit  == null ? 10 : limit ;
 
-		aj.get(baseUrlApi()+"fabricantes/"+offset+"/"+limit+"?id_empreendimento="+ng.userLogged.id_empreendimento)
+		var query_string = "?id_empreendimento="+ ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({nome_fabricante:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";	
+
+		aj.get(baseUrlApi()+"fabricantes/"+ offset +"/"+ limit + query_string)
 			.success(function(data, status, headers, config) {
 				ng.fabricantes = data.fabricantes;
 				ng.paginacao.fabricantes = data.paginacao ;
