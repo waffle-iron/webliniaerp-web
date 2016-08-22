@@ -140,6 +140,13 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 		});
 	}
 
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.load(0,10);
+	}
+
 	ng.loadOrdemProducao = function(offset, limit) {
 		ng.ordem_producao = [];
 
@@ -147,6 +154,9 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 		limit  = limit  == null ? 10 : limit;
 
 		var query_string = "?top->id_empreendimento="+ng.userLogged.id_empreendimento+"&top->flg_excluido=0";
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({'tu->nome':{exp:"like '%"+ng.busca.text+"%' OR "}})+")";
 
 		aj.get(baseUrlApi()+"ordem_producao/"+ offset +"/"+ limit +"/"+query_string)
 			.success(function(data, status, headers, config) {

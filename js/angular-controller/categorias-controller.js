@@ -6,6 +6,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 	ng.userLogged 	= UserService.getUserLogado();
 	ng.categoria 	= {};
     ng.categorias	= [];
+    ng.paginacao = { itens: [] } ;
 
     ng.editing = false;
 
@@ -42,10 +43,27 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 		$(".has-error").removeClass("has-error");
 	}
 
-	ng.load = function() {
-		aj.get(baseUrlApi()+"categorias?id_empreendimento="+ng.userLogged.id_empreendimento)
+	ng.paginacao = { itens: [] } ;
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.load(0,10);
+	}
+
+	ng.load = function(offset, limit) {
+		offset = offset == null ? 0 : offset ;
+		limit  = limit  == null ? 10 : limit ;
+
+		var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({descricao_categoria:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";
+
+		aj.get(baseUrlApi()+"categorias/" + offset + "/" + limit + query_string)
 			.success(function(data, status, headers, config) {
 				ng.categorias = data.categorias;
+				ng.paginacao.itens = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
@@ -113,5 +131,5 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
 
-	ng.load();
+	ng.load(0,10);
 });

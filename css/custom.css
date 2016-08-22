@@ -391,3 +391,7 @@ legend {
      -moz-background-clip: padding;
           background-clip: padding-box;
 }
+
+.datepicker {
+	z-index: 100000;
+}

@@ -196,15 +196,28 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 	}
 
 	 ng.id_invetario_current = null ;
+
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.loadUltimosInventarios(0,10);
+	}
+
      ng.loadUltimosInventarios = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 
+    	var query_string = "?tde->id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({nme_deposito:{exp:"like '%"+ng.busca.text+"%' OR usu.nome like '%"+ng.busca.text+"%' OR inv.id ='"+ng.busca.text+"' "}})+")";
+
 		ng.utimosInventarios = [];
-		aj.get(baseUrlApi()+"inventarios/"+offset+"/"+limit+"?tde->id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"inventarios/"+offset+"/"+limit+ query_string)
 			.success(function(data, status, headers, config) {
-				ng.utimosInventarios                       = data.invetarios ;
-				ng.paginacao.inventarios 	   = data.paginacao;
+				ng.utimosInventarios = data.invetarios ;
+				ng.paginacao.inventarios = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				ng.utimosInventarios = [];
