@@ -141,7 +141,6 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 		ng.load(0,10);
 	}
 
-
 	ng.load = function(offset, limit) {
 		offset = offset == null ? 0 : offset ;
 		limit  = limit  == null ? 10 : limit ;

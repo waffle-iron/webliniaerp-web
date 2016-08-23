@@ -20,6 +20,15 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Datepicker -->
+	<link href="css/datepicker.css" rel="stylesheet"/>
+
+	<!-- Timepicker -->
+	<link href="css/bootstrap-timepicker.css" rel="stylesheet"/>
+
+	<!-- Chosen -->
+	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
+
 	<!-- Gritter -->
 	<link href="css/gritter/jquery.gritter.css" rel="stylesheet">
 
@@ -223,9 +232,82 @@
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
+					<div class="panel-heading"><i class="fa fa-filter"></i> Opções de Filtro</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">De</label>
+									<div class="input-group">
+										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
+										<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Até</label>
+									<div class="input-group">
+										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control text-center">
+										<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">Cliente</label>
+									<input ng-model="busca.nome_clienteORfornecedor" ng-enter="" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<div class="form-group" id="regimeTributario">
+									<label class="ccontrol-label">Situação da O.S.</label> 
+									<select chosen option="status_servicos" ng-model="busca.id_plano_conta"
+									    ng-options="status.cod_status_servico as status.dsc_status_servico for status in status_servicos">
+									</select>
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-primary" ng-click="load(0,20)"><i class="fa fa-filter"></i> Filtrar</button>
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="limparBusca()">Limpar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="panel panel-default">
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Ordens de Produção</div>
 
 					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-11">
+								<div class="input-group">
+						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="loadOrdemProducao(0,10)">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadOrdemProducao(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div>
+						        </div>
+							</div>
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
+							</div>
+						</div>
+						<br>
 						<div class="alert alert-list-pedidos" style="display:none"  >
 								
 						</div>
@@ -571,6 +653,15 @@
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- Chosen -->
+	<script src='js/chosen.jquery.min.js'></script>
+
+	<!-- Datepicker -->
+	<script src='js/bootstrap-datepicker.min.js'></script>
+
+	<!-- Timepicker -->
+	<script src='js/bootstrap-timepicker.min.js'></script>
+
     <!-- Moment -->
 	<script src="js/moment/moment.min.js"></script>
 
@@ -606,6 +697,10 @@
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
+    <script src="js/angular-chosen.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['angular.chosen'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>

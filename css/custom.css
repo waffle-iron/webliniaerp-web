@@ -404,6 +404,10 @@ legend {
           background-clip: padding-box;
 }
 
+.datepicker {
+	z-index: 100000;
+}
+
 .width-100 {
 	width: 100% !important;
 }

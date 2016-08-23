@@ -263,6 +263,22 @@
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Últimas Contagens</div>
 
 					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-11">
+								<div class="input-group">
+						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="loadUltimosInventarios(0,10)">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadUltimosInventarios(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div>
+						        </div>
+							</div>
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
+							</div>
+						</div>
+						<br>
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead ng-show="utimosInventarios.length > 0">
 								<tr>

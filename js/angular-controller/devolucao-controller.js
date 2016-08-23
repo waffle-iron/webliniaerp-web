@@ -13,6 +13,7 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 	ng.busca                = {clientes:''};
 	ng.clientes             = [];
 	ng.cliente_selecionado  = {} ;
+	ng.paginacao = { itens: [] } ;
 
 	ng.showBoxNovaDevolucao = function(onlyShow){
     	//ng.editing = !ng.editing;
