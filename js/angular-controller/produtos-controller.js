@@ -242,7 +242,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	
 	ng.loadFabricantes = function(nome_fabricante) {
 		ng.fabricantes = [{id:"",nome_fabricante:"--- Selecione ---"}];
-		aj.get(baseUrlApi()+"fabricantes?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"fabricantes?tfe->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.fabricantes = ng.fabricantes.concat(data.fabricantes);
 				if(nome_fabricante != null)
@@ -257,7 +257,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	
 	ng.loadImportadores = function(nome_importador) {
 		ng.importadores = [{id:"",nome_importador:"--- Selecione ---"}];
-		aj.get(baseUrlApi()+"importadores?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"importadores?tie->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.importadores = ng.importadores.concat(data.importadores);
 				if(nome_importador != null)
@@ -271,7 +271,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.loadCategorias = function(descricao_categoria) {
 		ng.categorias = [{id:"",descricao_categoria:"--- Selecione ---"}];
-		aj.get(baseUrlApi()+"categorias?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"categorias?tce->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.categorias = ng.categorias.concat(data.categorias);
 				if(descricao_categoria != null)

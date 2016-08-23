@@ -55,7 +55,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 		offset = offset == null ? 0 : offset ;
 		limit  = limit  == null ? 10 : limit ;
 
-		var query_string = "?id_empreendimento="+ ng.userLogged.id_empreendimento;
+		var query_string = "?tfe->id_empreendimento="+ ng.userLogged.id_empreendimento;
 
 		if(ng.busca.text != "")
 			query_string += "&("+$.param({nome_fabricante:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";	

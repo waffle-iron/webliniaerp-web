@@ -43,7 +43,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 	}
 
 	ng.load = function() {
-		aj.get(baseUrlApi()+"categorias?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"categorias?tce->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.categorias = data.categorias;
 			})

@@ -44,7 +44,7 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 	}
 
 	ng.load = function() {
-		aj.get(baseUrlApi()+"importadores?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"importadores?tie->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.importadores = data.importadores;
 			})
