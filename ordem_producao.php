@@ -237,20 +237,10 @@
 						<div class="row">
 							<div class="col-sm-2">
 								<div class="form-group">
-									<label class="control-label">De</label>
+									<label class="control-label">Data</label>
 									<div class="input-group">
-										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="datepicker form-control text-center">
-										<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<div class="form-group">
-									<label class="control-label">Até</label>
-									<div class="input-group">
-										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control text-center">
-										<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
+										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="data" class="datepicker form-control text-center">
+										<span class="input-group-addon" id="cld_data"><i class="fa fa-calendar"></i></span>
 									</div>
 								</div>
 							</div>
@@ -258,15 +248,15 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label class="control-label">Cliente</label>
-									<input ng-model="busca.nome_clienteORfornecedor" ng-enter="" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+									<input ng-model="busca.nme_cliente" ng-enter="loadOrdemProducao(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
 								</div>
 							</div>
 
 							<div class="col-sm-3">
 								<div class="form-group" id="regimeTributario">
 									<label class="ccontrol-label">Situação da O.S.</label> 
-									<select chosen option="status_servicos" ng-model="busca.id_plano_conta"
-									    ng-options="status.cod_status_servico as status.dsc_status_servico for status in status_servicos">
+									<select chosen option="status_op" ng-model="busca.id_status_op"
+									    ng-options="status.id as status.nome_status for status in status_op">
 									</select>
 								</div>
 							</div>
@@ -274,14 +264,14 @@
 							<div class="col-sm-1">
 								<div class="form-group">
 									<label class="control-label"><br></label>
-									<button type="button" class="btn btn-sm btn-primary" ng-click="load(0,20)"><i class="fa fa-filter"></i> Filtrar</button>
+									<button type="button" class="btn btn-sm btn-primary" ng-click="loadOrdemProducao(0,10)"><i class="fa fa-filter"></i> Filtrar</button>
 								</div>
 							</div>
 
 							<div class="col-sm-1">
 								<div class="form-group">
 									<label class="control-label"><br></label>
-									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="limparBusca()">Limpar</button>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="resetFilter()">Limpar</button>
 								</div>
 							</div>
 						</div>
@@ -292,22 +282,6 @@
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Ordens de Produção</div>
 
 					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-11">
-								<div class="input-group">
-						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="loadOrdemProducao(0,10)">
-						            <div class="input-group-btn">
-						            	<button ng-click="loadOrdemProducao(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-						            		<i class="fa fa-search"></i> Buscar
-						            	</button>
-						            </div>
-						        </div>
-							</div>
-							<div class="col-sm-1">
-								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
-							</div>
-						</div>
-						<br>
 						<div class="alert alert-list-pedidos" style="display:none"  >
 								
 						</div>
@@ -705,7 +679,14 @@
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/ordem_producao-controller.js"></script>
-	<script type="text/javascript"></script>>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#data").datepicker();
+			$("#cld_data").on("click", function(){ $("#data").trigger("focus"); });
+			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+		});
+	</script>
 	<?php include("google_analytics.php"); ?>
   </body>
 </html>

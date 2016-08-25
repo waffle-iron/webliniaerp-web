@@ -197,9 +197,15 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 
 	 ng.id_invetario_current = null ;
 
-	ng.busca = { text: "" };
+	 ng.reset = function(){
+		ng.Notas = {itens:[]};
+	}
+
+	ng.busca = { text: "", responsavel: ""};
 	ng.resetFilter = function() {
+		$("#data_da_contagem").val("");
 		ng.busca.text = "" ;
+		ng.busca.responsavel = "" ;
 		ng.reset();
 		ng.loadUltimosInventarios(0,10);
 	}
@@ -210,9 +216,19 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 
     	var query_string = "?tde->id_empreendimento="+ng.userLogged.id_empreendimento;
 
-		if(ng.busca.text != "")
-			query_string += "&("+$.param({nme_deposito:{exp:"like '%"+ng.busca.text+"%' OR usu.nome like '%"+ng.busca.text+"%' OR inv.id ='"+ng.busca.text+"' "}})+")";
+		if(ng.busca.text != ""){
+			query_string += "&("+$.param({nme_deposito:{exp:"like '%"+ng.busca.text+"%'"}})+")";
+		}
 
+		if(ng.busca.responsavel != ""){
+			query_string += "&("+$.param({'usu->nome':{exp:"like '%"+ng.busca.responsavel+"%'"}})+")";
+		}
+
+		if($("#data_da_contagem").val() != ""){
+			var data = moment($("#data_da_contagem").val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+			query_string += "&("+$.param({'1':{exp:"= 1 AND cast(dta_contagem as date) = '"+ data +"' "}})+")";
+		}
+		
 		ng.utimosInventarios = [];
 		aj.get(baseUrlApi()+"inventarios/"+offset+"/"+limit+ query_string)
 			.success(function(data, status, headers, config) {

@@ -166,6 +166,68 @@
 
 			<div class="padding-md">
 				<div class="panel panel-default">
+					<div class="panel-heading"><i class="fa fa-filter"></i> Opções de Filtro</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label">Nº NF-e</label>
+									<input ng-model="busca.numeroo" ng-enter="loadNotas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Natureza da Operação</label>
+									<input ng-model="busca.nat_op" ng-enter="loadNotas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">Destinatário</label>
+									<input ng-model="busca.text" ng-enter="loadNotas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Data de Emissão</label>
+											<div class="input-group">
+												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
+												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Data de Saída</label>
+											<div class="input-group">
+												<input id="inputDtaSaida" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
+												<span  id="btnDtaSaida" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+											</div>
+										</div>
+									</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-primary" ng-click="loadNotas(0,10)"><i class="fa fa-filter"></i> Filtrar</button>
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="resetFilter()">Limpar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
 							<li class="active"><a href="#emitidas" data-toggle="tab"><i class="fa fa-send"></i> Emitidas</a></li>
@@ -174,22 +236,6 @@
 						</ul>
 					</div>
 					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-11">
-								<div class="input-group">
-						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="load(0,10)">
-						            <div class="input-group-btn">
-						            	<button ng-click="load(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-						            		<i class="fa fa-search"></i> Buscar
-						            	</button>
-						            </div>
-						        </div>
-							</div>
-							<div class="col-sm-1">
-								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
-							</div>
-						</div>
-						<br>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="emitidas">
 								<!--<div class="row">
@@ -264,7 +310,6 @@
 													<th class="text-middle text-center">Data de Emissão</th>
 													<th class="text-middle text-center">Data de Saída</th>
 													<th class="text-middle text-center">Status</th>
-													<th class="text-middle text-center" width="60px"></th>
 												</thead>
 												<tbody>
 													<tr ng-show="(!notas)">
@@ -296,6 +341,9 @@
 																	<li role="separator" class="divider" ng-show="(nota.status == 'autorizado' || nota.status == 'processando_autorizacao')"></li>
 																	<!--<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>-->
 																	<li><a href="nota-fiscal.php?id_venda={{ nota.cod_venda }}"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
+																	<li class="hide" ng-show="(nota.status == 'autorizado')" ng-click="modalCancelar(nota)">
+																		<a href=""><i class="fa fa-times-circle"></i> Cancelar NF-e</a>
+																	</li>
 																</ul>
 															</div>
 														</td>
@@ -323,10 +371,6 @@
 																Cancelada
 															</span>
 															
-														</td>
-
-														<td>
-															<!-- <button type="button" class="btn btn-xs btn-danger" ng-click="modalCancelar(nota)"><i class="fa fa-ban"></i></button>-->
 														</td>
 													</tr>
 												</tbody>
