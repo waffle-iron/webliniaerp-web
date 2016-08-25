@@ -55,7 +55,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 		offset = offset == null ? 0 : offset ;
 		limit  = limit  == null ? 10 : limit ;
 
-		var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento;
+		var query_string = "?tce->id_empreendimento="+ng.userLogged.id_empreendimento;
 
 		if(ng.busca.text != "")
 			query_string += "&("+$.param({descricao_categoria:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";
