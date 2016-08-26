@@ -205,61 +205,86 @@
 					</div>
 				</div>
 
-				<ul class="pagination pagination-sm m-top-none pull-right hidden-print" ng-show="paginacao.itens.length > 1">
-					<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
-						<a href="" h ng-click="loadItens(item.offset,item.limit)">{{ item.index }}</a>
-					</li>
-				</ul>
-
 				<br>
 
-				<table id="data" class="table table-bordered table-hover table-striped table-condensed" style="font-family: monospace; font-size: 10px;">
-					<thead>
-						<tr>
-							<th class="text-center" style="line-height: 78px;" rowspan="3">Produto</th>
-							<th class="text-center" style="line-height: 78px;" rowspan="3">Fabricante</th>
-							<th class="text-center" style="line-height: 78px;" rowspan="3">Tamanho</th>
-							<th class="text-center" style="line-height: 78px;" rowspan="3">Sabor/Cor</th>
-							<th class="text-center" style="line-height: 78px;" rowspan="3">Validade</th>
-							<th class="text-center" style="line-height: 78px;" rowspan="3">Qtd</th>
-							<th class="text-center" style="line-height: 60px;" rowspan="2" colspan="2">Custo</th>
-							<th class="text-center" style="line-height: 36px;" colspan="6">Estimativa Venda</th>
-						</tr>
-						<tr>
-							<th colspan="2" class="text-center">Atacado</th>
-							<th colspan="2" class="text-center">Intermediário</th>
-							<th colspan="2" class="text-center">Varejo</th>
-						</tr>
-						<tr>
-							<th class="text-center">Unitário</th>
-							<th class="text-center">Total</th>
-							<th class="text-center">Unitário</th>
-							<th class="text-center">Total</th>
-							<th class="text-center">Unitário</th>
-							<th class="text-center">Total</th>
-							<th class="text-center">Unitário</th>
-							<th class="text-center">Total</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="item in itens">
-							<td>{{ item.nome }}</td>
-							<td>{{ item.nome_fabricante }}</td>
-							<td>{{ item.peso }}</td>
-							<td>{{ item.sabor }}</td>
-							<td>{{ item.dta_validade | dateFormat: 'date' }}</td>
-							<td class="text-center">{{ item.qtd_item }}</td>
-							<td class="valor">R$ {{ item.vlr_custo_real | numberFormat: 2 : ',' : '.' }}</td>
-							<td class="valor">R$ {{ item.vlr_custo_total | numberFormat: 2 : ',' : '.' }}</td>
-							<td class="valor">R$ {{ item.vlr_venda_atacado | numberFormat: 2 : ',' : '.' }}</td>
-							<td class="valor">R$ {{ item.vlr_total_venda_atacado | numberFormat: 2 : ',' : '.' }}</td>
-							<td class="valor">R$ {{ item.vlr_venda_intermediario | numberFormat: 2 : ',' : '.' }}</td>
-							<td class="valor">R$ {{ item.vlr_total_venda_intermediario | numberFormat: 2 : ',' : '.' }}</td>
-							<td class="valor">R$ {{ item.vlr_venda_varejo | numberFormat: 2 : ',' : '.' }}</td>
-							<td class="valor">R$ {{ item.vlr_total_venda_varejo | numberFormat: 2 : ',' : '.' }}</td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="panel panel-default">
+					<div class="panel-heading clearfix">
+						<div class="pull-right">
+							<ul class="pagination pagination-sm m-top-none hidden-print" ng-show="paginacao.itens.length > 1">
+								<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
+									<a href="" h ng-click="loadItens(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
+						</div>	
+					</div>
+
+					<div class="panel-body" style="overflow-y: scroll; width: 100%; background-color: #fff;">
+						<table id="data" class="table table-bordered table-hover table-striped table-condensed" style="font-family: monospace; font-size: 10px;">
+							<thead>
+								<tr>
+									<th class="text-middle text-center" rowspan="3">Produto</th>
+									<th class="text-middle text-center" rowspan="3">Fabricante</th>
+									<th class="text-middle text-center" rowspan="3">Tamanho</th>
+									<th class="text-middle text-center" rowspan="3">Sabor/Cor</th>
+									<th class="text-middle text-center" rowspan="3">Validade</th>
+									<th class="text-middle text-center" rowspan="3">Qtd</th>
+									<th class="text-middle text-center" rowspan="2" colspan="2">Custo</th>
+									<th class="text-middle text-center" colspan="6">Estimativa Venda</th>
+								</tr>
+								<tr>
+									<th colspan="2" class="text-center">Atacado</th>
+									<th colspan="2" class="text-center">Intermediário</th>
+									<th colspan="2" class="text-center">Varejo</th>
+								</tr>
+								<tr>
+									<th class="text-center">Unitário</th>
+									<th class="text-center">Total</th>
+
+									<th class="text-center">Unitário</th>
+									<th class="text-center">Total</th>
+
+									<th class="text-center">Unitário</th>
+									<th class="text-center">Total</th>
+
+									<th class="text-center">Unitário</th>
+									<th class="text-center">Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in itens">
+									<td class="text-middle" style="min-width: 250px;">{{ item.nome }}</td>
+									<td class="text-middle" style="min-width: 100px;">{{ item.nome_fabricante }}</td>
+									<td class="text-middle text-center">{{ item.peso }}</td>
+									<td class="text-middle text-center">{{ item.sabor }}</td>
+									<td class="text-middle text-center">{{ item.dta_validade | dateFormat: 'date' }}</td>
+									<td class="text-middle text-center">{{ item.qtd_item }}</td>
+
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_custo_real | numberFormat: 2 : ',' : '.' }}</td>
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_custo_total | numberFormat: 2 : ',' : '.' }}</td>
+
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_venda_atacado | numberFormat: 2 : ',' : '.' }}</td>
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_total_venda_atacado | numberFormat: 2 : ',' : '.' }}</td>
+
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_venda_intermediario | numberFormat: 2 : ',' : '.' }}</td>
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_total_venda_intermediario | numberFormat: 2 : ',' : '.' }}</td>
+
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_venda_varejo | numberFormat: 2 : ',' : '.' }}</td>
+									<td class="text-middle text-right" style="min-width: 100px;">R$ {{ item.vlr_total_venda_varejo | numberFormat: 2 : ',' : '.' }}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<ul class="pagination pagination-sm m-top-none hidden-print" ng-show="paginacao.itens.length > 1">
+								<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
+									<a href="" h ng-click="loadItens(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
+						</div>	
+					</div>
+				</div>
 
 				<div class="padding-sm bg-grey">
 					<strong>Nota:</strong>

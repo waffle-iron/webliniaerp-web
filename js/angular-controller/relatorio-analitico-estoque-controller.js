@@ -3,7 +3,7 @@ app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $w
 		aj = $http;
 	ng.userLogged = UserService.getUserLogado();
 	ng.config     = ConfigService.getConfig(ng.userLogged.id_empreendimento);
-	ng.itensPorPagina = 10;
+	ng.itensPorPagina = "10";
 	ng.deposito = {};
 	ng.depositos = [];
 	ng.itens = [];
@@ -19,8 +19,14 @@ app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $w
 	}
 
 	ng.resetFilter = function() {
+		ng.itensPorPagina = "10";
 		ng.deposito = {};
 		ng.reset();
+
+		if(!ng.funcioalidadeAuthorized('buscar_por_deposito')){
+	    	ng.deposito.id = !empty(ng.config.id_deposito_padrao) ? ""+ng.config.id_deposito_padrao : 0 ;
+	    	ng.loadItens();
+	    }
 	}
 
 	ng.aplicarFiltro = function() {
@@ -62,4 +68,6 @@ app.controller('RelatorioAnaliticoEstoqueController', function($scope, $http, $w
     }
 	ng.reset();
 	ng.loadDepositos();
+
+	$('#sizeToggle').trigger("click");
 });
