@@ -8,8 +8,9 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 	ng.fabricante 	= {};
     ng.fabricantes	= [];
     ng.paginacao    = {fabricantes : [] } ;
-
+    ng.busca = { text: "", empreendimento: "" };
     ng.editing = false;
+    ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,flg_visivel:1 }];
 
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
@@ -29,6 +30,11 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 		}
 	}
 
+	ng.showEmpreendimentos = function() {
+		$('#list_empreendimentos').modal('show');
+		ng.loadAllEmpreendimentos(0,10);
+	}
+
 	ng.mensagens = function(classe , msg){
 		$('.alert-sistema').fadeIn().addClass(classe).html(msg);
 
@@ -39,12 +45,45 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 
 	ng.reset = function() {
 		ng.fabricante = {};
+		ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento }];
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
 	}
 
-	ng.busca = { text: "" };
+	ng.loadAllEmpreendimentos = function(offset, limit) {
+		offset = offset == null ? 0  : offset;
+    	limit  = limit  == null ? 20 : limit;
+
+    	var query_string = "?id_usuario="+ng.userLogged.id;
+    	if(ng.busca.empreendimento != ""){
+    		query_string += "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
+    	}
+
+    	ng.empreendimentos = [];
+		aj.get(baseUrlApi()+"empreendimentos/"+offset+"/"+limit+"/"+query_string)
+			.success(function(data, status, headers, config) {
+				ng.empreendimentos = data.empreendimentos;
+				ng.paginacao.empreendimentos = data.paginacao;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.empreendimentos = [];
+			});
+	}
+
+	ng.loadEmpreendimentosByFabricante = function() {
+		aj.get(baseUrlApi()+"empreendimentos/fabricante/"+ng.fabricante.id)
+			.success(function(data, status, headers, config) {
+				ng.empreendimentosAssociados = [];
+				ng.empreendimentosAssociados = data;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.empreendimentos = [];
+			});
+	}
+
 	ng.resetFilter = function() {
 		ng.busca.text = "" ;
 		ng.reset();
@@ -71,9 +110,50 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 			});
 	}
 
+	ng.empreendimentoIsSelected = function(item){
+		var r = false ;
+		$.each(ng.empreendimentosAssociados,function(i,v){
+			if(Number(item.id)==Number(v.id)){
+				r = true ;
+				return;
+			}
+		});
+		return r ;
+	}
+
+	ng.delEmpreendimento = function(item) {
+		ng.empreendimentosAssociados.pop(item);
+	}
+
+	ng.addEmpreendimento = function(item) {
+		if(ng.empreendimentosAssociados == null)
+			ng.empreendimentosAssociados = [];
+
+		var s = true;
+
+		$.each(ng.empreendimentosAssociados, function(i, emp) {
+			if(emp.id == item.id)
+				s = false;
+		});
+
+		if(s) {
+			ng.empreendimentosAssociados.push(item);
+		}
+		else {
+			$('#list_empreendimentos').modal('hide');
+			ng.mensagens('alert-danger','<strong>Este empreendimento já foi adicionado a listagem</strong>');
+		}
+	}
+
 	ng.salvar = function() {
 		var url = 'fabricante';
 		var itemPost = {};
+
+		if(ng.empreendimentosAssociados == null || ng.empreendimentosAssociados.length == 0) {
+			ng.mensagens('alert-danger','<strong>Você deve selecionar ao menos um empreendimento</strong>');
+			btn.button('reset');
+			return false;
+		}
 
 		if(ng.fabricante.id != null && ng.fabricante.id > 0) {
 			itemPost.id = ng.fabricante.id;
@@ -82,6 +162,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 
 		itemPost.id_empreendimento 	= ng.userLogged.id_empreendimento;
 		itemPost.nome_fabricante 	= ng.fabricante.nome_fabricante;
+		itemPost.empreendimentos = ng.empreendimentosAssociados;
 
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
@@ -111,6 +192,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 	ng.editar = function(item) {
 		ng.fabricante = angular.copy(item);
 		ng.showBoxNovo(true);
+		ng.loadEmpreendimentosByFabricante();
 	}
 
 	ng.delete = function(item){
