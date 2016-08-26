@@ -209,6 +209,12 @@
 					</div>
 
 					<div class="panel-footer clearfix">
+						<div class="pull-left" ng-show="(saldo_produto)">
+							<h4>
+								Saldo do Produto Selecionado:
+								<span class="{{ saldo_produto < 0 ? 'text-danger' : (saldo_produto > 0 ? 'text-info' : 'text-primary')}}">{{ saldo_produto }}</span>
+							</h4>
+						</div>
 						<div class="pull-right">
 							<button type="button" class="btn btn-sm btn-primary" ng-click="aplicarFiltro()"><i class="fa fa-filter"></i> Aplicar Filtro</button>
 							<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
