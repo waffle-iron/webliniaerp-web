@@ -166,6 +166,38 @@
 								</div>
 							</div>
 
+							<div class="empreendimentos form-group">
+								<div class="col-sm-12">
+									<table class="table table-bordered table-condensed table-striped table-hover">
+										<thead>
+											<tr>
+												<td>Empreendimentos Associados</td>
+												<td width="60" align="center">
+													<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()">
+														<i class="fa fa-plus-circle"></i>
+													</button>
+												</td>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-show="(empreendimentosAssociados.length == 0)">
+												<td colspan="3" align="center">Nenhum empreendimento selecionado</td>
+											</tr>
+											<tr ng-repeat="item in empreendimentosAssociados">
+												<td>{{ item.nome_empreendimento }}</td>
+												<td align="center">
+													<button class="btn btn-xs btn-danger" 
+														ng-if="item.id != userLogged.id_empreendimento" 
+														ng-click="delEmpreendimento(item)">
+														<i class="fa fa-trash-o"></i>
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
 							<div class="form-group">
 								<div class="col-sm-12">
 									<div class="pull-right">
@@ -238,6 +270,73 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal empreendimento-->
+		<div class="modal fade" id="list_empreendimentos" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Empreendimentos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.empreendimento" ng-enter="loadAllEmpreendimentos(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadAllEmpreendimentos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(empreendimento.length != 0)">
+										<tr>
+											<th colspan="2">Nome</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(empreendimento.length == 0)">
+											<td colspan="2">Não há empreendimentos cadastrados</td>
+										</tr>
+										<tr ng-repeat="item in empreendimentos">
+											<td>{{ item.nome_empreendimento }}</td>
+											<td width="50" align="center">
+												<button ng-if="empreendimentoIsSelected(item)" type="button" class="btn btn-xs btn-primary">
+													<i class="fa fa-check-square-o"></i> Selecionado
+												</button>
+												<button ng-if="!empreendimentoIsSelected(item)" type="button" class="btn btn-xs btn-success" ng-click="addEmpreendimento(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.empreendimentos.length > 1">
+									<li ng-repeat="item in paginacao.empreendimentos" ng-class="{'active': item.current}">
+										<a href="" ng-click="loadAllEmpreendimentos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+				    		</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->
