@@ -189,17 +189,11 @@
 					<div class="panel-footer clearfix hidden-print">
 						<div class="pull-right">
 							<button class="btn btn-sm btn-primary" ng-click="loadProdutosVencer()"><i class="fa fa-filter"></i> Filtrar</button>
-							<button class="btn btn-sm btn-default" ng-show="itens.length > 0" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
-							<button class="btn btn-sm btn-success" ng-show="itens.length > 0" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
+							<button class="btn btn-sm btn-default" ng-show="itens" ng-click="resetFilter()"><i class="fa fa-times-circle"></i> Limpar Filtro</button>
+							<button class="btn btn-sm btn-success" ng-show="itens" id="invoicePrint"><i class="fa fa-print"></i> Imprimir</button>
 						</div>
 					</div>
 				</div>
-
-				<ul class="pagination pagination-sm m-top-none pull-right hidden-print" ng-show="paginacao.itens.length > 1">
-					<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
-						<a href="" h ng-click="loadItens(item.offset,item.limit)">{{ item.index }}</a>
-					</li>
-				</ul>
 
 				<br>
 
@@ -229,6 +223,16 @@
 						</tr>
 					</tbody>
 				</table>
+
+				<div class="clearfix">
+					<div class="pull-right">
+						<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.length > 1">
+							<li ng-repeat="item in paginacao" ng-class="{'active': item.current}">
+								<a href="" h ng-click="loadProdutosVencer(item.offset)">{{ item.index }}</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div><!-- /.padding20 -->
 		</div><!-- /main-container -->
 	</div><!-- /wrapper -->

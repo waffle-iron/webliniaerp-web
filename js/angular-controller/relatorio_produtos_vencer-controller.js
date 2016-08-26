@@ -2,27 +2,31 @@ app.controller('RelatorioProdutosVencerController', function($scope, $http, $win
 	var ng = $scope,
 		aj = $http;
 
-	ng.tempoAvalicao = 30;
-	ng.itensPagina = 10;
+	ng.tempoAvalicao = "30";
+	ng.itensPagina = "10";
 	ng.userLogged = UserService.getUserLogado();
-	ng.itens = [];
+	ng.itens = null;
+	ng.paginacao = [];
 	ng.paginacao = {};
 
 	ng.resetFilter = function() {
-		ng.tempoAvalicao = 30;
-		ng.itensPagina = 10;
+		ng.tempoAvalicao = "30";
+		ng.itensPagina = "10";
 		ng.itens = [];
 	}
 
-	ng.loadProdutosVencer = function() {
-		aj.get(baseUrlApi()+"produtos/vencer/"+ ng.userLogged.id_empreendimento +"/"+ ng.tempoAvalicao + "/0/" + ng.itensPagina)
+	ng.loadProdutosVencer = function(offset) {
+		offset = offset == null ? 0  : offset;
+
+		aj.get(baseUrlApi()+"produtos/vencer/"+ ng.userLogged.id_empreendimento +"/"+ ng.tempoAvalicao +"/"+ offset +"/"+ ng.itensPagina)
 			.success(function(data, status, headers, config) {
 				ng.itens = data.produtos;
+				ng.paginacao = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				arr = null;
 			});
 	}
 
-	ng.loadProdutosVencer();
+	ng.loadProdutosVencer(0);
 });
