@@ -163,7 +163,7 @@
 			</div>
 			<!-- breadcrumb -->
 
-			<div class="padding-md" ng-show="caixa_aberto == false && abrir_pdv ==false && caixa_configurado == true && caixa_other_operador == false && operador_other_caixa == false">
+			<div class="padding-md" ng-show="caixa_aberto == false && abrir_pdv == false && caixa_configurado == true && caixa_other_operador == false && operador_other_caixa == false">
 				<div class="panel panel-primary" style="width:500px;margin:0 auto">
 					<div class="panel-heading">
 						<i class="fa fa-desktop"></i> Frente de Caixa | PDV - {{ caixa.dsc_conta_bancaria }}
@@ -199,7 +199,7 @@
 					</div>
 
 					<div class="panel-body">
-						<h1 class="text-center">Caixa ocupado</h1>
+						<h1 class="text-center">Caixa Ocupado</h1>
 						<div class="col-sm-12" style="text-align:center">
 							<p>
 								{{ msg_caixa }}
@@ -222,7 +222,7 @@
 					</div>
 
 					<div class="panel-body">
-						<h1 class="text-center">Operador ocupado</h1>
+						<h1 class="text-center">Operador Ocupado</h1>
 						<div class="col-sm-12" style="text-align:center">
 							<p>
 								{{ msg_caixa }}
@@ -244,13 +244,13 @@
 					</div>
 
 					<div class="panel-body">
-						<h1 class="text-center">Caixa não configurado</h1>
+						<h1 class="text-center">Caixa Não Configurado</h1>
 						<div class="row">
 							<div class="col-sm-12">
 								<p>
 									As configuraçãoes necessárias para que o caixa funcione corretamente ainda não foram efetuadas.
-									<br/>
-									Solicite que seu administrador as faça.
+									<br/><br/>
+									Entre em contato com o Administrador do sistema para obter apoio.
 								</p>
 							</div>
 						</div>
