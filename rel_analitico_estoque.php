@@ -219,7 +219,7 @@
 					</div>
 
 					<div class="panel-body" style="overflow-y: scroll; width: 100%; background-color: #fff;">
-						<table id="data" class="table table-bordered table-hover table-striped table-condensed" style="font-family: monospace; font-size: 10px;">
+						<table id="data" class="table table-bordered table-hover table-striped table-condensed" style="font-family: monospace; font-size: 10px; margin-bottom: 0;">
 							<thead>
 								<tr>
 									<th class="text-middle text-center" rowspan="3">Produto</th>
