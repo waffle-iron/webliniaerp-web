@@ -1,4 +1,4 @@
-app.controller('OrdemProducaoController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
+app.controller('OrdemProducaoController', function($scope, $http, $window, $dialogs, UserService, ConfigService, AsyncAjaxSrvc){
 
 	var ng = $scope
 		aj = $http;
@@ -9,7 +9,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 	ng.ordemProducao = {itens:[]};
 	ng.busca         = {produtos:"",depositos:""};
 	ng.paginacao     = {produtos:[]} ;
-
+	ng.status_op 	 = AsyncAjaxSrvc.getListOfItens(baseUrlApi()+'status/ordem-producao');
 
     ng.editing = false;
 
@@ -140,11 +140,13 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 		});
 	}
 
-	ng.busca = { text: "" };
+	ng.busca = { nme_cliente: "", id_status_op: null};
 	ng.resetFilter = function() {
-		ng.busca.text = "" ;
+		$("#data").val("");
+		ng.busca.nme_cliente = "" ;
+		ng.busca.id_status_op = null;
 		ng.reset();
-		ng.load(0,10);
+		ng.loadOrdemProducao(0,10);
 	}
 
 	ng.loadOrdemProducao = function(offset, limit) {
@@ -155,8 +157,14 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 
 		var query_string = "?top->id_empreendimento="+ng.userLogged.id_empreendimento+"&top->flg_excluido=0";
 
-		if(ng.busca.text != "")
-			query_string += "&("+$.param({'tu->nome':{exp:"like '%"+ng.busca.text+"%' OR "}})+")";
+		if(ng.busca.nme_cliente != "")
+			query_string += "&("+$.param({'tu->nome':{exp:"like '%"+ng.busca.nme_cliente+"%' "}})+")";
+		if(ng.busca.id_status_op != null)
+			query_string += "&top->id_status="+ ng.busca.id_status_op;
+		if($("#data").val() != ""){
+			var data = moment($("#data").val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+			query_string += "&("+$.param({'1':{exp:"= 1 AND cast(dta_create as date) = '"+ data +"' "}})+")";
+		}
 
 		aj.get(baseUrlApi()+"ordem_producao/"+ offset +"/"+ limit +"/"+query_string)
 			.success(function(data, status, headers, config) {

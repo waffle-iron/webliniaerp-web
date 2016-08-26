@@ -57,7 +57,7 @@ function sanitizeString($str) {
 				<?php
 
 				$lines = array();
-				$pointer = fopen("ncm-hage.csv", "r");
+				$pointer = fopen("produtos.csv", "r");
 
 				?>
 				<table id="produtos" class="table table-hover table-condesed">
@@ -74,7 +74,7 @@ function sanitizeString($str) {
 										$lines[] = $line;
 
 									if($count === 0) {
-										$fields = split(";", $line);
+										$fields = explode(";", $line);
 
 										foreach ($fields as $key => $field) {
 											$field = utf8_encode($field);
@@ -137,7 +137,7 @@ function sanitizeString($str) {
 						?>
 						<tr>
 						<?php
-								$values = split(";", $line);
+								$values = explode(";", $line);
 								foreach ($values as $key => $value) {
 									$value = utf8_encode($value);
 
@@ -195,10 +195,10 @@ function sanitizeString($str) {
 			$("button#exportToSQL").on("click", function() {
 				var data = {
 					fields: [],
-					input_filename: "ncm-hage.csv",
+					input_filename: "produtos.csv",
 					output_format: "sql",
-					output_filename: "ncm-hage.sql",
-					table_name: "tmp_ncm_hage"
+					output_filename: "produtos.sql",
+					table_name: "tmp_produtos_proreflex"
 				};
 				$.each($("select"), function(i, field){
 					data.fields.push({

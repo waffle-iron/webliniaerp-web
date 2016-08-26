@@ -278,23 +278,25 @@
 							<thead>
 								<tr>
 									<th>#</th>
+									<th>Data do Pedido</th>
 									<th>Fornecedor</th>
 									<th>Solicitante</th>
 									<th>Qtd</th>
 									<th>Total</th>
-									<th>Data do Pedido</th>
+									
 									<th width="80" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-repeat="item in pedidos">
 									<td>{{ item.id }}</td>
+									<td>{{ item.dta_pedido }}</td>
 									<td>{{ item.nome_fornecedor }}</td>
 									<td ng-if="item.id_venda == null " ><a target="_blank" href="{{ bseUrl }}usuarios.php?id_usuario={{ item.id_usuario }}">{{ item.nome_usuario }}</a></td>
 									<td ng-if="item.id_venda != null " >Gerado automaticamente</td>
 									<td>{{ item.qtd_pedido }}</td>
 									<td>R$ {{ item.total_pedido | numberFormat:2:',':'.' }}</td>
-									<td>{{ item.dta_pedido }}</td>
+									
 									<td align="center">
 										<button type="button" ng-click="viewDetalhes(item)" tooltip="Detalhes" class="btn btn-xs btn-info" data-toggle="tooltip">
 											<i class="fa fa-tasks"></i>
