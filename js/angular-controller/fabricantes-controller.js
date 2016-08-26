@@ -8,9 +8,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 	ng.fabricante 	= {};
     ng.fabricantes	= [];
     ng.paginacao    = {fabricantes : [] } ;
-    ng.busca = { text: "", empreendimento: "" };
     ng.editing = false;
-    ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,flg_visivel:1 }];
 
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
@@ -30,11 +28,6 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 		}
 	}
 
-	ng.showEmpreendimentos = function() {
-		$('#list_empreendimentos').modal('show');
-		ng.loadAllEmpreendimentos(0,10);
-	}
-
 	ng.mensagens = function(classe , msg){
 		$('.alert-sistema').fadeIn().addClass(classe).html(msg);
 
@@ -49,6 +42,13 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
+	}
+	
+	ng.busca = { text: "", empreendimento: "" };
+	ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,flg_visivel:1 }];
+	ng.showEmpreendimentos = function() {
+		$('#list_empreendimentos').modal('show');
+		ng.loadAllEmpreendimentos(0,10);
 	}
 
 	ng.loadAllEmpreendimentos = function(offset, limit) {
@@ -73,7 +73,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 	}
 
 	ng.loadEmpreendimentosByFabricante = function() {
-		aj.get(baseUrlApi()+"empreendimentos/fabricante/"+ng.fabricante.id)
+		aj.get(baseUrlApi()+"empreendimentos/ref/fabricante/"+ng.fabricante.id)
 			.success(function(data, status, headers, config) {
 				ng.empreendimentosAssociados = [];
 				ng.empreendimentosAssociados = data;
@@ -81,32 +81,6 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 			.error(function(data, status, headers, config) {
 				if(status == 404)
 					ng.empreendimentos = [];
-			});
-	}
-
-	ng.resetFilter = function() {
-		ng.busca.text = "" ;
-		ng.reset();
-		ng.load(0,10);
-	}
-
-	ng.load = function(offset, limit) {
-		offset = offset == null ? 0 : offset ;
-		limit  = limit  == null ? 10 : limit ;
-
-		var query_string = "?tfe->id_empreendimento="+ ng.userLogged.id_empreendimento;
-
-		if(ng.busca.text != "")
-			query_string += "&("+$.param({nome_fabricante:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";	
-
-		aj.get(baseUrlApi()+"fabricantes/"+ offset +"/"+ limit + query_string)
-			.success(function(data, status, headers, config) {
-				ng.fabricantes = data.fabricantes;
-				ng.paginacao.fabricantes = data.paginacao ;
-			})
-			.error(function(data, status, headers, config) {
-				if(status == 404)
-					ng.fabricantes = [];
 			});
 	}
 
@@ -143,6 +117,32 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 			$('#list_empreendimentos').modal('hide');
 			ng.mensagens('alert-danger','<strong>Este empreendimento já foi adicionado a listagem</strong>');
 		}
+	}
+
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.load(0,10);
+	}
+
+	ng.load = function(offset, limit) {
+		offset = offset == null ? 0 : offset ;
+		limit  = limit  == null ? 10 : limit ;
+
+		var query_string = "?tfe->id_empreendimento="+ ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({nome_fabricante:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";	
+
+		aj.get(baseUrlApi()+"fabricantes/"+ offset +"/"+ limit + query_string)
+			.success(function(data, status, headers, config) {
+				ng.fabricantes = data.fabricantes;
+				ng.paginacao.fabricantes = data.paginacao ;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.fabricantes = [];
+			});
 	}
 
 	ng.salvar = function() {

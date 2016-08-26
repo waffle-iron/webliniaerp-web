@@ -1057,6 +1057,11 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
    		btn.button('loading');
 
 		ng.fabricante.id_empreendimento = ng.userLogged.id_empreendimento;
+		ng.fabricante.empreendimentos = [];
+
+		$.each(ng.empreendimentosAssociados, function(i, item) {
+			ng.fabricante.empreendimentos.push({id: item.id_empreendimento, nome_empreendimento: item.nome_empreendimento});
+		});
 
 		aj.post(baseUrlApi()+url, ng.fabricante)
 			.success(function(data, status, headers, config) {
@@ -1088,6 +1093,12 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		var btn = $('#btn-salvar-importador');
    		btn.button('loading');
 		ng.importador.id_empreendimento 	= ng.userLogged.id_empreendimento;
+		ng.importador.empreendimentos = [];
+
+		$.each(ng.empreendimentosAssociados, function(i, item) {
+			ng.importador.empreendimentos.push({id: item.id_empreendimento, nome_empreendimento: item.nome_empreendimento});
+		});
+
 		aj.post(baseUrlApi()+url, ng.importador)
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
@@ -1119,6 +1130,13 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		var btn = $('#btn-salvar-categoria');
    		btn.button('loading');
 		ng.categoria.id_empreendimento 	= ng.userLogged.id_empreendimento;
+		
+		ng.categoria.empreendimentos = [];
+
+		$.each(ng.empreendimentosAssociados, function(i, item) {
+			ng.categoria.empreendimentos.push({id: item.id_empreendimento, nome_empreendimento: item.nome_empreendimento});
+		});
+		
 		aj.post(baseUrlApi()+url, ng.categoria)
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
