@@ -255,6 +255,24 @@
 							</div>
 						</div>
 
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group" id="num_cfop_mercadoria_st">
+									<label class="control-label">N° CFOP Mercadoria ST Substituído</label> 
+									<select chosen
+								    option="lista_cfop"
+								    allow-single-deselect="true"
+								    ng-model="operacao.num_cfop_mercadoria_st_subst"
+								    ng-options="cfop.num_item as cfop.dsc_completa for cfop in lista_cfop">
+									</select>
+								</div>
+								<!--<div id="num_cfop_mercadoria_st" class="form-group">
+									<label class="control-label">N° CFOP Mercadoria ST</label>
+									<input  maxlength="4" onKeyPress="return SomenteNumero(event);" type="text" class="form-control" ng-model="operacao.num_cfop_mercadoria_st">
+								</div>-->
+							</div>
+						</div>
+
 						<div  class="row">
 							<div class="col-sm-6">
 								<div class="form-group" id="cod_operacao_estorno">

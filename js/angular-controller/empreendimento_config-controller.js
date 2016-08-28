@@ -457,11 +457,25 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	}
 
 
-	 ng.loadOperacaoCombo = function() {
+	ng.loadOperacaoCombo = function() {
 		ng.lista_operacao  = [{cod_operacao:'',dsc_operacao:'--- Selecione ---'}] ;
 		aj.get(baseUrlApi()+"operacao/get/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&flg_excluido=0")
 			.success(function(data, status, headers, config) {
 				ng.lista_operacao = ng.lista_operacao.concat(data.operacao);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+					
+			});
+	}
+
+	ng.loadVersoesIBPTCombo = function() {
+		ng.lista_versao_ibpt  = [{versao:'--- Selecione ---'}] ;
+		aj.get(baseUrlApi()+"ibpt/versoes")
+			.success(function(data, status, headers, config) {
+				ng.lista_versao_ibpt = ng.lista_versao_ibpt.concat(data);
 				setTimeout(function(){
 					$("select").trigger("chosen:updated");
 				},300);
@@ -593,6 +607,11 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		var chaves = [];
 		if(ng.configuracoes.id_operacao_padrao_venda != undefined){
 			var item = {nome:'id_operacao_padrao_venda',valor:ng.configuracoes.id_operacao_padrao_venda,id_empreendimento:ng.userLogged.id_empreendimento}
+			chaves.push(item);
+		}
+
+		if(ng.configuracoes.num_versao_ibpt != undefined){
+			var item = {nome:'num_versao_ibpt',valor:ng.configuracoes.num_versao_ibpt,id_empreendimento:ng.userLogged.id_empreendimento}
 			chaves.push(item);
 		}
 
@@ -877,6 +896,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.existsCookie();
 	ng.loadConfig();
 	ng.loadOperacaoCombo();
+	ng.loadVersoesIBPTCombo();
 	ng.loadSerieDocumentoFiscal();
 	ng.loadEstados();
 	ng.loadZoneamento();

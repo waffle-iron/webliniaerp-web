@@ -706,6 +706,17 @@
 											</select>
 										</div>
 									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group" id="regimeTributario">
+											<label class="ccontrol-label">Versão Tabela IBPT</label> 
+											<select chosen
+											    option="lista_versao_ibpt"
+											    ng-model="configuracoes.num_versao_ibpt"
+											    ng-options="item.versao as item.versao for item in lista_versao_ibpt">
+											</select>
+										</div>
+									</div>
 								</div>
 
 								<div class="row">
