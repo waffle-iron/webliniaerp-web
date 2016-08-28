@@ -417,19 +417,19 @@
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Endereço</label>
-											<input type="text" ng-model="NF.emitente.nme_logradouro" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.emitente.xLgr" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-1">
 										<div class="form-group">
 											<label class="control-label">Número</label>
-											<input type="text"  ng-model="NF.emitente.num_logradouro" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.nro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Bairro</label>
-											<input type="text"  ng-model="NF.emitente.nme_bairro_logradouro" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.xBairro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -438,13 +438,13 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Estado</label>
-											<input type="text"  ng-model="NF.emitente.estado.nome" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.UF" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Cidade</label>
-											<input type="text" ng-model="NF.emitente.cidade.nome" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.emitente.cMun" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -463,25 +463,25 @@
 											<input type="text" value="{{ NF.destinatario.CPF }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-2" ng-if="NF.destinatario.tipo_cadastro == 'pj'">
 										<div class="form-group">
 											<label class="control-label">I.E.</label>
 											<input type="text" value="{{ NF.destinatario.IE }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-2" ng-if="NF.destinatario.tipo_cadastro == 'pj'">
 										<div class="form-group">
 											<label class="control-label">ID Sub. Tributária</label>
 											<input type="text" value="{{ NF.destinatario.IEST }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-2" ng-if="NF.destinatario.tipo_cadastro == 'pj'">
 										<div class="form-group">
 											<label class="control-label">Inscrição Municipal</label>
 											<input type="text" value="{{ NF.destinatario.IM }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
-									<div class="col-sm-2">
+									<div class="col-sm-2" ng-if="NF.destinatario.tipo_cadastro == 'pj'">
 										<div class="form-group">
 											<label class="control-label">ID Estrangeiro</label>
 											<input type="text" value="{{ NF.destinatario.num_registro_estrangeiro }}" class="form-control input-sm" readonly="readonly">
@@ -490,10 +490,16 @@
 								</div>
 
 								<div class="row">
-									<div class="col-sm-5">
+									<div class="col-sm-5" ng-if="NF.destinatario.tipo_cadastro == 'pj'">
 										<div class="form-group">
 											<label class="control-label">Nome Fantasia</label>
 											<input type="text" value="{{ NF.destinatario.xFant }}" class="form-control input-sm" readonly="readonly">
+										</div>
+									</div>
+									<div class="col-sm-5" ng-if="NF.destinatario.tipo_cadastro == 'pf'">
+										<div class="form-group">
+											<label class="control-label">Nome</label>
+											<input type="text" value="{{ NF.destinatario.xNome }}" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-4">
@@ -514,19 +520,19 @@
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Endereço</label>
-											<input type="text" ng-model="NF.destinatario.nme_logradouro"  class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.xLgr"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-1">
 										<div class="form-group">
 											<label class="control-label">Número</label>
-											<input type="text" ng-model="NF.destinatario.num_logradouro"  class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.nro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Bairro</label>
-											<input type="text" ng-model="NF.destinatario.nme_bairro_logradouro"  class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.xBairro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -535,13 +541,13 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Estado</label>
-											<input type="text" ng-model="NF.destinatario.estado.nome" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.UF" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Cidade</label>
-											<input type="text" ng-model="NF.destinatario.cidade.nome" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.cMun" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
