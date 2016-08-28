@@ -168,4 +168,19 @@ app.service('CaixaService', function($http) {
 	}
 });
 
-
+app.service('AsyncAjaxSrvc', function() {
+	this.getListOfItens = function(route) {
+		var list = [];
+		$.ajax({
+			url: route,
+			async: false,
+			success: function(responseData){
+				if(Array.isArray(responseData.rows))
+					list = responseData.rows;
+				else
+					list = responseData;
+			}
+		});
+		return list;
+	};
+});

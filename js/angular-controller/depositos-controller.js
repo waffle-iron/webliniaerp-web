@@ -57,7 +57,7 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 
 	ng.reset = function() {
 		ng.deposito = {};
-		 ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento }];
+		ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento }];
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
@@ -96,11 +96,24 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 			});
 	}
 
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.loadDepositos(0,10);
+	}
+
 	ng.loadDepositos = function(offset,limit) {
 		offset = offset == null ? 0 : offset ;
 		limit  = limit == null ? 10 : limit ;
+
+		var query_string = "?id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({nme_deposito:{exp:"like '%"+ng.busca.text+"%' OR dep.id = '"+ng.busca.text+"'"}})+")";
+
 		console.log(ng.userLogged.id_empreendimento);
-		aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+"?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"depositos/"+offset+"/"+limit+ query_string)
 			.success(function(data, status, headers, config) {
 				ng.depositos = data.depositos;
 				ng.paginacao.depositos = data.paginacao;

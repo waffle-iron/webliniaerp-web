@@ -258,11 +258,58 @@
 						</form>
 					</div>
 				</div><!-- /panel -->
+				<div class="panel-body">
+				<div class="panel panel-default">
+					<div class="panel-heading"><i class="fa fa-filter"></i> Opções de Filtro</div>
+					<div class="panel-body">
+						<div class="row">
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Data da Contagem</label>
+									<div class="input-group">
+										<input id="data_da_contagem" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
+										<span  id="botao_do_lado" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">Depósito</label>
+									<input ng-model="busca.text" ng-enter="loadUltimosInventarios(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">Responsável</label>
+									<input ng-model="busca.responsavel" ng-enter="loadUltimosInventarios(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-primary" ng-click="loadUltimosInventarios(0,10)"><i class="fa fa-filter"></i> Filtrar</button>
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="resetFilter()">Limpar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-tasks"></i> Últimas Contagens</div>
 
-					<div class="panel-body">
+					<div class="panel-heading"><i class="fa fa-tasks"></i> Últimas Contagens</div>
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead ng-show="utimosInventarios.length > 0">
 								<tr>
@@ -690,6 +737,9 @@
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
@@ -709,6 +759,7 @@
 		$(document).ready(function() {
 			$('.datepicker').datepicker();
 			$("#cld_pagameto").on("click", function(){ $("#inventarioData").trigger("focus"); });
+			$("#botao_do_lado").on("click", function(){ $("#data_da_contagem").trigger("focus"); });
 
 			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
 			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});

@@ -7,8 +7,8 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 	ng.userLogged 	= UserService.getUserLogado();
 	ng.importador 	= {};
     ng.importadores	= [];
-
     ng.editing = false;
+    ng.paginacao = { itens: [] } ;
 
     ng.showBoxNovo = function(onlyShow){
     	ng.editing = !ng.editing;
@@ -28,6 +28,81 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 		}
 	}
 
+	ng.busca = { text: "", empreendimento: "" };
+	ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,flg_visivel:1 }];
+	ng.showEmpreendimentos = function() {
+		$('#list_empreendimentos').modal('show');
+		ng.loadAllEmpreendimentos(0,10);
+	}
+
+	ng.loadAllEmpreendimentos = function(offset, limit) {
+		offset = offset == null ? 0  : offset;
+    	limit  = limit  == null ? 20 : limit;
+
+    	var query_string = "?id_usuario="+ng.userLogged.id;
+    	if(ng.busca.empreendimento != ""){
+    		query_string += "&" +$.param({nome_empreendimento:{exp:"like'%"+ng.busca.empreendimento+"%'"}});
+    	}
+
+    	ng.empreendimentos = [];
+		aj.get(baseUrlApi()+"empreendimentos/"+offset+"/"+limit+"/"+query_string)
+			.success(function(data, status, headers, config) {
+				ng.empreendimentos = data.empreendimentos;
+				ng.paginacao.empreendimentos = data.paginacao;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.empreendimentos = [];
+			});
+	}
+
+	ng.loadEmpreendimentosByImportador = function() {
+		aj.get(baseUrlApi()+"empreendimentos/ref/importador/"+ng.importador.id)
+			.success(function(data, status, headers, config) {
+				ng.empreendimentosAssociados = [];
+				ng.empreendimentosAssociados = data;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404)
+					ng.empreendimentos = [];
+			});
+	}
+
+	ng.empreendimentoIsSelected = function(item){
+		var r = false ;
+		$.each(ng.empreendimentosAssociados,function(i,v){
+			if(Number(item.id)==Number(v.id)){
+				r = true ;
+				return;
+			}
+		});
+		return r ;
+	}
+
+	ng.delEmpreendimento = function(item) {
+		ng.empreendimentosAssociados.pop(item);
+	}
+
+	ng.addEmpreendimento = function(item) {
+		if(ng.empreendimentosAssociados == null)
+			ng.empreendimentosAssociados = [];
+
+		var s = true;
+
+		$.each(ng.empreendimentosAssociados, function(i, emp) {
+			if(emp.id == item.id)
+				s = false;
+		});
+
+		if(s) {
+			ng.empreendimentosAssociados.push(item);
+		}
+		else {
+			$('#list_empreendimentos').modal('hide');
+			ng.mensagens('alert-danger','<strong>Este empreendimento já foi adicionado a listagem</strong>');
+		}
+	}
+
 	ng.mensagens = function(classe , msg){
 		$('.alert-sistema').fadeIn().addClass(classe).html(msg);
 
@@ -43,10 +118,26 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 		$(".has-error").removeClass("has-error");
 	}
 
-	ng.load = function() {
-		aj.get(baseUrlApi()+"importadores?id_empreendimento="+ng.userLogged.id_empreendimento)
+	ng.paginacao = { itens: [] } ;
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.load(0,10);
+	}
+
+	ng.load = function(offset, limit) {
+		offset = offset == null ? 0 : offset ;
+		limit  = limit  == null ? 10 : limit ;
+
+		var query_string = "?tie->id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({nome_importador:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";
+
+		aj.get(baseUrlApi()+"importadores/" + offset + "/" + limit + query_string)
 			.success(function(data, status, headers, config) {
 				ng.importadores = data.importadores;
+				ng.paginacao.itens = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
@@ -58,6 +149,12 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 		var url = 'importador';
 		var itemPost = {};
 
+		if(ng.empreendimentosAssociados == null || ng.empreendimentosAssociados.length == 0) {
+			ng.mensagens('alert-danger','<strong>Você deve selecionar ao menos um empreendimento</strong>');
+			btn.button('reset');
+			return false;
+		}
+
 		if(ng.importador.id != null && ng.importador.id > 0) {
 			itemPost.id = ng.importador.id;
 			url += '/update';
@@ -65,6 +162,7 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 
 		itemPost.id_empreendimento 	= ng.userLogged.id_empreendimento;
 		itemPost.nome_importador 	= ng.importador.nome_importador;
+		itemPost.empreendimentos = ng.empreendimentosAssociados;
 
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
@@ -94,6 +192,7 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 	ng.editar = function(item) {
 		ng.importador = angular.copy(item);
 		ng.showBoxNovo(true);
+		ng.loadEmpreendimentosByImportador();
 	}
 
 	ng.delete = function(item){
@@ -114,5 +213,5 @@ app.controller('ImportadoresController', function($scope, $http, $window, $dialo
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
 
-	ng.load();
+	ng.load(0,10);
 });

@@ -212,11 +212,11 @@
 							<td ng-if="item.tipo_movimentacao == 'Sangria' || item.tipo_movimentacao == 'Reforco' ">
 								<a ng-if="item.tipo_movimentacao == 'Sangria'" style="cursor:pointer" init-popover content="
 								<div><b>Fornecedor:</b> {{ item.nome_fornecedor }} <br/> <b>Observação:</b> {{ item.obs_pagamento_saida }}<div/>
-								" >{{ item.dsc_movimentacao}} ({{ item.conta_saida }} >> {{ item.conta_entrada }} )</a>
+								" >{{ item.obs_pagamento_saida }} <small>({{ item.conta_saida }} >> {{ item.conta_entrada }})</small></a>
 
 								<a ng-if="item.tipo_movimentacao == 'Reforco'" style="cursor:pointer" init-popover content="
 								<div><b>Observação:</b> {{ item.obs_pagamento_entrada }}<div/>
-								" >{{ item.dsc_movimentacao}} ({{ item.conta_saida }} >> {{ item.conta_entrada }} )</a>
+								" >{{ item.obs_pagamento_entrada }} <small>({{ item.conta_saida }} >> {{ item.conta_entrada }})</small></a>
 							</td>
 
 							<td ng-if="item.id_tipo_movimentacao == 5">
@@ -252,7 +252,7 @@
 						</tr>
 
 						<tr ng-if="movimentacoes.length > 0">
-							<td colspan="4" class="text-right"> Total</td>
+							<td colspan="4" class="text-right">Saldo Final</td>
 							<td style="color:#000;" class="text-right">
 								<strong>R$ {{ totais.total | numberFormat:2:',':'.'}}</strong>
 							</td>
@@ -264,6 +264,17 @@
 							</td>
 							<td colspan="2" style="color:#000;" class="text-right" ng-if="funcioalidadeAuthorized('ver_taxa_maquineta')">
 								<strong>R$ {{ totais.total - total_desconto_taxa_maquineta | numberFormat:2:',':'.'}}</strong>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4" class="text-right">Total de Vendas</td>
+							<td class="text-right" style="color:#000;"><strong>R$ {{ (total_vendas | numberFormat : 2 : ',' : '.') }}</strong> </td>
+							<td ></td>
+							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" class="text-right" style="color:#000;">
+								<strong>R$ {{ ((total_desconto_taxa_maquineta_debito+total_desconto_taxa_maquineta_credito) | numberFormat : 2 : ',' : '.') }}</strong>
+							</td>
+							<td ng-if="key != 'cartao_debito' && key != 'cartao_credito' && funcioalidadeAuthorized('ver_taxa_maquineta')" class="text-right" style="color:#000;">
+								<strong>R$ {{ ((total_vendas-(total_desconto_taxa_maquineta_debito+total_desconto_taxa_maquineta_credito)) | numberFormat:2:',':'.') }}</strong>
 							</td>
 						</tr>
 						<tr colspan="4" ng-if="movimentacoes.length > 0">

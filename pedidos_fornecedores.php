@@ -258,27 +258,45 @@
 				<div class="panel panel-default">
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Pedidos Realizados</div>
 					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-11">
+								<div class="input-group">
+						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="load(0,10)">
+						            <div class="input-group-btn">
+						            	<button ng-click="load(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div>
+						        </div>
+							</div>
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
+							</div>
+						</div>
+						<br>
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
 									<th>#</th>
+									<th>Data do Pedido</th>
 									<th>Fornecedor</th>
 									<th>Solicitante</th>
 									<th>Qtd</th>
 									<th>Total</th>
-									<th>Data do Pedido</th>
+									
 									<th width="80" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-repeat="item in pedidos">
 									<td>{{ item.id }}</td>
+									<td>{{ item.dta_pedido }}</td>
 									<td>{{ item.nome_fornecedor }}</td>
 									<td ng-if="item.id_venda == null " ><a target="_blank" href="{{ bseUrl }}usuarios.php?id_usuario={{ item.id_usuario }}">{{ item.nome_usuario }}</a></td>
 									<td ng-if="item.id_venda != null " >Gerado automaticamente</td>
 									<td>{{ item.qtd_pedido }}</td>
 									<td>R$ {{ item.total_pedido | numberFormat:2:',':'.' }}</td>
-									<td>{{ item.dta_pedido }}</td>
+									
 									<td align="center">
 										<button type="button" ng-click="viewDetalhes(item)" tooltip="Detalhes" class="btn btn-xs btn-info" data-toggle="tooltip">
 											<i class="fa fa-tasks"></i>

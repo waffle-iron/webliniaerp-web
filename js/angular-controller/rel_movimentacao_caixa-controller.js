@@ -72,29 +72,33 @@ app.controller('relMovimentacaoCaixaController', function($scope, $http, $window
 	 	});
 	}
 
-	ng.total_desconto_taxa_maquineta = 0 ;
-	ng.total_desconto_taxa_maquineta_debito = 0 ;
-	ng.total_desconto_taxa_maquineta_credito = 0;
-	ng.total_reforco_caixa = 0 ;
+	ng.total_desconto_taxa_maquineta 			= 0;
+	ng.total_desconto_taxa_maquineta_debito 	= 0;
+	ng.total_desconto_taxa_maquineta_credito 	= 0;
+	ng.total_reforco_caixa 						= 0;
+	ng.total_vendas								= 0;
 
 	ng.loadMovimentacoes= function() {
 		aj.get(baseUrlApi()+"caixa/movimentacoes/"+params['id'])
 			.success(function(data, status, headers, config) {
 				$.each(data,function(i,v){
-						data[i].vlr_taxa_maquineta           = (Math.round(v.valor_entrada * 100) / 100) * v.taxa_maquineta;
-						data[i].valor_desconto_maquineta     = (Math.round(v.valor_entrada * 100) / 100) - data[i].vlr_taxa_maquineta ;
-						ng.total_desconto_taxa_maquineta     += data[i].vlr_taxa_maquineta ;
-						if(v.id_forma_pagamento_entrada == 5){
-							ng.total_desconto_taxa_maquineta_debito += data[i].vlr_taxa_maquineta ;
-						}else if(v.id_forma_pagamento_entrada == 6 ){
-							ng.total_desconto_taxa_maquineta_credito += data[i].vlr_taxa_maquineta ;
-						}
+					data[i].vlr_taxa_maquineta           = (Math.round(v.valor_entrada * 100) / 100) * v.taxa_maquineta;
+					data[i].valor_desconto_maquineta     = (Math.round(v.valor_entrada * 100) / 100) - data[i].vlr_taxa_maquineta ;
+					ng.total_desconto_taxa_maquineta     += data[i].vlr_taxa_maquineta ;
+					if(v.id_forma_pagamento_entrada == 5){
+						ng.total_desconto_taxa_maquineta_debito += data[i].vlr_taxa_maquineta ;
+					}else if(v.id_forma_pagamento_entrada == 6 ){
+						ng.total_desconto_taxa_maquineta_credito += data[i].vlr_taxa_maquineta ;
+					}
 
-						if(v.id_tipo_movimentacao == 1){
-							ng.total_reforco_caixa += Number(v.valor_entrada) ;
-						}
+					if(v.id_tipo_movimentacao == 1){
+						ng.total_reforco_caixa += Number(v.valor_entrada) ;
+					}
+
+					if(!empty(v.id_venda)) {
+						ng.total_vendas += Number(v.valor_entrada);
+					}
 				});
-				console.log(data);
 				ng.movimentacoes = data;
 			})
 			.error(function(data, status, headers, config) {

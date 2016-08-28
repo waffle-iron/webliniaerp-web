@@ -61,7 +61,7 @@ app.controller('relCaixasController', function($scope, $http, $window, $dialogs,
 
 	ng.loadContas = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
-    	limit  = limit  == null ? 20 : limit;
+    	limit  = limit  == null ? 10 : limit;
 		ng.contas = [] ;
 
 		var query_string = "";
@@ -236,7 +236,7 @@ app.controller('relCaixasController', function($scope, $http, $window, $dialogs,
 		ng.busca.caixas_string = "" ;
 		$("#dtaInicial").val('');
 		$("#dtaFinal").val('');
-		ng.loadContas(0,20);
+		ng.loadContas(0,10);
 	}
 
 	ng.mensagens = function(classe , msg, alertClass){
@@ -252,7 +252,7 @@ app.controller('relCaixasController', function($scope, $http, $window, $dialogs,
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}
 
-	ng.loadContas(0,20);
+	ng.loadContas(0,10);
 	ng.loadBancos();
 	ng.loadtipos();
 	ng.loadDepositos();

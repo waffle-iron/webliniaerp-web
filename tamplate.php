@@ -84,7 +84,7 @@
 	</style>
   </head>
 
-  <body class="overflow-hidden" ng-controller="OrdemServicoController" ng-cloak>
+  <body class="overflow-hidden" ng-controller="LancamentosController" ng-cloak>
   	<!-- Overlay Div -->
 	<div id="overlay" class="transparent"></div>
 
@@ -162,14 +162,14 @@
 			<div class="main-header clearfix">
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-columns"></i> Ordem de Serviço</h3>
-					<h6>
-						<i class="fa fa-circle {{ (caixa != null) ? 'text-success' : 'text-danger' }}"></i>
-					</h6>
+					<h6>&nbsp;</h6>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md" style="padding-top: 0px !important;">
-				<div class="panel panel-primary" id="box-novo" style="display:none">
+				<div class="alert alert-sistema" style="display:none"></div>
+
+				<div class="panel panel-default" id="box-novo" style="display:none">
 					<div class="panel-heading">
 						<i class="fa fa-plus-circle"></i> Nova Ordem de Serviço
 						<div class="pull-right">
@@ -181,83 +181,60 @@
 
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-sm-9">
-								<div class="row">
-									<div class="col-sm-2" id="id">
-										<div class="form-group element-group">
-											<label class="control-label">N° da OS</label>
-											<input type="text" class="form-control" readonly="readonly">
-										</div>
-									</div>
-
-									<div class="col-sm-3">
-										<div class="form-group element-group">
-											<label class="control-label">Data da OS</label>
-											<input type="text" class="form-control text-center" readonly="readonly" ng-model="objectModel.dta_ordem_servico">
-										</div>
-									</div>
-
-									<div class="col-sm-3">
-										<div class="form-group element-group">
-											<label class="control-label">Criador da OS</label>
-											<input type="text" class="form-control" readonly="readonly" ng-model="objectModel.criador.nme_usuario">
-										</div>
-									</div>
-
-									<div class="col-sm-4">
-										<div class="form-group element-group">
-											<label class="control-label">Responsável pela OS</label>
-											<div class="input-group">
-												<input type="text" class="form-control" readonly="readonly" style="cursor: pointer;"
-													name="id_cliente"
-													ng-model="objectModel.responsavel.nome" ng-click="showModal('list_clientes', 'responsavel')"/>
-												<span class="input-group-btn">
-													<button ng-click="showModal('list_clientes', 'responsavel')" type="button" class="btn btn-default">
-														<i class="fa fa-user"></i>
-													</button>
-												</span>
-											</div>
-										</div>
-									</div>
+							<div class="col-sm-2" id="id_cliente">
+								<div class="form-group">
+									<label class="control-label">N° Ordem de Serviço</label>
+									<input type="text" class="form-control" readonly="readonly">
 								</div>
+							</div>
 
-								<div class="row">
-									<div class="col-sm-10" id="id_cliente">
-										<div class="form-group element-group">
-											<label class="control-label">Cliente</label>
-											<div class="input-group">
-												<input type="text" class="form-control" readonly="readonly" style="cursor: pointer;"
-													name="id_cliente"
-													ng-model="objectModel.cliente.nome" ng-click="showModal('list_clientes', 'cliente')"/>
-												<span class="input-group-btn">
-													<button ng-click="showModal('list_clientes', 'cliente')" type="button" class="btn btn-info">
-														<i class="fa fa-users"></i>
-													</button>
-												</span>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-sm-2" ng-show="(objectModel.cliente != null)">
-										<div class="form-group element-group">
-											<label class="control-label">Saldo</label>
-											<input type="text" class="form-control" readonly="readonly" 
-												style="{{ (objectModel.cliente.vlr_saldo_devedor >= 0) ? 'color: #1A7204;' : 'color: #E62C2C;' }}" 
-												value="R$ {{ objectModel.cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }}">
-										</div>
+							<div class="col-sm-8" id="id_cliente">
+								<div class="form-group">
+									<label class="control-label">Cliente</label>
+									<div class="input-group">
+										<input ng-click="selCliente(0,10)"  type="text" class="form-control" ng-model="cliente.nome" readonly="readonly" style="cursor: pointer;" />
+										<span class="input-group-btn">
+											<button ng-click="selCliente(0,10)" type="button" class="btn btn-info"><i class="fa fa-users"></i></button>
+										</span>
 									</div>
 								</div>
 							</div>
 
-							<div class="col-sm-3">
-								<div class="form-group element-group">
-									<label class="control-label">Situação da OS</label><br/>
-									<label class="label-radio" ng-repeat="item in status_ordem_servico">
-										<input type="radio" value="{{ item.id }}" ng-model="objectModel.cod_status_servico">
-										<span class="custom-radio {{ item.clr_class }}"></span>
-										<span>{{ item.dsc_status }}</span>
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Situação</label><br/>
+									<label class="label-radio">
+										<input name="cod_status_servico" ng-model="objectModel.cod_status_servico" value="2" type="radio">
+										<span class="custom-radio text-success"></span>
+										<span>Entregue/Concluído</span>
+									</label>
+
+									<label class="label-radio">
+										<input name="cod_status_servico" ng-model="objectModel.cod_status_servico" value="1" type="radio">
+										<span class="custom-radio text-warning"></span>
+										<span>Em andamento</span>
+									</label>
+
+									<label class="label-radio">
+										<input name="cod_status_servico" ng-model="objectModel.cod_status_servico" value="0" type="radio">
+										<span class="custom-radio text-danger"></span>
+										<span>Pendente</span>
 									</label>
 								</div>
+							</div>
+						</div>
+
+						<div class="row" ng-if="flgTipoLancamento == 0 && cliente.vlr_saldo_devedor < 0">
+							<div class="col-sm-12">
+								<span style="font-weight: bold; color: #777">Saldo: </span>
+								<span style="font-weight: bold; color: #E62C2C">{{cliente.vlr_saldo_devedor | numberFormat:2:',':'.'}}</span>
+							</div>
+						</div>
+
+						<div class="row" ng-if="flgTipoLancamento == 0 && cliente.vlr_saldo_devedor >= 0">
+							<div class="col-sm-12">
+								<span style="font-weight: bold; color: #777">Saldo: </span>
+								<span style="font-weight: bold; color: #1A7204">{{cliente.vlr_saldo_devedor | numberFormat:2:',':'.'}}</span>
 							</div>
 						</div>
 
@@ -265,7 +242,7 @@
 							<div class="col-sm-6">
 								<fieldset>
 									<legend>Serviços</legend>
-									<table name="servicos" class="table table-bordered table-condensed table-striped table-hover">
+									<table class="table table-bordered table-condensed table-striped table-hover">
 										<thead>
 											<th class="text-center text-middle" width="70">Código</th>
 											<th class="text-middle">Descrição</th>
@@ -273,47 +250,32 @@
 											<th class="text-center text-middle" width="150">Status</th>
 											<th class="text-center text-middle" width="40">
 												<button class="btn btn-xs btn-block btn-primary"
-													data-toggle="tooltip" title="Adicionar Serviço"
-													ng-click="showModal('list_servicos')">
+													data-toggle="tooltip" title="Adicionar Serviço">
 													<i class="fa fa-plus-square"></i>
 												</button>
 											</th>
 										</thead>
 										<tbody>
-											<tr ng-show="(objectModel.servicos == null || objectModel.servicos.length == 0)">
-												<td class="text-center" colspan="5">Nenhum serviço foi adicionado!</td>
-											</tr>
-											<tr ng-repeat="item in objectModel.servicos">
-												<td class="text-center text-middle">
-													{{ item.cod_procedimento }}
-												</td>
+											<tr>
+												<td class="text-center text-middle">1234</td>
+												<td class="text-middle">Lorem ipsum dolor sit amet, consectetur adipisicing elit</td>
+												<td class="text-right text-middle">R$ 130,00</td>
 												<td class="text-middle">
-													{{ item.dsc_procedimento }}
-												</td>
-												<td class="text-right text-middle">
-													R$ {{ item.vlr_procedimento | numberFormat : 2 : ',' : '.' }}
-												</td>
-												<td class="text-middle">
-													<select chosen option="status_servico" ng-model="item.cod_status_servico"
-													    ng-options="status.id as status.dsc_status for status in status_servico">
+													<select chosen option="status_servicos" ng-model="busca.id_plano_conta"
+													    ng-options="status.cod_status_servico as status.dsc_status_servico for status in status_servicos">
 													</select>
 												</td>
 												<td class="text-center text-middle">
 													<button class="btn btn-xs btn-danger" 
-														data-toggle="tooltip" title="Remover Serviço"
-														ng-click="removeItem(item, 'servicos')">
+														data-toggle="tooltip" title="Remover Serviço">
 														<i class="fa fa-trash-o"></i>
 													</button>
 												</td>
 											</tr>
 										</tbody>
-										<tfoot ng-show="(objectModel.servicos.length > 0)">
-											<th class="text-right text-middle" colspan="2">
-												Total Serviços
-											</th>
-											<th class="text-right text-middle">
-												R$ {{ objectModel.vlr_total_servicos | numberFormat : 2 : ',' : '.' }}
-											</th>
+										<tfoot>
+											<th class="text-right text-middle" colspan="2">Total Serviços</th>
+											<th class="text-right text-middle">R$ 130,00</th>
 											<th></th>
 											<th></th>
 										</tfoot>
@@ -324,7 +286,7 @@
 							<div class="col-sm-6">
 								<fieldset>
 									<legend>Produtos</legend>
-									<table name="produtos" class="table table-bordered table-condensed table-striped table-hover">
+									<table class="table table-bordered table-condensed table-striped table-hover">
 										<thead>
 											<th class="text-center text-middle" width="70">Código</th>
 											<th class="text-middle">Descrição</th>
@@ -333,80 +295,46 @@
 											<th class="text-center text-middle" width="90">Subtotal</th>
 											<th class="text-center text-middle" width="40">
 												<button class="btn btn-xs btn-block btn-primary"
-													data-toggle="tooltip" title="Adicionar Produto"
-													ng-click="showModal('list_produtos')">
+													data-toggle="tooltip" title="Adicionar Produto">
 													<i class="fa fa-plus-square"></i>
 												</button>
 											</th>
 										</thead>
 										<tbody>
-											<tr ng-show="(objectModel.servicos == null || objectModel.servicos.length == 0)">
-												<td class="text-center" colspan="6">Nenhum produto foi adicionado!</td>
-											</tr>
-											<tr ng-repeat="item in objectModel.produtos">
+											<tr>
+												<td class="text-center text-middle">1234</td>
+												<td class="text-middle">Lorem ipsum dolor</td>
+												<td class="text-right text-middle">R$ 59,90</td>
 												<td class="text-center text-middle">
-													{{ item.id }}
+													<input type="text" class="form-control input-xs text-center" value="2">
 												</td>
-												<td class="text-middle">
-													{{ item.nome_produto }}
-												</td>
-												<td class="text-right text-middle">
-													R$ {{ item.vlr_venda_varejo | numberFormat : 2 : ',' : '.' }}
-												</td>
-												<td class="text-center text-middle">
-													<input type="text" class="form-control input-xs text-center"
-														ng-model="item.qtd_pedido" ng-keyup="recalculaTotais()">
-												</td>
-												<td class="text-right text-middle">
-													R$ {{ (item.qtd_pedido * item.vlr_venda_varejo)  | numberFormat : 2 : ',' : '.' }}
-												</td>
+												<td class="text-right text-middle">R$ 119,80</td>
 												<td class="text-center text-middle">
 													<button class="btn btn-xs btn-danger" 
-														data-toggle="tooltip" title="Remover Produto"
-														ng-click="removeItem(item, 'produtos')">
+														data-toggle="tooltip" title="Remover Produto">
 														<i class="fa fa-trash-o"></i>
 													</button>
 												</td>
 											</tr>
 										</tbody>
-										<tfoot ng-show="(objectModel.produtos.length > 0)">
-											<th class="text-right text-middle" colspan="3">
-												Total Produtos
-											</th>
-											<th class="text-center text-middle">
-												{{ objectModel.qtd_total_produtos }}
-											</th>
-											<th class="text-right text-middle">
-												R$ {{ objectModel.vlr_total_produtos | numberFormat : 2 : ',' : '.' }}
-											</th>
+										<tfoot>
+											<th class="text-right text-middle" colspan="3">Total Produtos</th>
+											<th class="text-center text-middle">2</th>
+											<th class="text-right text-middle">R$ 119,90</th>
 											<th></th>
 										</tfoot>
 									</table>
 								</fieldset>
 							</div>
 						</div>
-
-						<div class="row">
-							<div class="col-lg-6"></div>
-							<div class="col-lg-6 text-right">
-								<h2><small>Valor Total</small><br/>R$ {{ objectModel.vlr_total_os | numberFormat : 2 : ',' : '.' }}</h2>
-							</div>
-						</div>
 					</div>
 
 					<div class="panel-footer clearfix">
-						<div class="pull-left">
-							<div class="alert alert-form alert-warning hide"></div>
-							<div class="alert alert-form alert-danger hide"></div>
-						</div>
-
 						<div class="pull-right">
-							<button class="btn btn-sm btn-default" 
-								ng-click="showBoxNovo(true)">
+							<button class="btn btn-sm btn-default" ng-click="showBoxNovo(true)">
 								<i class="fa fa-times-circle"></i> Cancelar
 							</button>
-							<button class="btn btn-sm btn-success"
-								ng-click="save()">
+							<button class="btn btn-sm btn-success">
 								<i class="fa fa-save"></i> Salvar Ordem de Serviço
 							</button>
 						</div>
@@ -639,231 +567,63 @@
 		</div><!-- /main-container -->
 
 		<!-- /Modal Clientes-->
-        <div class="modal fade" id="list_clientes" style="display:none">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Clientes</span></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="input-group">
-                                    <input ng-model="busca.clientes"  ng-enter="loadClientes(0,10)" type="text" class="form-control input-sm">
-                                    <div class="input-group-btn">
-                                        <button ng-click="loadClientes(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-                                            <i class="fa fa-search"></i> Buscar
-                                        </button>
-                                    </div> <!-- /input-group-btn -->
-                                </div> <!-- /input-group -->
-                            </div><!-- /.col -->
-                        </div>
-
-                        <br />
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-bordered table-condensed table-striped table-hover">
-                                    <thead ng-show="(clientes.length != 0)">
-                                        <tr>
-                                            <th>Nome</th>
-                                            <th>Apelido</th>
-                                            <th class="text-center">Perfil</th>
-                                            <th class="text-center" colspan="2">Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    	<tr ng-show="clientes != false && (clientes.length <= 0 || clientes == null)">
-	                                        <td class="text-center text-bold" colspan="9">
-	                                        	Aguarde, carregando <img src="assets/imagens/progresso_venda.gif">
-                                    		</td>
-	                                    </tr>
-	                                    
-	                                    <tr ng-show="clientes == false">
-	                                        <td colspan="4" class="text-center">Não há resultados para a busca</td>
-	                                    </tr>
-
-                                        <tr ng-repeat="item in clientes">
-                                            <td>{{ item.nome }}</td>
-                                            <td>{{ item.apelido }}</td>
-                                            <td class="text-center">{{ item.nome_perfil | uppercase }}</td>
-                                            <td class="text-center" width="50">
-                                                <button type="button" class="btn btn-xs {{ (item[modalSelectDestination+'_selected']) ? 'btn-primary' : 'btn-success' }}" 
-                                                	ng-click="selectCliente(item)" ng-disabled="(item[modalSelectDestination+'_selected'])">
-                                                    <i class="fa fa-check-square-o"></i>
-                                                    {{ (item[modalSelectDestination+'_selected']) ? 'Selecionado' : 'Selecionar' }}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.clientes.length > 1">
-                                    <li ng-repeat="item in paginacao.clientes" ng-class="{'active': item.current}">
-                                        <a href="" h ng-click="loadClientes(item.offset,item.limit)">{{ item.index }}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
-        <!-- /Modal Servicos-->
-        <div class="modal fade" id="list_servicos" style="display:none">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4>Serviços</span></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="input-group">
-                                    <input ng-model="busca.servicos"  ng-enter="loadServicos(0,10)" type="text" class="form-control input-sm">
-                                    <div class="input-group-btn">
-                                        <button ng-click="loadServicos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-                                            <i class="fa fa-search"></i> Buscar
-                                        </button>
-                                    </div> <!-- /input-group-btn -->
-                                </div> <!-- /input-group -->
-                            </div><!-- /.col -->
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <table class="table table-bordered table-condensed table-striped table-hover">
-                                    <thead ng-show="(servicos.length != 0)">
-                                        <tr>
-                                            <th class="text-center">Código</th>
-                                            <th>Descrição</th>
-                                            <th class="text-center">Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    	<tr ng-show="servicos != false && (servicos.length <= 0 || servicos == null)">
-	                                        <td class="text-center text-bold" colspan="9">
-	                                        	Aguarde, carregando <img src="assets/imagens/progresso_venda.gif">
-	                                    	</td>
-	                                    </tr>
-	                                    <tr ng-show="servicos == false">
-	                                        <td colspan="4" class="text-center">Não há resultados para a busca</td>
-	                                    </tr>
-                                        <tr ng-repeat="item in servicos">
-                                            <td class="text-center">{{ item.cod_procedimento }}</td>
-                                            <td>{{ item.dsc_procedimento }}</td>
-                                            <td class="text-center" width="50">
-                                                <button type="button" class="btn btn-xs {{ (item.selected) ? 'btn-primary' : 'btn-success' }}" 
-                                                	ng-click="selectServico(item)" ng-disabled="(item.selected)">
-                                                    <i class="fa fa-check-square-o"></i>
-                                                    {{ (item.selected) ? 'Selecionado' : 'Selecionar' }}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.servicos.length > 1">
-                                    <li ng-repeat="item in paginacao.servicos" ng-class="{'active': item.current}">
-                                        <a href="" h ng-click="loadServicos(item.offset,item.limit)">{{ item.index }}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
-        <!-- /Modal Produtos-->
-		<div class="modal fade" id="list_produtos" style="display:none">
-  			<div class="modal-dialog modal-lg">
+		<div class="modal fade" id="list_clientes" style="display:none">
+  			<div class="modal-dialog">
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Produtos</span></h4>
+						<h4>Clientes</span></h4>
       				</div>
 				    <div class="modal-body">
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.produtos" ng-enter="loadProdutos(0,10)" type="text" class="form-control input-sm">
+						            <input ng-model="busca.clientes" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
-						            	<button ng-click="loadProdutos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            	<button ng-click="loadCliente(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
 						            	</button>
 						            </div> <!-- /input-group-btn -->
 						        </div> <!-- /input-group -->
 							</div><!-- /.col -->
 						</div>
-						<br/>
-				   		<div class="row">
-				   			<div class="col-sm-12">
-				   				<table class="table table-bordered table-condensed table-striped table-hover">
-									<thead ng-show="(produtos.length != 0)">
+						<br />
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered table-condensed table-striped table-hover">
+									<tr ng-if="clientes.length <= 0 || clientes == null">
+										<th class="text-center" colspan="9" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+									</tr>
+									<thead ng-show="(clientes.length != 0)">
 										<tr>
-											<th class="text-center">Código</th>
-											<th>Nome</th>
-											<th>Fabricante</th>
-											<th class="text-center">Tamanho</th>
-											<th class="text-center">Sabor/Cor</th>
-											<th class="text-center">Quantidade</th>
-											<th class="text-center">Ações</th>
+											<th >Nome</th>
+											<th >perfil</th>
+											<th colspan="2">selecionar</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr ng-show="produtos != false && (produtos.length <= 0 || produtos == null)">
-	                                        <td class="text-center text-bold" colspan="7">
-	                                        	Aguarde, carregando <img src="assets/imagens/progresso_venda.gif">
-	                                    	</td>
-	                                    </tr>
-	                                    <tr ng-show="produtos == false">
-	                                        <td colspan="7" class="text-center">Não há resultados para a busca</td>
-	                                    </tr>
-										<tr ng-repeat="item in produtos">
-											<td class="text-center">{{ item.id }}</td>
-											<td>{{ item.nome_produto }}</td>
-											<td>{{ item.nome_fabricante }}</td>
-											<td class="text-center">{{ item.peso }}</td>
-											<td class="text-center">{{ item.sabor }}</td>
-											<td class="text-center" width="50">
-												<input type="text" class="form-control input-xs"
-													ng-model="item.qtd_pedido">
-											</td>
+										<tr ng-repeat="item in clientes">
+											<td>{{ item.nome }}</td>
+											<td>{{ item.nome_perfil }}</td>
 											<td width="50" align="center">
-												<button type="button" class="btn btn-xs {{ (item.selected) ? 'btn-primary' : 'btn-success' }}" 
-                                                	ng-click="selectProduto(item)" ng-disabled="(item.selected)">
-                                                    <i class="fa fa-check-square-o"></i>
-                                                    {{ (item.selected) ? 'Selecionado' : 'Selecionar' }}
-                                                </button>
+												<button type="button" class="btn btn-xs btn-success" ng-click="addCliente(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
 											</td>
 										</tr>
 									</tbody>
 								</table>
-				   			</div>
-				   		</div>
+							</div>
+						</div>
 
-				   		<div class="row">
-					    	<div class="col-sm-12">
-					    		<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.produtos.length > 1">
-									<li ng-repeat="item in paginacao.produtos" ng-class="{'active': item.current}">
-										<a href="" h ng-click="loadProdutos(item.offset,item.limit)">{{ item.index }}</a>
+						<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_clientes.length > 1">
+									<li ng-repeat="item in paginacao_clientes" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadCliente(item.offset,item.limit)">{{ item.index }}</a>
 									</li>
 								</ul>
-					    	</div>
+				    		</div>
 				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
@@ -965,8 +725,6 @@
 	<!-- fixedHeadTable -->
 	<script type="text/javascript" src="js/fixedHeadTable/fixedHeadTable.js"></script>
 
-	<script src='js/agenda/lib/moment.min.js'></script>
-
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script type="text/javascript" src="bower_components/angular-ui-utils/mask.min.js"></script>
@@ -981,7 +739,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/ordem_servico-controller.js?v=<?php /*echo filemtime('js/angular-controller/ordem_servico-controller.js')*/ ?>"></script>
+	<script src="js/angular-controller/ordem_servico-controller.js?<?php echo filemtime('js/angular-controller/ordem_servico-controller.js')?>"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
 	<script type="text/javascript"></script>

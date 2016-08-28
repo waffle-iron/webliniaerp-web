@@ -20,6 +20,12 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Datepicker -->
+	<link href="css/datepicker.css" rel="stylesheet"/>
+
+	<!-- Timepicker -->
+	<link href="css/bootstrap-timepicker.css" rel="stylesheet"/>
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -383,6 +389,51 @@
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
+					<div class="panel-heading"><i class="fa fa-filter"></i> Opções de Filtro</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Data</label>
+									<div class="input-group">
+										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="data" class="datepicker form-control text-center">
+										<span class="input-group-addon" id="cld_data"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">ID Venda</label>
+									<input ng-model="busca.id_venda" ng-enter="loadDevolucoes(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-5">
+								<div class="form-group">
+									<label class="control-label">Cliente</label>
+									<input ng-model="busca.nome" ng-enter="loadDevolucoes(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-primary" ng-click="loadDevolucoes(0,10)"><i class="fa fa-filter"></i> Filtrar</button>
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="resetFilter()">Limpar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="panel panel-default">
 					<div class="panel-heading"><i class="fa fa-tasks"></i> Lista de Devoluções</div>
 					<div class="panel-body">
 						<div style="display:none" class="alert alert-devolucao-sucesso"></div>
@@ -587,6 +638,15 @@
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- Datepicker -->
+	<script src='js/bootstrap-datepicker.min.js'></script>
+
+	<!-- Timepicker -->
+	<script src='js/bootstrap-timepicker.min.js'></script>
+
+    <!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
 	<!-- Modernizr -->
 	<script src='js/modernizr.min.js'></script>
 
@@ -621,6 +681,14 @@
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/devolucao-controller.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#data").datepicker();
+			$("#cld_data").on("click", function(){ $("#data").trigger("focus"); });
+			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+		});
+	</script>
 	<?php include("google_analytics.php"); ?>
 
   </body>

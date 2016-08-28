@@ -120,7 +120,7 @@
 		$saida['nickname'] 				= $_GET['nickname'];
 		$saida['nme_logo'] 				= $_GET['nme_logo'];
 		$nickname						= isset($_GET['nickname']) ? $_GET['nickname'] : null ;
-
+		
 		$ch = curl_init();
 		$url = $url;
 		curl_setopt($ch, CURLOPT_URL,URL_API.'usuario/'.$saida['id_empreendimento'].'/'.$saida['id']);

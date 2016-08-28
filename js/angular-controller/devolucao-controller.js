@@ -13,6 +13,7 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 	ng.busca                = {clientes:''};
 	ng.clientes             = [];
 	ng.cliente_selecionado  = {} ;
+	ng.paginacao = { itens: [] } ;
 
 	ng.showBoxNovaDevolucao = function(onlyShow){
     	//ng.editing = !ng.editing;
@@ -343,13 +344,42 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 			});
 	}
 
+	ng.reset = function(){
+		ng.Devolucoes = {itens:[]};
+	}
+
+	ng.busca = { nome: "", id_venda: ""};
+	ng.resetFilter = function() {
+		$("#data").val("");
+		ng.busca.nome = "" ;
+		ng.busca.id_venda = "" ;
+		ng.reset();
+		ng.loadDevolucoes(0,10);
+	}
+
 	ng.loadDevolucoes = function(offset,limit,divLoadingAjax) {
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
 		if(divLoadingAjax == null) ng.devolucoes = [];
 		else $(divLoadingAjax).show();
 
-		aj.get(baseUrlApi()+"devolucoes/"+ng.userLogged.id_empreendimento+"/"+offset+"/"+limit)
+		query_string = "?1=1";
+
+		if(ng.busca.nome != ""){
+			query_string += "&("+$.param({'tu->nome':{exp:"like'%"+ng.busca.nome+"%')"}});
+		}
+
+		if(ng.busca.id_venda != ""){
+			query_string += "&("+$.param({'td->id_venda':{exp:"= "+ng.busca.id_venda+")"}});
+		}
+
+		if($("#data").val() != ""){
+			var dta_devolucao = moment($("#data").val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+			query_string += "&("+$.param({'2':{exp:"=2 AND cast(td.dta_devolucao as date) = '"+ dta_devolucao +"' )"}});
+		}
+
+		aj.get(baseUrlApi()+"devolucoes/"+ng.userLogged.id_empreendimento+"/"+offset+"/"+limit + query_string)
 			.success(function(data, status, headers, config) {
 					$(divLoadingAjax).hide();
 					ng.devolucoes           = data.devolucoes; 

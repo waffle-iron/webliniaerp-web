@@ -235,10 +235,11 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 				}
 				data.movimentacoes[i].dta = dta[0];
 				data.movimentacoes[i].total = saldo_anterior;
+				ng.saldo_produto = saldo_anterior;
 			});	
 			console.log(inventarios);
 			ng.movimentacoes =  _.groupBy(data.movimentacoes, "dia_movimentacao"); 
-			console.log(ng.movimentacoes);
+			
 			$("#modal-aguarde").modal('hide');
 		})
 		.error(function(data, status, headers, config) {

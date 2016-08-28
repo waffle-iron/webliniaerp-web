@@ -196,15 +196,44 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 	}
 
 	 ng.id_invetario_current = null ;
+
+	 ng.reset = function(){
+		ng.Notas = {itens:[]};
+	}
+
+	ng.busca = { text: "", responsavel: ""};
+	ng.resetFilter = function() {
+		$("#data_da_contagem").val("");
+		ng.busca.text = "" ;
+		ng.busca.responsavel = "" ;
+		ng.reset();
+		ng.loadUltimosInventarios(0,10);
+	}
+
      ng.loadUltimosInventarios = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 
+    	var query_string = "?tde->id_empreendimento="+ng.userLogged.id_empreendimento;
+
+		if(ng.busca.text != ""){
+			query_string += "&("+$.param({nme_deposito:{exp:"like '%"+ng.busca.text+"%'"}})+")";
+		}
+
+		if(ng.busca.responsavel != ""){
+			query_string += "&("+$.param({'usu->nome':{exp:"like '%"+ng.busca.responsavel+"%'"}})+")";
+		}
+
+		if($("#data_da_contagem").val() != ""){
+			var data = moment($("#data_da_contagem").val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+			query_string += "&("+$.param({'1':{exp:"= 1 AND cast(dta_contagem as date) = '"+ data +"' "}})+")";
+		}
+		
 		ng.utimosInventarios = [];
-		aj.get(baseUrlApi()+"inventarios/"+offset+"/"+limit+"?tde->id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"inventarios/"+offset+"/"+limit+ query_string)
 			.success(function(data, status, headers, config) {
-				ng.utimosInventarios                       = data.invetarios ;
-				ng.paginacao.inventarios 	   = data.paginacao;
+				ng.utimosInventarios = data.invetarios ;
+				ng.paginacao.inventarios = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				ng.utimosInventarios = [];

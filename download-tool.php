@@ -50,7 +50,7 @@ if(isset($_GET) && !empty($_GET)) {
 
 			$str_sql .=" ) VALUES ( ";
 
-			$values = split(";", $line);
+			$values = explode(";", $line);
 
 			foreach ($values as $key => $value) {
 				$value = trim($value);

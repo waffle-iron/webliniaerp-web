@@ -240,7 +240,7 @@ div[data-tree-model] li .selected {
 }
 
 .text-bold {
-	font-weight: bold;
+	font-weight: bold !important;
 }
 
 @media print {
@@ -334,15 +334,27 @@ button:focus{
 	margin-top: 7px !important;
 }
 
-input[type=radio]:checked+.custom-radio.text-success:before {
+input[type=radio]:checked+.custom-radio.new-primary:before {
+	background-color: #2e3744;
+}
+
+input[type=radio]:checked+.custom-radio.primary:before {
+	background-color: #428bca;
+}
+
+input[type=radio]:checked+.custom-radio.info:before {
+	background-color: #4c99a9;
+}
+
+input[type=radio]:checked+.custom-radio.success:before {
 	background-color: #65cea7;
 }
 
-input[type=radio]:checked+.custom-radio.text-warning:before {
+input[type=radio]:checked+.custom-radio.warning:before {
 	background-color: #f3ce85;
 }
 
-input[type=radio]:checked+.custom-radio.text-danger:before {
+input[type=radio]:checked+.custom-radio.danger:before {
 	background-color: #fc8675;
 }
 
@@ -390,4 +402,12 @@ legend {
   -webkit-background-clip: padding-box;
      -moz-background-clip: padding;
           background-clip: padding-box;
+}
+
+.datepicker {
+	z-index: 100000;
+}
+
+.width-100 {
+	width: 100% !important;
 }

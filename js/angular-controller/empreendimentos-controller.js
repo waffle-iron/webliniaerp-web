@@ -13,7 +13,7 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 	};
     ng.empreendimentos 	= [];
     ng.roleList = [];
-    ng.paginacao = {} ;
+    ng.paginacao = { itens: [] } ;
     ng.busca     = {} ;
 
 
@@ -133,10 +133,27 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 		ng.editing = false ;
 	}
 
-	ng.load = function() {
-		aj.get(baseUrlApi()+"empreendimentos?id_usuario="+ng.userLogged.id)
+	ng.paginacao = { itens: [] } ;
+	ng.busca = { text: "" };
+	ng.resetFilter = function() {
+		ng.busca.text = "" ;
+		ng.reset();
+		ng.load(0,10);
+	}
+
+	ng.load = function(offset, limit) {
+		offset = offset == null ? 0 : offset ;
+		limit  = limit  == null ? 10 : limit ;
+
+		var query_string = "?id_usuario="+ng.userLogged.id;
+
+		if(ng.busca.text != "")
+			query_string += "&("+$.param({nome_empreendimento:{exp:"like '%"+ng.busca.text+"%' OR emp.id = '"+ng.busca.text+"'"}})+")";
+
+		aj.get(baseUrlApi()+"empreendimentos/" + offset + "/" + limit + query_string)
 			.success(function(data, status, headers, config) {
-				ng.empreendimentos = data;
+				ng.empreendimentos = data.empreendimentos;
+				ng.paginacao.itens = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404)
@@ -342,7 +359,7 @@ app.controller('EmpreendimentoController', function($scope, $http, $window, $dia
 
 	
 
-	ng.load();
+	ng.load(0,10);
 	ng.loadZoneamento();
 	ng.loadControleNfe('regime_tributario','regimeTributario');
 	ng.loadControleNfe('regime_tributario_pis_cofins','regimePisCofins');
