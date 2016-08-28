@@ -13,6 +13,7 @@ app.controller('OperacaoController', function($scope, $http, $window, $dialogs, 
 							num_cfop_produto_st 	: null ,
 							num_cfop_mercadoria 	: null ,
 							num_cfop_mercadoria_st 	: null ,
+							num_cfop_mercadoria_st_subst 	: null ,
 							cod_operacao_estorno 	: null ,
 							cod_operacao_devolucao 	: null 
 						 };
