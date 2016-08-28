@@ -248,7 +248,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<p>
-									As configuraçãoes necessárias para que o caixa funcione corretamente ainda não foram efetuadas.
+									As configurações necessárias para que o caixa funcione corretamente ainda não foram efetuadas.
 									<br/><br/>
 									Entre em contato com o Administrador do sistema para obter apoio.
 								</p>
