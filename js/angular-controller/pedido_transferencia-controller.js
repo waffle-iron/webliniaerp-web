@@ -1,7 +1,7 @@
 app.controller('PedidoTransferenciaController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
 	var ng = $scope
 		aj = $http;
-
+	ng.ctrl = $scope ;
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
 	ng.busca 		= {empreendimento:'',produto:''} ;
@@ -203,6 +203,16 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		}
 		var produto = angular.copy(item) ;
 		produto.id_produto = item.id ;
+
+		if(ng.transferencia.flg_controle_validade==1){
+			var qtd_transferida = 0 ;
+			$.each(produto.validades,function(i,x){
+				if($.isNumeric(x.qtd_transferida))
+					qtd_transferida += Number(x.qtd_transferida);
+			});
+			produto.qtd_transferida = qtd_transferida ;
+		}
+
 		ng.transferencia.produtos.push(produto);
 		item.qtd_pedida = null ;
 	}
@@ -355,17 +365,38 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 			ng.addEmpreendimento(data.empreendimento_transferencia,event);
 			$.each(data.itens,function(i,x){
 				prd_in += x.id_produto+",";
-				aux[x.id_produto] = {
-					qtd_pedida:x.qtd_pedida,
-					qtd_transferida:x.qtd_transferida,
-					id_item:x.id,
-					vlr_custo : x.vlr_custo
-				} ;
+				if(ng.listaTransferencias.transferencias[index].flg_controle_validade == 1){
+					if(empty(aux[x.id_produto])){
+						aux[x.id_produto] = {
+							vlr_custo : x.vlr_custo,
+							qtd_pedida:x.qtd_pedida,
+							qtd_transferida:x.qtd_transferida,
+							validades:{}
+						} ;
+					}
+					if(empty(aux[x.id_produto]['validades'][x.dta_validade])){
+						aux[x.id_produto]['validades'][x.dta_validade] = {
+							qtd_transferida:Number(x.qtd_transferida),
+							dta_validade : x.dta_validade,
+							qtd_recebida : null
+						};
+					}else{
+						aux[x.id_produto]['validades'][x.dta_validade].qtd_transferida += Number(x.qtd_transferida) ;
+					}
+				}else{
+					aux[x.id_produto] = {
+						qtd_pedida:x.qtd_pedida,
+						qtd_transferida:x.qtd_transferida,
+						id_item:x.id,
+						vlr_custo : x.vlr_custo
+					} ;
+				}
 			});
 			prd_in = prd_in.substring(0,prd_in.length-1);
 			aj.get(baseUrlApi()+"produtos?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&pro->id[exp]=IN("+prd_in+")")
 			.success(function(prd, status, headers, config) {
 				ng.transferencia.id = data.id ;
+				ng.transferencia.flg_controle_validade = data.flg_controle_validade ;
 				//ng.transferencia.id_empreendimento_pedido = data.id_empreendimento_pedido ;
 				ng.transferencia.id_empreendimento_transferencia = data.id_empreendimento_transferencia ;
 				//ng.transferencia.id_usuario_pedido = data.id_usuario_pedido ;
@@ -378,11 +409,21 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 				$.each(prd.produtos,function(x,i){ prd.produtos[x].id_item = aux[i.id_produto].id_item; });
 				prd.produtos = _.sortBy(prd.produtos,'id_item');
 				$.each(prd.produtos,function(x,i){
-					i.qtd_pedida = aux[i.id_produto].qtd_pedida;
-					i.qtd_transferida = aux[i.id_produto].qtd_transferida;
-					i.vlr_custo_sugerido = aux[i.id_produto].vlr_custo;
-					i.atualizar_custo = 0 ;
-					ng.addProduto(i);
+					if(ng.listaTransferencias.transferencias[index].flg_controle_validade == 1){
+							i.qtd_pedida = aux[i.id_produto].qtd_pedida;
+							i.qtd_transferida = aux[i.id_produto].qtd_transferida;
+							i.vlr_custo_sugerido = aux[i.id_produto].vlr_custo;
+							i.atualizar_custo = 0 ;
+							i.validades = aux[i.id_produto].validades ;
+							i.qtd_recebida = 0 ;
+							ng.addProduto(i);
+					}else{
+						i.qtd_pedida = aux[i.id_produto].qtd_pedida;
+						i.qtd_transferida = aux[i.id_produto].qtd_transferida;
+						i.vlr_custo_sugerido = aux[i.id_produto].vlr_custo;
+						i.atualizar_custo = 0 ;
+						ng.addProduto(i);
+					}
 				});
 				ng.loadDepositos(0,10,true);
 				btn.button('reset');
@@ -464,36 +505,39 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		var qtd_atualiza_custo = 0 ;
 		$.each(ng.transferencia.produtos,function(key,item){
 			if(!($.isNumeric(item.qtd_recebida))){
-				$('#td-trasnferencia-qtd-recebida-'+item.id).addClass('has-error');
-				$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade recebida não pode ser vazia').attr("data-original-title", 'A quantidade para transferência não pode ser vazia'); 
+				var id_element = '#td-trasnferencia-qtd-recebida-'+item.id ;
+				$(id_element).addClass('has-error');
+				$(id_element).find('input').attr("data-placement", "top").attr("title", 'A quantidade recebida não pode ser vazia').attr("data-original-title", 'A quantidade para transferência não pode ser vazia'); 
 				if(error == 0) {
-					$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').tooltip('show');
-					$('html,body').animate({scrollTop: $('#td-trasnferencia-qtd-recebida-'+item.id).offset().top - 100 },'slow');
+					$(id_element).find('input').tooltip('show');
+					$('html,body').animate({scrollTop: $(id_element).offset().top - 100 },'slow');
 				}else {
-					$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').tooltip();
+					$(id_element).find('input').tooltip();
 				}
 				error ++ ;
 			}else if( !(Number(item.qtd_recebida) == Number(item.qtd_transferida)) ){
-				$('#td-trasnferencia-qtd-recebida-'+item.id).addClass('has-error');
-				$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade recebida não pode diferente da transferida').attr("data-original-title", 'A quantidade recebida não pode diferente da transferida'); 
+				var id_element = '#td-trasnferencia-qtd-recebida-'+item.id ;
+				$(id_element).addClass('has-error');
+				$(id_element).find('input').attr("data-placement", "top").attr("title", 'A quantidade recebida não pode diferente da transferida').attr("data-original-title", 'A quantidade recebida não pode diferente da transferida'); 
 				if(error == 0) {
-					$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').tooltip('show');
-					$('html,body').animate({scrollTop: $('#td-trasnferencia-qtd-recebida-'+item.id).offset().top - 100 },'slow');
+					$(id_element).find('input').tooltip('show');
+					$('html,body').animate({scrollTop: $(id_element).offset().top - 100 },'slow');
 				}else {
-					$('#td-trasnferencia-qtd-recebida-'+item.id).find('input').tooltip();
+					$(id_element).find('input').tooltip();
 				}
 				error ++ ;
 			}
 			if(!$.isNumeric(item.id_deposito_entrada) && ( $.isNumeric(item.qtd_recebida) && Number(item.qtd_recebida) > 0 ) ){
-				$('#td-trasnferencia-id-deposito-entrada-'+item.id).addClass('has-error');
-				$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').attr("data-placement", "top").attr("title", 'Informe o deposito de entrada').attr("data-original-title", 'A quantidade para transferência não pode ser vazia'); 
-				$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').attr('style','border: 1px solid #A94442;');
-				$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').find('span').attr('style','color:#A94442;');
+				var id_element =  '#td-trasnferencia-id-deposito-entrada-'+item.id ;
+				$(id_element).addClass('has-error');
+				$(id_element).find('.chosen-single').attr("data-placement", "top").attr("title", 'Informe o deposito de entrada').attr("data-original-title", 'A quantidade para transferência não pode ser vazia'); 
+				$(id_element).find('.chosen-single').attr('style','border: 1px solid #A94442;');
+				$(id_element).find('.chosen-single').find('span').attr('style','color:#A94442;');
 				if(error == 0) {
-					$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').tooltip('show');
-					$('html,body').animate({scrollTop: $('#td-trasnferencia-id-deposito-entrada-'+item.id).offset().top - 100 },'slow');
+					$(id_element).find('.chosen-single').tooltip('show');
+					$('html,body').animate({scrollTop: $(id_element).offset().top - 100 },'slow');
 				}else {
-					$('#td-trasnferencia-id-deposito-entrada-'+item.id).find('.chosen-single').tooltip();
+					$(id_element).find('.chosen-single').tooltip();
 				}
 				error ++ ;
 			}
@@ -514,8 +558,12 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 			dlg.result.then(function(){
 				ng.transferencia.dta_recebido = moment().format('YYYY-MM-DD HH:mm:ss');
 				ng.transferencia.id_usuario_recebeu = ng.userLogged.id ;
-
-				aj.post(baseUrlApi()+"estoque/pedido/transferencia/receber/",ng.transferencia)
+				var post = angular.copy(ng.transferencia);
+				if(ng.transferencia.flg_controle_validade == 1){
+					post.flg_controle_validade = 1 ;
+					post.produtos = formatPostValidades() ;
+				}
+				aj.post(baseUrlApi()+"estoque/pedido/transferencia/receber/",post)
 				.success(function(data, status, headers, config) {
 					aj.get(baseUrlApi()+"transferencias/estoque/?id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+"&tte->id="+ng.transferencia.id)
 					.success(function(data, status, headers, config) {
@@ -555,8 +603,13 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		}else{
 			ng.transferencia.dta_recebido = moment().format('YYYY-MM-DD HH:mm:ss');
 			ng.transferencia.id_usuario_recebeu = ng.userLogged.id ;
+			var post = angular.copy(ng.transferencia);
+			if(ng.transferencia.flg_controle_validade == 1){
+				post.flg_controle_validade = 1 ;
+				post.produtos = formatPostValidades() ;
+			}
 
-			aj.post(baseUrlApi()+"estoque/pedido/transferencia/receber/",ng.transferencia)
+			aj.post(baseUrlApi()+"estoque/pedido/transferencia/receber/",post)
 			.success(function(data, status, headers, config) {
 				aj.get(baseUrlApi()+"transferencias/estoque/?id_empreendimento_transferencia="+ng.userLogged.id_empreendimento+"&tte->id="+ng.transferencia.id)
 				.success(function(data, status, headers, config) {
@@ -671,6 +724,49 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		item = angular.copy(item);
 		ng.busca.empreendimento_busca = item ;
 		$('#list_empreendimentos_busca').modal('hide');
+	}
+
+	ng.somarQtdRecebida = function(item){
+		var total = 0 ;
+		$.each(item.validades,function(i,x){
+			if($.isNumeric(x.qtd_recebida)){
+				total += Number(x.qtd_recebida);
+			}
+		});
+		item.qtd_recebida = total ;
+		return total ;
+	}
+
+	ng.vericarQtdByValidade = function(item,container){
+		var qtd_transferida = $.isNumeric(item.qtd_transferida) ? Number(item.qtd_transferida) : 0 ;
+		var qtd_recebida    = $.isNumeric(item.qtd_recebida) ? Number(item.qtd_recebida) : 0 ;
+
+		if(qtd_recebida > qtd_transferida){
+			delete item.tooltip ;
+			item.tooltip = {init:true,show:true,placement:'top',trigger:'focus hover',title:'Quantidade superior a transferida',container:(empty(container) ? null : container)} ;
+			item.qtd_recebida = '' ;
+		}else{
+			delete item.tooltip ;
+		}
+	}
+
+	function formatPostValidades(){
+		var produtos = [];
+		var transferencia_itens = angular.copy(ng.transferencia.produtos);
+		$.each(transferencia_itens,function(i,x){
+			var item = angular.copy(x)  ;
+			delete item.validades ;
+			$.each(x.validades,function(y,z){
+				item.qtd_recebida = empty(z.qtd_recebida) ? 0 : z.qtd_recebida ;
+				item.dta_validade = z.dta_validade ;
+				produtos.push(angular.copy(item));
+			});
+		});
+		return produtos ;
+	}
+
+	ng.clearTooltip = function(item){
+		delete item.tooltip ;
 	}
 
 	ng.loadtransferencias(0,10);

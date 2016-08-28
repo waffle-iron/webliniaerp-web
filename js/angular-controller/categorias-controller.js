@@ -109,6 +109,10 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 		}, undefined);
 	}
 
+	ng.integracao = function(){
+		console.log('manda v');
+	}
+
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');
 	}

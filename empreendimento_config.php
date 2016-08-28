@@ -1113,6 +1113,23 @@
 							            	</div>
 							        	</div>
 									</div>
+									<div class="col-sm-5">
+										<div class="form-group">
+											<label for="" class="control-label">Controlar validade nas Transferências ?</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_controlar_validade_transferencia" value="1" name="flg_controlar_validade_transferencia"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_controlar_validade_transferencia" value="0" name="flg_controlar_validade_transferencia"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+											</div>
+										</div>
+									</div>
 								</div>
 
 								<div class="row">

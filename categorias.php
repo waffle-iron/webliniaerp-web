@@ -197,14 +197,16 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="item in categorias">
+								<tr ng-repeat="item in categorias" integracao>
 									<td width="80">{{ item.id }}</td>
-									<td>{{ item.descricao_categoria }}</td>
+									<td id="td-categoriaId-{{  item.id }}">
+										{{ item.descricao_categoria }}
+									</td>
 									<td align="center">
-										<button type="button" ng-click="editar(item)" tooltip="Editar" class="btn btn-xs btn-warning" data-toggle="tooltip">
+										<button type="button" ng-click="editar(item)"  class="btn btn-xs btn-warning" tooltip title="editar">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button type="button" ng-click="delete(item)" tooltip="Excluir" class="btn btn-xs btn-danger delete" data-toggle="tooltip">
+										<button type="button" tooltip class="btn btn-xs btn-danger delete" tooltip title="Excluir">
 											<i class="fa fa-trash-o"></i>
 										</button>
 									</td>

@@ -175,7 +175,7 @@
 		$info 	 = curl_getinfo($ch);
 		curl_close ($ch);
 
-		if($info['http_code'] == 200){ 
+		if($info['http_code'] == 200 && $usuario['flg_tipo'] == 'usuario'){ 
 			$saida['modulos'] = json_decode($modulos,true);
 			$saida['modulosAssociatePage'] = array();
 			foreach ($saida['modulos'] as $key => $value) {

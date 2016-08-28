@@ -554,16 +554,34 @@ function groupObjByQtd(arr,qtd){
 }
 
 function getIndex(campo,vlr,obj){
-    var index = null ;
-    $.each(obj,function(i,v){
-        if(!empty(v[campo]) && v[campo] == vlr){
-            index = i;
-            return
-        }
-    });
-    return index ;
-}
+    if(typeof campo == 'object'){
+        var index = null ;
+       var qtd_c =  Object.keys(campo).length ;
+       var qtd   = 0 ;
+        $.each(obj,function(i,v){
+            var qtd = 0 ;
+            $.each(campo,function(a,b){
+                if(b == v[a])
+                    qtd ++ ;
+            });
 
+            if(qtd_c == qtd){
+                index = i;
+                return
+            }
+        });
+        return index ;
+    }else{
+        var index = null ;
+        $.each(obj,function(i,v){
+            if(!empty(v[campo]) && v[campo] == vlr){
+                index = i;
+                return
+            }
+        });
+        return index ;
+    }
+}
 
 function pick(obj,arrNames,isArr,valuesAdd){
     isArr = empty(isArr) ?  false : isArr ;

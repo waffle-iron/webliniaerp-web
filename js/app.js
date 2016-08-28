@@ -339,7 +339,10 @@ angular.module('filters', [])
 	}).directive('tooltip', function ($filter) {
 	    return {
 	            link: function (scope, element, attrs, ctrl) {
-	           	$(element).tooltip()
+	            if(empty(attrs.tooltip))
+	           		$(element).tooltip()
+	           	else if(attrs.tooltip=='show' || attrs.tooltip == 'hide')
+	           		$(element).tooltip(attrs.tooltip);
 	        }
 	    };
 	}).directive('controllTooltip', function ($filter) {
@@ -358,7 +361,8 @@ angular.module('filters', [])
 	           			$(element).tooltip( {
 	           				placement : newValue.placement,
 							title : newValue.title,
-							trigger : newValue.trigger
+							trigger : newValue.trigger,
+							container: ( empty(newValue.container) ? null : newValue.container )
 	           			} );
 	           			if(newValue.show === true){
 	           				$(element).trigger("focus");
@@ -611,7 +615,8 @@ angular.module('filters', [])
 	    return {
 	    	scope: {
 	            options: '=',
-	           	model: '='
+	           	model: '=',
+	           	func: '='
 	       	},
 	    	link:function(scope,element,attrs,ctrl){
 	    			scope.$watch("model", function(currentValue, previousValue) {
@@ -625,7 +630,7 @@ angular.module('filters', [])
 			    		var config = {
 							title: ( title==false ? '' : title ) ,
 			                placement: placement ,
-			                content:  $compile($(attrs.content))(scope) ,
+			                content:  $compile($( unescape(attrs.content) ))(scope) ,
 			                html: true,
 			                container: container,
 			                trigger  :trigger
@@ -633,6 +638,9 @@ angular.module('filters', [])
 			            if(title == false)
 			           	 config.template =  '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>'
 		    			$(element).popover(config).popover();
+		    			$(element).on('show.bs.popover', function () {
+						   $('[popover-control-angular]').not(element).popover('hide');
+						})
 		            });
 	    	}
 	    }
@@ -743,6 +751,16 @@ app.directive('bsTooltip', function ($timeout) {
         }
     }
 });
+
+app.directive('integracao', function($timeout) {
+  	return {
+		link: function(scope, element, attrs) {
+		    if (scope.$last){
+                scope.integracao();
+		    }
+		  }
+ 	}
+})
 
 app.controller('MasterController', function($scope, $http, $window, UserService) {
 	var ng = $scope,
