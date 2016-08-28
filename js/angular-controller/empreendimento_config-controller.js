@@ -186,6 +186,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		 	type: 'post',
 		 	data: ng.empreendimento,
 		 	success:function(data){
+		 		ng.loadEmpreendimento(ng.userLogged.id_empreendimento);
+				ng.loadEstados();
 		 		btn.button('reset');
 		 		ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-basico-loja');
 		 	},
@@ -852,6 +854,24 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.regimePisCofins = [{num_item:null,nme_item:null}] ;
 	ng.tipoEmpresa = [{num_item:null,nme_item:null}] ;
 	ng.zoneamentos = [{num_item:null,nme_item:null}] ;
+
+
+
+	ng.addIncricaoEstadual = function() {
+		if(empty(ng.empreendimento.inscricoes_estaduais))
+			ng.empreendimento.inscricoes_estaduais = [];
+
+		 ng.empreendimento.inscricoes_estaduais.push({
+		 	id_empreendimento : ng.userLogged.id_empreendimento,
+		 	id_estado : null
+		 });	
+	}
+
+	ng.deleteInscricoesEstaduais= function(index){
+		ng.empreendimento.inscricoes_estaduais.splice(index,1);
+	}
+
+
 
 	ng.loadEmpreendimento(ng.userLogged.id_empreendimento);
 	ng.existsCookie();

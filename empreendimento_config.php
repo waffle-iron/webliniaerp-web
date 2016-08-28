@@ -211,27 +211,12 @@
 									</div>
 
 									<div class="row">
-										<div class="col-sm-3">
+										<div class="col-sm-2">
 											<div id="cnpj" class="form-group">
 												<label class="control-label">CNPJ </label> 
 												<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="empreendimento.num_cnpj">
 											</div>
 										</div>
-										<div class="col-sm-3">
-											<div id="num_inscricao_estadual" class="form-group">
-												<label class="control-label">I.E. </label>
-												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual">
-											</div>
-										</div>
-										<div class="col-sm-3">
-											<div id="num_inscricao_estadual_st" class="form-group">
-												<label class="control-label">I.E ST </label>
-												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual_st">
-											</div>
-										</div>
-									</div>
-
-									<div class="row">
 										<div class="col-lg-6">
 											<div id="nme_razao_social" class="form-group">
 												<label class="control-label">Razão Social  </label>
@@ -244,8 +229,56 @@
 												<input class="form-control" ng-model="empreendimento.nme_fantasia">
 											</div>
 										</div>
+										<!--<div class="col-sm-3">
+											<div id="num_inscricao_estadual" class="form-group">
+												<label class="control-label">I.E. </label>
+												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual">
+											</div>
+										</div>
+										<div class="col-sm-3">
+											<div id="num_inscricao_estadual_st" class="form-group">
+												<label class="control-label">I.E ST </label>
+												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual_st">
+											</div>
+										</div>-->
 									</div>
-
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="form-group">
+												<div class="table-responsive">
+													<table class="table table-bordered table-condensed table-striped table-hover">
+														<thead>
+															<th width="200">Estado</th>
+															<th>I.E.</th>
+															<th>I.E ST</th>
+															<td width="60" align="center">
+																<button class="btn btn-xs btn-primary" ng-click="addIncricaoEstadual()"><i class="fa fa-plus-circle"></i></button>
+															</td>
+														</thead>
+														<tbody>
+															<tr ng-repeat="item in empreendimento.inscricoes_estaduais">
+																<td>
+																	<select chosen
+																	    option="plano_contas"
+																	    allow-single-deselect="true"
+																	    ng-model="item.uf"
+																	    ng-options="item.uf as item.nome for item in estados"">
+																	</select>
+																</td>
+																<td><input type="text" ng-model="item.num_inscricao_estadual" class="form-control input-sm"></td>
+																<td><input type="text" ng-model="item.num_inscricao_estadual_st" class="form-control input-sm"></td>
+																<td class="text-center">
+																	<button class="btn btn-xs btn-danger" ng-click="deleteInscricoesEstaduais($index)">
+																		<i class="fa fa-trash-o"></i>
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
 									<div class="row">
 										<div class="col-sm-2">
 											<div id="cep" class="form-group">
@@ -1255,6 +1288,73 @@
 									</li>
 								</ul>
 					    	</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- /Modal empreendimento-->
+		<div class="modal fade" id="list_empreendimentos" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Empreendimentos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.empreendimento" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadAllEmpreendimentos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(empreendimento.length != 0)">
+										<tr>
+											<th colspan="2">Nome</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(empreendimentos.length == 0)">
+											<td colspan="2">Não há empreendimentos cadastrados</td>
+										</tr>
+										<tr ng-show="(empreendimentos.length == null)" class="text-center">
+											<td colspan="2"><i class='fa fa-refresh fa-spin'></i> Carregando...</td>
+										</tr>
+										<tr ng-repeat="item in empreendimentos">
+											<td>{{ item.nome_empreendimento }}</td>
+											<td width="50" align="center">
+												<button type="button" class="btn btn-xs btn-success" ng-disabled="empreendimentoSelected(item)" ng-click="addEmpreendimento(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.empreendimentos.length > 1">
+									<li ng-repeat="item in paginacao.empreendimentos" ng-class="{'active': item.current}">
+										<a href="" ng-click="loadAllEmpreendimentos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+				    		</div>
 				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
