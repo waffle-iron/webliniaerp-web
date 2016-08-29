@@ -2120,7 +2120,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					error++;
 				}
 
-				if(error > 0 || ng.caixa_open == undefined || ng.caixa_open == null)
+				if(error > 0)
 					ng.caixa_configurado = false ;
 				else {
 					ng.caixa_configurado = true ;
