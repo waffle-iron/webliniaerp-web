@@ -63,27 +63,36 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 	}
 
 	ng.atualzarStatus = function(cod_nota_fiscal,index,event){
+		if(!empty(event)){
 		var element = $(event.target);
 		event.stopPropagation();
-		if(!element.is('a'))
-			element = $(event.target).parent();
-		element.button('loading');
+			if(!element.is('a'))
+				element = $(event.target).parent();
+			element.button('loading');
+		}	
 
 		aj.get(baseUrlApi()+"nota_fiscal/"+cod_nota_fiscal+"/"+ng.userLogged.id_empreendimento+"/atualizar/status")
 			.success(function(data, status, headers, config) {
-				element.html('<i class="fa fa-check-circle-o"></i> Atualizado');
-				if(!(ng.notas[index].status == data.status))
-					ng.notas[index] = data ;
-				$timeout(function(){
-					element.html('<i class="fa fa-refresh"></i> Atualizar Status');
-				}, 2000);	
+				if(!empty(event)){
+					element.html('<i class="fa fa-check-circle-o"></i> Atualizado');
+					if(!(ng.notas[index].status == data.status))
+						ng.notas[index] = data ;
+					$timeout(function(){
+						element.html('<i class="fa fa-refresh"></i> Atualizar Status');
+					}, 2000);	
+				}else{
+					if(!(ng.notas[index].status == data.status))
+						ng.notas[index] = data ;
+				}
 			})
 			.error(function(data, status, headers, config) {
-				element.html('<i class="fa fa-times-circle"></i> Erro ao atualizar');
-				nota = data;
-				$timeout(function(){
-					element.html('<i class="fa fa-refresh"></i> Atualizar Status');
-				}, 2000);	
+				if(!empty(event)){
+					element.html('<i class="fa fa-times-circle"></i> Erro ao atualizar');
+					nota = data;
+					$timeout(function(){
+						element.html('<i class="fa fa-refresh"></i> Atualizar Status');
+					}, 2000);	
+				}
 		});
 
 	}
@@ -104,7 +113,7 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 	}
 
 	ng.notaCancelar = null ;
-	ng.modalCancelar = function(item){
+	ng.modalCancelar = function(item,index){
 		aj.get(baseUrlApi()+"nota_fiscal/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&cod_venda="+item.cod_venda)
 			.success(function(data, status, headers, config) {
 				data.dados_emissao.data_emissao = formatDateBR(data.dados_emissao.data_emissao);
@@ -112,6 +121,7 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 				ng.notaCancelar.dados_emissao.chave_nfe = item.chave_nfe ;
 				ng.notaCancelar.dados_emissao.valor_total = item.valor_total ;
 				ng.notaCancelar.dados_emissao.id_ref = item.cod_nota_fiscal
+				ng.notaCancelar.index = index ;
 				
 				$('#modal-cencelar-nota').modal('show');
 			})
@@ -125,34 +135,23 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 			var server = 'http://homologacao.acrasnfe.acras.com.br/';
 			var token  =  ng.configuracoes.token_focus_homologacao ;
 		}
-		else if(ng.configuracoes.flg_ambiente_nfe == 1){
-			var server = 'http://producao.acrasnfe.acras.com.br/';
-			var token  =  ng.configuracoes.token_focus_producao ;
-		}else{
-			return ;
-		}
+
 		var btn = $('#btn-cancelar-nota');
 		btn.button('loading');
-		aj.post(server+'nfe2/cancelar?token='+token+'&ref='+ng.notaCancelar.dados_emissao.id_ref+'&justificativa='+ng.notaCancelar.justificativa)
+
+		aj.get(baseUrlApi()+'nota_fiscal/cancelar/'+ng.notaCancelar.dados_emissao.id_ref+'/'+ng.notaCancelar.justificativa+'/'+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				$('#modal-cencelar-nota').modal('hide');
-				ng.mensagens('alert-success','<b>Nota cancelada com Sucesso</b>','.alert-list-notas');
+				ng.mensagens('alert-success','<b>Pedido de Cancelamento enviado com sucesso</b>','.alert-list-notas');
 				btn.button('reset');
-					/*aj.post(server+'nfe2/consultar.json?token='+token+'&ref='+ng.notaCancelar.dados_emissao.id_ref)
-					.success(function(data, status, headers, config) {
-						if(data.status == 'cancelado'){
-							ng.mensagens('alert-success','<b>Nota cancelada com Sucesso</b>','.alert-list-notas');
-						}else if(data.status == 'erro_cancelamento'){
-							ng.mensagens('alert-success','<b>'+data.mensagem_sefaz_cancelamento+'</b>','.alert-list-notas');
-						}
-					})
-					.error(function(data, status, headers, config) {});*/
 			})
 			.error(function(data, status, headers, config) {
 				$('#modal-cencelar-nota').modal('hide');
 				ng.mensagens('alert-danger','<b>Erro ao cacelar nota</b>','.alert-list-notas');
-				btn.button('reset');
+				btn.button('reset');	
 		});
+
+		
 	}
 
 	ng.mensagens = function(classe , msg, alertClass){
