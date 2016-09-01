@@ -371,30 +371,81 @@
 				</div><!-- /panel -->
 				<div class="alert alert-sistema" style="display:none"></div>
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-tasks"></i> Últimas Entradas</div>
+					<div class="panel-heading"><i class="fa fa-filter"></i> Opções de Filtro</div>
 
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-sm-11">
-								<div class="input-group">
-						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="load(0,10)">
-						            <div class="input-group-btn">
-						            	<button ng-click="load(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-						            		<i class="fa fa-search"></i> Buscar
-						            	</button>
-						            </div>
-						        </div>
+							<div class="col-sm-2">
+								<div class="form-group">
+								<label class="control-label">Data do Recebimento</label>
+									<div class="input-group">
+										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="datarecebimento" class="datepicker form-control text-center">
+										<span class="input-group-addon" id="cld_datarecebimento"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
 							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Usuário</label>
+									<input ng-model="busca.nme_usuario" ng-enter="loadEntradas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Fornecedor</label>
+									<input ng-model="busca.fornecedor" ng-enter="loadEntradas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
 							<div class="col-sm-1">
-								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
+								<div class="form-group">
+									<label class="control-label">Nº NF</label>
+									<input ng-model="busca.notafiscal" ng-enter="loadEntradas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label">Pedido</label>
+									<input ng-model="busca.pedido" ng-enter="loadEntradas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Depósito</label>
+									<input ng-model="busca.dep_entrada" ng-enter="loadEntradas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-primary" ng-click="loadEntradas(0,10)"><i class="fa fa-filter"></i> Filtrar</button>
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="resetFilter()">Limpar</button>
+								</div>
 							</div>
 						</div>
-						<br>
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading"><i class="fa fa-tasks"></i> Entradas</div>
+					<div class="panel-body">
 						<div class="row">
-					  	    <div class="col-sm-12">
-	      						<div class="alert alert-entrada-lista" style="display:none"></div>
-	      					</div>
-	      				</div>
+							<div class="col-sm-12">
+								<div class="alert alert-entrada-lista" style="display:none"></div>
+							</div>
+						</div>
+
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead ng-show="ultimasEntradas.length > 0">
 								<tr>
@@ -430,7 +481,9 @@
 								</tr>
 							</tbody>
 						</table>
-						<div class="panel-footer clearfix">
+					</div>
+
+					<div class="panel-footer clearfix">
 						<div class="pull-right">
 							<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.entradas.length > 1">
 								<li ng-repeat="item in paginacao.entradas" ng-class="{'active': item.current}">
@@ -438,7 +491,6 @@
 								</li>
 							</ul>
 						</div>
-					</div>
 					</div>
 				</div>
 			</div>
@@ -882,6 +934,8 @@
 	<!-- Timepicker -->
 	<script src='js/bootstrap-timepicker.min.js'></script>
 
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
 
     <!-- Pace -->
 	<script src='js/pace.min.js'></script>
@@ -923,6 +977,7 @@
 		$(document).ready(function() {
 			$('.datepicker').datepicker();
 			$("#cld_pagameto").on("click", function(){ $("#pagamentoData").trigger("focus"); });
+			$("#cld_datarecebimento").on("click", function(){ $("#datarecebimento").trigger("focus"); });
 
 			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
 			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
