@@ -21,14 +21,42 @@ app.controller('PedidosFornecedoresController', function($scope, $http, $window,
     ng.vl_btn =  {salvar_pedido:"Salvar pedido"} ;
 
    	//funções para produtos ja cadastrados
+
+   	ng.reset = function(){
+		ng.PedidosFornecedores = {itens:[]};
+	}
+
+   	ng.busca = { solicitante: "", fornecedor: ""};
+		ng.resetFilter = function() {
+			$("#datapedido").val("");
+			ng.busca.solicitante = "" ;
+			ng.busca.fornecedor = "";
+			ng.reset();
+			ng.loadPedidosFornecedores(0,10);
+		}
+
 	ng.loadPedidosFornecedores = function(offset, limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 
+    	var query_string = "?tpf->id_empreendimento="+ng.userLogged.id_empreendimento;
+			
+			if(ng.busca.fornecedor != "")
+				query_string += "&("+$.param({'frn->nome_fornecedor':{exp:"like '%"+ng.busca.fornecedor+"%' "}})+")";
+
+			if(ng.busca.solicitante != "")
+				query_string += "&("+$.param({'usu->nome':{exp:"like '%"+ng.busca.solicitante+"%' "}})+")";
+
+			if($("#datapedido").val() != ""){
+			var data = moment($("#datapedido").val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+			query_string += "&("+$.param({'1':{exp:"= 1 AND cast(dta_pedido as date) = '"+ data +"' "}})+")";
+		}
+		
+
 		ng.pedidos = [];
 		ng.paginacao_pedidos = {};
 
-		var url = "pedidos/"+ offset +"/"+ limit +"?tpf->id_empreendimento="+ng.userLogged.id_empreendimento;
+		var url = "pedidos/"+ offset +"/"+ limit + query_string;
 
 		aj.get(baseUrlApi()+url)
 			.success(function(data, status, headers, config) {
