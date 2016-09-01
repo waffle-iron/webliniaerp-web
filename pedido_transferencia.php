@@ -149,8 +149,9 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-sitemap"></i> Depósitos</li>
-					 <li class="active"><i class="fa fa-arrows-h"></i> Transferência</li>
+					 <li class="active"><i class="fa fa-sitemap"></i><a href="depositos.php"> Depósitos</a></li>
+					 <li class="active"><i class="fa fa-list-ol"></i><a href="estoque.php"> Controle de Estoque</a></li>
+					 <li class="active"><i class="fa fa-arrows-h"></i> Transferências</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
@@ -661,7 +662,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.produto" ng-enter="loadProdutos(0,10)" type="text" class="form-control input-sm">
+						            <input ng-model="busca.produto" id="foco" ng-enter="loadProdutos(0,10)" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
 						            	<button ng-click="loadProdutos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
@@ -702,7 +703,7 @@
 											<td>{{ item.sabor }}</td>
 											<td  width="50"><input  ng-model="item.qtd_pedida" type="text" class="form-control input-xs" /></td>
 											<td width="50" align="center">
-												<button ng-show="!produtoSelected(item.id)" type="button" class="btn btn-xs btn-success" ng-click="addProduto(item)">
+												<button ng-show="!produtoSelected(item.id)" type="button" id="selecionar" class="btn btn-xs btn-success" ng-click="addProduto(item)">
 													<i class="fa fa-check-square-o"></i> Selecionar
 												</button>
 												<button ng-show="produtoSelected(item.id)" ng-show="existsAcessorio(item)" ng-disabled="true" class="btn btn-primary btn-xs" type="button">
