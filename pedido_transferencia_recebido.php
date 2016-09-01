@@ -156,7 +156,9 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-sitemap"></i> Depósitos</li>
+					 <li class="active"><i class="fa fa-sitemap"></i><a href="depositos.php"> Depósitos</a></li>
+					 <li class="active"><i class="fa fa-list-ol"></i><a href="estoque.php"> Controle de Estoque</a></li>
+					 <li class="active"><i class="fa fa-arrows-h"></i><a href="pedido_transferencia.php"> Transferências</a></li>
 					 <li class="active"><i class="fa fa-arrows-h "></i> Pedidos de Transferências</li>
 				</ul>
 			</div><!-- breadcrumb -->

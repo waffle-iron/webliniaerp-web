@@ -141,6 +141,8 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
+					 <li class="active"><i class="fa fa-tags"></i><a href="empreendimentos.php"> Empreendimento</a></li>
+					 <li class="active"><i class="fa fa-tags"></i><a href="empreendimento_config.php"> Configurações</a></li>
 					 <li class="active"><i class="fa fa-tags"></i> Controle NF-e</li>
 				</ul>
 			</div><!-- breadcrumb -->
