@@ -7,8 +7,8 @@ app.controller('relPagamentosController', function($scope, $http, $window, $dial
 	ng.userLogged 					= UserService.getUserLogado();
     ng.contas    					= [];
     ng.paginacao           			= {conta:null} ;
-    ng.busca               			= {id_forma_pagamento:"",tipoData:""} ;
-    ng.busca_aux               		= {id_forma_pagamento:"",tipoData:""} ;
+    ng.busca               			= {id_forma_pagamento:"",tipoData:"" } ;
+    ng.busca_aux               		= {id_forma_pagamento:"",tipoData:"", cliente: ""} ;
     ng.conta                        = {} ;
     ng.movimentacao 				= {};
     ng.movimentacoes 				= [];
@@ -85,6 +85,7 @@ app.controller('relPagamentosController', function($scope, $http, $window, $dial
 		$("#dtaInicial").val('');
 		$("#dtaFinal").val('');
 		ng.busca.id_forma_pagamento = "";
+		ng.busca_aux.cliente = "";
 		ng.loadMovimentacoes();
 	}
 	ng.loadMovimentacoes= function() {
@@ -111,6 +112,9 @@ app.controller('relPagamentosController', function($scope, $http, $window, $dial
 			query_string += !empty(dtaFinal) && empty(dtaInicial)  ?  "&(date_format(tcpv->dta_pagamento,'%Y-%m-%d')[exp]=<='"+dtaFinal+"'  OR tpv.data_pagamento <='"+dtaFinal+"')" : ""  ;
 			query_string += !empty(dtaInicial) && !empty(dtaFinal)  ? "&("+$.param({'tcpv->dta_pagamento':{exp:"between '"+dtaInicial+" 00:00:00' AND '"+dtaFinal+" 23:59:59' OR tpv.data_pagamento between '"+dtaInicial+" 00:00:00' AND '"+dtaFinal+" 23:59:59')"}}) : ""  ;
 		}
+
+		if(ng.busca.cliente != "")
+				query_string += "&("+$.param({'tu->nome':{exp:"like '%"+ng.busca.cliente+"%' "}})+")";
 		
 		query_string += !empty(ng.busca.id_forma_pagamento)  ?  "&tpv->id_forma_pagamento="+ng.busca.id_forma_pagamento : ""  ;
 
