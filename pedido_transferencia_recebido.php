@@ -244,9 +244,9 @@
 															</div>	
 														</th>
 														<th class="text-center" >Qtd.Pedida</th>
-														<th>Qtd. transferir</th>
+														<th>Qtd. Transferir</th>
 														<th width="250">
-															Depósito
+															Selecione o depósito de saída
 															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
 														</th>
 														<th></th>
@@ -459,7 +459,7 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-6" id="id_empreendimento_transferencia">
-									<label class="control-label">Selecione o Empreendimento:</label>
+									<label class="control-label">Selecione o empreendimento para o qual deseja enviar produtos:</label>
 									<div class="input-group">
 							            <input ng-model="transferencia.nome_empreendimento" ng-disabled="true" type="text" class="form-control input-sm">
 							            <div class="input-group-btn">
@@ -479,7 +479,7 @@
 													<tr>
 														<td colspan="10"><i class="fa fa-archive"></i> Produtos</td>
 														<td width="60" align="center">
-														<button class="btn btn-xs btn-primary" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
+														<button class="btn btn-xs btn-primary" tooltip title="Selecionar produto(s)" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i></button>
 														</td>
 													</tr>
 												</thead>
@@ -489,7 +489,7 @@
 														<th>Produto</th>
 														<th>Fabricante</th>
 														<th>Peso</th>
-														<th>sabor</th>
+														<th>Sabor</th>
 														<th class="text-center" >Estoque</th>
 														<th class="text-center" width="90">
 															Vlr. Custo
@@ -520,10 +520,10 @@
 															</div>	
 														</th>
 														<th class="text-center" >Qtd.Pedida</th>
-														<th>Qtd. transferir</th>
+														<th>Qtd. Transferir</th>
 														<th width="250">
-															Deposito
-															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
+															Selecione o depósito de saída
+															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar depósito para todos os produtos"><i class="fa fa-sitemap"></i></button>
 														</th>
 														<th></th>
 													</tr>
@@ -630,7 +630,7 @@
 															</div>	
 														</th>
 														<th class="text-center" >Qtd.Pedida</th>
-														<th>Qtd. transferir</th>
+														<th>Qtd. Transferir</th>
 														<!--<th width="250">
 															Depósito
 															<button style="float:right" class="btn btn-xs btn-info" ng-disabled="!isNumeric(transferencia.id_empreendimento_transferencia)" ng-click="selDeposito()" tooltip data-placement="top" title="Selecionar deposito para todos os itens"><i class="fa fa-sitemap"></i></button>
@@ -751,7 +751,7 @@
 								<tr>
 									<th>#</th>
 									<th>Data Pedido</th>
-									<th>Data transferência</th>
+									<th>Data Transferência</th>
 									<th>Usuário</th>
 									<th>Empreendimento</th>
 									<th>Status</th>
