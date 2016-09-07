@@ -11,6 +11,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <link rel="apple-touch-icon-precomposed" href="img/logo-marca-novo.png"/>
+	<link rel="apple-touch-icon" href="img/logo-marca-novo.png"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
     <!-- Bootstrap core CSS -->
       <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
 

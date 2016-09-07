@@ -230,7 +230,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 
 	ng.loadCategorias = function(){
 		ng.categoriasProduto = null ;
-		aj.get(baseUrlApi()+'categorias?id_empreendimento='+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+'categorias?tce->id_empreendimento='+ng.userLogged.id_empreendimento)
 		.success(function(data, status, headers, config) {
 			ng.categoriasProduto = data.categorias ;
 		})
@@ -243,7 +243,7 @@ app.controller('ControleMesasController', function($scope, $http, $window, UserS
 
 	ng.loadFabricantes = function(){
 		ng.fabricantesProduto = null ;
-		aj.get(baseUrlApi()+'fabricantes?id_empreendimento='+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+'fabricantes?tfe->id_empreendimento='+ng.userLogged.id_empreendimento)
 		.success(function(data, status, headers, config) {
 			ng.fabricantesProduto = data.fabricantes ;
 		})

@@ -7,10 +7,14 @@
 <html lang="en" ng-app="HageERP">
   <head>
     <meta charset="utf-8">
-    <title>Login</title>
+    <title>WebliniaERP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
+
+	<link rel="apple-touch-icon-precomposed" href="img/logo-marca-novo.png"/>
+	<link rel="apple-touch-icon" href="img/logo-marca-novo.png"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
