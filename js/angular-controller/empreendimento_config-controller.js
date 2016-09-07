@@ -137,6 +137,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item);
 		}
 
+		if(!empty(ng.configuracoes.flg_controlar_estoque) || ng.configuracoes.flg_controlar_estoque == 0 ){
+			var item = {
+				nome 				: 'flg_controlar_estoque',
+				valor 				: ng.configuracoes.flg_controlar_estoque,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+
 		btn.button('loading');
 		
 		aj.post(baseUrlApi()+"configuracao/save/",{ chaves: chaves })
@@ -248,6 +257,16 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+
+				if(!empty(data.regras_servico_padrao) && typeof parseJSON(data.regras_servico_padrao) == 'object' ){
+					ng.regras_servico_padrao = parseJSON(data.regras_servico_padrao);
+					$.each(ng.regras_servico_padrao,function(z,x){
+						ng.loadCidadesByEstado(x.cod_estado,x);
+						ng.loadRegrasServico(x);
+					});
+				}else{
+					ng.regras_servico_padrao = [] ;
+				}
 
 				$.each(data,function(i,x){
 					ng.keysConfig[i] = { 
@@ -417,6 +436,16 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 							id_empreendimento	:ng.userLogged.id_empreendimento
 						}
 			chaves.push(item9);
+		}
+
+		if(typeof ng.perfis == 'object'){
+			var perfis = JSON.stringify(angular.copy(ng.perfis));
+			var item10 = {
+							nome 				:'perfis_cadastro_rapido',
+							valor 				:perfis , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item10);
 		}
 
 		if(ng.configuracoes.flg_questionar_manutencao_precos_orcamento != undefined){
@@ -863,6 +892,26 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		console.log(json);
 	}
 
+	ng.loadPerfis = function() {
+		aj.get(baseUrlApi()+"perfis?tpue->id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				var aux = typeof parseJSON(ng.cfg.perfis_cadastro_rapido) == 'object' ?  parseJSON(ng.cfg.perfis_cadastro_rapido) : [] ;
+				console.log(aux);
+				$.each(data,function(i,x){
+					index = getIndex('id',data[i].id,data);
+					if($.isNumeric(index) && !empty(aux[i])){
+						data[i].value = aux[i].value ;
+					}else{
+						data[i].value = 0 ;
+					}
+				});
+				ng.perfis = data ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.perfis = [] ;
+			});
+	}
+
 
 	ng.loadControleNfe('modelo_nota_fiscal','chosen_modelo_nota_fiscal');
 	function defaulErrorHandler(data, status, headers, config) {
@@ -890,8 +939,77 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		ng.empreendimento.inscricoes_estaduais.splice(index,1);
 	}
 
+	
+	ng.addRegraServico = function(){
+		ng.regras_servico_padrao.push({
+			cod_estado : null,
+			cod_municipio : null,
+			cod_regra_servico : null 
+		});
+	}
+	ng.deleteRegraServico = function(index){
+		ng.regras_servico_padrao.splice(index,1);	
+	}
+
+	ng.loadCidadesByEstado = function (id_estado,item) {
+		aj.get(baseUrlApi()+"cidades/"+id_estado)
+		.success(function(data, status, headers, config) {
+			item.municipios = [{id:null,nome:'Selecione'}].concat(data);
+			setTimeout(function(){$("select").trigger("chosen:updated");},300);
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
+	ng.loadRegrasServico = function (item) {
+		var queryString = "?cplSql= WHERE trs.cod_empreendimento = "+ng.userLogged.id_empreendimento+" AND trs.flg_excluido = 0 ";
+		queryString += "AND trs.cod_estado = "+item.cod_estado+" AND trs.cod_municipio = "+item.cod_municipio;
+		aj.get(baseUrlApi()+"regras_servico/"+encodeURI(queryString) )
+		.success(function(data, status, headers, config) {
+			item.regras = data ;
+			setTimeout(function(){$("select").trigger("chosen:updated");},300);
+		})
+		.error(function(data, status, headers, config) {
+			ng.regrasCadastradas = {regras:[],paginacao:[]} ;
+		});
+	}
+
+	ng.salvarConfigFiscalServico = function(event){
+		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		var chaves = [];
+		if(typeof ng.regras_servico_padrao == 'object'){
+			regras_servico_padrao = angular.copy(ng.regras_servico_padrao);
+			$.each(regras_servico_padrao,function(i,x){
+				delete regras_servico_padrao[i].municipios ;
+				delete regras_servico_padrao[i].regras ;
+			});
+			regras_servico_padrao = JSON.stringify(angular.copy(regras_servico_padrao));
+		}
+		else
+			var regras_servico_padrao = JSON.stringify([]);
+		var item = {
+						nome 				:'regras_servico_padrao',
+						valor 				:regras_servico_padrao , 
+						id_empreendimento	:ng.userLogged.id_empreendimento
+					}
+		chaves.push(item);
+		btn.button('loading');
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves:chaves} )
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-fiscal-servico');
+				ng.loadConfig();
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+			});
+	}
 
 
+	ng.loadPerfis();
 	ng.loadEmpreendimento(ng.userLogged.id_empreendimento);
 	ng.existsCookie();
 	ng.loadConfig();

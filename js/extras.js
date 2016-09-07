@@ -651,13 +651,17 @@ function applyFormErrors(errors, dataElement) {
             $(element).css("border-color", "#A94442").css("color", "#A94442");
         else if (typeof (element.attr('flow-btn')) != "undefined")
             element = $(element).closest("span").css("background-color", "#A94442").css("border-color", "#A94442").css("color", "#FFFFFF");
-        else if (element.hasClass("chosen")) {
+        else if (element.hasClass("chosen") || $(element).attr().chosen != undefined) {
             var form_group = element.closest(".form-group");
+            form_group.addClass('has-error');
             if (form_group.find("a.chosen-single").length > 0)
                 element = form_group.find("a.chosen-single");
             else if (form_group.find("ul.chosen-choices").length > 0)
                 element = form_group.find("ul.chosen-choices");
             element.css("border-color", "#A94442");
+        }else if(element.is(':radio')){
+            element.parents('.form-group').addClass('has-error');
+            element = element.parents('.form-group').eq(1) ;
         }
 
         // coloca a mensagem de erro no elemento HTML selecionado
@@ -680,4 +684,24 @@ function clearValidationFormStyle() {
     $(".form-fields span").css("background-color", "#fafafa").css("border-color", "#CDD6E1").css("color", "#515151");
     $("a.chosen-single").css("border-color", "#CDD6E1");
     $("ul.chosen-choices").css("border-color", "#CDD6E1");
+    $(".has-error").removeClass("has-error");
 }
+
+ (function($) {
+          // duck-punching to make attr() return a map
+          var _old = $.fn.attr;
+          $.fn.attr = function() {
+            var a, aLength, attributes, map;
+            if (this[0] && arguments.length === 0) {
+                    map = {};
+                    attributes = this[0].attributes;
+                    aLength = attributes.length;
+                    for (a = 0; a < aLength; a++) {
+                            map[attributes[a].name.toLowerCase()] = attributes[a].value;
+                    }
+                    return map;
+            } else {
+                    return _old.apply(this, arguments);
+            }
+    }
+  }(jQuery));

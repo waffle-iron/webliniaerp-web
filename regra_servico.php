@@ -69,7 +69,7 @@
 	</style>
   </head>
 
-  <body class="overflow-hidden" ng-controller="CategoriasController" ng-cloak>
+  <body class="overflow-hidden" ng-controller="RegraServicoController" ng-cloak>
   	<!-- Overlay Div -->
 	<div id="overlay" class="transparent"></div>
 
@@ -147,106 +147,184 @@
 		<div id="main-container">
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
-					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-tags"></i> Categorias</li>
+					<li><i class="fa fa-home"></i><a href="dashboard.php">Home</a></li>
+					<li><i class="fa fa-building-o"></i> Empreendimento</li>
+					<li><i class="fa fa-cog"></i> <a href="empreendimento_config.php">Configurações</a></li>
+					<li class="active"><i class="fa fa-tags"></i> Regra de Serviços</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-tags"></i> Categorias</h3>
+					<h3 class="no-margin"><i class="fa fa-tags"></i> Regra de Servios</h3>
 					<br/>
-					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Categoria</a>
+					<a class="btn btn-info" id="btn-novo" ng-disabled="editing" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Nova Regra</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md">
-				<div class="alert alert-sistema" style="display:none"></div>
+				<div class="alert alert-top" style="display:none"></div>
 
 				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Nova Categoria</div>
-
+					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Nova Regra</div>
 					<div class="panel-body">
-						<form class="form-horizontal" role="form">
-							<div id="descricao_categoria" class="form-group">
-								<label for="descricao" class="col-sm-1 control-label">Descrição</label>
-								<div class="col-sm-11">
-									<input type="text" class="form-control" id="descricao" ng-model="categoria.descricao_categoria">
-								</div>
-							</div>
-
-
-							<div id="descricao_categoria" class="form-group">
-								<label for="descricao" class="col-sm-1 control-label">Categoria Pai</label>
-								<div class="col-sm-11">
-									<select chosen 
-								    option="categoriasChosen"
-								    ng-model="categoria.id_pai"
-								    >
-								    <option ng-repeat="campo in categoriasChosen" ng-bind-html="(campo.nivel+campo.descricao_categoria)" value="{{campo.id}}"></option>
+						<div class="row">
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label for="" class="control-label">Estado</label>
+									<select  chosen 
+								    option="estados"
+								    ng-model="regra_servico.cod_estado"
+								    ng-change="changeEstado(regra_servico.cod_estado)"
+								    ng-options="item.id as item.nome for item in estados">
 									</select>
 								</div>
 							</div>
-
-
-							<div class="empreendimentos form-group">
-								<div class="col-sm-12">
-									<table class="table table-bordered table-condensed table-striped table-hover">
-										<thead>
-											<tr>
-												<td>Empreendimentos Associados</td>
-												<td width="60" align="center">
-													<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()">
-														<i class="fa fa-plus-circle"></i>
-													</button>
-												</td>
-											</tr>
-										</thead>
-										<tbody>
-											<tr ng-show="(empreendimentosAssociados.length == 0)">
-												<td colspan="3" align="center">Nenhum empreendimento selecionado</td>
-											</tr>
-											<tr ng-repeat="item in empreendimentosAssociados">
-												<td>{{ item.nome_empreendimento }}</td>
-												<td align="center">
-													<button class="btn btn-xs btn-danger" 
-														ng-if="item.id != userLogged.id_empreendimento" 
-														ng-click="delEmpreendimento(item)">
-														<i class="fa fa-trash-o"></i>
-													</button>
-												</td>
-											</tr>
-										</tbody>
-									</table>
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label for="" class="control-label">Município</label>
+									<select  chosen "
+								    option="municipios"
+								    ng-model="regra_servico.cod_municipio"
+								    ng-options="item.id as item.nome for item in municipios">
+									</select>
 								</div>
 							</div>
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_cont_ipi_emitente">
+									<label for="" class="control-label">Retém ISS PF</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_iss_pf" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
 
-							<div class="form-group">
-								<div class="col-sm-12">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_iss_pf" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_cont_ipi_emitente">
+									<label for="" class="control-label">Retém ISS PJ</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_iss_pj" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_iss_pj" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Perc. retenção ISS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_iss">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Vlr. minino retenção ISS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_iss">
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_cont_ipi_emitente">
+									<label for="" class="control-label">Retém INSS</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_inss" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_inss" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Perc. retenção INSS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_inss">
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Vlr. minino retenção INSS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_inss">
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_cont_ipi_emitente">
+									<label for="" class="control-label">Retém PIS</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_pis" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_pis" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Perc retenção PIS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_pis">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group">
 									<div class="pull-right">
 										<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 											<i class="fa fa-times-circle"></i> Cancelar
 										</button>
-										<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-click="salvar()" type="submit" class="btn btn-success btn-sm">
+										<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." id="btn_salvar" ng-click="salvarRegra()" type="submit" class="btn btn-success btn-sm">
 											<i class="fa fa-save"></i> Salvar
 										</button>
 									</div>
 								</div>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-tasks"></i> Categorias Cadastradas</div>
+					<div class="panel-heading"><i class="fa fa-tasks"></i> Regras Cadastradas</div>
 
 					<div class="panel-body">
+						<div class="alert alert-lista" style="display:none"></div>
 						<div class="row">
 							<div class="col-sm-11">
 								<div class="input-group">
-						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="load(0,10)">
+						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="loadRegras(0,10)">
 						            <div class="input-group-btn">
-						            	<button ng-click="load(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            	<button ng-click="loadRegras(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
 						            	</button>
 						            </div>
@@ -262,21 +340,31 @@
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Descrição</th>
+									<th>UF</th>
+									<th>Municipio</th>
 									<th width="80" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
+							<tr>
+								<td colspan="4" ng-if="regrasCadastradas.regras == null" class="text-center">
+									<i class='fa fa-refresh fa-spin'></i> Carregando
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4" ng-if="regrasCadastradas.regras.length == 0" class="text-center">
+									Nenhuma regra encontrada
+								</td>
+							</tr>
 							<tbody>
-								<tr ng-repeat="item in categorias" integracao>
+								<tr ng-repeat="item in regrasCadastradas.regras">
 									<td width="80">{{ item.id }}</td>
-									<td id="td-categoriaId-{{  item.id }}">
-										<span ng-bind-html="item.nivel"></span>{{ item.descricao_categoria }}
-									</td>
+									<td>{{ item.uf }}</td>
+									<td>{{ item.municipio }}</td>
 									<td align="center">
 										<button type="button" ng-click="editar(item)"  class="btn btn-xs btn-warning" tooltip title="editar">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button type="button" ng-click="delete(item)" tooltip class="btn btn-xs btn-danger delete" tooltip title="Excluir">
+										<button type="button" ng-click="delete(item.id)" tooltip class="btn btn-xs btn-danger delete" tooltip title="Excluir">
 											<i class="fa fa-trash-o"></i>
 										</button>
 									</td>
@@ -286,9 +374,9 @@
 					</div>
 					<div class="panel-footer clearfix">
 						<div class="pull-right">
-							<ul class="pagination pagination-sm m-top-none" ng-show="paginacao.itens.length > 1">
-								<li ng-repeat="item in paginacao.itens" ng-class="{'active': item.current}">
-									<a href="" h ng-click="load(item.offset,item.limit)">{{ item.index }}</a>
+							<ul class="pagination pagination-sm m-top-none" ng-show="regrasCadastradas.paginacao.length > 1">
+								<li ng-repeat="item in regrasCadastradas.paginacao" ng-class="{'active': item.current}">
+									<a href="" h ng-click="loadRegras(item.offset,item.limit)">{{ item.index }}</a>
 								</li>
 							</ul>
 						</div>
@@ -310,9 +398,9 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.empreendimento" ng-enter="loadAllEmpreendimentos(0,10)" type="text" class="form-control input-sm">
+						            <input ng-model="busca.regra" ng-enter="loadRegras(0,10)" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
-						            	<button ng-click="loadAllEmpreendimentos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            	<button ng-click="loadRegras(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
 						            	</button>
 						            </div> <!-- /input-group-btn -->
@@ -436,7 +524,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/categorias-controller.js"></script>
+	<script src="js/angular-controller/regra_servico-controller.js"></script>
 	<script type="text/javascript"></script>>
 	<?php include("google_analytics.php"); ?>
   </body>

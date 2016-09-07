@@ -144,6 +144,7 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 				ng.showBoxNovo();
 				ng.reset();
 				ng.load();
+				ng.salvarPrestaShop(itemPost);
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
@@ -167,6 +168,16 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 					});
 				}
 			});
+	}
+
+	ng.salvarPrestaShop = function(dados){
+		aj.post(baseUrlApi()+"prestashop/fornecedor/",dados)
+		.success(function(data, status, headers, config) {
+
+		})
+		.error(function(data, status, headers, config) {
+
+		});
 	}
 
 	ng.editar = function(item) {

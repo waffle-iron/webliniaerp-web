@@ -21,6 +21,9 @@
 	<link href="css/pace.css" rel="stylesheet">
 
 	<!-- Datepicker -->
+	<link href="css/datepicker/bootstrap-datepicker.css" rel="stylesheet"/>
+
+	<!-- Datepicker -->
 	<link href="css/datepicker.css" rel="stylesheet"/>
 
 	<!-- Chosen -->
@@ -170,7 +173,7 @@
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-list"></i> Controle de Atendimento</h3>
 					<br/>
-					<button class="btn btn-info" id="btn-novo" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Atendimento</button>
+					<button class="btn btn-info" id="btn-novo" ng-click="showBoxNovo()" ng-disabled="disabilitarNovoAtendimento"><i class="fa fa-plus-circle"></i> Novo Atendimento</button>
 					<button class="btn btn-info" id="btn-novo" ng-click="selCliente('selecionar_ficha')"><i class="fa fa-users"></i></button>
 					
 				</div><!-- /page-title -->
@@ -272,6 +275,34 @@
 					</div>
 				</div>
 
+				<div class="panel panel-default hidden-print" style="margin-top: 15px;">
+					<div class="panel-heading"><i class="fa fa-calendar"></i> Busca atendimento de outra data</div>				
+					<div class="panel-body">
+						<div class="alert-sistema alert errorBusca" style="display:none"></div>
+						<form role="form">
+							<div class="row">
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label">Inicial</label>
+										<div class="input-group">
+											<input stardate="" date-picker ng-model="busca.dta" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaInicial" class="form-control text-center">
+											<span class="input-group-addon" id="cld_dtaInicial"><i class="fa fa-calendar"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="panel-footer clearfix">
+						<div class="pull-right">
+							<button type="button" class="btn btn-sm btn-primary" ng-click="getListaAtendimento(busca.dta)"><i class="fa fa-filter"></i> Aplicar Filtro</button>
+							<button ng-if="false" type="button" class="btn btn-sm btn-default" ng-click=""><i class="fa fa-times-circle"></i> Limpar Filtro</button>
+						</div>
+					</div>
+				</div>
+
+		
 
 				<div class="panel panel-default">
 					<div class="panel-body">
@@ -1643,7 +1674,8 @@
 	<script src='js/jquery.slimscroll.min.js'></script>
 
 	<!-- Datepicker -->
-	<script src='js/bootstrap-datepicker.min.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.js'></script>
+	<script src='js/datepicker/bootstrap-datepicker.pt-BR.js'></script>
 
 	<!-- Cookie -->
 	<script src='js/jquery.cookie.min.js'></script>
