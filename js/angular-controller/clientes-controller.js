@@ -13,7 +13,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 	ng.cliente = angular.copy(clienteTO);
     ng.clientes	= [];
     ng.paginacao = {};
-    ng.busca = {clientes:""};
+    ng.busca = {clientes:"", tipo_cliente: 'ambos'};
     ng.editing = false;
     ng.estadoSelecionado = {};
 
@@ -218,6 +218,14 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		});
 	}
 
+	ng.ccDetalhes = false ;
+
+	ng.changeDetalhesCC = function(status){
+		ng.ccDetalhes = status ;
+		console.log(ng.ccDetalhes);
+	}
+
+
 	ng.loadClientes = function(offset, limit) {
 		offset = offset == null ? 0  : offset;
 		limit  = limit  == null ? 10 : limit;
@@ -228,7 +236,10 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 			query_string += " AND (usu.id NOT IN (222,498,1069,46) OR ( usu.id IN (222,498,1069,46) AND emp.id = 6 ) )";
 		}
 		if(ng.busca.clientes != ""){
-			query_string += "&"+$.param({"(usu->nome":{exp:"like'%"+ng.busca.clientes+"%' OR apelido like '%"+ng.busca.clientes+"%')"}})+"";
+			query_string += "&"+$.param({"(usu->nome":{exp:"like'%"+ng.busca.clientes+"%' OR apelido like '%"+ng.busca.clientes+"%' OR nome_fantasia like '%"+ng.busca.clientes+"%' OR cnpj like '%"+ng.busca.clientes+"%' )"}})+"";
+		}
+		if(ng.busca.tipo_cliente != 'ambos') {
+			query_string += "&"+$.param({"(1":{exp:"=1 AND (CASE WHEN tpf.usuarios_id is NULL THEN 'pj' WHEN tpj.cnpj is NULL THEN 'pf' END) = '"+ ng.busca.tipo_cliente +"' AND (usu.nome like'%"+ng.busca.clientes+"%' OR apelido like '%"+ng.busca.clientes+"%' OR nome_fantasia like '%"+ng.busca.clientes+"%' OR cnpj like '%"+ng.busca.clientes+"%'))"}})+"";
 		}
 
 		aj.get(baseUrlApi()+"usuarios/"+ offset +"/"+ limit +"/"+query_string)

@@ -175,11 +175,11 @@
 								<div class="panel-tab clearfix">
 									<ul class="tab-bar">
 										<li class="active"><a href="#informacoes_basicas" data-toggle="tab"><i class="fa fa-archive"></i>  Informações Básicas</a></li>
+										<li><a href="#Empreendimentos" data-toggle="tab"><i class="fa fa-building-o"></i> Empreendimentos</a></li>
 										<li ng-if="funcioalidadeAuthorized('alterar_preco')"><a href="#preco" data-toggle="tab"><i class="fa fa-archive"></i>  Preço</a></li>
 										<li><a href="#estoque" data-toggle="tab"><i class="fa fa-list-ol"></i> Estoque</a></li>
-										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
-										<li><a href="#Empreendimentos" data-toggle="tab"><i class="fa fa-building-o"></i> Empreendimentos</a></li>
 										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
+										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
 										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
 									</ul>
 								</div>
@@ -463,9 +463,20 @@
 														<div class="upload-file">
 															<input  id="foto-produto" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" name="img"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
 															<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
-															<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecione" for="foto-produto">
+															<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecionar" for="foto-produto">
 																<span data-title="{{ produto.img }}"></span>
 															</label>
+
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-1  no-pad">
+													<div class="form-group">
+														<label class="control-label">&nbsp;</label>
+														<div class="controls clearfix text-left">
+															<button type="button" tooltip title="Excluir Foto do Produto" class="btn btn-danger btn-xs" ng-click="limpa_fp()">
+															<i class="fa fa-trash-o"></i>
+														</button>
 														</div>
 													</div>
 												</div>
@@ -487,6 +498,16 @@
 															<label data-title="Selecione" for="arquivo-produto">
 																<span data-title="{{ produto.nme_arquivo_nutricional }}"></span>
 															</label>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-1  no-pad">
+													<div class="form-group">
+														<label class="control-label">&nbsp;</label>
+														<div class="controls clearfix text-left">
+															<button type="button" tooltip title="Excluir Arquivo Nutricional" class="btn btn-danger btn-xs" ng-click="limpa_an">
+															<i class="fa fa-trash-o"></i>
+														</button>
 														</div>
 													</div>
 												</div>
@@ -929,7 +950,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="busca.fornecedores" type="text" class="form-control input-sm">
+						            <input ng-model="busca.fornecedores" ng-enter="loadFornecedores(0,10)" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
 						            	<button ng-click="loadFornecedores(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar

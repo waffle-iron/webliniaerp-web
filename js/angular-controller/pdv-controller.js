@@ -3422,6 +3422,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadPlanoContas();
 	ng.loadFavorecidos() ;
 	closeWindow();
+	$("[data-toggle='tooltip']").tooltip()
 
 	ng.isNumeric = function(vlr){
 		return $.isNumeric(vlr);
@@ -3470,3 +3471,5 @@ app.directive('bsTooltip', function ($timeout) {
         }
     }
 });
+
+

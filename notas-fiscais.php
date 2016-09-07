@@ -326,22 +326,22 @@
 																	Ações <span class="caret"></span>
 																</button>
 																<ul class="dropdown-menu">
-																	<li ng-show="(nota.status == 'autorizado')" ng-click="showDANFEModal(nota, 'PDF')">
+																	<li ng-show="(nota.status == 'autorizado')|| (nota.status == 'processando_cancelamento')||(nota.status == 'erro_cancelamento')" ng-click="showDANFEModal(nota, 'PDF')">
 																		<a href=""><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (PDF)</a>
 																	</li>
-																	<li ng-show="(nota.status == 'autorizado')">
+																	<li ng-show="(nota.status == 'autorizado')|| (nota.status == 'processando_cancelamento')||(nota.status == 'erro_cancelamento')">
 																		<a href="{{ nota.caminho_xml_nota_fiscal }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar DANFE (XML)</a>
 																	</li>
-																	<li ng-show="(nota.status == 'cancelado')">
+																	<li ng-show="(nota.status == 'cancelado')|| (nota.status == 'processando_cancelamento')">
 																		<a href="{{ nota.caminho_xml_cancelamento }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar XML de Cancelamento </a>
 																	</li>
-																	<li ng-show="(nota.status == 'processando_autorizacao')">
+																	<li ng-show="(nota.status == 'processando_autorizacao') || (nota.status == 'processando_cancelamento')">
 																		<a href="" target="_blank" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Atualizando" ng-click="atualzarStatus(nota.cod_nota_fiscal,$index,$event)"><i class="fa fa-refresh"></i> Atualizar Status</a>
 																	</li>
 																	<li role="separator" class="divider" ng-show="(nota.status == 'autorizado' || nota.status == 'processando_autorizacao')"></li>
 																	<!--<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>-->
 																	<li><a href="nota-fiscal.php?id_venda={{ nota.cod_venda }}"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
-																	<li class="hide" ng-show="(nota.status == 'autorizado')" ng-click="modalCancelar(nota)">
+																	<li ng-show="(nota.status == 'autorizado')" ng-click="modalCancelar(nota,$index)">
 																		<a href=""><i class="fa fa-times-circle"></i> Cancelar NF-e</a>
 																	</li>
 																</ul>
@@ -354,7 +354,7 @@
 														<td class="text-center text-middle">{{ nota.data_emissao | date : 'dd/MM/yyyy' }}</td>
 														<td class="text-center text-middle">{{ nota.data_entrada_saida | date : 'dd/MM/yyyy' }}</td>
 														<td class="text-middle text-center">
-															<span class="label label-success" ng-show="(nota.status == 'autorizado')" 
+															<span class="label label-success" ng-show="(nota.status == 'autorizado') || (nota.status == 'erro_cancelamento') || (nota.status == 'processando_cancelamento')" 
 																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
 																NF-e Autorizada
 															</span>
@@ -366,11 +366,18 @@
 																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
 																Erro na Autorização
 															</span>
-															<span class="label" ng-show="(nota.status == 'cancelado')" 
+															<span class="label label-danger" ng-show="(nota.status == 'erro_cancelamento')" 
+																data-toggle="tooltip" title="{{ nota.mensagem_sefaz_cancelamento }}">
+																Erro no cancelamento
+															</span>
+															<span class="label label-danger" ng-show="(nota.status == 'cancelado')" 
 																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
 																Cancelada
 															</span>
-															
+															<span class="label label-warning" ng-show="(nota.status == 'processando_cancelamento')" 
+																data-toggle="tooltip" title="Atualize o status para ver o andamento">
+																Processando Cancelamento
+															</span>															
 														</td>
 													</tr>
 												</tbody>

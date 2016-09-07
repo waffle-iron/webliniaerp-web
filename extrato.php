@@ -135,6 +135,13 @@
 		</aside>
 
 		<div id="main-container">
+			<div id="breadcrumb">
+				<ul class="breadcrumb">
+					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
+					 <li class="active"><i class="fa fa-users"></i><a href="clientes.php">Clientes/Usuários</a></li>
+					 <li class="active"><i class="fa fa-clipboard"></i> Extrato</li>
+				</ul>
+			</div><!-- breadcrumb -->
 			<div class="padding-md">
 				<div class="clearfix">
 					<div class="pull-left">

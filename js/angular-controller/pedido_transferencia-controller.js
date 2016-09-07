@@ -147,9 +147,13 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		$('#list_produtos').modal('show');
 		ng.busca.produto = "";
 		ng.loadProdutos(0,10);
+		setTimeout(function(){
+		
+		},500);
 	}
 
 	ng.loadProdutos = function(offset, limit) {
+	
 		ng.produtos = null;
 
  		offset = offset == null ? 0  : offset;
@@ -171,11 +175,13 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 
 		aj.get(baseUrlApi()+"produtos/"+ offset +"/"+ limit +"/"+query_string)
 			.success(function(data, status, headers, config) {
+			
 				ng.produtos = data.produtos;
 				ng.paginacao.produtos = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				if(status == 404) {
+				
 					ng.produtos = [];
 					ng.paginacao.produtos = null;
 				}
@@ -215,6 +221,8 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 
 		ng.transferencia.produtos.push(produto);
 		item.qtd_pedida = null ;
+
+		$('#foco').focus()
 	}
 
 	ng.salvarTransferencia = function(id_status_transferencia,event){
@@ -771,6 +779,10 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 
 	ng.loadtransferencias(0,10);
 	ng.loadDepositosSelect();
+
+	$('#list_produtos').on('shown.bs.modal', function () {
+		$('#foco').focus()
+	})
 
 });
 

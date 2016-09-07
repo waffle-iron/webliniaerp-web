@@ -832,9 +832,30 @@
 
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-sm-11">
+							<div class="col-lg-2">
+								<div class="form-group" style="padding-top:7px; margin-bottom:0px;">
+									<label class="label-radio inline">
+										<input  ng-click="busca.tipo_cliente = 'pf'" name="changeDetalhesCC" ng-checked="(busca.tipo_cliente == 'pf')" type="radio" class="inline-radio">
+										<span class="custom-radio"></span>
+										<span>PF</span>
+									</label>
+
+									<label class="label-radio inline">
+										<input  ng-click="busca.tipo_cliente = 'pj'" name="changeDetalhesCC"  ng-checked="(busca.tipo_cliente == 'pj')" type="radio" class="inline-radio">
+										<span class="custom-radio"></span>
+										<span>PJ</span>
+									</label>
+
+									<label class="label-radio inline">
+										<input  ng-click="busca.tipo_cliente = 'ambos'" name="changeDetalhesCC"  ng-checked="(busca.tipo_cliente == 'ambos')" type="radio" class="inline-radio">
+										<span class="custom-radio"></span>
+										<span>Ambos</span>
+									</label>
+								</div>
+							</div>
+							<div class=" col-sm-9">
 								<div class="input-group">
-						            <input ng-model="busca.clientes"ng-enter="loadClientes(0,10)"  type="text" class="form-control input-sm">
+						            <input ng-model="busca.clientes" ng-enter="loadClientes(0,10)"  type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
 						            	<button ng-click="loadClientes(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
 						            		<i class="fa fa-search"></i> Buscar
@@ -843,7 +864,7 @@
 						        </div>
 							</div>
 							<div class="col-sm-1">
-								<button type="button" class="btn btn-sm btn-default" ng-click="busca.clientes='';loadClientes(0,10)">Limpar</button>
+								<button type="button" class="btn btn-sm btn-default" ng-click="busca.clientes='';busca.tipo_cliente = 'ambos'; loadClientes(0,10); ">Limpar</button>
 							</div>
 						</div>
 
@@ -867,7 +888,7 @@
 											<th class="text-center" width="50">#</th>
 											<th class="text-center" width="80">Data Cadastro</th>
 											<th class="text-center" width="100">Saldo</th>
-											<th class="text-center" style="min-width: 150px;">Nome/CPF</th>
+											<th class="text-center" style="min-width: 150px;">Nome</th>
 											<th class="text-center" width="130">Apelido</th>
 											<th class="text-center">Perfil</th>
 											<th class="text-center" style="min-width: 100px;">Telefone</th>
