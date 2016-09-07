@@ -2078,7 +2078,7 @@
 													<select chosen
 												    option="perfisCadastroRapido"
 												    ng-model="new_cliente.id_perfil"
-												    ng-options="perfil.id as perfil.dsc_perfil for perfil in perfisCadastroRapido">
+												    ng-options="perfil.id as perfil.nome for perfil in perfisCadastroRapido">
 													</select>
 												</div>
 											</div>
