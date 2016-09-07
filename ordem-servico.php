@@ -340,7 +340,7 @@
 											</th>
 										</thead>
 										<tbody>
-											<tr ng-show="(objectModel.servicos == null || objectModel.servicos.length == 0)">
+											<tr ng-show="(objectModel.produtos == null || objectModel.produtos.length == 0)">
 												<td class="text-center" colspan="6">Nenhum produto foi adicionado!</td>
 											</tr>
 											<tr ng-repeat="item in objectModel.produtos">
