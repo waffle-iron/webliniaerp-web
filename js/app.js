@@ -920,7 +920,7 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 				if(data.length > 0) {
 					ng.alertas.push({
 						type: 'warning',
-						message: "Você tem "+ data.length +" "+ (data.length == 1 ? 'pedido' : 'pedidos' ) + " de transferência de estoque",
+						message: "Você tem "+ data.length +" "+ (data.length == 1 ? 'pedido' : 'pedidos' ) + " de transferência de produtos",
 						link: "pedido_transferencia_recebido.php"
 					});
 				}
@@ -937,7 +937,7 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 				if(data.length > 0) {
 					ng.alertas.push({
 						type: 'warning',
-						message: "Você tem "+ data.length +" "+ (data.length == 1 ? 'pedido' : 'pedidos' ) + " de transferência de estoque em transporte",
+						message: "Você tem "+ data.length +" "+ (data.length == 1 ? 'pedido' : 'pedidos' ) + " de transferência de produtos em transporte",
 						link: "pedido_transferencia.php"
 					});
 				}

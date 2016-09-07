@@ -20,6 +20,12 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Datepicker -->
+	<link href="css/datepicker.css" rel="stylesheet"/>
+
+	<!-- Timepicker -->
+	<link href="css/bootstrap-timepicker.css" rel="stylesheet"/>
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -256,24 +262,53 @@
 					</div>
 				</div><!-- /panel -->
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-tasks"></i> Pedidos Realizados</div>
+					<div class="panel-heading"><i class="fa fa-filter"></i> Opções de Filtro</div>
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-sm-11">
-								<div class="input-group">
-						            <input ng-model="busca.text" type="text" class="form-control input-sm" ng-enter="load(0,10)">
-						            <div class="input-group-btn">
-						            	<button ng-click="load(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
-						            		<i class="fa fa-search"></i> Buscar
-						            	</button>
-						            </div>
-						        </div>
+							<div class="col-sm-2">
+								<div class="form-group">
+								<label class="control-label">Data do Pedido</label>
+									<div class="input-group">
+										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="datapedido" class="datepicker form-control text-center">
+										<span class="input-group-addon" id="cld_datapedido"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
 							</div>
+
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label class="control-label">Fornecedor</label>
+									<input ng-model="busca.fornecedor" ng-enter="loadPedidosFornecedores(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<div class="form-group">
+									<label class="control-label">Solicitante</label>
+									<input ng-model="busca.solicitante" ng-enter="loadPedidosFornecedores(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+								</div>
+							</div>
+
 							<div class="col-sm-1">
-								<button type="button" class="btn btn-sm btn-default" ng-click="resetFilter()">Limpar</button>
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-primary" ng-click="loadPedidosFornecedores(0,10)"><i class="fa fa-filter"></i> Filtrar</button>
+								</div>
+							</div>
+
+							<div class="col-sm-1">
+								<div class="form-group">
+									<label class="control-label"><br></label>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="resetFilter()">Limpar</button>
+								</div>
 							</div>
 						</div>
-						<br>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading"><i class="fa fa-tasks"></i> Pedidos Realizados</div>
+					<div class="panel-body">
+						
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
@@ -444,6 +479,71 @@
 		</div>
 		<!-- /.modal -->
 
+
+
+		<div class="modal fade" id="list_fornecedores2" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Selecionar Fornecedor <span style="color:rgba(41, 145, 179, 1)">{{ nome_produto_form }}</span></h4>
+      				</div>
+
+				    <div class="modal-body">
+				    	<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-enter="loadFornecedores(0,10)" ng-model="busca.fornecedores" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button  ng-click="loadFornecedores(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+						<br />
+				   		<table class="table table-bordered table-condensed table-striped table-hover">
+							<thead ng-show="(fornecedores.length != 0)">
+								<tr>
+									<th colspan="2">nome</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-show="(fornecedores.length == 0)">
+									<td colspan="2">Nenhum fornecedor encontrado.</td>
+								</tr>
+								<tr ng-repeat="item in fornecedores">
+									<td>{{ item.nome_fornecedor }}</td>
+									<td width="50" align="center">
+										<button ng-click="addFornecedor(item)" class="btn btn-success btn-xs" type="button">
+											<i class="fa fa-check-square-o"></i> Selecionar
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+				    </div>
+
+				    <div class="modal-footer">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+				    			<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao_fornecedores.length > 1">
+									<li ng-repeat="item in paginacao_fornecedores" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadFornecedores(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+				    		</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+
+
+
+
+
 		<!-- /Modal Itens do pedido-->
 		<div class="modal fade" id="view-itens-pedido" style="display:none">
   			<div class="modal-dialog">
@@ -517,6 +617,15 @@
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- Datepicker -->
+	<script src='js/bootstrap-datepicker.min.js'></script>
+
+	<!-- Timepicker -->
+	<script src='js/bootstrap-timepicker.min.js'></script>
+
+    <!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
 	<!-- Modernizr -->
 	<script src='js/modernizr.min.js'></script>
 
@@ -551,6 +660,14 @@
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
 	<script src="js/angular-controller/pedidos_fornecedores-controller.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#datapedido").datepicker();
+			$("#cld_datapedido").on("click", function(){ $("#datapedido").trigger("focus"); });
+			$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+			$(".dropdown-menu").mouseleave(function(){$('.dropdown-menu').hide();$('input.datepicker').blur()});
+		});
+	</script>
 	<?php include("google_analytics.php"); ?>
 
   </body>

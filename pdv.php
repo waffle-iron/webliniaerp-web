@@ -886,15 +886,15 @@
 
 									<div class="row">
 										<div class="col-sm-6">
-											<button ng-click="showVlrReal()" class="btn btn-xs btn-success" type="button" ng-if="funcioalidadeAuthorized('ver_valor_custo_produto')">
+											<button ng-click="showVlrReal()" class="btn btn-xs btn-success" type="button" ng-if="funcioalidadeAuthorized('ver_valor_custo_produto')" tooltip data-original-title="Mostrar Custo">
 												<i ng-if="show_vlr_real == false" class="fa fa-eye fa-lg"></i>
 												<i ng-if="show_vlr_real == true" class="fa fa-eye-slash fa-lg"></i>
 											</button>
-											<button ng-click="showAditionalColumns()" class="btn btn-xs btn-default" type="button">
+											<button  ng-click="showAditionalColumns()" class="btn btn-xs btn-default" type="button" tooltip title="Ordenar">
 												<i ng-if="show_aditional_columns == true" class="fa fa-th-list fa-lg"></i>
 												<i ng-if="show_aditional_columns == false" class="fa fa-align-justify fa-lg"></i>
 											</button>
-											<button  class="btn btn-xs btn-default" id="pop-over-desconto-venda" title="Desconto" type="button" init-popover placement="bottom" 
+											<button  class="btn btn-xs btn-default" id="pop-over-desconto-venda" tooltip title="Desconto na venda inteira"  type="button" init-popover placement="bottom" 
 											content='
 												<div class="input-group">
 							            			<input ng-model="descontoAllItens.valor"  placeholder="R$" thousands-formatter  type="text" class="form-control input-sm" ng-enter="DesAllVenda(descontoAllItens.valor)">
@@ -917,7 +917,7 @@
 											>
 												<i class="fa fa-minus-square-o fa-lg fa-align-justify"></i>
 											</button>
-											<button  class="btn btn-xs btn-default" id="popover-mudar-margem" title="Selecione a margem" type="button" init-popover placement="bottom" 
+											<button  class="btn btn-xs btn-default" id="popover-mudar-margem" tooltip title="Selecione a margem" type="button" init-popover placement="bottom" 
 											content='
 												<div class="row">
 													<div class="col-sm-12">

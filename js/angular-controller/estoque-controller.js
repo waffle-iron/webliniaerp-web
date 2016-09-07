@@ -604,11 +604,44 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 			return validade
 		}
 
+		ng.busca = { nme_usuario: "", fornecedor: "", notafiscal: "",pedido: "" , dep_entrada: ""};
+		ng.resetFilter = function() {
+			$("#datarecebimento").val("");
+			ng.busca.nme_usuario = "" ;
+			ng.busca.fornecedor = "";
+			ng.busca.notafiscal = "";
+			ng.busca.pedido = "";
+			ng.busca.dep_entrada = "";
+			ng.reset();
+			ng.loadEntradas(0,10);
+		}
+
 		ng.loadEntradas = function(offset,limit){
 			offset = offset == null ? 0  : offset;
 			limit  = limit  == null ? 20 : limit;
 
-			query_string = "";
+			var query_string = "?1=1";
+
+			if(ng.busca.nme_usuario != "")
+				query_string += "&("+$.param({'tu->nome':{exp:"like '%"+ng.busca.nme_usuario+"%' "}})+")";
+
+			if(ng.busca.fornecedor != "")
+				query_string += "&("+$.param({'tf->nome_fornecedor':{exp:"like '%"+ng.busca.fornecedor+"%' "}})+")";
+
+			if(ng.busca.notafiscal != "")
+				query_string += "&("+$.param({num_nota_fiscal:{exp:"like '%"+ng.busca.notafiscal+"%' "}})+")";
+
+			if(ng.busca.pedido != "")
+				query_string += "&("+$.param({'ped_fornecedor->id':{exp:"like '%"+ng.busca.pedido+"%' "}})+")";
+
+			if(ng.busca.dep_entrada != "")
+				query_string += "&("+$.param({'dep->nme_deposito':{exp:"like '%"+ng.busca.dep_entrada+"%' "}})+")";
+
+			if($("#datarecebimento").val() != ""){
+				var data = moment($("#datarecebimento").val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+				query_string += "&("+$.param({'1':{exp:"= 1 AND cast(dta_entrada as date) = '"+ data +"' "}})+")";
+			}
+
 			ng.ultimasEntradas = [] ;
 
 			aj.get(baseUrlApi()+"estoque/entradas/"+ng.userLogged.id_empreendimento+"/"+offset+"/"+limit+"/"+query_string)
