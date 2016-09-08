@@ -108,8 +108,11 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 
 		var query_string = "?id_empreendimento="+ $scope.userLogged.id_empreendimento;
 
-		if($scope.busca.servicos != "")
+		if($scope.busca.servicos != ""){
 			query_string += "&"+$.param({'dsc_procedimento':{exp:"like'%"+$scope.busca.servicos+"%'"}});
+		}
+
+		
 
 		$http.get(baseUrlApi()+"clinica/procedimentos/"+ offset +"/"+ limit +"/"+ query_string)
 			.success(function(data, status, headers, config) {
@@ -242,8 +245,39 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			});
 	}
 
-	function loadOrdensServicos(offset,limit) {
-		$http.get(baseUrlApi()+"ordens-servico/"+ offset +"/"+ limit +"?atd->id_empreendimento="+ $scope.userLogged.id_empreendimento)
+	$scope.reset = function(){
+		$scope.OrdensServicos = {itens:[]};
+	}
+
+	$scope.busca = { nome: "", cod_status_servico: null};
+	$scope.resetFilter = function() {
+		$("#dtaInicial").val("");
+		$scope.busca.nome = "" ;
+		$scope.busca.cod_status_servico = null ;
+		$scope.reset();
+		$scope.loadOrdensServicos(0,10);
+	}
+
+	$scope.loadOrdensServicos = function(offset,limit) {
+
+		var query_string = "?atd->id_empreendimento="+ $scope.userLogged.id_empreendimento;
+
+		if($scope.busca.nome != ""){
+			query_string += "&("+$.param({'cli->nome':{exp:"like'%"+$scope.busca.nome+"%')"}});
+		}
+
+		if($scope.busca.cod_status_servico != null){
+			query_string += "&atd->id_status="+ $scope.busca.cod_status_servico;
+		}
+
+		if($("#dtaInicial").val() != ""){
+			var dta_ordem_servico = moment($("#dtaInicial").val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+			query_string += "&("+$.param({'2':{exp:"=2 AND cast(ven.dta_venda as date) = '"+ dta_ordem_servico +"' )"}});
+		}
+
+
+		$http.get(baseUrlApi()+"ordens-servico/"+ offset +"/"+ limit + query_string)
 			.success(function(data, status, headers, config) {
 				$scope.ordens_servico = data.itens;
 				$scope.paginacao.ordens_servico = data.paginacao;
@@ -285,7 +319,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			vlr_total_os: 0,
 			dta_ordem_servico: moment().format('DD/MM/YYYY HH:mm:ss')
 		};
-		loadOrdensServicos(0,10);
+		$scope.loadOrdensServicos(0,10);
 	}
 
 	clearObject();

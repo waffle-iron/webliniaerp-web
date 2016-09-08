@@ -144,15 +144,15 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-tags"></i> Procedimentos</li>
+					 <li class="active"><i class="fa fa-tags"></i> Serviços</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-tags"></i> Procedimentos</h3>
+					<h3 class="no-margin"><i class="fa fa-tags"></i> Serviços</h3>
 					<br/>
-					<a class="btn btn-info" id="btn-novo" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo procedimento</a>
+					<a class="btn btn-info" id="btn-novo" ng-click="showBoxNovo()"><i class="fa fa-plus-circle"></i> Novo Serviço</a>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
@@ -160,7 +160,7 @@
 				<div class="alert alert-sistema" style="display:none"></div>
 
 				<div class="panel panel-default" id="box-novo" style="display:none">
-					<div class="panel-heading"><i class="fa fa-plus-circle"></i>  Novo procedimento</div>
+					<div class="panel-heading"><i class="fa fa-plus-circle"></i>  Novo Serviço</div>
 
 					<div class="panel-body">
 						<div class="alert alert-success-baixa" style="display:none"></div>
@@ -182,7 +182,7 @@
 						<div class="row">
 							<div class="col-sm-4">
 								<div class="form-group" id="id_especialidade">
-									<label class="control-label">Especialidade</label> <i ng-click="modalNovaEspecilidade()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+									<label class="control-label">Categoria/Tipo</label> <i ng-click="modalNovaEspecilidade()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
 									<select chosen 
 								    option="especialidades"
 								    ng-model="procedimento.id_especialidade"
@@ -218,7 +218,7 @@
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-tasks"></i> Procedimentos cadastrados</div>
+					<div class="panel-heading"><i class="fa fa-tasks"></i> Serviços cadastrados</div>
 
 					<div class="panel-body">
 						<div class="alert alert-procedimeto" style="display: none">
@@ -230,7 +230,7 @@
 									<th class="text-center">#</th>
 									<th class="text-center">Código</th>
 									<th class="text-center">Descrição</th>
-									<th class="text-center">Especialidade</th>
+									<th class="text-center">Categoria/Tipo</th>
 									<th class="text-center">Valor</th>
 									<th class="text-center">TMA</th>
 									<th class="text-center" width="80">Opções</th>
@@ -280,7 +280,7 @@
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>Nova Especialidade</span></h4>
+						<h4>Nova Categoria/Tipo</span></h4>
       				</div>
 				    <div class="modal-body">
 				    	<div class="alert alert-nova-especialidade" style="display: none">
