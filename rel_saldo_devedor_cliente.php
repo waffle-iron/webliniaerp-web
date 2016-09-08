@@ -143,8 +143,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório de Saldo Devedor</h3>
-							<span class="text-muted">Total do Saldo Devedor por Cliente</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Saldo Devedor de Clientes</h3>
 						</div>
 					</div>
 

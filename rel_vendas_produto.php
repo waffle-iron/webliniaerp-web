@@ -120,7 +120,6 @@
 
 						<div class="pull-left m-left-sm">
 							<h3 class="m-bottom-xs m-top-xs">Relatório de Vendas por Produto</h3>
-							<span class="text-muted">Margem de Lucro por Produto</span>
 						</div>
 					</div>
 

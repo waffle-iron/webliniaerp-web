@@ -144,7 +144,6 @@
 
 						<div class="pull-left m-left-sm">
 							<h3 class="m-bottom-xs m-top-xs">Relatório de Contas a Pagar</h3>
-							<span class="text-muted">Saldo de Pagamentos por Fornecedor</span>
 						</div>
 					</div>
 

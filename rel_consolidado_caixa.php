@@ -105,8 +105,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório de Caixas</h3>
-							<span class="text-muted">Consolidado por empreendimento</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Resumo de Caixas</h3>
 						</div>
 					</div>
 

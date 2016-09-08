@@ -144,7 +144,6 @@
 
 						<div class="pull-left m-left-sm">
 							<h3 class="m-bottom-xs m-top-xs">Relatório de Fechamento Mensal</h3>
-							<span class="text-muted">Consolidação de Compras e Vendas de Produtos</span>
 						</div>
 					</div>
 
@@ -195,16 +194,16 @@
 				<table id="data" class="table table-bordered table-hover table-striped table-condensed">
 					<thead>
 						<tr>
-							<th style="vertical-align: middle; width: 365px;" rowspan="2">Product</th>
+							<th style="vertical-align: middle; width: 365px;" rowspan="2">Produto</th>
 							<th style="text-align: center;" colspan="3">COMPRAS</th>
 							<th style="text-align: center;" colspan="3">VENDAS</th>
 							<th style="text-align: center;" colspan="2">BALANÇO</th>
 						</tr>
 						<tr>
-							<th style="text-align: center;" >Qtde.</th>
+							<th style="text-align: center;" >Qtd.</th>
 							<th style="text-align: center;" >CMU</th>
 							<th style="text-align: center;" >CMT</th>
-							<th style="text-align: center;" >Qtde.</th>
+							<th style="text-align: center;" >Qtd.</th>
 							<th style="text-align: center;" >PMU</th>
 							<th style="text-align: center;" >PMT</th>
 							<th style="text-align: center;" >%</th>

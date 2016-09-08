@@ -143,8 +143,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório Analítico de Estoque</h3>
-							<p>Produtos próximos do vencimento</p>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Produtos à Vencer</h3>
 						</div>
 					</div>
 

@@ -147,8 +147,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório de Pagamentos</h3>
-							<span class="text-muted">Detalhes das transações</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Contas a Receber</h3>
 						</div>
 					</div>
 

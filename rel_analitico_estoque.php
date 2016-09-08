@@ -144,7 +144,7 @@
 
 						<div class="pull-left m-left-sm">
 							<h3 class="m-bottom-xs m-top-xs">Relatório Analítico de Estoque</h3>
-							<span class="text-muted">Controle de Estoque por Depósito</span>
+							<span>{{ item.id }}</span>
 						</div>
 					</div>
 

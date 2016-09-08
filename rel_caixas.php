@@ -144,8 +144,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório de Caixas</h3>
-							<span class="text-muted">Lista de caixas</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Movimentações de Caixas</h3>
 						</div>
 					</div>
 
