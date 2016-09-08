@@ -1321,6 +1321,14 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		});
 	}
 
+	ng.limpa_fp = function(){
+		ng.produto.img = null;
+	}
+
+	ng.limpa_an = function(){
+		ng.produto.nme_arquivo_nutricional = null;
+	}
+
 	ng.modal = function(acao,id){
 		ng.fabricante.nome_fabricante = "";
 		ng.importador.nome_importador = "";

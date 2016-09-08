@@ -461,7 +461,7 @@
 															<label style="cursor:pointer" class="control-label" ng-hide="editing == false || (produto.img == '' || produto.img == null)" ><i class="fa fa-camera"></i> Foto do Produto</label>
 														</a>
 														<div class="upload-file">
-															<input  id="foto-produto" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" name="img"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
+															<input  id="foto-produto" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" name="img"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*"  />
 															<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
 															<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecionar" for="foto-produto">
 																<span data-title="{{ produto.img }}"></span>

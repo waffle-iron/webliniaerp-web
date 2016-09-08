@@ -422,3 +422,8 @@ legend {
 .width-100 {
 	width: 100% !important;
 }
+
+.no-pad {
+	padding-left: 0px;
+	padding-top: 2px;
+}
