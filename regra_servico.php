@@ -169,6 +169,12 @@
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Nova Regra</div>
 					<div class="panel-body">
 						<div class="row">
+							<div class="col-sm-6">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Nome da Regra</label>
+									<input type="text" class="form-control input-sm" ng-model="regra_servico.nme_regra_servico">
+								</div>
+							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label for="" class="control-label">Estado</label>
@@ -190,6 +196,9 @@
 									</select>
 								</div>
 							</div>
+						</div>
+
+						<div class="row">
 							<div class="col-sm-2">
 								<div class="form-group" id="flg_cont_ipi_emitente">
 									<label for="" class="control-label">Retém ISS PF</label>
@@ -228,18 +237,19 @@
 							</div>
 							<div class="col-sm-2">
 								<div id="num_percentual_mva_proprio" class="form-group">
-									<label class="control-label">Perc. retenção ISS</label>
+									<label class="control-label">% Retenção ISS</label>
 									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_iss">
 								</div>
 							</div>
-						</div>
-						<div class="row">
 							<div class="col-sm-2">
 								<div id="num_percentual_mva_proprio" class="form-group">
-									<label class="control-label">Vlr. minino retenção ISS</label>
+									<label class="control-label">Valor Mín. Retenção ISS</label>
 									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_iss">
 								</div>
 							</div>
+						</div>
+
+						<div class="row">
 							<div class="col-sm-2">
 								<div class="form-group" id="flg_cont_ipi_emitente">
 									<label for="" class="control-label">Retém INSS</label>
@@ -260,16 +270,19 @@
 							</div>
 							<div class="col-sm-2">
 								<div id="num_percentual_mva_proprio" class="form-group">
-									<label class="control-label">Perc. retenção INSS</label>
+									<label class="control-label">% Retenção INSS</label>
 									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_inss">
 								</div>
 							</div>
 							<div class="col-sm-2">
 								<div id="num_percentual_mva_proprio" class="form-group">
-									<label class="control-label">Vlr. minino retenção INSS</label>
+									<label class="control-label">Valor Mín Ret. INSS</label>
 									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_inss">
 								</div>
 							</div>
+						</div>
+
+						<div class="row">
 							<div class="col-sm-2">
 								<div class="form-group" id="flg_cont_ipi_emitente">
 									<label for="" class="control-label">Retém PIS</label>
@@ -290,8 +303,113 @@
 							</div>
 							<div class="col-sm-2">
 								<div id="num_percentual_mva_proprio" class="form-group">
-									<label class="control-label">Perc retenção PIS</label>
+									<label class="control-label">% Retenção PIS</label>
 									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_pis">
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Valor Mín Ret. PIS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_pis">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_cont_ipi_emitente">
+									<label for="" class="control-label">Retém COFINS</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_cofins" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_cofins" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">% Retenção COFINS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_cofins">
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Valor Mín Ret. COFINS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_cofins">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_cont_ipi_emitente">
+									<label for="" class="control-label">Retém CSLL</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_csll" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_csll" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">% Retenção CSLL</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_csll">
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Valor Mín Ret. CSLL</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_csll">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_cont_ipi_emitente">
+									<label for="" class="control-label">Retém I.R.</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_ir" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_servico.flg_retem_ir" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">% Retenção I.R.</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.prc_retencao_ir">
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Valor Mín Ret. I.R.</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_servico.vlr_minimo_retencao_ir">
 								</div>
 							</div>
 						</div>
@@ -339,9 +457,10 @@
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
-									<th>#</th>
-									<th>UF</th>
-									<th>Municipio</th>
+									<th class="text-center">#</th>
+									<th>Nome</th>
+									<th class="text-center" width="80">UF</th>
+									<th width="120">Municipio</th>
 									<th width="80" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
@@ -357,10 +476,11 @@
 							</tr>
 							<tbody>
 								<tr ng-repeat="item in regrasCadastradas.regras">
-									<td width="80">{{ item.id }}</td>
-									<td>{{ item.uf }}</td>
+									<td class="text-center" width="80">{{ item.id }}</td>
+									<td>{{ item.nme_regra_servico }}</td>
+									<td class="text-center">{{ item.uf }}</td>
 									<td>{{ item.municipio }}</td>
-									<td align="center">
+									<td class="text-center">
 										<button type="button" ng-click="editar(item)"  class="btn btn-xs btn-warning" tooltip title="editar">
 											<i class="fa fa-edit"></i>
 										</button>

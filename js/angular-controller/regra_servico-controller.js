@@ -8,6 +8,7 @@ app.controller('RegraServicoController', function($scope, $http, $window, $dialo
     ng.busca = {};
     var regraServicoTO = {
     	id 							: null,
+		nme_regra_servico  			: null,
 		cod_empreendimento  		: ng.userLogged.id_empreendimento,
 		cod_estado 					: null,
 		cod_municipio 				: null,
@@ -19,7 +20,17 @@ app.controller('RegraServicoController', function($scope, $http, $window, $dialo
 		prc_retencao_inss 			: null,
 		vlr_minimo_retencao_inss 	: null,
 		flg_retem_pis 				: null,
-		prc_retencao_pis 			: null
+		prc_retencao_pis 			: null,
+		vlr_minimo_retencao_pis 	: null,
+		flg_retem_cofins			: null,
+		prc_retencao_cofins			: null,
+		vlr_minimo_retencao_cofins 	: null,
+		flg_retem_csll				: null,
+		prc_retencao_csll			: null,
+		vlr_minimo_retencao_csll	: null,
+		flg_retem_ir				: null,
+		prc_retencao_ir				: null,
+		vlr_minimo_retencao_ir		: null
     }; 
 
     ng.regra_servico = angular.copy(regraServicoTO);
