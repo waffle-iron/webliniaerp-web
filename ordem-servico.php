@@ -183,10 +183,10 @@
 						<div class="row">
 							<div class="col-sm-9">
 								<div class="row">
-									<div class="col-sm-2" id="id">
+									<div class="col-sm-3" id="id">
 										<div class="form-group element-group">
 											<label class="control-label">N° da OS</label>
-											<input type="text" class="form-control" readonly="readonly">
+											<input type="text" class="form-control" readonly="readonly" value="#{{ objectModel.id }}">
 										</div>
 									</div>
 
@@ -197,26 +197,10 @@
 										</div>
 									</div>
 
-									<div class="col-sm-3">
+									<div class="col-sm-6">
 										<div class="form-group element-group">
-											<label class="control-label">Criador da OS</label>
+											<label class="control-label">Criador da O.S.</label>
 											<input type="text" class="form-control" readonly="readonly" ng-model="objectModel.criador.nme_usuario">
-										</div>
-									</div>
-
-									<div class="col-sm-4">
-										<div class="form-group element-group">
-											<label class="control-label">Responsável pela OS</label>
-											<div class="input-group">
-												<input type="text" class="form-control" readonly="readonly" style="cursor: pointer;"
-													name="id_cliente"
-													ng-model="objectModel.responsavel.nome" ng-click="showModal('list_clientes', 'responsavel')"/>
-												<span class="input-group-btn">
-													<button ng-click="showModal('list_clientes', 'responsavel')" type="button" class="btn btn-default">
-														<i class="fa fa-user"></i>
-													</button>
-												</span>
-											</div>
 										</div>
 									</div>
 								</div>
@@ -291,7 +275,8 @@
 													{{ item.dsc_procedimento }}
 												</td>
 												<td class="text-right text-middle">
-													R$ {{ item.vlr_procedimento | numberFormat : 2 : ',' : '.' }}
+													<input type="text" class="form-control input-xs text-center"
+														ng-model="item.vlr_procedimento" mask-moeda><!--ng-keyup="recalculaTotais('')"-->
 												</td>
 												<td class="text-middle">
 													<select chosen option="status_servico" ng-model="item.cod_status_servico"
@@ -340,22 +325,25 @@
 											</th>
 										</thead>
 										<tbody>
-											<tr ng-show="(objectModel.servicos == null || objectModel.servicos.length == 0)">
+											<tr ng-show="(objectModel.produtos == null || objectModel.produtos.length == 0)">
 												<td class="text-center" colspan="6">Nenhum produto foi adicionado!</td>
 											</tr>
 											<tr ng-repeat="item in objectModel.produtos">
 												<td class="text-center text-middle">
-													{{ item.id }}
+													{{ item.id_produto }}
 												</td>
 												<td class="text-middle">
 													{{ item.nome_produto }}
 												</td>
 												<td class="text-right text-middle">
-													R$ {{ item.vlr_venda_varejo | numberFormat : 2 : ',' : '.' }}
+													<input type="text" class="form-control input-xs text-center"
+														ng-model="item.vlr_venda_varejo" mask-moeda 
+														ng-keyup="recalculaTotais()">
 												</td>
 												<td class="text-center text-middle">
 													<input type="text" class="form-control input-xs text-center"
-														ng-model="item.qtd_pedido" ng-keyup="recalculaTotais()">
+														ng-model="item.qtd_pedido" 
+														ng-keyup="recalculaTotais()">
 												</td>
 												<td class="text-right text-middle">
 													R$ {{ (item.qtd_pedido * item.vlr_venda_varejo)  | numberFormat : 2 : ',' : '.' }}
@@ -449,15 +437,15 @@
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label class="control-label">Cliente</label>
-									<input ng-model="busca.nome_clienteORfornecedor" ng-enter="" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
+									<input ng-model="busca.nome_clienteORfornecedor" ng-enter="" type="text" class="form-control input-md ng-pristine ng-valid ng-touched">
 								</div>
 							</div>
 
 							<div class="col-sm-3">
 								<div class="form-group" id="regimeTributario">
 									<label class="ccontrol-label">Situação da O.S.</label> 
-									<select chosen option="status_servicos" ng-model="busca.id_plano_conta"
-									    ng-options="status.cod_status_servico as status.dsc_status_servico for status in status_servicos">
+									<select chosen option="status_ordem_servico" ng-model="busca.cod_status_servico"
+									    ng-options="status.id as status.dsc_status for status in status_ordem_servico">
 									</select>
 								</div>
 							</div>
@@ -489,146 +477,63 @@
 					<div class="col-sm-12">
 						<table class="table table-bordered table-condensed table-striped table-hover" style="background-color: #FFF;">
 							<thead>
-								<th class="text-center text-middle" width="170">Ações</th>
-								<th class="text-center text-middle">Data da O.S.</th>
-								<th class="text-middle">Cliente</th>
+								<th class="text-center text-middle" width="10"></th>
+								<th class="text-center text-middle" width="130">Aberturda da O.S.</th>
+								<th class="text-middle" width="200">Cliente</th>
 								<th class="text-center text-middle" width="130">Total Serviços</th>
 								<th class="text-center text-middle" width="130">Total Produto</th>
-								<th class="text-center text-middle" width="130">Total Pedido</th>
-								<th class="text-center text-middle" width="25">Status</th>
+								<th class="text-center text-middle" width="130">Total Pedidos</th>
+								<th class="text-center text-middle" width="150">Status</th>
 							</thead>
 							<tbody>
-								<tr>
+								<tr ng-repeat="item in ordens_servico">
 									<td class="text-middle">
-										<button type="button" class="btn btn-xs btn-danger"
-											data-toggle="tooltip" title="Excluir O.S.">
-											<i class="fa fa-trash-o"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-warning"
-											data-toggle="tooltip" title="Editar O.S.">
-											<i class="fa fa-edit"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-default"
-											data-toggle="tooltip" title="Visualizar Serviços da O.S.">
-											<i class="fa fa-columns"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-default"
-											data-toggle="tooltip" title="Visualizar Produtos da O.S.">
-											<i class="fa fa-archive"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-primary"
-											data-toggle="tooltip" title="Emitir NFS-e">
-											<i class="fa fa-file-text-o"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-info"
-											data-toggle="tooltip" title="Emitir NF-e">
-											<i class="fa fa-file-text-o"></i>
-										</button>
+										<div class="btn-group">
+											<button type="button" class="btn btn-sm btn-default dropdown-toggle" 
+												data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												Ações <span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu">
+												<li ng-click="editItem(item)">
+													<a href=""><i class="fa fa-edit"></i> Editar O.S.</a>
+												</li>
+												<li>
+													<a href=""><i class="fa fa-file-text-o"></i> Emitir NF-e</a>
+												</li>
+												<li>
+													<a href=""><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (NF-e)</a>
+												</li>
+												<li>
+													<a href=""><i class="fa fa-file-code-o"></i> Visualizar XML (NF-e)</a>
+												</li>
+												<li>
+													<a href=""><i class="fa fa-file-text-o"></i> Emitir NFS-e</a>
+												</li>
+												<li>
+													<a href=""><i class="fa fa-file-pdf-o"></i> Visualizar PDF (NFS-e)</a>
+												</li>
+											</ul>
+										</div>
 									</td>
 									<td class="text-center text-middle">
-										05/04/1991
+										{{ item.dta_ordem_servico | dateFormat : 'dateTime' }}
 									</td>
 									<td class="text-middle">
-										AES ELETROPAULO
+										{{ item.nme_cliente | uppercase }}
 									</td>
 									<td class="text-right text-middle">
-										R$ 999.999,99
+										R$ {{ item.vlr_servicos | numberFormat : 2 : ',' : '.' }}
 									</td>
 									<td class="text-right text-middle">
-										R$ 999.999,99
+										R$ {{ item.vlr_produtos | numberFormat : 2 : ',' : '.' }}
 									</td>
 									<td class="text-right text-middle">
-										R$ 999.999,99
-									</td>
-									<td class="text-center text-middle">
-										<i class="fa fa-circle fa-lg text-warning" 
-											data-toggle="tooltip" data-placement="left" title="Em andamento"></i>
-									</td>
-								</tr>
-								<tr>
-									<td class="text-middle">
-										<button type="button" class="btn btn-xs btn-danger"
-											data-toggle="tooltip" title="Excluir O.S.">
-											<i class="fa fa-trash-o"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-warning"
-											data-toggle="tooltip" title="Editar O.S.">
-											<i class="fa fa-edit"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-default"
-											data-toggle="tooltip" title="Visualizar Serviços da O.S.">
-											<i class="fa fa-columns"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-primary"
-											data-toggle="tooltip" title="Emitir NFS-e">
-											<i class="fa fa-file-text-o"></i>
-										</button>
-									</td>
-									<td class="text-center text-middle">
-										05/04/1991
+										R$ {{ (item.vlr_servicos + item.vlr_produtos) | numberFormat : 2 : ',' : '.' }}
 									</td>
 									<td class="text-middle">
-										AES ELETROPAULO
-									</td>
-									<td class="text-right text-middle">
-										R$ 999.999,99
-									</td>
-									<td class="text-right text-middle">
-										R$ 999.999,99
-									</td>
-									<td class="text-right text-middle">
-										R$ 999.999,99
-									</td>
-									<td class="text-center text-middle">
-										<i class="fa fa-circle fa-lg text-success" 
-											data-toggle="tooltip" data-placement="left" title="Entregue/Concluído"></i>
-									</td>
-								</tr>
-								<tr>
-									<td class="text-middle">
-										<button type="button" class="btn btn-xs btn-danger"
-											data-toggle="tooltip" title="Excluir O.S.">
-											<i class="fa fa-trash-o"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-warning"
-											data-toggle="tooltip" title="Editar O.S.">
-											<i class="fa fa-edit"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-default"
-											data-toggle="tooltip" title="Visualizar Serviços da O.S.">
-											<i class="fa fa-columns"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-default"
-											data-toggle="tooltip" title="Visualizar Produtos da O.S.">
-											<i class="fa fa-archive"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-primary"
-											data-toggle="tooltip" title="Emitir NFS-e">
-											<i class="fa fa-file-text-o"></i>
-										</button>
-										<button type="button" class="btn btn-xs btn-info"
-											data-toggle="tooltip" title="Emitir NF-e">
-											<i class="fa fa-file-text-o"></i>
-										</button>
-									</td>
-									<td class="text-center text-middle">
-										05/04/1991
-									</td>
-									<td class="text-middle">
-										AES ELETROPAULO
-									</td>
-									<td class="text-right text-middle">
-										R$ 999.999,99
-									</td>
-									<td class="text-right text-middle">
-										R$ 999.999,99
-									</td>
-									<td class="text-right text-middle">
-										R$ 999.999,99
-									</td>
-									<td class="text-center text-middle">
-										<i class="fa fa-circle fa-lg text-danger" 
-											data-toggle="tooltip" data-placement="left" title="Pendente"></i>
+										<i class="fa fa-circle fa-lg text-{{ item.clr_class }}" 
+											tooltip data-original-title="{{ item.dsc_status }}"></i>
+										{{ item.dsc_status }}
 									</td>
 								</tr>
 							</tbody>

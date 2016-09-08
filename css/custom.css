@@ -102,12 +102,15 @@ div[data-tree-model] li .selected {
 	padding: 1px 5px;
 }
 
-.has-error thead>tr, .has-error thead>tr>td,.has-error label.selected{
+.has-error thead>tr, .has-error thead>tr>td,.has-error label.selected, {
 	border: 1px solid #b94a48;
 	color: #b94a48;
 	font-weight: bold;
 }
 
+.has-error .label-radio span, .has-error .chosen-container span {
+	color: #a94442;
+}
 .selected{
 	overflow: hidden;
 }
@@ -332,6 +335,14 @@ button:focus{
 
 .switch {
 	margin-top: 7px !important;
+}
+
+.text-primary {
+	color: #428bca;
+}
+
+.text-new-primary {
+	color: #2e3744;
 }
 
 input[type=radio]:checked+.custom-radio.new-primary:before {

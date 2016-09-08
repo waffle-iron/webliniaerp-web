@@ -1098,7 +1098,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
     	}
 
 		ng.produtos =  null;
-		aj.get(baseUrlApi()+"estoque_produtos/1/"+offset+"/"+limit+"/"+query_string)
+		var qtd_minima = ng.config.flg_controlar_estoque != undefined && Number(ng.config.flg_controlar_estoque) == 0 ? 'null' : '1' ; 
+		aj.get(baseUrlApi()+"estoque_produtos/"+qtd_minima+"/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
 				ng.produtos        = data.produtos ;
 				ng.paginacao.produtos = data.paginacao;
@@ -2521,7 +2522,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			return ng.cliente.nome;
 	}
 
-	ng.perfisCadastroRapido = [
+	/*ng.perfisCadastroRapido = [
 		{
 			id: 5,
 			dsc_perfil: "vendedor externo"
@@ -2534,7 +2535,29 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			id: 7,
 			dsc_perfil: "atacado"
 		}
-	]
+	]*/
+	ng.perfisCadastroRapido = [] ;
+	ng.loadPerfisCadastroRapido = function() {
+		aj.get(baseUrlApi()+"perfis?tpue->id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				var aux = typeof parseJSON(ng.config.perfis_cadastro_rapido) == 'object' ?  parseJSON(ng.config.perfis_cadastro_rapido) : [] ;
+				var perfis = [];
+				$.each(data,function(i,x){
+					index = getIndex('id',data[i].id,data);
+					if($.isNumeric(index)){
+						if(aux[index].value == 1)
+							perfis.push(x);
+					}
+				});
+				ng.perfisCadastroRapido = perfis ;
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				ng.perfis = [] ;
+			});
+	}
 
 	ng.salvarCliente = function(){
 		$(".has-error").removeClass('has-error');
@@ -2613,8 +2636,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	    		else
 	    			query_string += "&("+$.param({'tp->nome':{exp:"like'%"+busca+"%' OR tf.nome_fabricante like'%"+busca+"%' OR tp.id = "+busca+" OR tp.codigo_barra like '%"+busca+"%' OR tt.nome_tamanho like '%"+busca+"%' "}})+")";
 	    	}
-
-			aj.get(baseUrlApi()+"estoque_produtos/1/"+query_string)
+	    	var qtd_minima = ng.config.flg_controlar_estoque != undefined && Number(ng.config.flg_controlar_estoque) == 0 ? 'null' : '1' ; 
+			aj.get(baseUrlApi()+"estoque_produtos/"+qtd_minima+"/"+query_string)
 				.success(function(data, status, headers, config) {
 					
 					ng.produtos_auto_complete = data;
@@ -3421,6 +3444,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.loadFormasPagamento();
 	ng.loadPlanoContas();
 	ng.loadFavorecidos() ;
+	ng.loadPerfisCadastroRapido();
 	closeWindow();
 	$("[data-toggle='tooltip']").tooltip()
 

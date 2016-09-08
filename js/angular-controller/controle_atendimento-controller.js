@@ -1,14 +1,19 @@
-app.controller('ControleAtendimentoController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
+app.controller('ControleAtendimentoController', function($scope, $http, $window, $dialogs, UserService,ConfigService,FuncionalidadeService){
 
 	var ng = $scope ,
 		aj = $http;
 	$scope.userLogged = UserService.getUserLogado();
 	ng.configuracoes = ConfigService.getConfig(ng.userLogged.id_empreendimento);
-	ng.busca 		 = {clientes:"",profissionais:"",procedimentos:"",odontogramas:"",faces:""};
+	ng.busca 		 = {clientes:"",profissionais:"",procedimentos:"",odontogramas:"",faces:"",dta:null};
 	ng.cliente       = {acao_cliente:'insert'} ;
 	ng.paginacao     = {} ;
 	var atividadeTO    = {id_procedimento_principal:null,id_procedimento:null,data:'',flg_concluido:0};
-	ng.atividade     = angular.copy(atividadeTO);  
+	ng.atividade     = angular.copy(atividadeTO);
+
+	 ng.funcioalidadeAuthorized = function(cod_funcionalidade){
+    	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+    }
+
 	$scope.openModal = function(aba){
 		$("#modalFichaPaciente").modal('show');
 		if(empty(aba)){
@@ -60,7 +65,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 		ng.profissionais = [];
-		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=9&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=1547&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
 
 		if(ng.busca.profissionais != ""){
 			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.profissionais+"%' OR usu.apelido LIKE '%"+ng.busca.profissionais+"%')"}});
@@ -344,7 +349,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				ng.getListaAtendimento();
 				$('#list_profissionais').modal('hide');
 				ng.openModal('procedimentos');
-				ng.loadProcedimentos();
+				ng.loadProcedimentos(ng.busca.dta);
 				ng.loadPaciente();
 				ng.getItensVenda();
 				if(ng.paciente_atendimento.flg_procedimento == 1){
@@ -379,9 +384,16 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	}
 
 	ng.lista_atendimento = [] ;
-	ng.getListaAtendimento = function(){
+	ng.disabilitarNovoAtendimento = false ;
+	ng.getListaAtendimento = function(dta){
+		if(empty(dta)){
+			dta = moment().format('YYYY-MM-DD')  ;
+			ng.disabilitarNovoAtendimento = false ;
+		}else{
+			ng.disabilitarNovoAtendimento = true ;
+		}
 		ng.lista_atendimento = null ;
-		aj.get(baseUrlApi()+"clinica/atendimentos?cplSql=ta.id_empreendimento="+ng.userLogged.id_empreendimento+" AND date_format(ta.dta_entrada,'%Y-%m-%d') = '"+moment().format('YYYY-MM-DD')+"' ORDER BY ta.dta_entrada ASC")
+		aj.get(baseUrlApi()+"clinica/atendimentos?cplSql=ta.id_empreendimento="+ng.userLogged.id_empreendimento+" AND date_format(ta.dta_entrada,'%Y-%m-%d') = '"+dta+"' ORDER BY ta.dta_entrada ASC")
 			.success(function(data, status, headers, config) {
 				ng.lista_atendimento = data ;
 			})
@@ -567,7 +579,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 		}*/
 
 		if(empty(ng.procedimento.valor)){
-			error ++ ;
+			/*error ++ ;
 			 $("#valor").addClass("has-error");
 				var formControl = $("#valor")
 					.attr("data-toggle", "tooltip")
@@ -577,7 +589,8 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			if(error == 1)
 				formControl.tooltip('show');
 			else
-				formControl.tooltip();
+				formControl.tooltip();*/
+			ng.procedimento.valor = 0 ;
 		}
 
 		if(error > 0){
@@ -1855,7 +1868,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 		ng.atividade_profissionais = [];
-		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=9&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+" AND usu.id_perfil=1547&usu->id[exp]= NOT IN("+ng.configuracoes.id_cliente_movimentacao_caixa+","+ng.configuracoes.id_usuario_venda_vitrine+"))";
 
 		if(ng.busca.profissionais != ""){
 			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.profissionais+"%' OR usu.apelido LIKE '%"+ng.busca.profissionais+"%')"}});

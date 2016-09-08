@@ -85,7 +85,7 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 	}
 
 	ng.loadEmpreendimentosByDeposito = function() {
-		aj.get(baseUrlApi()+"empreendimentos/deposito/"+ng.deposito.id)
+		aj.get(baseUrlApi()+"deposito/empreendimentos/"+ng.deposito.id)
 			.success(function(data, status, headers, config) {
 				ng.empreendimentosAssociados = [];
 				ng.empreendimentosAssociados = data;

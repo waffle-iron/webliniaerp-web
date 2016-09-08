@@ -1,4 +1,4 @@
-<?php
+	<?php
 	include_once "util/login/restrito.php";
 	restrito();
 ?>
@@ -20,6 +20,9 @@
 	<!-- Pace -->
 	<link href="css/pace.css" rel="stylesheet">
 
+	<!-- Chosen -->
+	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
+
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -27,6 +30,10 @@
 	<link href="css/custom.css" rel="stylesheet">
 
 	<style type="text/css">
+
+		.panel.panel-default {
+		    overflow: visible !important;
+		}
 
 		/* Fix for Bootstrap 3 with Angular UI Bootstrap */
 
@@ -168,6 +175,20 @@
 								</div>
 							</div>
 
+
+							<div id="descricao_categoria" class="form-group">
+								<label for="descricao" class="col-sm-1 control-label">Categoria Pai</label>
+								<div class="col-sm-11">
+									<select chosen 
+								    option="categoriasChosen"
+								    ng-model="categoria.id_pai"
+								    >
+								    <option ng-repeat="campo in categoriasChosen" ng-bind-html="(campo.nivel+campo.descricao_categoria)" value="{{campo.id}}"></option>
+									</select>
+								</div>
+							</div>
+
+
 							<div class="empreendimentos form-group">
 								<div class="col-sm-12">
 									<table class="table table-bordered table-condensed table-striped table-hover">
@@ -236,6 +257,7 @@
 							</div>
 						</div>
 						<br>
+						<div id="tabelaCategoria"></div>
 						<table class="table table-bordered table-condensed table-striped table-hover">
 							<thead>
 								<tr>
@@ -248,13 +270,13 @@
 								<tr ng-repeat="item in categorias" integracao>
 									<td width="80">{{ item.id }}</td>
 									<td id="td-categoriaId-{{  item.id }}">
-										{{ item.descricao_categoria }}
+										<span ng-bind-html="item.nivel"></span>{{ item.descricao_categoria }}
 									</td>
 									<td align="center">
 										<button type="button" ng-click="editar(item)"  class="btn btn-xs btn-warning" tooltip title="editar">
 											<i class="fa fa-edit"></i>
 										</button>
-										<button type="button" tooltip class="btn btn-xs btn-danger delete" tooltip title="Excluir">
+										<button type="button" ng-click="delete(item)" tooltip class="btn btn-xs btn-danger delete" tooltip title="Excluir">
 											<i class="fa fa-trash-o"></i>
 										</button>
 									</td>
@@ -392,6 +414,9 @@
 	<!-- Endless -->
 	<script src="js/endless/endless.js"></script>
 
+	<!-- Chosen -->
+	<script src='js/chosen.jquery.min.js'></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -404,6 +429,10 @@
     <script src="js/ui-bootstrap-tpls-0.6.0.js" type="text/javascript"></script>
     <script src="js/dialogs.v2.min.js" type="text/javascript"></script>
     <script src="js/auto-complete/ng-sanitize.js"></script>
+    <script src="js/angular-chosen.js"></script>
+    <script type="text/javascript">
+    	var addParamModule = ['angular.chosen'] ;
+    </script>
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>

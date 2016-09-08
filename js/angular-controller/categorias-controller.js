@@ -4,7 +4,6 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 
 	ng.baseUrl 		= baseUrl();
 	ng.userLogged 	= UserService.getUserLogado();
-	ng.categoria 	= {};
     ng.categorias	= [];
     ng.paginacao = { itens: [] } ;
 
@@ -126,7 +125,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 		ng.load(0,10);
 	}
 
-	ng.load = function(offset, limit) {
+	/*ng.load = function(offset, limit) {
 		offset = offset == null ? 0 : offset ;
 		limit  = limit  == null ? 10 : limit ;
 
@@ -144,7 +143,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 				if(status == 404)
 					ng.categorias = [];
 			});
-	}
+	}*/
 
 	ng.salvar = function() {
 		var url = 'categoria';
@@ -163,10 +162,14 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 
 		itemPost.id_empreendimento 		= ng.userLogged.id_empreendimento;
 		itemPost.descricao_categoria 	= ng.categoria.descricao_categoria;
-		itemPost.empreendimentos = ng.empreendimentosAssociados;
+		itemPost.empreendimentos 		= ng.empreendimentosAssociados;
+		itemPost.id_pai 				= empty(ng.categoria.id_pai) ? null : ng.categoria.id_pai ;
 
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
+				if( empty(ng.categoria.id) )
+					itemPost.id = data.categoria.id
+				ng.salvarPrestaShop(itemPost);
 				ng.mensagens('alert-success','<strong>Categoria salvo com sucesso!</strong>');
 				ng.showBoxNovo();
 				ng.reset();
@@ -190,8 +193,29 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 			});
 	}
 
+	ng.salvarPrestaShop = function(dados) {
+		aj.post(baseUrlApi()+"prestashop/categoria", dados)
+		.success(function(data, status, headers, config) {
+
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
+	ng.deletePrestaShop = function(id_categoria,id_empreendimento) {
+		aj.delete(baseUrlApi()+"prestashop/categoria/"+id_categoria+"/"+id_empreendimento)
+		.success(function(data, status, headers, config) {
+
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
 	ng.editar = function(item) {
 		ng.categoria = angular.copy(item);
+		ng.categoria.id_pai = empty(ng.categoria.id_pai) ? null : ""+ng.categoria.id_pai;
 		ng.showBoxNovo(true);
 		ng.loadEmpreendimentosByCategoria();
 	}
@@ -202,6 +226,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 		dlg.result.then(function(btn){
 			aj.get(baseUrlApi()+"categoria/delete/"+item.id)
 				.success(function(data, status, headers, config) {
+					ng.deletePrestaShop(item.id,ng.userLogged.id_empreendimento);
 					ng.mensagens('alert-success','<strong>Categoria excluido com sucesso</strong>');
 					ng.reset();
 					ng.load();
@@ -213,6 +238,41 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 	ng.integracao = function(){
 		console.log('manda v');
 	}
+
+	ng.load= function() {
+		var query_string = "?tce->id_empreendimento="+ng.userLogged.id_empreendimento;
+		aj.get(baseUrlApi()+"categorias/treeview"+ query_string)
+			.success(function(data, status, headers, config) {
+				ng.categorias = ng.montarTabelaCategria([],data,0);
+				ng.categoriasChosen = [{id:null,descricao_categoria:'Selecione'}];
+				ng.categoriasChosen  = ng.categoriasChosen.concat(ng.categorias);
+				setTimeout(function(){
+					$("select").trigger("chosen:updated");
+				},300);
+			})
+			.error(function(data, status, headers, config) {
+				
+			});
+	}
+
+	ng.montarTabelaCategria = function(saida,dados,nivel){
+		$.each(dados,function(i,item){
+			var aux = nivel ;
+			var filhos = item.filhos ;
+			delete item.filhos ;
+			item.nivel="";
+			if(aux > 0)
+			for(i=0;i<nivel;i++){ item.nivel+= "&nbsp;&nbsp;&nbsp;"}
+			saida.push(item);
+			if(!empty(filhos)){
+				aux ++ ;
+				saida = ng.montarTabelaCategria(saida,filhos,aux);
+			}
+		});
+		return saida ;
+	}
+
+
 
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');

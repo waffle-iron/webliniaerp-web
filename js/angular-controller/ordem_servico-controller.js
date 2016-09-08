@@ -4,7 +4,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 	$scope.status_ordem_servico = AsyncAjaxSrvc.getListOfItens(baseUrlApi()+'status/atendimento');;
 	$scope.status_servico 		= AsyncAjaxSrvc.getListOfItens(baseUrlApi()+'status/procedimento');;
 	$scope.busca 				= { clientes: "", 	servicos: "", 	produtos: "" 	};
-	$scope.paginacao			= { clientes: null, servicos: null, produtos: null 	};
+	$scope.paginacao			= { clientes: null, servicos: null, produtos: null, ordens_servico: null };
 
 	$scope.showBoxNovo = function(clearData){
     	$scope.editing = !$scope.editing;
@@ -13,6 +13,33 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			clearValidationFormStyle();
 			clearObject();
 		}
+	}
+
+	$scope.editItem = function(item) {
+		$scope.objectModel = {
+			id: item.cod_ordem_servico,
+			id_venda: item.id_venda,
+			criador: {
+				id: item.cod_criador,
+				nme_usuario: item.nme_criador
+			},
+			cliente: {
+				id: item.cod_cliente,
+				nome: item.nme_cliente
+			},
+			id_empreendimento: $scope.userLogged.id_empreendimento,
+			cod_status_servico: item.cod_status_servico,
+			servicos: [],
+			produtos: [],
+			vlr_total_servicos: item.vlr_servicos,
+			vlr_total_produtos: item.vlr_produtos,
+			vlr_total_os: (item.vlr_servicos + item.vlr_produtos),
+			dta_ordem_servico: moment(item.dta_ordem_servico, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+		};
+		loadSaldoDevedorCliente();
+		loadProdutosByIdOrdemServico();
+		loadServicosByIdOrdemServico();
+		$scope.showBoxNovo(false);
 	}
 
 	$scope.showModal = function(modal, objectDestination) {
@@ -69,15 +96,8 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 	$scope.selectCliente = function(item){
 		$("#list_clientes").modal("hide");
 		$scope.objectModel[$scope.modalSelectDestination] = item;
-		if($scope.modalSelectDestination === 'cliente') {
-			$http.get(baseUrlApi()+"usuarios/saldodevedor/"+ $scope.userLogged.id_empreendimento +"?usu->id="+ item.id)
-				.success(function(data, status, headers, config) {
-					$scope.objectModel.cliente.vlr_saldo_devedor = data.vlr_saldo_devedor;
-				})
-				.error(function(data, status, headers, config) {
-					console.log('erro ao consultar saldo do cliente');
-				});
-		}
+		if($scope.modalSelectDestination === 'cliente')
+			loadSaldoDevedorCliente();
 	}
 
 	$scope.loadServicos = function(offset,limit) {
@@ -134,7 +154,9 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		$http.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
 			.success(function(data, status, headers, config) {
 				$.each(data.produtos, function(i, item) {
-					if(!empty(_.findWhere($scope.objectModel.produtos, { id: item.id})))
+					item.id_produto = parseInt(item.id_produto, 10);
+
+					if(!empty(_.findWhere($scope.objectModel.produtos, { id_produto: item.id_produto})))
 						item.selected = true;
 					else
 						item.selected = false;
@@ -184,7 +206,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 				$scope.caixa = data;
 			})
 			.error(function(data, status, headers, config) {
-				alert(data);
+				console.log(data, status, headers, config);
 			});
 	}
 
@@ -210,6 +232,47 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			});
 	}
 
+	function loadSaldoDevedorCliente() {
+		$http.get(baseUrlApi()+"usuarios/saldodevedor/"+ $scope.userLogged.id_empreendimento +"?usu->id="+ $scope.objectModel.cliente.id)
+			.success(function(data, status, headers, config) {
+				$scope.objectModel.cliente.vlr_saldo_devedor = data.vlr_saldo_devedor;
+			})
+			.error(function(data, status, headers, config) {
+				console.log('erro ao consultar saldo do cliente');
+			});
+	}
+
+	function loadOrdensServicos(offset,limit) {
+		$http.get(baseUrlApi()+"ordens-servico/"+ offset +"/"+ limit +"?atd->id_empreendimento="+ $scope.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				$scope.ordens_servico = data.itens;
+				$scope.paginacao.ordens_servico = data.paginacao;
+			})
+			.error(function(data, status, headers, config) {
+				console.log(data, status, headers, config);
+			});
+	}
+
+	function loadProdutosByIdOrdemServico() {
+		$http.get(baseUrlApi()+"ordem-servico/"+ $scope.objectModel.id +"/produtos")
+			.success(function(data, status, headers, config) {
+				$scope.objectModel.produtos = data;
+			})
+			.error(function(data, status, headers, config) {
+				console.log(data, status, headers, config);
+			});
+	}
+
+	function loadServicosByIdOrdemServico() {
+		$http.get(baseUrlApi()+"ordem-servico/"+ $scope.objectModel.id +"/servicos")
+			.success(function(data, status, headers, config) {
+				$scope.objectModel.servicos = data;
+			})
+			.error(function(data, status, headers, config) {
+				console.log(data, status, headers, config);
+			});
+	}
+
 	function clearObject() {
 		$scope.objectModel = {
 			criador: $scope.userLogged,
@@ -222,6 +285,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			vlr_total_os: 0,
 			dta_ordem_servico: moment().format('DD/MM/YYYY HH:mm:ss')
 		};
+		loadOrdensServicos(0,10);
 	}
 
 	clearObject();
