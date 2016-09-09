@@ -295,6 +295,14 @@
 										<input type="text" class="form-control" ng-model="nota.vlr_total_nota_fiscal" readonly="readonly">
 									</div>
 								</div>
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label"><br></label>
+										<button type="button" class="btn btn-default form-control" ng-click="selProduto()">
+											<i class="fa fa-plus-circle"></i> Adicionar Produto
+										</button>
+									</div>
+								</div>
 							</div>
 
 							<br>
@@ -495,6 +503,72 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal Produtos-->
+		<div class="modal fade" id="list_produtos" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Produtos</h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="pesquisa.produto" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadProdutosBusca()" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br/>
+
+				   		<div class="row">
+				   			<div class="col-sm-12">
+				   				<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Nome</th>
+											<th>Fabricante</th>
+											<th >Tamanho</th>
+											<th >Sabor/cor</th>
+											<th width="80"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in produtos">
+											<td>{{ item.nome }}</td>
+											<td>{{ item.nome_fabricante }}</td>
+											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
+											<td>
+												<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+				   			</div>
+				   		</div>
+
+						<div class="row">
+							<div class="col-sm-12">
+								<ul class="pagination pagination-xs m-top-none pull-right">
+									<li ng-repeat="item in paginacao_produtos" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadProdutos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- /Modal tabela de validades-->
 		<div class="modal fade" id="list_validades" style="display:none">
