@@ -424,20 +424,10 @@
 								</div>
 							</div>
 
-							<div class="col-sm-2">
-								<div class="form-group">
-									<label class="control-label">Até</label>
-									<div class="input-group">
-										<input readonly="readonly" style="background:#FFF;cursor:pointer" type="text" id="dtaFinal" class="datepicker form-control text-center">
-										<span class="input-group-addon" id="cld_dtaFinal"><i class="fa fa-calendar"></i></span>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-sm-3">
+							<div class="col-sm-4">
 								<div class="form-group">
 									<label class="control-label">Cliente</label>
-									<input ng-model="busca.nome_clienteORfornecedor" ng-enter="" type="text" class="form-control input-md ng-pristine ng-valid ng-touched">
+									<input ng-model="busca.nome" ng-enter="loadOrdensServicos(0,10)" type="text" class="form-control input-md ng-pristine ng-valid ng-touched">
 								</div>
 							</div>
 
@@ -453,14 +443,14 @@
 							<div class="col-sm-1">
 								<div class="form-group">
 									<label class="control-label"><br></label>
-									<button type="button" class="btn btn-sm btn-primary" ng-click="load(0,20)"><i class="fa fa-filter"></i> Filtrar</button>
+									<button type="button" class="btn btn-sm btn-block btn-primary" ng-click="loadOrdensServicos(0,10)"><i class="fa fa-filter"></i> Filtrar</button>
 								</div>
 							</div>
 
 							<div class="col-sm-1">
 								<div class="form-group">
 									<label class="control-label"><br></label>
-									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="limparBusca()">Limpar</button>
+									<button type="button" class="btn btn-sm btn-block btn-default" ng-click="resetFilter()">Limpar</button>
 								</div>
 							</div>
 						</div>

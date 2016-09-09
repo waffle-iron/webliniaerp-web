@@ -143,8 +143,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório Total Produto em Estoque</h3>
-							<span class="text-muted">Total em Estoque por Produto</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório Produto em Estoque</h3>
 						</div>
 					</div>
 

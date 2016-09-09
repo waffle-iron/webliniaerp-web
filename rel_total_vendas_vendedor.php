@@ -143,8 +143,7 @@
 						</span>
 
 						<div class="pull-left m-left-sm">
-							<h3 class="m-bottom-xs m-top-xs">Relatório Consolidado de Vendas</h3>
-							<span class="text-muted">Total de Vendas por Vendedor</span>
+							<h3 class="m-bottom-xs m-top-xs">Relatório de Vendas por Vendedor</h3>
 						</div>
 					</div>
 

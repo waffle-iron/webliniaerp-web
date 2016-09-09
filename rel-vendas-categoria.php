@@ -128,7 +128,6 @@
 
 						<div class="pull-left m-left-sm">
 							<h3 class="m-bottom-xs m-top-xs">Relatório de Vendas por Categoria</h3>
-							<span class="text-muted">Consolidação de vendas por categoria de produto</span>
 						</div>
 					</div>
 
