@@ -13,13 +13,11 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 		ng.Notas = {itens:[]};
 	}
 
-	ng.busca = { text: "", numeroo: "", nat_op: "" };
+	ng.busca = { text: "", numeroo: "" };
 	ng.resetFilter = function() {
 		$("#inputDtaEmissao").val("");
-		$("#inputDtaSaida").val("");
 		ng.busca.text = "" ;
 		ng.busca.numeroo = "" ;
-		ng.busca.nat_op = "" ;
 		ng.reset();
 		ng.loadNotas(0,10);
 	}
@@ -36,20 +34,10 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 			query_string += "&("+$.param({numero:{exp:"like'%"+ng.busca.numeroo+"%')"}});
 		}
 
-		if(ng.busca.nat_op != ""){
-			query_string += "&("+$.param({natureza_operacao:{exp:"like'%"+ng.busca.nat_op+"%')"}});
-		}
-
 		if($("#inputDtaEmissao").val() != ""){
 			var data_emissao = moment($("#inputDtaEmissao").val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
 
 			query_string += "&("+$.param({'2':{exp:"=2 AND cast(data_emissao as date) = '"+ data_emissao +"' )"}});
-		}
-
-		if($("#inputDtaSaida").val() != ""){
-			var data_entrada_saida = moment($("#inputDtaSaida").val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-
-			query_string += "&("+$.param({'2':{exp:"=2 AND cast(data_entrada_saida as date) = '"+ data_entrada_saida +"' )"}});
 		}
 
 		aj.get(baseUrlApi()+"notas/"+ offset +"/"+ limit + query_string)

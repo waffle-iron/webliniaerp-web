@@ -212,12 +212,20 @@
 									</div>
 
 									<div class="row">
-										<div class="col-sm-2">
+										<div class="col-sm-3">
 											<div id="cnpj" class="form-group">
 												<label class="control-label">CNPJ </label> 
 												<input class="form-control" ui-mask="99.999.999/9999-99" ng-model="empreendimento.num_cnpj">
 											</div>
 										</div>
+										<div class="col-sm-3">
+											<div id="cnpj" class="form-group">
+												<label class="control-label">Inscrição Municipal</label> 
+												<input class="form-control" ng-model="empreendimento.num_inscricao_municipal">
+											</div>
+										</div>
+									</div>
+									<div class="row">
 										<div class="col-lg-6">
 											<div id="nme_razao_social" class="form-group">
 												<label class="control-label">Razão Social  </label>
@@ -314,14 +322,17 @@
 										<div class="col-sm-2">
 											<div id="id_estado" class="form-group">
 												<label class="control-label">Estado  </label>
-												<select id="id_select_estado" class="form-control" ng-change="loadCidadesByEstado()"  ng-model="empreendimento.cod_estado" ng-options="item.id as item.nome for item in estados" ng-change="loadCidadesByEstado()"></select>
+												<select id="id_select_estado" class="form-control" 
+													ng-options="item.id as item.nome for item in estados"
+													ng-model="empreendimento.cod_estado" 
+													ng-change="loadCidadesByEstado(empreendimento.cod_estado)"></select>
 											</div>
 										</div>
 
 										<div class="col-sm-4">
 											<div id="id_cidade" class="form-group">
-												<label class="control-label">Cidade   <span ng-if="cidades.length == 0" style="color:#428bca"><i class='fa fa-refresh fa-spin'></i></span></label>
-												<select class="form-control"  ng-model="empreendimento.cod_cidade" ng-options="a.id as a.nome for a in cidades"></select>
+												<label class="control-label">Cidade <span ng-if="cidades.length == 0" style="color:#428bca"><i class='fa fa-refresh fa-spin'></i></span></label>
+												<select class="form-control" ng-model="empreendimento.cod_cidade" ng-options="a.id as a.nome for a in cidades"></select>
 											</div>
 										</div>
 									</div>
@@ -935,7 +946,7 @@
 																		    allow-single-deselect="true"
 																		    ng-model="item.cod_municipio"
 																		    ng-change="loadRegrasServico(item)"
-																		    ng-options="municipio.id as municipio.nome for municipio in item.municipios"">
+																		    ng-options="municipio.id as municipio.nome for municipio in cidades"">
 																		</select>
 																	</td>
 																	<td>

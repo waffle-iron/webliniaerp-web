@@ -200,6 +200,22 @@
 
 						<div class="row">
 							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Cód. Servico Municipal</label>
+									<input type="text" class="form-control input-sm" ng-model="regra_servico.cod_servico_municipio">
+								</div>
+							</div>
+
+							<div class="col-sm-10">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Descrição Serviço Municipal</label>
+									<input type="text" class="form-control input-sm" ng-model="regra_servico.dsc_servico_municipio">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-2">
 								<div class="form-group" id="flg_cont_ipi_emitente">
 									<label for="" class="control-label">Retém ISS PF</label>
 									<div class="form-group">
@@ -458,7 +474,9 @@
 							<thead>
 								<tr>
 									<th class="text-center">#</th>
-									<th>Nome</th>
+									<th width="200">Nome da Regra</th>
+									<th class="text-center" width="100">Cód. Serviço Mun.</th>
+									<th>Descrição Serviço Municipal</th>
 									<th class="text-center" width="80">UF</th>
 									<th width="120">Municipio</th>
 									<th width="80" style="text-align: center;">Opções</th>
@@ -476,11 +494,13 @@
 							</tr>
 							<tbody>
 								<tr ng-repeat="item in regrasCadastradas.regras">
-									<td class="text-center" width="80">{{ item.id }}</td>
-									<td>{{ item.nme_regra_servico }}</td>
-									<td class="text-center">{{ item.uf }}</td>
-									<td>{{ item.municipio }}</td>
-									<td class="text-center">
+									<td class="text-center text-middle" width="80">{{ item.id }}</td>
+									<td class="text-middle">{{ item.nme_regra_servico }}</td>
+									<td class="text-center text-middle">{{ item.cod_servico_municipio }}</td>
+									<td class="text-middle">{{ item.dsc_servico_municipio }}</td>
+									<td class="text-center text-middle">{{ item.uf }}</td>
+									<td class="text-middle">{{ item.municipio }}</td>
+									<td class="text-center text-middle">
 										<button type="button" ng-click="editar(item)"  class="btn btn-xs btn-warning" tooltip title="editar">
 											<i class="fa fa-edit"></i>
 										</button>

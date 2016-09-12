@@ -1,6 +1,6 @@
 <?php
-	/*include_once "util/login/restrito.php";
-	restrito(array(1));*/
+	include_once "util/login/restrito.php";
+	//restrito(array(1));
 ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="HageERP">
@@ -146,7 +146,7 @@
 					</div>
 				</div><!-- /user-block -->
 
-				<?php /*include_once('menu-modulos.php')*/ ?>
+				<?php include_once('menu-modulos.php') ?>
 				
 			</div><!-- /sidebar-inner -->
 		</aside>
@@ -485,22 +485,17 @@
 											</button>
 											<ul class="dropdown-menu">
 												<li ng-click="editItem(item)">
-													<a href=""><i class="fa fa-edit"></i> Editar O.S.</a>
+													<a href=""><i class="fa fa-edit"></i> Editar Ordem de Serviço</a>
 												</li>
-												<li>
-													<a href=""><i class="fa fa-file-text-o"></i> Emitir NF-e</a>
+												<li ng-show="item.vlr_produtos > 0">
+													<a href="nota-fiscal.php?id_venda={{ item.id_venda }}">
+														<i class="fa fa-file-text-o"></i> Emitir/Visualizar NF (Produtos)
+													</a>
 												</li>
-												<li>
-													<a href=""><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (NF-e)</a>
-												</li>
-												<li>
-													<a href=""><i class="fa fa-file-code-o"></i> Visualizar XML (NF-e)</a>
-												</li>
-												<li>
-													<a href=""><i class="fa fa-file-text-o"></i> Emitir NFS-e</a>
-												</li>
-												<li>
-													<a href=""><i class="fa fa-file-pdf-o"></i> Visualizar PDF (NFS-e)</a>
+												<li ng-show="item.vlr_servicos > 0">
+													<a href="nota-fiscal-servico.php?id={{ item.cod_ordem_servico }}">
+														<i class="fa fa-file-text-o"></i> Emitir/Visualizar NF (Serviços)
+													</a>
 												</li>
 											</ul>
 										</div>

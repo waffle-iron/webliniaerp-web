@@ -219,6 +219,9 @@
 							<th width="100" class="text-center">Tamanho</th>
 							<th width="100" class="text-center">Sabor/Cor</th>
 							<th width="100" class="text-center">R$ Custo Unit.</th>
+							<th width="100" class="text-center">R$ Atacado</th>
+							<th width="100" class="text-center">R$ Interm.</th>
+							<th width="100" class="text-center">R$ Varejo</th>
 							<th width="100" class="text-center" >Depósito</th>
 							<th width="100" class="text-center" ng-if="grupo_tabela == 'validade'">Validade</th>
 							<th width="100" class="text-center">Estoque</th>
@@ -227,12 +230,12 @@
 					</thead>
 					<tbody>
 						<tr ng-if="produtos.length == 0 && produtos != null">
-							<td class="text-center" colspan="8">
+							<td class="text-center" colspan="14">
 								<i class="fa fa-refresh fa-spin"></i> Aguarde, carregando itens...
 							</td>
 						</tr>
 						<tr ng-if="produtos.length < 0 && produtos == null">
-							<td colspan="4">
+							<td colspan="14">
 								Nenhuma venda encontrada.
 							</td>
 						</tr>
@@ -247,6 +250,9 @@
 							<td class="text-center">{{ item.sabor }}</td>
 							
 							<td class="text-right">R$ {{ item.vlr_custo_real | numberFormat : 2 : ',' : '.' }}</td>
+							<td class="text-right">R$ {{ item.vlr_venda_atacado | numberFormat : 2 : ',' : '.' }}</td>
+							<td class="text-right">R$ {{ item.vlr_venda_intermediario | numberFormat : 2 : ',' : '.' }}</td>
+							<td class="text-right">R$ {{ item.vlr_venda_varejo | numberFormat : 2 : ',' : '.' }}</td>
 
 							<td class="text-center" >{{ (grupo_tabela == 'validade' || grupo_tabela == 'deposito' || busca_deposito) &&  item.nome_deposito  || 'Todos' }}</td>
 							<td class="text-center" ng-if="grupo_tabela == 'validade'">{{ item.dta_validade != '2099-12-31' && (item.dta_validade | dateFormat:'date') || ' ' }}</td>
@@ -257,7 +263,7 @@
 					</tbody>
 					<tfoot>
 						<tr>
-							<td class="text-right text-bold" colspan="8">TOTAL</td>
+							<td class="text-right text-bold" colspan="11">TOTAL</td>
 							<td class="text-center">{{ qtd_total_estoque }}</td>
 							<td class="text-right hide">R$ {{ vlr_total_estoque | numberFormat : 2 : ',' : '.'  }}</td>
 						</tr>

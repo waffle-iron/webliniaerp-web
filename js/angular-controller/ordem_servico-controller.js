@@ -3,7 +3,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 	$scope.configuracoes 		= ConfigService.getConfig($scope.userLogged.id_empreendimento);
 	$scope.status_ordem_servico = AsyncAjaxSrvc.getListOfItens(baseUrlApi()+'status/atendimento');;
 	$scope.status_servico 		= AsyncAjaxSrvc.getListOfItens(baseUrlApi()+'status/procedimento');;
-	$scope.busca 				= { clientes: "", 	servicos: "", 	produtos: "" 	};
+	$scope.busca 				= { clientes: "", 	servicos: "", 	produtos: "",  nome: "", cod_status_servico: null};
 	$scope.paginacao			= { clientes: null, servicos: null, produtos: null, ordens_servico: null };
 
 	$scope.showBoxNovo = function(clearData){
@@ -111,8 +111,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		if($scope.busca.servicos != ""){
 			query_string += "&"+$.param({'dsc_procedimento':{exp:"like'%"+$scope.busca.servicos+"%'"}});
 		}
-
-		
 
 		$http.get(baseUrlApi()+"clinica/procedimentos/"+ offset +"/"+ limit +"/"+ query_string)
 			.success(function(data, status, headers, config) {
@@ -249,7 +247,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		$scope.OrdensServicos = {itens:[]};
 	}
 
-	$scope.busca = { nome: "", cod_status_servico: null};
 	$scope.resetFilter = function() {
 		$("#dtaInicial").val("");
 		$scope.busca.nome = "" ;
@@ -259,7 +256,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 	}
 
 	$scope.loadOrdensServicos = function(offset,limit) {
-
 		var query_string = "?atd->id_empreendimento="+ $scope.userLogged.id_empreendimento;
 
 		if($scope.busca.nome != ""){
@@ -275,7 +271,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 
 			query_string += "&("+$.param({'2':{exp:"=2 AND cast(ven.dta_venda as date) = '"+ dta_ordem_servico +"' )"}});
 		}
-
 
 		$http.get(baseUrlApi()+"ordens-servico/"+ offset +"/"+ limit + query_string)
 			.success(function(data, status, headers, config) {

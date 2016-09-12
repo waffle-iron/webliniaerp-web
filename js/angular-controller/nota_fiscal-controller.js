@@ -262,7 +262,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				}
 			
 				$dialogs.error('<strong>'+msg+'</strong>'+'<br><br><pre style="overflow:auto;height: 300px;" >'+data.json+'</pre>');
-				$('#notifyModal h4').addClass('text-warning')
+				$('#notifyModal h4').addClass('text-warning');
 				btn.button('reset');		
 		});
 	}
