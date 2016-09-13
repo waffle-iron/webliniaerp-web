@@ -97,11 +97,13 @@ app.controller('NotaFiscalServicoController', function($scope, $http, $window, $
 				$("#btnTransmitir").button('reset');
 
 				var msg = "" ;
-				if( typeof data != 'undefined'){
+				if( typeof data != 'undefined' && !empty(data.erros)){
 					$.each(JSON.parse(data.erros[0].mensagem).erros,function(i,v) {
 						msg += v.mensagem+"<br/>";
 					});
 				}
+				else
+					msg = data;
 			
 				$dialogs.error('<strong>'+msg+'</strong>'+'<br><br><pre style="overflow:auto;height: 300px;" >'+data.json+'</pre>');
 				$('#notifyModal h4').addClass('text-warning');

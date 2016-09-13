@@ -1268,9 +1268,9 @@
 							            	</div>
 							        	</div>
 									</div>
-									<div class="col-sm-3">
+									<div class="col-sm-4">
 										<div class="form-group">
-											<label for="" class="control-label">Controlar validade nas Transferências ?</label>
+											<label for="" class="control-label">Controlar validade nas Transferências entre Depósitos?</label>
 											<div class="form-group">
 												<label class="label-radio inline">
 													<input ng-model="configuracoes.flg_controlar_validade_transferencia" value="1" name="flg_controlar_validade_transferencia"   type="radio" class="inline-radio">
@@ -1285,17 +1285,17 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-sm-3">
+									<div class="col-sm-4">
 										<div class="form-group">
-											<label for="" class="control-label">Controlar estoque?</label>
+											<label for="" class="control-label">Permitir realizar venda de produtos sem estoque?</label>
 											<div class="form-group">
 												<label class="label-radio inline">
-													<input ng-model="configuracoes.flg_controlar_estoque" value="1" name="flg_controlar_estoque"   type="radio" class="inline-radio">
+													<input ng-model="configuracoes.flg_controlar_estoque" value="0" name="flg_controlar_estoque"   type="radio" class="inline-radio">
 													<span class="custom-radio"></span>
 													<span>Sim</span>
 												</label>
 												<label class="label-radio inline">
-													<input ng-model="configuracoes.flg_controlar_estoque" value="0" name="flg_controlar_estoque"   type="radio" class="inline-radio">
+													<input ng-model="configuracoes.flg_controlar_estoque" value="1" name="flg_controlar_estoque"   type="radio" class="inline-radio">
 													<span class="custom-radio"></span>
 													<span>Não</span>
 												</label>

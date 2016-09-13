@@ -59,7 +59,13 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 			element.button('loading');
 		}	
 
-		aj.get(baseUrlApi()+"nota_fiscal/"+cod_nota_fiscal+"/"+ng.userLogged.id_empreendimento+"/atualizar/status")
+		var url = "";
+		if(!empty(ng.notas[index].cod_ordem_servico))
+			url = baseUrlApi()+"nfse/"+ cod_nota_fiscal +"/atualizar/status/"+ ng.userLogged.id_empreendimento;
+		else
+			url = baseUrlApi()+"nota_fiscal/"+ cod_nota_fiscal +"/"+ ng.userLogged.id_empreendimento +"/atualizar/status";
+
+		aj.get(url)
 			.success(function(data, status, headers, config) {
 				if(!empty(event)){
 					element.html('<i class="fa fa-check-circle-o"></i> Atualizado');
