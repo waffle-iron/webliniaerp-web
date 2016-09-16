@@ -222,6 +222,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		$http.post(baseUrlApi()+"ordem-servico", postData)
 			.success(function(data, status, headers, config) {
 				$scope.showBoxNovo(true);
+				$scope.loadOrdensServicos(0,10);
 			})
 			.error(function(errors, status, headers, config) {
 				if(status === 406) {
