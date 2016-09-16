@@ -1118,6 +1118,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.calcTotalCompra();
 		ng.totalPagamento();
 		ng.calculaTroco();
+		$('#foco').focus()
 	}
 
 	ng.addProdutoAutoComplete = function(item){
@@ -3430,6 +3431,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.favorecidos = [];
 			});
 	}
+
+	$('#list_produtos').on('shown.bs.modal', function () {
+		$('#foco').focus()
+	})
 
 	ng.existsCookie();
 	ng.loadConfig();
