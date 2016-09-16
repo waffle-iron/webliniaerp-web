@@ -166,6 +166,8 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
+				if(!empty(data.fabricante) && !empty(data.fabricante.id))
+					itemPost.id = data.fabricante.id ;
 				ng.salvarPrestaShop(itemPost);
 				ng.mensagens('alert-success','<strong>Fabricante salvo com sucesso!</strong>');
 				ng.showBoxNovo();

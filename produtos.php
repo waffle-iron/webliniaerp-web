@@ -181,6 +181,7 @@
 										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
 										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
 										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
+										<!--<li ><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>-->
 									</ul>
 								</div>
 								<form id="formProdutos" role="form" enctype="multipart/form-data">
@@ -750,6 +751,49 @@
 												</div>
 											</div>
 										</div>
+										<div class="tab-pane fade" id="combinacoes">
+											<div class="row">	
+												<div class="col-sm-12">
+													<div class="empreendimentos form-group" id="insumos">
+															<table class="table table-bordered table-condensed table-striped table-hover">
+																<thead>
+																	<tr>
+																		<td colspan="5"><i class="fa fa fa-th fa-lg"></i>Combinações</td>
+																		<td width="60" align="center">
+																			<button class="btn btn-xs btn-primary" ng-click="showModalCombinacoes()"><i class="fa fa-plus-circle"></i></button>
+																		</td>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-show="(produto.combinacoes.length == 0)">
+																		<td colspan="6" align="center">Nenhum combinação inserida</td>
+																	</tr>
+
+																	<tr ng-show="(produto.combinacoes.length > 0)">
+																		<td>#</td>
+																		<td class="text-center">Produto</td>
+																		<td class="text-center">Fabricante</td>
+																		<td class="text-center">Tamanho</td>
+																		<td class="text-center">Sabor/Cor</td>
+																		<td class="text-center" align="center"></td>
+																	</tr>
+																	<tr ng-repeat="item in produto.combinacoes">
+																		<td>{{ item.id }}</td>
+																		<td>{{ item.nome }}</td>
+																		<td>{{ item.nome_fabricante }}</td>
+																		<td>{{ item.peso }}</td>
+																		<td>{{ item.sabor }}</td>
+																		<td align="center">
+																			<button class="btn btn-xs btn-danger" ng-click="delCombinacao($index,item)"><i class="fa fa-trash-o"></i></button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+												
+													</div>
+												</div>
+											</div>	
+										</div>
 									</div>
 								</div>
 								</form>
@@ -1082,6 +1126,85 @@
 		</div>
 		<!-- /.modal -->
 
+		<!-- /Modal Combinacoes-->
+		<div class="modal fade" id="modal_combinacoes" style="display:none">
+  			<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Produtos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.insumos" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadModalCombinacoes(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br/>
+
+				   		<div class="row">
+				   			<div class="col-sm-12">
+				   				<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(modal_combinacoes.length != 0)">
+										<tr>
+											<th >ID</th>
+											<th >Nome</th>
+											<th >Fabricante</th>
+											<th >Tamanho</th>
+											<th >Sabor/cor</th>
+											<th ></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(modal_combinacoes.length == 0)">
+											<td colspan="6">Nenhum Produto Encontrado</td>
+										</tr>
+										<tr ng-show="(modal_combinacoes == null)">
+											<td colspan="6" align="center"><i class='fa fa-refresh fa-spin'></i> Carregando.</td>
+										</tr>
+										<tr ng-repeat="item in modal_combinacoes">
+											<td>{{ item.id }}</td>
+											<td>{{ item.nome }}</td>
+											<td>{{ item.nome_fabricante }}</td>
+											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
+											<td width="50" align="center">
+												<button ng-if="!existsCombinacao(item.id)" type="button" class="btn btn-xs btn-success" ng-disabled="" ng-click="addCombinacao(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+												<button ng-if="existsCombinacao(item.id)"  ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                               		 <i class="fa fa-check-circle-o"></i> Selecionado
+                                           		 </button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+				   			</div>
+				   		</div>
+
+				   		<div class="row">
+					    	<div class="col-sm-12">
+					    		<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.modal_combinacoes.length > 1">
+									<li ng-repeat="item in paginacao.modal_combinacoes" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadInsumos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+					    	</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 		<!-- /Modal depositos-->
 		<div class="modal fade" id="modal-depositos" style="display:none">
   			<div class="modal-dialog">
@@ -1111,6 +1234,7 @@
 				   				<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(depositos.length != 0)">
 										<tr>
+											<th width="50">#</th>
 											<th colspan="2">Nome</th>
 										</tr>
 									</thead>
@@ -1119,6 +1243,7 @@
 											<td colspan="3">{{ busca_vazia.depositos  && 'Não há resultado para a busca' || 'Não há Depositos cadastrados' }}</td>
 										</tr>
 										<tr ng-repeat="item in depositos">
+											<td>{{item.id}}</td>
 											<td>{{ item.nme_deposito }}</td>
 											<td width="50" align="center">
 												<button type="button" class="btn btn-xs btn-success" ng-click="addDeposito(item)">
