@@ -87,7 +87,8 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 
 	ng.reset = function() {
 		
-		ng.fornecedor = ng.fornecedor 	= {'tipo_cadastro':'pj'};;
+		ng.fornecedor 	= {'tipo_cadastro':'pj',telefones:[{tbl_referencia:'tbl_fornecedores',id_referencia:null,num_telefone:null},{tbl_referencia:'tbl_fornecedores',id_referencia:null,num_telefone:null}]};
+    
 		ng.editing = false;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
@@ -136,6 +137,12 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 		itemPost = angular.copy(ng.fornecedor);
 		itemPost.id_empreendimento 		= ng.userLogged.id_empreendimento;
 
+		if($.isNumeric(itemPost.cod_cidade)){
+			var index_cidade = getIndex('id',itemPost.cod_cidade,ng.chosen_cidade);
+			if($.isNumeric(index_cidade))
+				itemPost.nome_cidade = ng.chosen_cidade[index_cidade].nome;
+		}
+		
 		aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
@@ -144,6 +151,8 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 				ng.showBoxNovo();
 				ng.reset();
 				ng.load();
+				if(!empty(data.id))
+					itemPost.id = data.id ;
 				ng.salvarPrestaShop(itemPost);
 			})
 			.error(function(data, status, headers, config) {
@@ -180,8 +189,21 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 		});
 	}
 
+	ng.deletePrestaShop = function(id_fornecedor,id_empreendimento) {
+		aj.delete(baseUrlApi()+"prestashop/fornecedor/"+id_fornecedor+"/"+id_empreendimento)
+		.success(function(data, status, headers, config) {
+
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
 	ng.editar = function(item) {
 		ng.fornecedor = angular.copy(item);
+		if(ng.fornecedor.telefones == false){
+			ng.fornecedor.telefones = [{tbl_referencia:'tbl_fornecedores',id_referencia:null,num_telefone:null},{tbl_referencia:'tbl_fornecedores',id_referencia:null,num_telefone:null}] ;
+		}
 		ng.loadCidadesByEstado();
 		ng.showBoxNovo(true);
 		$('html,body').animate({scrollTop: 0},'slow');
@@ -196,6 +218,7 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 					ng.mensagens('alert-success','<strong>Fornecedores excluido com sucesso</strong>');
 					ng.reset();
 					ng.load();
+					ng.deletePrestaShop(item.id,ng.userLogged.id_empreendimento);
 				})
 				.error(defaulErrorHandler);
 		}, undefined);

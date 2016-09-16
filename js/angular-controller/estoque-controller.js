@@ -461,6 +461,9 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 	ng.atualizaQtdValidadeItens = function() {
 		var qtdTotal = 0;
 
+		if(ng.produto.validades == null || typeof(ng.produto.validades) == "undefined")
+			ng.produto.validades = [];
+
 		$.each(ng.produto.validades, function(i, item) {
 			qtdTotal += parseInt(item.qtd,10);
 		});
