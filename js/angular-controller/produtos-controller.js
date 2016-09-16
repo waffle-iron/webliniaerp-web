@@ -1348,6 +1348,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		});
 	}
 
+
 	ng.loadModalCombinacoes = function(offset, limit) {
 		ng.modal_combinacoes = [];
 
@@ -1408,6 +1409,13 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		console.log(index);
 		ng.produto.combinacoes.splice(index,1);
 	}
+
+	ng.limpa_fp = function(){
+		ng.produto.img = null;
+	}
+
+	ng.limpa_an = function(){
+		ng.produto.nme_arquivo_nutricional = null;
 
 	ng.modal = function(acao,id){
 		ng.fabricante.nome_fabricante = "";

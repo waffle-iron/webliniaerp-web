@@ -144,7 +144,6 @@
 
 						<div class="pull-left m-left-sm">
 							<h3 class="m-bottom-xs m-top-xs">Relatório Pagamentos Fornecedor</h3>
-							<span class="text-muted">Lista de Pagamentos a Fornecedores</span>
 						</div>
 					</div>
 

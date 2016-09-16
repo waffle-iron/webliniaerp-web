@@ -337,6 +337,14 @@ button:focus{
 	margin-top: 7px !important;
 }
 
+.text-primary {
+	color: #428bca;
+}
+
+.text-new-primary {
+	color: #2e3744;
+}
+
 input[type=radio]:checked+.custom-radio.new-primary:before {
 	background-color: #2e3744;
 }
@@ -413,4 +421,9 @@ legend {
 
 .width-100 {
 	width: 100% !important;
+}
+
+.no-pad {
+	padding-left: 0px;
+	padding-top: 2px;
 }

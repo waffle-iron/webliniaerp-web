@@ -217,8 +217,10 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		 	}
 		}).submit(); 
 	}
+	
 	ng.tipo_plano = null ;
 	ng.config     = {} ;
+
 	ng.modalPlanoContas = function(tipo){
 		ng.tipo_plano = tipo;
 		ng.loadPlanoContas();
@@ -629,6 +631,8 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	}
 
 	ng.salvarConfigFiscal = function(event){
+		ng.update(event);
+		
 		var serie = angular.copy(ng.serie_documento_fiscal);
 		var btn = $(event.target);
 		if(!(btn.is(':button')))
@@ -954,7 +958,7 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadCidadesByEstado = function (id_estado,item) {
 		aj.get(baseUrlApi()+"cidades/"+id_estado)
 		.success(function(data, status, headers, config) {
-			item.municipios = [{id:null,nome:'Selecione'}].concat(data);
+			ng.cidades = [{id:null,nome:'Selecione'}].concat(data);
 			setTimeout(function(){$("select").trigger("chosen:updated");},300);
 		})
 		.error(function(data, status, headers, config) {

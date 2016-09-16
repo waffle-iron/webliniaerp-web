@@ -169,17 +169,10 @@
 					<div class="panel-heading"><i class="fa fa-filter"></i> Opções de Filtro</div>
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-sm-1">
+							<div class="col-sm-2">
 								<div class="form-group">
 									<label class="control-label">Nº NF-e</label>
 									<input ng-model="busca.numeroo" ng-enter="loadNotas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
-								</div>
-							</div>
-
-							<div class="col-sm-2">
-								<div class="form-group">
-									<label class="control-label">Natureza da Operação</label>
-									<input ng-model="busca.nat_op" ng-enter="loadNotas(0,10)" type="text" class="form-control input-sm ng-pristine ng-valid ng-touched">
 								</div>
 							</div>
 
@@ -190,26 +183,15 @@
 								</div>
 							</div>
 
-							<div class="row">
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">Data de Emissão</label>
-											<div class="input-group">
-												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
-												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											</div>
-										</div>
+							<div class="col-sm-2">
+								<div class="form-group">
+									<label class="control-label">Data de Emissão</label>
+									<div class="input-group">
+										<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
+										<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
 									</div>
-
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">Data de Saída</label>
-											<div class="input-group">
-												<input id="inputDtaSaida" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
-												<span  id="btnDtaSaida" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											</div>
-										</div>
-									</div>
+								</div>
+							</div>
 
 							<div class="col-sm-1">
 								<div class="form-group">
@@ -238,64 +220,6 @@
 					<div class="panel-body">
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="emitidas">
-								<!--<div class="row">
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">De</label>
-											<div class="input-group">
-												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
-												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">Até</label>
-											<div class="input-group">
-												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
-												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-sm-3">
-										<div class="form-group">
-											<label for="" class="control-label">Tipo de Cadastro</label>
-											<div class="form-group">
-												<label class="label-radio inline">
-													<input ng-model="empreendimento.flg_contribuinte_icms" value="0" type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Pessoa Física</span>
-												</label>
-												<label class="label-radio inline">
-													<input ng-model="empreendimento.flg_contribuinte_icms" value="1" type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Pessoa Jurídica</span>
-												</label>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-sm-3">
-										<div class="form-group">
-											<label class="control-label">Destinatário</label> 
-											<select chosen
-											    option="lista_finalidade_emissao"
-											    ng-model="NF.dados_emissao.finalidade_emissao"
-											    ng-options="item.num_item as item.nme_item for item in lista_finalidade_emissao">
-											</select>
-										</div>
-									</div>
-
-									<div class="col-sm-1">
-										<div class="form-group">
-											<label class="control-label"><br></label>
-											<button type="button" class="btn btn-sm btn-primary" ng-click="load(0,20)"><i class="fa fa-filter"></i> Filtrar</button>
-										</div>
-									</div>
-								</div>-->
-
 								<div class="row">
 									<div class="col-lg-12">
 										<div class="table-responsive">
@@ -304,11 +228,9 @@
 												<thead>
 													<th class="text-middle text-center" width="50"></th>
 													<th class="text-middle text-center">Nº NF-e</th>
-													<th class="text-middle text-center">Nº Série</th>
-													<th class="text-middle">Natureza da Operação</th>
 													<th class="text-middle">Destinatário</th>
 													<th class="text-middle text-center">Data de Emissão</th>
-													<th class="text-middle text-center">Data de Saída</th>
+													<th class="text-middle text-center">Valor da NF</th>
 													<th class="text-middle text-center">Status</th>
 												</thead>
 												<tbody>
@@ -326,33 +248,62 @@
 																	Ações <span class="caret"></span>
 																</button>
 																<ul class="dropdown-menu">
-																	<li ng-show="(nota.status == 'autorizado')|| (nota.status == 'processando_cancelamento')||(nota.status == 'erro_cancelamento')" ng-click="showDANFEModal(nota, 'PDF')">
-																		<a href=""><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (PDF)</a>
+																	<li ng-show="(nota.status == 'autorizado')|| (nota.status == 'processando_cancelamento')||(nota.status == 'erro_cancelamento')" 
+																		ng-click="showDANFEModal(nota, 'PDF')">
+																		<a href="">
+																			<i class="fa fa-file-pdf-o"></i> Visualizar DANFE (PDF)
+																		</a>
 																	</li>
 																	<li ng-show="(nota.status == 'autorizado')|| (nota.status == 'processando_cancelamento')||(nota.status == 'erro_cancelamento')">
-																		<a href="{{ nota.caminho_xml_nota_fiscal }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar DANFE (XML)</a>
+																		<a href="{{ nota.caminho_xml_nota_fiscal }}" target="_blank">
+																			<i class="fa fa-file-code-o"></i> Visualizar DANFE (XML)
+																		</a>
 																	</li>
 																	<li ng-show="(nota.status == 'cancelado')|| (nota.status == 'processando_cancelamento')">
-																		<a href="{{ nota.caminho_xml_cancelamento }}" target="_blank"><i class="fa fa-file-code-o"></i> Visualizar XML de Cancelamento </a>
+																		<a href="{{ nota.caminho_xml_cancelamento }}" target="_blank">
+																			<i class="fa fa-file-code-o"></i> Visualizar XML de Cancelamento
+																		</a>
 																	</li>
 																	<li ng-show="(nota.status == 'processando_autorizacao') || (nota.status == 'processando_cancelamento')">
-																		<a href="" target="_blank" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Atualizando" ng-click="atualzarStatus(nota.cod_nota_fiscal,$index,$event)"><i class="fa fa-refresh"></i> Atualizar Status</a>
+																		<a href="" target="_blank" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Atualizando" 
+																			ng-click="atualzarStatus(nota.cod_nota_fiscal, $index, $event)">
+																			<i class="fa fa-refresh"></i> Atualizar Status
+																		</a>
 																	</li>
+																	<li role="separator" class="divider" 
+																		ng-show="(nota.status == 'autorizado' || nota.status == 'processando_autorizacao')">
+																	</li>
+																	<li>
+																		<a href="nota-fiscal.php?id_venda={{ nota.cod_venda }}" 
+																			ng-show="nota.cod_venda">
+																			<i class="fa fa-list-alt"></i> Visualizar Detalhes
+																		</a>
+																		<a href="nota-fiscal-servico.php?id={{ nota.cod_ordem_servico }}" 
+																			ng-show="nota.cod_ordem_servico">
+																			<i class="fa fa-list-alt"></i> Visualizar Detalhes
+																		</a>
+																	</li>
+<<<<<<< HEAD
 																	<li role="separator" class="divider" ng-show="(nota.status == 'autorizado' || nota.status == 'processando_autorizacao')"></li>
 																	<!--<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>-->
 																	<li><a href="nota-fiscal.php?id_venda={{ nota.cod_venda }}"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
 																	<li  ng-show="(nota.status == 'autorizado')" ng-click="modalCancelar(nota,$index)">
 																		<a href=""><i class="fa fa-times-circle"></i> Cancelar NF-e</a>
+=======
+																	<li ng-show="(nota.cod_venda && nota.status == 'autorizado')" 
+																		ng-click="modalCancelar(nota,$index)">
+																		<a href="">
+																			<i class="fa fa-times-circle"></i> Cancelar Nota
+																		</a>
+>>>>>>> 3b39fd8a2436725f5dd3c72f02894e5424914570
 																	</li>
 																</ul>
 															</div>
 														</td>
 														<td class="text-center text-middle">{{ nota.numero }}</td>
-														<td class="text-center text-middle">{{ nota.serie }}</td>
-														<td class="text-middle">{{ nota.natureza_operacao }}</td>
 														<td class="text-middle">{{ nota.nome_destinatario }}</td>
 														<td class="text-center text-middle">{{ nota.data_emissao | date : 'dd/MM/yyyy' }}</td>
-														<td class="text-center text-middle">{{ nota.data_entrada_saida | date : 'dd/MM/yyyy' }}</td>
+														<td class="text-right text-middle">R$ {{ nota.valor_total | numberFormat : 2 : ',' : '.' }}</td>
 														<td class="text-middle text-center">
 															<span class="label label-success" ng-show="(nota.status == 'autorizado') || (nota.status == 'erro_cancelamento') || (nota.status == 'processando_cancelamento')" 
 																data-toggle="tooltip" title="{{ nota.mensagem_sefaz }}">
@@ -386,112 +337,6 @@
 									</div>
 
 								</div>
-							</div>
-							<div class="tab-pane fade in" id="canceladas">
-								<div class="row">
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">De</label>
-											<div class="input-group">
-												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
-												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-sm-2">
-										<div class="form-group">
-											<label class="control-label">Até</label>
-											<div class="input-group">
-												<input id="inputDtaEmissao" readonly="readonly" style="background:#FFF;cursor:pointer" type="text" class="datepicker form-control input-sm">
-												<span  id="btnDtaEmissao" class="input-group-addon"><i class="fa fa-calendar"></i></span>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-sm-3">
-										<div class="form-group">
-											<label for="" class="control-label">Tipo de Cadastro</label>
-											<div class="form-group">
-												<label class="label-radio inline">
-													<input ng-model="empreendimento.flg_contribuinte_icms" value="0" type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Pessoa Física</span>
-												</label>
-												<label class="label-radio inline">
-													<input ng-model="empreendimento.flg_contribuinte_icms" value="1" type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Pessoa Jurídica</span>
-												</label>
-											</div>
-										</div>
-									</div>
-
-									<div class="col-sm-3">
-										<div class="form-group">
-											<label class="control-label">Destinatário</label> 
-											<select chosen
-											    option="lista_finalidade_emissao"
-											    ng-model="NF.dados_emissao.finalidade_emissao"
-											    ng-options="item.num_item as item.nme_item for item in lista_finalidade_emissao">
-											</select>
-										</div>
-									</div>
-
-									<div class="col-sm-1">
-										<div class="form-group">
-											<label class="control-label"><br></label>
-											<button type="button" class="btn btn-sm btn-primary" ng-click="load(0,20)"><i class="fa fa-filter"></i> Filtrar</button>
-										</div>
-									</div>
-								</div>
-
-								<div class="row">
-									
-									<div class="col-lg-12">
-										<div class="table-responsive">
-											<table class="table table-bordered table-condensed table-striped table-hover">
-												<thead>
-													<th class="text-middle text-center" width="50"></th>
-													<th class="text-middle text-center">Nº NF-e</th>
-													<th class="text-middle text-center">Nº Série</th>
-													<th class="text-middle">Natureza da Operação</th>
-													<th class="text-middle">Destinatário</th>
-													<th class="text-middle">E-mail Destinatário</th>
-													<th class="text-middle text-center">Data de Emissão</th>
-													<th class="text-middle text-center">Data de Saída</th>
-												</thead>
-												<tbody>
-													<tr>
-														<td class="text-middle">
-															<div class="btn-group">
-																<button type="button" class="btn btn-sm btn-default dropdown-toggle" 
-																	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-																	Ações <span class="caret"></span>
-																</button>
-																<ul class="dropdown-menu">
-																	<li><a href="nota-fiscal.php"><i class="fa fa-file-pdf-o"></i> Visualizar DANFE (PDF)</a></li>
-																	<li role="separator" class="divider"></li>
-																	<li><a href="#"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
-																</ul>
-															</div>
-														</td>
-														<td class="text-center text-middle">13443</td>
-														<td class="text-center text-middle">1</td>
-														<td class="text-middle">VENDA PARA CONSUMIDOR FINAL</td>
-														<td class="text-middle">FILIPE MENDONÇA COELHO</td>
-														<td class="text-middle">filipe.mendonca.coelho@gmail.com</td>
-														<td class="text-center text-middle">05/04/1991 09:42</td>
-														<td class="text-center text-middle">05/04/1991 10:30</td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane fade in" id="inutilizadas">
-								
 							</div>
 						</div>
 					</div>
