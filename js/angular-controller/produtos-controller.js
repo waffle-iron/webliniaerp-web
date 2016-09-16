@@ -20,7 +20,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 										valor_venda_intermediario:0,
 										vlr_custo:0
 									},
-							precos:[]
+							precos:[],
+							combinacoes : []
 						};
 
 	ng.campos_extras_produto  = [] ;
@@ -111,7 +112,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 										perc_venda_atacado: 0,
 										perc_venda_intermediario: 0,
 										perc_venda_varejo: 0
-									}]
+									}],
+								combinacoes : []
 						};
 		ng.editing = false;
 		ng.empreendimentosAssociados = [{ id_empreendimento : ng.userLogged.id_empreendimento, nome_empreendimento : ng.userLogged.nome_empreendimento }];
@@ -425,6 +427,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		 		btn.button('reset');
 		 		ng.reset();
 		 		$('html,body').animate({scrollTop: 0},'slow');
+
+		 		produto.id= data.id ;
+		 		produto.local_new_image = !empty(data.local_new_image) ?  data.local_new_image : null ; 
+		 		ng.salvarPrestaShop(produto);
 		 	},
 		 	error:function(data){
 		 		 btn.button('reset');
@@ -447,6 +453,26 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		 		}
 		 	}
 		}).submit();
+	}
+
+	ng.salvarPrestaShop = function(dados){
+		aj.post(baseUrlApi()+"prestashop/produto/",dados)
+		.success(function(data, status, headers, config) {
+
+		})
+		.error(function(data, status, headers, config) {
+
+		});
+	}
+
+	ng.deletePrestaShop = function(id_produto){
+		aj.delete(baseUrlApi()+"prestashop/produto/"+id_produto+'/'+ng.userLogged.id_empreendimento)
+		.success(function(data, status, headers, config) {
+
+		})
+		.error(function(data, status, headers, config) {
+
+		});
 	}
 
 	ng.editar = function(item) {
@@ -487,6 +513,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					ng.mensagens('alert-success','<strong>Produto excluido com sucesso</strong>');
 					ng.reset();
 					ng.loadProdutos();
+					ng.deletePrestaShop(item.id);
 				})
 				.error(defaulErrorHandler);
 		}, undefined);
@@ -1321,13 +1348,74 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		});
 	}
 
+
+	ng.loadModalCombinacoes = function(offset, limit) {
+		ng.modal_combinacoes = [];
+
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+
+		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&pro->flg_produto_composto=0&(tt->id[exp]= IS NOT NULL OR tcp.id IS NOT NULL)";
+
+		query_string += ng.editing ? '&pro->id[exp]=<> '+ng.produto.id : '' ;
+
+		if(!empty(ng.busca.combinacoes)){
+			if(isNaN(Number(ng.combinacoes)))
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.combinacoes+"%' OR codigo_barra like '%"+ng.combinacoes+"%' OR fab.nome_fabricante like '%"+ng.combinacoes+"%'"}})+")";
+			else
+				query_string += "&("+$.param({nome:{exp:"like '%"+ng.combinacoes+"%' OR codigo_barra like '%"+ng.combinacoes+"%' OR fab.nome_fabricante like '%"+ng.combinacoes+"%' OR pro.id = "+ng.combinacoes+""}})+")";
+		}
+
+		aj.get(baseUrlApi()+"produtos/"+ offset +"/"+ limit +"/"+query_string)
+			.success(function(data, status, headers, config) {
+				ng.modal_combinacoes = data.produtos;
+				ng.paginacao.modal_combinacoes = data.paginacao;
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 404) {
+					ng.modal_combinacoes = [];
+					ng.paginacao.modal_combinacoes = null;
+				}
+			});
+	}
+	ng.insumos = [] ;
+	ng.showModalCombinacoes = function(){
+		$('#modal_combinacoes').modal('show');
+		ng.busca.combinacoes = "";
+		ng.loadModalCombinacoes(0,10);
+	}
+
+	ng.addCombinacao = function(item){
+		if(typeof ng.produto.combinacoes != 'object' )
+			ng.produto.combinacoes = [] ;
+		item.id_combinacao = item.id_produto ;
+		ng.produto.combinacoes.push(item);
+	}
+
+	ng.existsCombinacao = function(id_produto){
+		var r = false ;
+		if(typeof ng.produto.combinacoes == 'object' ){
+			$.each(ng.produto.combinacoes,function(i,x){
+				if(Number(x.id) == Number(id_produto)){
+					r = true ;
+					return;
+				}
+			});
+		}
+		return r ;
+	}
+
+	ng.delCombinacao = function(index){
+		console.log(index);
+		ng.produto.combinacoes.splice(index,1);
+	}
+
 	ng.limpa_fp = function(){
 		ng.produto.img = null;
 	}
 
 	ng.limpa_an = function(){
 		ng.produto.nme_arquivo_nutricional = null;
-	}
 
 	ng.modal = function(acao,id){
 		ng.fabricante.nome_fabricante = "";

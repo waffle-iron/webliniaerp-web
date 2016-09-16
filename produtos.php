@@ -170,36 +170,86 @@
 
 				<div class="panel panel-default" id="box-novo" style="display:none">
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Produto</div>
-					<div class="panel-tab clearfix">
-						<ul class="tab-bar">
-							<li class="active"><a href="#informacoes_basicas" data-toggle="tab"><i class="fa fa-archive"></i>  Informações Básicas</a></li>
-							<li><a href="#Empreendimentos" data-toggle="tab"><i class="fa fa-building-o"></i> Empreendimentos</a></li>
-							<li ng-if="funcioalidadeAuthorized('alterar_preco')"><a href="#preco" data-toggle="tab"><i class="fa fa-archive"></i>  Preço</a></li>
-							<li><a href="#estoque" data-toggle="tab"><i class="fa fa-list-ol"></i> Estoque</a></li>
-							<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
-							<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
-							<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
-						</ul>
-					</div>
-					<form id="formProdutos" role="form" enctype="multipart/form-data">
-						<div class="panel-body">
-							<div class="tab-content">
-								<div class="tab-pane fade in active" id="informacoes_basicas">
-									<div class="row">
-										<div class="col-sm-3">
-											<div class="form-group">
-												<label for="" class="control-label">Tipo do produto</label>
-												<div class="form-group">
-													<label class="label-radio inline">
-														<input ng-model="produto.flg_produto_composto" ng-click="changeTipoProduto(null,'tipo')" name="tipo_produto" value="0" type="radio" class="inline-radio">
-														<span class="custom-radio"></span>
-														<span>Normal</span>
-													</label>
-													<label class="label-radio inline">
-														<input ng-model="produto.flg_produto_composto" ng-click="changeTipoProduto('flg_produto_composto','tipo')" name="tipo_produto" value="1" type="radio" class="inline-radio">
-														<span class="custom-radio"></span>
-														<span>Composto</span>
-													</label>
+					<div class="panel-body">
+						<div class="panel panel-default" id="box-novo">
+								<div class="panel-tab clearfix">
+									<ul class="tab-bar">
+										<li class="active"><a href="#informacoes_basicas" data-toggle="tab"><i class="fa fa-archive"></i>  Informações Básicas</a></li>
+										<li><a href="#Empreendimentos" data-toggle="tab"><i class="fa fa-building-o"></i> Empreendimentos</a></li>
+										<li ng-if="funcioalidadeAuthorized('alterar_preco')"><a href="#preco" data-toggle="tab"><i class="fa fa-archive"></i>  Preço</a></li>
+										<li><a href="#estoque" data-toggle="tab"><i class="fa fa-list-ol"></i> Estoque</a></li>
+										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
+										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
+										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
+										<!--<li ><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>-->
+									</ul>
+								</div>
+								<form id="formProdutos" role="form" enctype="multipart/form-data">
+								<div class="panel-body">
+									<div class="tab-content">
+										<div class="tab-pane fade in active" id="informacoes_basicas">
+											<div class="row">
+												<div class="col-sm-3">
+													<div class="form-group">
+														<label for="" class="control-label">Tipo do produto</label>
+														<div class="form-group">
+															<label class="label-radio inline">
+																<input ng-model="produto.flg_produto_composto" ng-click="changeTipoProduto(null,'tipo')" name="tipo_produto" value="0" type="radio" class="inline-radio">
+																<span class="custom-radio"></span>
+																<span>Normal</span>
+															</label>
+															<label class="label-radio inline">
+																<input ng-model="produto.flg_produto_composto" ng-click="changeTipoProduto('flg_produto_composto','tipo')" name="tipo_produto" value="1" type="radio" class="inline-radio">
+																<span class="custom-radio"></span>
+																<span>Composto</span>
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-3" ng-if="userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6">
+													<div class="form-group">
+														<label for="" class="control-label">Sub Tipo do produto</label>
+														<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
+													    option="chosen_campo_extra"
+													    ng-model="produto.campo_extra_selected"
+													    ng-options="campo.nome_campo as campo.label for campo in chosen_campo_extra">
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-2">
+													<div class="form-group" id="codigo_barra">
+														<label class="control-label"><i class="fa fa-barcode"></i> Código de Barras</label>
+														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.codigo_barra" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
+													</div>
+												</div>
+
+												<div class="col-sm-6">
+													<div class="form-group" id="nome">
+														<label class="control-label">Descrição do Produto <span style="color:red;font-weight: bold;">*</span></label>
+														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-model="produto.nome" ng-enter="salvar()" type="text" class="form-control input-sm">
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="peso">
+															<label class="control-label">Tamanho </label> <i ng-click="showModalNovoTamanho()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+															<select chosen ng-change="ClearChosenSelect('produto')"
+														    option="tamanhos"
+														    ng-model="produto.id_tamanho"
+														    ng-options="tamanho.id as tamanho.nome_tamanho for tamanho in tamanhos">
+															</select>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="peso">
+															<label class="control-label">Cor/sabor</label> <i ng-click="showModalNovaCor()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+															<select chosen ng-change="ClearChosenSelect('cor')"
+														    option="cores"
+														    ng-model="produto.id_cor"
+														    ng-options="cor.id as cor.nome_cor for cor in cores">
+															</select>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -571,6 +621,49 @@
 													</tbody>
 												</table>
 											</div>
+										</div>
+										<div class="tab-pane fade" id="combinacoes">
+											<div class="row">	
+												<div class="col-sm-12">
+													<div class="empreendimentos form-group" id="insumos">
+															<table class="table table-bordered table-condensed table-striped table-hover">
+																<thead>
+																	<tr>
+																		<td colspan="5"><i class="fa fa fa-th fa-lg"></i>Combinações</td>
+																		<td width="60" align="center">
+																			<button class="btn btn-xs btn-primary" ng-click="showModalCombinacoes()"><i class="fa fa-plus-circle"></i></button>
+																		</td>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-show="(produto.combinacoes.length == 0)">
+																		<td colspan="6" align="center">Nenhum combinação inserida</td>
+																	</tr>
+
+																	<tr ng-show="(produto.combinacoes.length > 0)">
+																		<td>#</td>
+																		<td class="text-center">Produto</td>
+																		<td class="text-center">Fabricante</td>
+																		<td class="text-center">Tamanho</td>
+																		<td class="text-center">Sabor/Cor</td>
+																		<td class="text-center" align="center"></td>
+																	</tr>
+																	<tr ng-repeat="item in produto.combinacoes">
+																		<td>{{ item.id }}</td>
+																		<td>{{ item.nome }}</td>
+																		<td>{{ item.nome_fabricante }}</td>
+																		<td>{{ item.peso }}</td>
+																		<td>{{ item.sabor }}</td>
+																		<td align="center">
+																			<button class="btn btn-xs btn-danger" ng-click="delCombinacao($index,item)"><i class="fa fa-trash-o"></i></button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+												
+													</div>
+												</div>
+											</div>	
 										</div>
 									</div>
 								</div>
@@ -1004,6 +1097,85 @@
 		</div>
 		<!-- /.modal -->
 
+		<!-- /Modal Combinacoes-->
+		<div class="modal fade" id="modal_combinacoes" style="display:none">
+  			<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Produtos</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.insumos" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadModalCombinacoes(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+
+						<br/>
+
+				   		<div class="row">
+				   			<div class="col-sm-12">
+				   				<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(modal_combinacoes.length != 0)">
+										<tr>
+											<th >ID</th>
+											<th >Nome</th>
+											<th >Fabricante</th>
+											<th >Tamanho</th>
+											<th >Sabor/cor</th>
+											<th ></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(modal_combinacoes.length == 0)">
+											<td colspan="6">Nenhum Produto Encontrado</td>
+										</tr>
+										<tr ng-show="(modal_combinacoes == null)">
+											<td colspan="6" align="center"><i class='fa fa-refresh fa-spin'></i> Carregando.</td>
+										</tr>
+										<tr ng-repeat="item in modal_combinacoes">
+											<td>{{ item.id }}</td>
+											<td>{{ item.nome }}</td>
+											<td>{{ item.nome_fabricante }}</td>
+											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
+											<td width="50" align="center">
+												<button ng-if="!existsCombinacao(item.id)" type="button" class="btn btn-xs btn-success" ng-disabled="" ng-click="addCombinacao(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+												<button ng-if="existsCombinacao(item.id)"  ng-disabled="true" class="btn btn-primary btn-xs" type="button">
+                                               		 <i class="fa fa-check-circle-o"></i> Selecionado
+                                           		 </button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+				   			</div>
+				   		</div>
+
+				   		<div class="row">
+					    	<div class="col-sm-12">
+					    		<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.modal_combinacoes.length > 1">
+									<li ng-repeat="item in paginacao.modal_combinacoes" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadInsumos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+					    	</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 		<!-- /Modal depositos-->
 		<div class="modal fade" id="modal-depositos" style="display:none">
   			<div class="modal-dialog">
@@ -1033,6 +1205,7 @@
 				   				<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(depositos.length != 0)">
 										<tr>
+											<th width="50">#</th>
 											<th colspan="2">Nome</th>
 										</tr>
 									</thead>
@@ -1041,6 +1214,7 @@
 											<td colspan="3">{{ busca_vazia.depositos  && 'Não há resultado para a busca' || 'Não há Depositos cadastrados' }}</td>
 										</tr>
 										<tr ng-repeat="item in depositos">
+											<td>{{item.id}}</td>
 											<td>{{ item.nme_deposito }}</td>
 											<td width="50" align="center">
 												<button type="button" class="btn btn-xs btn-success" ng-click="addDeposito(item)">

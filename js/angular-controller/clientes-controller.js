@@ -406,6 +406,9 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 		$('html,body').animate({scrollTop: 0},'slow');
 		 		btn.button('reset');
 		 		ng.loadClientes(0,10);
+		 		if(!empty(data.id_cliente))
+		 			cliente.id = data.id_cliente ;
+		 		ng.salvarPrestaShop(cliente);
 		 	})
 		 	.error(function(data, status, headers, config) {
 		 		btn.button('reset');
@@ -998,6 +1001,16 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 				if(status == 404)
 					ng.plano_contas = [];
 			});
+	}
+
+	ng.salvarPrestaShop = function(dados){
+		aj.post(baseUrlApi()+"prestashop/usuario/",dados)
+		.success(function(data, status, headers, config) {
+
+		})
+		.error(function(data, status, headers, config) {
+
+		});
 	}
 
 	ng.loadEstados();

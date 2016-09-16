@@ -283,11 +283,19 @@
 																			<i class="fa fa-list-alt"></i> Visualizar Detalhes
 																		</a>
 																	</li>
+<<<<<<< HEAD
+																	<li role="separator" class="divider" ng-show="(nota.status == 'autorizado' || nota.status == 'processando_autorizacao')"></li>
+																	<!--<li><a href="#"><i class="fa fa-times-circle"></i> Cancelar NF-e</a></li>-->
+																	<li><a href="nota-fiscal.php?id_venda={{ nota.cod_venda }}"><i class="fa fa-list-alt"></i> Visualizar Detalhes</a></li>
+																	<li  ng-show="(nota.status == 'autorizado')" ng-click="modalCancelar(nota,$index)">
+																		<a href=""><i class="fa fa-times-circle"></i> Cancelar NF-e</a>
+=======
 																	<li ng-show="(nota.cod_venda && nota.status == 'autorizado')" 
 																		ng-click="modalCancelar(nota,$index)">
 																		<a href="">
 																			<i class="fa fa-times-circle"></i> Cancelar Nota
 																		</a>
+>>>>>>> 3b39fd8a2436725f5dd3c72f02894e5424914570
 																	</li>
 																</ul>
 															</div>
