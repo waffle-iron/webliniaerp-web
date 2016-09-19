@@ -24,8 +24,10 @@
 	<!-- Chosen -->
 	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
 
-	<link href="css/fileinput/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="css/fileinput/dist/ui/fileinput.css" media="all" rel="stylesheet" type="text/css" />
 
+	<link href="js/Trumbowyg-master/dist/ui/trumbowyg.css" media="all" rel="stylesheet" type="text/css" />
+	
 	<!-- Endless -->
 	<link href="css/endless.min.css" rel="stylesheet">
 	<link href="css/endless-skin.css" rel="stylesheet">
@@ -181,7 +183,7 @@
 										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
 										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
 										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
-										<!--<li ><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>-->
+										<li ng-if="isNumeric(produto.id)" ><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>
 									</ul>
 								</div>
 								<form id="formProdutos" role="form" enctype="multipart/form-data">
@@ -252,374 +254,538 @@
 													</div>
 												</div>
 											</div>
-										</div>
-										<div class="col-sm-3" ng-if="userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6">
-											<div class="form-group">
-												<label for="" class="control-label">Sub Tipo do produto</label>
-												<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
-											    option="chosen_campo_extra"
-											    ng-model="produto.campo_extra_selected"
-											    ng-options="campo.nome_campo as campo.label for campo in chosen_campo_extra">
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-2">
-											<div class="form-group" id="codigo_barra">
-												<label class="control-label"><i class="fa fa-barcode"></i> Código de Barras</label>
-												<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.codigo_barra" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
-											</div>
-										</div>
-
-										<div class="col-sm-6">
-											<div class="form-group" id="nome">
-												<label class="control-label">Descrição do Produto <span style="color:red;font-weight: bold;">*</span></label>
-												<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-model="produto.nome" ng-enter="salvar()" type="text" class="form-control input-sm">
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="peso">
-													<label class="control-label">Tamanho </label> <i ng-click="showModalNovoTamanho()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-													<select chosen ng-change="ClearChosenSelect('produto')"
-												    option="tamanhos"
-												    ng-model="produto.id_tamanho"
-												    ng-options="tamanho.id as tamanho.nome_tamanho for tamanho in tamanhos">
-													</select>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="peso">
-													<label class="control-label">Cor/sabor</label> <i ng-click="showModalNovaCor()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-													<select chosen ng-change="ClearChosenSelect('cor')"
-												    option="cores"
-												    ng-model="produto.id_cor"
-												    ng-options="cor.id as cor.nome_cor for cor in cores">
-													</select>
-											</div>
-										</div>
-									</div>
-									<br/>
-									<div class="row" ng-if="produto.flg_produto_composto == 1">
-										<div class="col-sm-12">
-											<div class="empreendimentos form-group" id="insumos">
+											<br/>
+											<div class="row" ng-if="produto.flg_produto_composto == 1">
+												<div class="col-sm-12">
+													<div class="empreendimentos form-group" id="insumos">
+														
+															<table class="table table-bordered table-condensed table-striped table-hover">
+																<thead>
+																	<tr>
+																		<td colspan="7"><i class="fa fa fa-th fa-lg"></i> Insumos</td>
+																		<td width="60" align="center">
+																			<button class="btn btn-xs btn-primary" ng-click="showInsumos()"><i class="fa fa-plus-circle"></i></button>
+																		</td>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-show="(insumos.length == 0)">
+																		<td colspan="8" align="center">Nenhum insumo selecionado</td>
+																	</tr>
+																	<tr ng-show="(insumos.length > 0)">
+																		<td>#</td>
+																		<td class="text-center">Produto</td>
+																		<td class="text-center">Fabricante</td>
+																		<td class="text-center">Tamanho</td>
+																		<td class="text-center">Sabor/Cor</td>
+																		<td class="text-center">Custo</td>
+																		<td class="text-center" width="50">Qtd.</td>
+																		<td class="text-center" align="center"></td>
+																	</tr>
+																	<tr ng-repeat="item in insumos">
+																		<td>{{ item.id }}</td>
+																		<td>{{ item.nome }}</td>
+																		<td>{{ item.nome_fabricante }}</td>
+																		<td>{{ item.peso }}</td>
+																		<td>{{ item.sabor }}</td>
+																		<td class="text-right">R$ {{ item.vlr_custo_real | numberFormat:2:',':'.' }}</td>
+																		<td  width="50"><input  ng-model="item.qtd" onKeyPress="return SomenteNumero(event);" ng-keyup="calVlrCustoInsumos()" type="text" class="form-control input-xs" /></td>
+																		<td align="center">
+																			<button class="btn btn-xs btn-danger" ng-click="delInsumo($index,item)"><i class="fa fa-trash-o"></i></button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
 												
-													<table class="table table-bordered table-condensed table-striped table-hover">
-														<thead>
-															<tr>
-																<td colspan="7"><i class="fa fa fa-th fa-lg"></i> Insumos</td>
-																<td width="60" align="center">
-																	<button class="btn btn-xs btn-primary" ng-click="showInsumos()"><i class="fa fa-plus-circle"></i></button>
-																</td>
-															</tr>
-														</thead>
-														<tbody>
-															<tr ng-show="(insumos.length == 0)">
-																<td colspan="8" align="center">Nenhum insumo selecionado</td>
-															</tr>
-															<tr ng-show="(insumos.length > 0)">
-																<td>#</td>
-																<td class="text-center">Produto</td>
-																<td class="text-center">Fabricante</td>
-																<td class="text-center">Tamanho</td>
-																<td class="text-center">Sabor/Cor</td>
-																<td class="text-center">Custo</td>
-																<td class="text-center" width="50">Qtd.</td>
-																<td class="text-center" align="center"></td>
-															</tr>
-															<tr ng-repeat="item in insumos">
-																<td>{{ item.id }}</td>
-																<td>{{ item.nome }}</td>
-																<td>{{ item.nome_fabricante }}</td>
-																<td>{{ item.peso }}</td>
-																<td>{{ item.sabor }}</td>
-																<td class="text-right">R$ {{ item.vlr_custo_real | numberFormat:2:',':'.' }}</td>
-																<td  width="50"><input  ng-model="item.qtd" onKeyPress="return SomenteNumero(event);" ng-keyup="calVlrCustoInsumos()" type="text" class="form-control input-xs" /></td>
-																<td align="center">
-																	<button class="btn btn-xs btn-danger" ng-click="delInsumo($index,item)"><i class="fa fa-trash-o"></i></button>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-										
+													</div>
+												</div>
 											</div>
-										</div>
-									</div>
-								</div>
-								<div ng-if="funcioalidadeAuthorized('alterar_preco')" class="tab-pane fade" id="preco">
-									<div class="table-responsive">
-										<table class="table table-bordered table-condensed table-striped table-hover">
-											<thead>
-												<tr>
-													<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
-													<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
-													<th class="text-center" colspan="2">Vlr. Atacado</th>
-													<th class="text-center" colspan="2">Vlr. Intermediário</th>
-													<th class="text-center" colspan="2">Vlr. Varejo</th>
-												</tr>
-												<tr>
-													<td class="text-center">%</td>
-													<td class="text-center">R$</td>
-													<td class="text-center">%</td>
-													<td class="text-center">R$</td>
-													<td class="text-center">%</td>
-													<td class="text-center">R$</td>
-												</tr>
-											</thead>
-											<tbody ng-if="produto.precos.length == 0">
-												<tr>
-													<td colspan="9" class="text-center">Nenhum empreendimento vinculado ao produto</td>
-												</tr>
-											</tbody>
-											<tbody ng-repeat="preco in produto.precos">
-												<tr>
-													<td>
-														#{{preco.id_empreendimento}} - {{ preco.nome_empreendimento }}
-													</td>
-													<td>
-														<input ng-disabled="produto.flg_produto_composto == 1" ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
-													</td>
-													<td>
-														<input ng-model="preco.perc_venda_atacado" ng-keyup="calculaMargens('atacado','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-													</td>
-													<td>
-														<input ng-model="preco.valor_venda_atacado" ng-keyup="calculaMargens('atacado','valor',preco)" 
-														 ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-													</td>
-
-													<td>
-														<input ng-model="preco.perc_venda_intermediario" ng-keyup="calculaMargens('intermediario','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-													</td>
-													<td>
-														<input ng-model="preco.valor_venda_intermediario" ng-keyup="calculaMargens('intermediario','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-													</td>
-													<td>
-														<input ng-model="preco.perc_venda_varejo" ng-keyup="calculaMargens('varejo','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-													</td>
-													<td>
-														<input ng-model="preco.valor_venda_varejo" ng-keyup="calculaMargens('varejo','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<div class="tab-pane fade" id="estoque">
-									<div ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="row">
-										<div class="col-sm-5" id="inventario_novo_deposito">
-											<label class="control-label">Depósito</label>
-											<div class="input-group">
-									            <input ng-model="inventario_novo.nome_deposito" ng-disabled="true" type="text" class="form-control input-xs" ng-enter="loadDepositos(0,10)">
-									            <div class="input-group-btn">
-									            	<button ng-click="modalDepositos()" tabindex="-2" class="btn btn-xs btn-primary" type="button">
-									            		<i class="fa fa-sitemap"></i>
-									            	</button>
-									            </div>
-									        </div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="inventario_novo_validade">
-												<label class="control-label" >Data de Validade</label>
-												<input ng-model="inventario_novo.dta_validade" ui-mask="99/99/9999"  type="text" class="form-control input-xs">
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="inventario_novo_qtd">
-												<label class="control-label">Quantidade</label>
-												<input ng-model="inventario_novo.qtd_ivn" onkeypress="return SomenteNumero(event);" type="text" class="form-control input-xs">
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<label class="control-label">&nbsp;</label>
-											<div class="form-group" >
-												<button data-loading-text="Aguarde..." ng-click="addNovoInventario()" type="submit" id="btn-novo_inventario" class="btn btn-success btn-xs">
-													Adicionar
-												</button>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-10">
-											<table class="table table-bordered table-condensed table-striped table-hover">
-												<thead>
-													<tr>
-														<th class="text-center">Depósito</th>
-														<th class="text-center">Validade</th>
-														<th class="text-center" width="100">Quantidade</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr ng-repeat="(key, value) in produto.estoque | orderBy:'+nome_deposito'">
-														<td>{{ value.nome_deposito }}</td>
-														<td class="text-center" ng-if="value.dta_validade != '2099-12-31'">{{ value.dta_validade | dateFormat:'date' }}</td>
-														<td class="text-center" ng-if="value.dta_validade == '2099-12-31'"></td>
-														<td  ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="text-center" >
-															<input type="text" ng-if="value.flg_visivel == 1"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" >
-															<span ng-if="value.flg_visivel != 1">{{ value.qtd_ivn }}</span>
-														</td>
-														<td ng-if="!funcioalidadeAuthorized('alterar_quantidade')" class="text-center">{{ value.qtd_ivn }} </td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade" id="informacoes_complemetares">
-									<div class="row">
-										<div class="col-sm-4">
-											<div class="form-group" id="img">
-												<label class="control-label" ng-show="editing == false || (produto.img == '' || produto.img == null)" ><i class="fa fa-camera"></i> Foto do Produto</label>
-												<a href="assets/imagens/produtos/{{ produto.img }}"  target="_blanck">
-													<label style="cursor:pointer" class="control-label" ng-hide="editing == false || (produto.img == '' || produto.img == null)" ><i class="fa fa-camera"></i> Foto do Produto</label>
-												</a>
-												<div class="upload-file">
-													<input  id="foto-produto" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" name="img"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*"  />
-													<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
-													<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecionar" for="foto-produto">
-														<span data-title="{{ produto.img }}"></span>
-													</label>
-
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-informacoes-basicas')"type="submit" id="btn-salvar-informacoes-basicas" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
 												</div>
 											</div>
 										</div>
-										<div class="col-sm-1  no-pad">
-											<div class="form-group">
-												<label class="control-label">&nbsp;</label>
-												<div class="controls clearfix text-left">
-													<button type="button" tooltip title="Excluir Foto do Produto" class="btn btn-danger btn-xs" ng-click="limpa_fp()">
-													<i class="fa fa-trash-o"></i>
-												</button>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="qtd_minima_estoque">
-												<label class="control-label">Estoque Mínimo</label>
-												<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-model="produto.qtd_minima_estoque" type="text" class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="form-group" id="nme_arquivo_nutricional">
-												<label class="control-label" ng-show="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo Nutricional</label>
-												<a href="assets/arquivos/produtos/{{ produto.nme_arquivo_nutricional }}"  target="_blanck">
-													<label style="cursor:pointer" class="control-label" ng-hide="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo Nutricional</label>
-												</a>
-												<div class="upload-file">
-													<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  id="arquivo-produto" name="arquivo-produto"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
-													<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
-													<label data-title="Selecione" for="arquivo-produto">
-														<span data-title="{{ produto.nme_arquivo_nutricional }}"></span>
-													</label>
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-1  no-pad">
-											<div class="form-group">
-												<label class="control-label">&nbsp;</label>
-												<div class="controls clearfix text-left">
-													<button type="button" tooltip title="Excluir Arquivo Nutricional" class="btn btn-danger btn-xs" ng-click="limpa_an">
-													<i class="fa fa-trash-o"></i>
-												</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-4">
-											<div class="form-group" id="peso">
-													<label class="control-label">Fabricante</label> <i ng-click="modal('show','modal-novo-fabricante')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-													<select chosen ng-change="ClearChosenSelect('fabricante')"
-												    option="fabricantes"
-												    ng-model="produto.id_fabricante"
-												    ng-options="fabricante.id as fabricante.nome_fabricante for fabricante in fabricantes">
-													</select>
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="form-group" id="peso">
-													<label class="control-label">Importador</label> <i ng-click="modal('show','modal-novo-importador')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-													<select chosen ng-change="ClearChosenSelect('importador')"
-												    option="importadores"
-												    ng-model="produto.id_importador"
-												    ng-options="importador.id as importador.nome_importador for importador in importadores">
-													</select>
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="form-group" id="peso">
-													<label class="control-label">Categoria</label> <i ng-click="modal('show','modal-nova-categoria')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-													<select chosen ng-change="ClearChosenSelect('categoria')"
-												    option="categorias"
-												    ng-model="produto.id_categoria"
-												    ng-options="categoria.id as categoria.descricao_categoria for categoria in categorias">
-													</select>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group" id="descricao">
-												<label class="control-label">Descrição</label>
-												<textarea ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-model="produto.descricao" class="form-control" rows="5"></textarea>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade" id="Empreendimentos">
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="empreendimentos form-group" id="empreendimentos">
-													<table class="table table-bordered table-condensed table-striped table-hover">
-														<thead>
-															<tr>
-																<td><i class="fa fa-building-o"></i> Empreendimentos</td>
-																<td width="60" align="center">
-																	<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()"><i class="fa fa-plus-circle"></i></button>
-																</td>
-															</tr>
-														</thead>
-														<tbody>
-															<tr ng-show="(empreendimentosAssociados.length == 0)">
-																<td colspan="2" align="center">Nenhum empreendimento selecionado</td>
-															</tr>
-															<tr ng-repeat="item in empreendimentosAssociados">
-																<td>{{ item.nome_empreendimento }}</td>
-																<td align="center">
-																	<button class="btn btn-xs btn-danger" ng-click="delEmpreendimento($index,item)"><i class="fa fa-trash-o"></i></button>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-										
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="tab-pane fade" id="fornecedores">
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="form-group" id="fornecedores">
+										<div ng-if="funcioalidadeAuthorized('alterar_preco')" class="tab-pane fade" id="preco">
+											<div class="table-responsive">
 												<table class="table table-bordered table-condensed table-striped table-hover">
 													<thead>
 														<tr>
-															<td><i class="fa fa-truck"></i> Fornecedores <!--<i ng-click="modal('show','modal-novo-fornecedor')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>--></td>
-															<td width="60" align="center">
-																<button ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-click="showFornecedores()"  class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"></i></button>
-															</td>
+															<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
+															<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
+															<th class="text-center" colspan="2">Vlr. Atacado</th>
+															<th class="text-center" colspan="2">Vlr. Intermediário</th>
+															<th class="text-center" colspan="2">Vlr. Varejo</th>
+														</tr>
+														<tr>
+															<td class="text-center">%</td>
+															<td class="text-center">R$</td>
+															<td class="text-center">%</td>
+															<td class="text-center">R$</td>
+															<td class="text-center">%</td>
+															<td class="text-center">R$</td>
 														</tr>
 													</thead>
-													<tbody>
-														<tr ng-show="(produto.fornecedores.length == 0)">
-																<td colspan="2" align="center">Nenhum fornecedor selecionado</td>
-															</tr>
-														<tr ng-repeat="item in produto.fornecedores" >
-															<td>{{ item.nome_fornecedor }}</td>
-															<td align="center">
-																<button ng-click="delFornecedor($index)" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
+													<tbody ng-if="produto.precos.length == 0">
+														<tr>
+															<td colspan="9" class="text-center">Nenhum empreendimento vinculado ao produto</td>
+														</tr>
+													</tbody>
+													<tbody ng-repeat="preco in produto.precos">
+														<tr>
+															<td>
+																#{{preco.id_empreendimento}} - {{ preco.nome_empreendimento }}
+															</td>
+															<td>
+																<input ng-disabled="produto.flg_produto_composto == 1" ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
+															</td>
+															<td>
+																<input ng-model="preco.perc_venda_atacado" ng-keyup="calculaMargens('atacado','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.valor_venda_atacado" ng-keyup="calculaMargens('atacado','valor',preco)" 
+																 ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+
+															<td>
+																<input ng-model="preco.perc_venda_intermediario" ng-keyup="calculaMargens('intermediario','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.valor_venda_intermediario" ng-keyup="calculaMargens('intermediario','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.perc_venda_varejo" ng-keyup="calculaMargens('varejo','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+															</td>
+															<td>
+																<input ng-model="preco.valor_venda_varejo" ng-keyup="calculaMargens('varejo','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
 															</td>
 														</tr>
 													</tbody>
 												</table>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-preco')"type="submit" id="btn-salvar-preco" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="estoque">
+											<div ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="row">
+												<div class="col-sm-5" id="inventario_novo_deposito">
+													<label class="control-label">Depósito</label>
+													<div class="input-group">
+											            <input ng-model="inventario_novo.nome_deposito" ng-disabled="true" type="text" class="form-control input-xs" ng-enter="loadDepositos(0,10)">
+											            <div class="input-group-btn">
+											            	<button ng-click="modalDepositos()" tabindex="-2" class="btn btn-xs btn-primary" type="button">
+											            		<i class="fa fa-sitemap"></i>
+											            	</button>
+											            </div>
+											        </div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="inventario_novo_validade">
+														<label class="control-label" >Data de Validade</label>
+														<input ng-model="inventario_novo.dta_validade" ui-mask="99/99/9999"  type="text" class="form-control input-xs">
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="inventario_novo_qtd">
+														<label class="control-label">Quantidade</label>
+														<input ng-model="inventario_novo.qtd_ivn" onkeypress="return SomenteNumero(event);" type="text" class="form-control input-xs">
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<label class="control-label">&nbsp;</label>
+													<div class="form-group" >
+														<button data-loading-text="Aguarde..." ng-click="addNovoInventario()" type="submit" id="btn-novo_inventario" class="btn btn-success btn-xs">
+															Adicionar
+														</button>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-10">
+													<table class="table table-bordered table-condensed table-striped table-hover">
+														<thead>
+															<tr>
+																<th class="text-center">Depósito</th>
+																<th class="text-center">Validade</th>
+																<th class="text-center" width="100">Quantidade</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="(key, value) in produto.estoque | orderBy:'+nome_deposito'">
+																<td>{{ value.nome_deposito }}</td>
+																<td class="text-center" ng-if="value.dta_validade != '2099-12-31'">{{ value.dta_validade | dateFormat:'date' }}</td>
+																<td class="text-center" ng-if="value.dta_validade == '2099-12-31'"></td>
+																<td  ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="text-center" >
+																	<input type="text" ng-if="value.flg_visivel == 1"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" >
+																	<span ng-if="value.flg_visivel != 1">{{ value.qtd_ivn }}</span>
+																</td>
+																<td ng-if="!funcioalidadeAuthorized('alterar_quantidade')" class="text-center">{{ value.qtd_ivn }} </td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-estoque')"type="submit" id="btn-salvar-estoque" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="informacoes_complemetares">
+											<div class="row">
+												<div class="col-sm-4">
+													<div class="form-group" id="img">
+														<label class="control-label" ng-show="editing == false || (produto.img == '' || produto.img == null)" ><i class="fa fa-camera"></i> Foto do Produto</label>
+														<a href="assets/imagens/produtos/{{ produto.img }}"  target="_blanck">
+															<label style="cursor:pointer" class="control-label" ng-hide="editing == false || (produto.img == '' || produto.img == null)" ><i class="fa fa-camera"></i> Foto do Produto</label>
+														</a>
+														<div class="upload-file">
+															<input  id="foto-produto" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" name="img"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*"  />
+															<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
+															<label ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" data-title="Selecionar" for="foto-produto">
+																<span data-title="{{ produto.img }}"></span>
+															</label>
+
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-1  no-pad">
+													<div class="form-group">
+														<label class="control-label">&nbsp;</label>
+														<div class="controls clearfix text-left">
+															<button type="button" tooltip title="Excluir Foto do Produto" class="btn btn-danger btn-xs" ng-click="limpa_fp()">
+															<i class="fa fa-trash-o"></i>
+														</button>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="qtd_minima_estoque">
+														<label class="control-label">Estoque Mínimo</label>
+														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-model="produto.qtd_minima_estoque" type="text" class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group" id="nme_arquivo_nutricional">
+														<label class="control-label" ng-show="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo Nutricional</label>
+														<a href="assets/arquivos/produtos/{{ produto.nme_arquivo_nutricional }}"  target="_blanck">
+															<label style="cursor:pointer" class="control-label" ng-hide="editing == false || (produto.nme_arquivo_nutricional == '' || produto.nme_arquivo_nutricional == null)"><i class="fa fa-camera"></i> Arquivo Nutricional</label>
+														</a>
+														<div class="upload-file">
+															<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  id="arquivo-produto" name="arquivo-produto"  class="foto-produto" type="file" data-file="produto.foto" accept="image/*" />
+															<!-- <input ng-model=""   name="image" type="file" id="foto-produto" class="foto-produto" ng-model="fotoProduto"> -->
+															<label data-title="Selecione" for="arquivo-produto">
+																<span data-title="{{ produto.nme_arquivo_nutricional }}"></span>
+															</label>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-1  no-pad">
+													<div class="form-group">
+														<label class="control-label">&nbsp;</label>
+														<div class="controls clearfix text-left">
+															<button type="button" tooltip title="Excluir Arquivo Nutricional" class="btn btn-danger btn-xs" ng-click="limpa_an">
+															<i class="fa fa-trash-o"></i>
+														</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-4">
+													<div class="form-group" id="peso">
+															<label class="control-label">Fabricante</label> <i ng-click="modal('show','modal-novo-fabricante')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+															<select chosen ng-change="ClearChosenSelect('fabricante')"
+														    option="fabricantes"
+														    ng-model="produto.id_fabricante"
+														    ng-options="fabricante.id as fabricante.nome_fabricante for fabricante in fabricantes">
+															</select>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group" id="peso">
+															<label class="control-label">Importador</label> <i ng-click="modal('show','modal-novo-importador')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+															<select chosen ng-change="ClearChosenSelect('importador')"
+														    option="importadores"
+														    ng-model="produto.id_importador"
+														    ng-options="importador.id as importador.nome_importador for importador in importadores">
+															</select>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group" id="peso">
+															<label class="control-label">Categoria</label> <i ng-click="modal('show','modal-nova-categoria')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+															<select chosen ng-change="ClearChosenSelect('categoria')"
+														    option="categorias"
+														    ng-model="produto.id_categoria"
+														    ng-options="categoria.id as categoria.descricao_categoria for categoria in categorias">
+															</select>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group"  style="height:200px">
+														<label class="control-label">Descrição Curta</label>
+														<div id="descricao_html_curta"></div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group" style="height:200px">
+														<label class="control-label">Descrição</label>
+														<div id="descricao_html"></div>
+													</div>
+												</div>
+											</div>
+											<div style="padding: 10px 15px 10px 0px; margin-bottom:10px" class="panel-heading">
+												SEO (OTIMIZAÇÃO PARA MOTORES DE BUSCA)
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group" id="codigo_barra">
+														<label class="control-label"> Meta Title</label>
+														<input maxlength="70" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.meta_title" type="text"  class="form-control input-sm">
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group" id="codigo_barra">
+														<label class="control-label"> Meta Description</label>
+														<input maxlength="160" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.description" type="text"  class="form-control input-sm">
+													</div>
+												</div>
+											</div>
+											<!--<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group" id="descricao">
+														<label class="control-label">Descrição</label>
+														<textarea ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-model="produto.descricao" class="form-control" rows="5"></textarea>
+													</div>
+												</div>
+											</div>-->
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-informacoes-complemetares')"type="submit" id="btn-salvar-informacoes-complemetares" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="Empreendimentos">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="empreendimentos form-group" id="empreendimentos">
+															<table class="table table-bordered table-condensed table-striped table-hover">
+																<thead>
+																	<tr>
+																		<td><i class="fa fa-building-o"></i> Empreendimentos</td>
+																		<td width="60" align="center">
+																			<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()"><i class="fa fa-plus-circle"></i></button>
+																		</td>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr ng-show="(empreendimentosAssociados.length == 0)">
+																		<td colspan="2" align="center">Nenhum empreendimento selecionado</td>
+																	</tr>
+																	<tr ng-repeat="item in empreendimentosAssociados">
+																		<td>{{ item.nome_empreendimento }}</td>
+																		<td align="center">
+																			<button class="btn btn-xs btn-danger" ng-click="delEmpreendimento($index,item)"><i class="fa fa-trash-o"></i></button>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+												
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-empreendimentos')"type="submit" id="btn-salvar-empreendimentos" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="fornecedores">
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group" id="fornecedores">
+														<table class="table table-bordered table-condensed table-striped table-hover">
+															<thead>
+																<tr>
+																	<td><i class="fa fa-truck"></i> Fornecedores <!--<i ng-click="modal('show','modal-novo-fornecedor')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>--></td>
+																	<td width="60" align="center">
+																		<button ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" ng-click="showFornecedores()"  class="btn btn-xs btn-primary"><i class="fa fa-plus-circle"></i></button>
+																	</td>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-show="(produto.fornecedores.length == 0)">
+																		<td colspan="2" align="center">Nenhum fornecedor selecionado</td>
+																	</tr>
+																<tr ng-repeat="item in produto.fornecedores" >
+																	<td>{{ item.nome_fornecedor }}</td>
+																	<td align="center">
+																		<button ng-click="delFornecedor($index)" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-fornecedores')"type="submit" id="btn-salvar-fornecedores" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="fiscal">
+											<div class="row">
+												<div class="col-sm-4" id="cod_ncm">
+													<label class="control-label">NCM</label>
+													<div class="input-group">
+														<input ng-click="selNcm()" type="text" class="form-control input-sm" ng-model="produto.ncm_view" readonly="readonly" style="cursor: pointer;" />
+														<span class="input-group-btn">
+															<button ng-click="selNcm()"  type="button" class="btn btn-sm"><i class="fa-search fa"></i></button>
+														</span>
+													</div>
+												</div>
+												<div class="col-sm-1" id="ex_tipi">
+													<div class="form-group">
+														<label class="control-label">EX TIPI</label> 
+															<input  ng-model="produto.ex_tipi" type="text" class="form-control input-sm">
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group" id="cod_especializacao_ncm">
+														<label class="control-label">Especialização NCM</label> 
+														<select chosen ng-change="ClearChosenSelect('cod_especializacao_ncm')"
+													    option="chosen_especializacao_ncm"
+													    ng-model="produto.cod_especializacao_ncm"
+													    allow-single-deselect="true"
+													    ng-options="especializacao_ncm.cod_especializacao_ncm as especializacao_ncm.dsc_especializacao_ncm for especializacao_ncm in chosen_especializacao_ncm">
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-3">
+													<div class="form-group" id="cod_forma_aquisicao">
+														<label class="control-label">Forma Aquisição</label> 
+														<select chosen ng-change="ClearChosenSelect('cod_forma_aquisicao')"
+													    option="chosen_forma_aquisicao"
+													    ng-model="produto.cod_forma_aquisicao"
+													    allow-single-deselect="true"
+													    ng-options="forma_aquisicao.cod_controle_item_nfe as forma_aquisicao.nme_item for forma_aquisicao in chosen_forma_aquisicao">
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-5">
+													<div class="form-group" id="cod_origem_mercadoria">
+														<label class="control-label">Origem Mercadoria</label> 
+														<select chosen ng-change="ClearChosenSelect('cod_origem_mercadoria')"
+													    option="chosen_origem_mercadoria"
+													    ng-model="produto.cod_origem_mercadoria"
+													    allow-single-deselect="true"
+													    ng-options="origem_mercadoria.cod_controle_item_nfe as origem_mercadoria.nme_item for origem_mercadoria in chosen_origem_mercadoria">
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="cod_tipo_tributacao_ipi">
+														<label class="control-label">Tipo Tributação IPI</label> 
+														<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_ipi')"
+													    option="chosen_tipo_tributacao_ipi"
+													    ng-model="produto.cod_tipo_tributacao_ipi"
+													    allow-single-deselect="true"
+													    ng-options="tipo_tributacao_ipi.cod_controle_item_nfe as tipo_tributacao_ipi.nme_item for tipo_tributacao_ipi in chosen_tipo_tributacao_ipi">
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="cod_tipo_tributacao_ipi">
+														<label class="control-label">Regra Tributos</label> 
+														<select chosen 
+													    option="chosen_regra_tributos"
+													    ng-model="produto.cod_regra_tributos"
+													    allow-single-deselect="true"
+													    ng-options="regra.cod_regra_tributos as regra.dsc_regra_tributos for regra in chosen_regra_tributos">
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="codigo_barra">
+														<label class="control-label">Número Cest</label>
+														<input ng-model="produto.num_cest" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-2">
+													<div class="form-group" id="dsc_unidade_medida">
+														<label class="control-label">Uni Comercial</label>
+														<input ng-model="produto.dsc_unidade_medida" type="text"  class="form-control input-sm">
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-fiscal')"type="submit" id="btn-salvar-fiscal" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
 											</div>
 										</div>
 										<div class="tab-pane fade" id="combinacoes">
@@ -649,13 +815,13 @@
 																		<td class="text-center" align="center"></td>
 																	</tr>
 																	<tr ng-repeat="item in produto.combinacoes">
-																		<td>{{ item.id }}</td>
+																		<td>{{ item.id_combinacao }}</td>
 																		<td>{{ item.nome }}</td>
 																		<td>{{ item.nome_fabricante }}</td>
 																		<td>{{ item.peso }}</td>
 																		<td>{{ item.sabor }}</td>
 																		<td align="center">
-																			<button class="btn btn-xs btn-danger" ng-click="delCombinacao($index,item)"><i class="fa fa-trash-o"></i></button>
+																			<button ng-if="produto.id != item.id" class="btn btn-xs btn-danger" ng-click="delCombinacao($index,item)"><i class="fa fa-trash-o"></i></button>
 																		</td>
 																	</tr>
 																</tbody>
@@ -667,118 +833,18 @@
 										</div>
 									</div>
 								</div>
-								<div class="tab-pane fade" id="fiscal">
-									<div class="row">
-										<div class="col-sm-4" id="cod_ncm">
-											<label class="control-label">NCM</label>
-											<div class="input-group">
-												<input ng-click="selNcm()" type="text" class="form-control input-sm" ng-model="produto.ncm_view" readonly="readonly" style="cursor: pointer;" />
-												<span class="input-group-btn">
-													<button ng-click="selNcm()"  type="button" class="btn btn-sm"><i class="fa-search fa"></i></button>
-												</span>
-											</div>
-										</div>
-										<div class="col-sm-1" id="ex_tipi">
-											<div class="form-group">
-												<label class="control-label">EX TIPI</label> 
-													<input  ng-model="produto.ex_tipi" type="text" class="form-control input-sm">
-											</div>
-										</div>
-										<div class="col-sm-4">
-											<div class="form-group" id="cod_especializacao_ncm">
-												<label class="control-label">Especialização NCM</label> 
-												<select chosen ng-change="ClearChosenSelect('cod_especializacao_ncm')"
-											    option="chosen_especializacao_ncm"
-											    ng-model="produto.cod_especializacao_ncm"
-											    allow-single-deselect="true"
-											    ng-options="especializacao_ncm.cod_especializacao_ncm as especializacao_ncm.dsc_especializacao_ncm for especializacao_ncm in chosen_especializacao_ncm">
-												</select>
-											</div>
-										</div>
-										<div class="col-sm-3">
-											<div class="form-group" id="cod_forma_aquisicao">
-												<label class="control-label">Forma Aquisição</label> 
-												<select chosen ng-change="ClearChosenSelect('cod_forma_aquisicao')"
-											    option="chosen_forma_aquisicao"
-											    ng-model="produto.cod_forma_aquisicao"
-											    allow-single-deselect="true"
-											    ng-options="forma_aquisicao.cod_controle_item_nfe as forma_aquisicao.nme_item for forma_aquisicao in chosen_forma_aquisicao">
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-5">
-											<div class="form-group" id="cod_origem_mercadoria">
-												<label class="control-label">Origem Mercadoria</label> 
-												<select chosen ng-change="ClearChosenSelect('cod_origem_mercadoria')"
-											    option="chosen_origem_mercadoria"
-											    ng-model="produto.cod_origem_mercadoria"
-											    allow-single-deselect="true"
-											    ng-options="origem_mercadoria.cod_controle_item_nfe as origem_mercadoria.nme_item for origem_mercadoria in chosen_origem_mercadoria">
-												</select>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="cod_tipo_tributacao_ipi">
-												<label class="control-label">Tipo Tributação IPI</label> 
-												<select chosen ng-change="ClearChosenSelect('cod_tipo_tributacao_ipi')"
-											    option="chosen_tipo_tributacao_ipi"
-											    ng-model="produto.cod_tipo_tributacao_ipi"
-											    allow-single-deselect="true"
-											    ng-options="tipo_tributacao_ipi.cod_controle_item_nfe as tipo_tributacao_ipi.nme_item for tipo_tributacao_ipi in chosen_tipo_tributacao_ipi">
-												</select>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="cod_tipo_tributacao_ipi">
-												<label class="control-label">Regra Tributos</label> 
-												<select chosen 
-											    option="chosen_regra_tributos"
-											    ng-model="produto.cod_regra_tributos"
-											    allow-single-deselect="true"
-											    ng-options="regra.cod_regra_tributos as regra.dsc_regra_tributos for regra in chosen_regra_tributos">
-												</select>
-											</div>
-										</div>
-										<div class="col-sm-2">
-											<div class="form-group" id="codigo_barra">
-												<label class="control-label">Número Cest</label>
-												<input ng-model="produto.num_cest" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-2">
-											<div class="form-group" id="dsc_unidade_medida">
-												<label class="control-label">Uni Comercial</label>
-												<input ng-model="produto.dsc_unidade_medida" type="text"  class="form-control input-sm">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</form>
-					<div class="panel-footer clearfix">
-						<div class="pull-right">
-							<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
-								<i class="fa fa-times-circle"></i> Cancelar
-							</button>
-							<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-informacoes-basicas')"type="submit" id="btn-salvar-informacoes-basicas" class="btn btn-success btn-sm">
-								<i class="fa fa-save"></i> Salvar
-							</button>
-						</div>
+								</form>
+							</div><!-- /panel -->
 					</div>
 				</div><!-- /panel -->
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<i class="fa fa-tasks"></i> Produtos Cadastrados
-						<a href="util/export.php?c=produtos&id_empreendimento={{ userLogged.id_empreendimento }}" target="_blank" class="btn btn-xs btn-success pull-right"  type="button">
+						<!--<a href="util/export.php?c=produtos&id_empreendimento={{ userLogged.id_empreendimento }}" target="_blank" class="btn btn-xs btn-success pull-right"  type="button">
 							<i class="fa fa-download"></i>
 							Exportar
-						</a>
+						</a>-->
 					</div>
 
 
@@ -1573,6 +1639,8 @@
 	<!-- Mascaras para o formulario de produtos -->
 	<script src="js/scripts/mascaras.js"></script>
 
+	<script src="js/Trumbowyg-master/dist/trumbowyg.js"></script>
+
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
@@ -1600,6 +1668,8 @@
     <script src="js/auto-complete/ng-sanitize.js"></script>
     <script src="js/angular-chosen.js"></script>
     <script type="text/javascript">
+    	$('#descricao_html').trumbowyg();
+    	$('#descricao_html_curta').trumbowyg();
     	var addParamModule = ['angular.chosen'] ;
     </script>
     <script src="js/app.js"></script>
