@@ -92,6 +92,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.reset = function() {
 		//ng.busca.produtos = '';
 		$('#descricao_html').trumbowyg('html','');
+		$('#descricao_html_curta').trumbowyg('html','');
 		ng.insumos = []
 		ng.produto 		= {
 							id_tamanho : null,
@@ -337,6 +338,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		var produto = angular.copy(ng.produto) ;
 
 		produto.descricao = $('#descricao_html').trumbowyg('html');
+		produto.descricao_curta = $('#descricao_html_curta').trumbowyg('html');
 
 		console.log(produto);
 
@@ -501,6 +503,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.produto.cod_especializacao_ncm = ng.produto.cod_especializacao_ncm === null ? "" : Number(ng.produto.cod_especializacao_ncm)  ; 
 		ng.produto.ncm_view = item.cod_ncm+" - "+item.dsc_ncm ;
 		$('#descricao_html').trumbowyg('html',ng.produto.descricao);
+		$('#descricao_html_curta').trumbowyg('html',ng.produto.descricao_curta);
 
 		/*if((typeof ng.produto.combinacoes == 'object') && ng.produto.combinacoes.length == 0){
 			var combinacao = angular.copy(ng.produto);

@@ -578,7 +578,7 @@
 												<div class="col-sm-12">
 													<div class="form-group" id="codigo_barra">
 														<label class="control-label"> Meta Description</label>
-														<input maxlength="160" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.description" type="text"  class="form-control input-sm">
+														<input maxlength="160" ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.meta_description" type="text"  class="form-control input-sm">
 													</div>
 												</div>
 											</div>
