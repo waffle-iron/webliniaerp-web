@@ -24,7 +24,7 @@
 	<!-- Chosen -->
 	<link href="css/chosen/chosen.min.css" rel="stylesheet"/>
 
-	<link href="css/fileinput/dists/ui/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+	<link href="css/fileinput/fileinput.css" media="all" rel="stylesheet" type="text/css" />
 
 	<link href="js/Trumbowyg-master/dists/ui/trumbowyg.css" media="all" rel="stylesheet" type="text/css" />
 	
