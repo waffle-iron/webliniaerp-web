@@ -1336,7 +1336,11 @@
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(empreendimento.length != 0)">
 										<tr>
-											<th colspan="2">Nome</th>
+											<th colspan="2">Nome 
+												<button type="button" class="btn btn-xs btn-success pull-right" id="addAllEmpreendimentos" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." ng-disabled="empreendimentoSelected(item)" ng-click="addAllEmpreendimento(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar Todos
+												</button>
+											</th>
 										</tr>
 									</thead>
 									<tbody>

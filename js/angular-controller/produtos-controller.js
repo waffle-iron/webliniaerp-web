@@ -953,6 +953,40 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		}
 	}
 
+	ng.addAllEmpreendimento = function(item) {
+		var btn = $('#addAllEmpreendimentos');
+   		btn.button('loading');
+		aj.get(baseUrlApi()+"empreendimentos?id_usuario="+ng.userLogged.id)
+			.success(function(data, status, headers, config) {
+				ng.empreendimentosAssociados = [];
+				ng.produto.precos = [];
+				$.each(data,function(i,item){
+					var empreendimento = {
+				 	id : null,
+				 	id_empreendimento : item.id,
+				 	nome_empreendimento : item.nome_empreendimento 
+					}
+					ng.empreendimentosAssociados.push(empreendimento);
+					ng.produto.precos.push({
+					 	nome_empreendimento: item.nome_empreendimento,
+						id_empreendimento: item.id,
+						vlr_custo: 0,
+						perc_imposto_compra: 0,
+						perc_desconto_compra: 0,
+						perc_venda_atacado: 0,
+						perc_venda_intermediario: 0,
+						perc_venda_varejo: 0
+					});
+					if(Number(ng.produto.flg_produto_composto) == 1){
+						ng.calVlrCustoInsumos();
+					}
+				});
+				btn.button('reset');
+			})
+			.error(function(data, status, headers, config) {
+			});
+	}
+
 	ng.empreendimentoSelected = function(item){
 		var saida = false ;
 		$.each(ng.empreendimentosAssociados,function(i,v){
