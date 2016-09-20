@@ -10,7 +10,7 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 	ng.busca_return_empty   = false ;
 	ng.view					= { busca_return_empty : false,cadastar_cliente:false,cadastro_novo_cliente:false } ;
 	ng.cliente              = {tipo_cadastro:'pf'};
-	ng.busca                = {clientes:''};
+	ng.busca                = {clientes:'',nome: "",id_venda: ""};
 	ng.clientes             = [];
 	ng.cliente_selecionado  = {} ;
 	ng.paginacao = { itens: [] } ;
@@ -348,7 +348,6 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 		ng.Devolucoes = {itens:[]};
 	}
 
-	ng.busca = { nome: "", id_venda: ""};
 	ng.resetFilter = function() {
 		$("#data").val("");
 		ng.busca.nome = "" ;
