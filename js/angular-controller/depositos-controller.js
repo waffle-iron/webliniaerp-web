@@ -9,7 +9,7 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
     ng.depositos					= [];
     ng.empreendimentos 				= [];
     ng.paginacao           			= {} ;
-    ng.busca               			= {empreendimento:""} ;
+    ng.busca               			= {empreendimento:"", text: ""} ;
     ng.empreendimentosAssociados = [{ id : ng.userLogged.id_empreendimento,nome_empreendimento:ng.userLogged.nome_empreendimento,flg_visivel:1 }];
     ng.editing = false;
 
@@ -96,7 +96,6 @@ app.controller('DepositosController', function($scope, $http, $window, $dialogs,
 			});
 	}
 
-	ng.busca = { text: "" };
 	ng.resetFilter = function() {
 		ng.busca.text = "" ;
 		ng.reset();
