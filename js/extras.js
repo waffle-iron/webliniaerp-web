@@ -687,6 +687,38 @@ function clearValidationFormStyle() {
     $(".has-error").removeClass("has-error");
 }
 
+function notifcacaoPrestaShop(tipo){
+    if(tipo == 'sucesso'){
+         var x = noty({
+            text        : "<div style='font-size:12px'><i class='fa fa-check-circle-o' aria-hidden='true'></i> PrestaShop atualizado</div>",
+            type        : 'success',
+            dismissQueue: false,
+            layout      : 'topRight',
+            theme       : 'relax',
+            timeout     : 5000
+        });
+    }else if(tipo == 'informacao'){
+         var x = noty({
+            text        : "<div style='font-size:12px'><i class='fa fa-refresh fa-spin'></i> Atualizando PrestaShop</div>",
+            type        : 'information',
+            dismissQueue: false,
+            layout      : 'topRight',
+            theme       : 'relax'
+        });
+    }else{
+         var x = noty({
+                text        : "<div style='font-size:12px'>Erro ao atualizar dados em PrestaShop</div>",
+                type        : 'error',
+                dismissQueue: false,
+                layout      : 'topRight',
+                theme       : 'relax'
+            });
+    }
+
+    return x ;
+    
+}
+
  (function($) {
           // duck-punching to make attr() return a map
           var _old = $.fn.attr;
