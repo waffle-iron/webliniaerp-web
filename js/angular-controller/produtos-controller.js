@@ -1,4 +1,4 @@
-app.controller('ProdutosController', function($scope, $http, $window, $dialogs, UserService,FuncionalidadeService){
+app.controller('ProdutosController', function($scope, $http, $window, $dialogs, UserService,FuncionalidadeService,PrestaShop){
 	var ng = $scope
 		aj = $http;
 
@@ -6,23 +6,28 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.userLogged 	= UserService.getUserLogado();
 	ng.ids_empreendimento_usuario = [] ;
 	console.log(ng.ids_empreendimento_usuario);
-	ng.produto 		= {
-							id_tamanho : null,
-							id_cor     : null,
-							flg_produto_composto : 0,
-							estoque:[],
-							preco:{
-										perc_venda_atacado:0,
-										valor_venda_atacado:0,
-										perc_venda_varejo:0,
-										valor_venda_varejo:0,
-										perc_venda_intermediario:0,
-										valor_venda_intermediario:0,
-										vlr_custo:0
-									},
-							precos:[],
-							combinacoes : []
-						};
+
+	var produtoTO = {
+		id_tamanho : null,
+		id_cor     : null,
+		flg_produto_composto : 0,
+		estoque:[],
+		preco:{
+					perc_venda_atacado:0,
+					valor_venda_atacado:0,
+					perc_venda_varejo:0,
+					valor_venda_varejo:0,
+					perc_venda_intermediario:0,
+					valor_venda_intermediario:0,
+					vlr_custo:0
+				},
+		precos:[],
+		combinacoes : [],
+		categorias : []
+	};
+
+	ng.produto 			= angular.copy(produtoTO)  ;
+	ng.combinacoes 		= angular.copy(produtoTO)  ;
 
 	ng.campos_extras_produto  = [] ;
     ng.produtos		= null;
@@ -79,8 +84,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		}
 	}
 	
-
-
 	ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
 		$(alertClass).fadeIn().addClass(classe).html(msg);
@@ -93,33 +96,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		//ng.busca.produtos = '';
 		$('#descricao_html').trumbowyg('html','');
 		$('#descricao_html_curta').trumbowyg('html','');
-		ng.insumos = []
-		ng.produto 		= {
-							id_tamanho : null,
-							id_cor     : null,
-							estoque:[],
-							preco:{
-										perc_venda_atacado:0,
-										valor_venda_atacado:0,
-										perc_venda_varejo:0,
-										valor_venda_varejo:0,
-										perc_venda_intermediario:0,
-										valor_venda_intermediario:0,
-										vlr_custo:0
-									},
-							fornecedores : [],
-							precos:[{
-									 	nome_empreendimento: ng.userLogged.nome_empreendimento,
-										id_empreendimento: ng.userLogged.id_empreendimento,
-										vlr_custo: 0,
-										perc_imposto_compra: 0,
-										perc_desconto_compra: 0,
-										perc_venda_atacado: 0,
-										perc_venda_intermediario: 0,
-										perc_venda_varejo: 0
-									}],
-								combinacoes : []
-						};
+		ng.insumos = [] ;
+		ng.produto 		= angular.copy(produtoTO)  ;
+		ng.combinacoes 		= angular.copy(produtoTO)  ;
 		ng.editing = false;
 		ng.empreendimentosAssociados = [{ id_empreendimento : ng.userLogged.id_empreendimento, nome_empreendimento : ng.userLogged.nome_empreendimento }];
 		valor_campo_extra = angular.copy(ng.valor_campo_extra);
@@ -128,6 +107,11 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.produto_normal = 0 ;
 		$($(".has-error").find(".form-control")).tooltip('destroy');
 		$(".has-error").removeClass("has-error");
+		var treeview = $('#treeview-modulos').treeview('getUnselected', null);
+		$checkableTree.treeview('collapseAll', { silent: true });
+		$.each(treeview,function(i,v){
+				$checkableTree.treeview('uncheckNode', [v.nodeId, {silent: true}]);
+		});
 	}
 
 	ng.resetFilter = function() {
@@ -147,6 +131,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		currentPaginacao.limit  = limit  ;
 
 		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
+		query_string += "&(tpc->id_combinacao[exp]=IS NULL OR (tpc.id_combinacao IS NOT NULL AND pro.id = tpc.id_produto ) )" ;
 
 		if(ng.busca.produtos != ""){
 			if(isNaN(Number(ng.busca.produtos)))
@@ -440,7 +425,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 		 		produto.id= data.id ;
 		 		produto.local_new_image = !empty(data.local_new_image) ?  data.local_new_image : null ; 
-		 		ng.salvarPrestaShop(produto);
+		 		PrestaShop.send('post',baseUrlApi()+"prestashop/produto/",produto);
 		 	},
 		 	error:function(data){
 		 		 btn.button('reset');
@@ -465,36 +450,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		}).submit();
 	}
 
-	ng.salvarPrestaShop = function(dados){
-		aj.post(baseUrlApi()+"prestashop/produto/",dados)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
-	ng.deletePrestaShop = function(id_produto){
-		aj.delete(baseUrlApi()+"prestashop/produto/"+id_produto+'/'+ng.userLogged.id_empreendimento)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
-	ng.salvarPrestaShopCor = function(dados){
-		aj.post(baseUrlApi()+"prestashop/cor/",dados)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
 	ng.editar = function(item) {
 		ng.editing = true ;
 		ng.produto = angular.copy(item);
@@ -502,6 +457,11 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.produto.id_cor = ng.produto.id_cor === null ? 0 : Number(ng.produto.id_cor)  ;
 		ng.produto.cod_especializacao_ncm = ng.produto.cod_especializacao_ncm === null ? "" : Number(ng.produto.cod_especializacao_ncm)  ; 
 		ng.produto.ncm_view = item.cod_ncm+" - "+item.dsc_ncm ;
+		if(typeof ng.produto.categorias != 'object'){
+			 ng.produto.categorias = [] ;
+		}else{
+			ng.checkedTreeview(ng.produto.categorias);
+		}
 		$('#descricao_html').trumbowyg('html',ng.produto.descricao);
 		$('#descricao_html_curta').trumbowyg('html',ng.produto.descricao_curta);
 
@@ -541,7 +501,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					ng.mensagens('alert-success','<strong>Produto excluido com sucesso</strong>');
 					ng.reset();
 					ng.loadProdutos();
-					ng.deletePrestaShop(item.id);
+					PrestaShop.send('delete',baseUrlApi()+"prestashop/produto/"+item.id+'/'+ng.userLogged.id_empreendimento);
 				})
 				.error(defaulErrorHandler);
 		}, undefined);
@@ -1122,6 +1082,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			btn.button('reset');
 			ng.loadTamanhos(ng.tamanho.nome_tamanho);
 			$('#modal-novo-tamanho').modal('hide');
+			post = angular.copy(ng.tamanho);
+			post.id = data.id ;
+			PrestaShop.send('post',baseUrlApi()+"prestashop/tamanho/",post);
 		})
 		.error(function(data, status, headers, config) {
 			btn.button('reset');
@@ -1302,7 +1265,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.cor_produto = {nome_cor:"",empreendimentos:[]} ;
 	}
 
-		ng.salvarCorProduto = function(produto){
+	ng.salvarCorProduto = function(produto){
 		var btn = $('#btn-salvar-cor');
    		btn.button('loading');
 		ng.cor_produto.empreendimentos = [] ;
@@ -1317,7 +1280,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			$('#modal-nova-cor').modal('hide');
 			post = angular.copy(ng.cor_produto);
 			post.id = data.id ;
-			ng.salvarPrestaShopCor(post);
+			PrestaShop.send('post',baseUrlApi()+"prestashop/cor/",post);
 		})
 		.error(function(data, status, headers, config) {
 			btn.button('reset');
@@ -1450,11 +1413,63 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.loadModalCombinacoes(0,10);
 	}
 
+	ng.showModalAddCombinacoes = function(){
+		indexEditCombinacao = null ;
+		$('#modal-add-combinacao').modal('show');
+		ng.combinacao 	= angular.copy(produtoTO)  ;
+		ng.combinacao.nome = ng.produto.nome ;
+		$.each(ng.produto.precos,function(i,item){
+			ng.combinacao.precos.push({
+			 	nome_empreendimento: item.nome_empreendimento,
+				id_empreendimento: item.id_empreendimento,
+				vlr_custo: 0,
+				perc_imposto_compra: 0,
+				perc_desconto_compra: 0,
+				perc_venda_atacado: 0,
+				perc_venda_intermediario: 0,
+				perc_venda_varejo: 0
+			});
+		});
+	}
+
 	ng.addCombinacao = function(item){
 		if(typeof ng.produto.combinacoes != 'object' )
 			ng.produto.combinacoes = [] ;
+		if(ng.produto.combinacoes.length == 0){
+			var itemProdutoDefault = angular.copy(ng.produto);
+			itemProdutoDefault.id_combinacao = itemProdutoDefault.id_produto ;
+			ng.produto.combinacoes.push(angular.copy(itemProdutoDefault));
+		}
 		item.id_combinacao = item.id_produto ;
 		ng.produto.combinacoes.push(item);
+	}
+
+	var indexEditCombinacao = null ;
+	ng.ModalEditarCombinacao = function(item,$index){
+		indexEditCombinacao = $index ;
+		$('#modal-add-combinacao').modal('show');
+		ng.combinacao = item ;
+		if($.isNumeric(item.id_combinacao) && typeof item.precos != 'object'){
+			aj.get(baseUrlApi()+"produto/precos?cplSql=tp.id="+item.id_combinacao)
+			.success(function(dataPrc, statusPrc) {
+				$.each(dataPrc,function(i,x){
+					dataPrc[i].vlr_custo =  numberFormat( ( empty(x.vlr_custo) ? 0  : x.vlr_custo  )					  ,2,'.','');
+					dataPrc[i].perc_imposto_compra =  0 ;
+					dataPrc[i].perc_desconto_compra =  0 ;
+					dataPrc[i].perc_venda_atacado =  numberFormat( ( empty(x.perc_venda_atacado) ? 0  : x.perc_venda_atacado  )       * 100 ,2,'.','');
+					dataPrc[i].perc_venda_varejo =  numberFormat( ( empty(x.perc_venda_varejo) ? 0  : x.perc_venda_varejo  )        * 100 ,2,'.','');
+					dataPrc[i].perc_venda_intermediario =  numberFormat( ( empty(x.perc_venda_intermediario) ? 0  : x.perc_venda_intermediario  ) * 100 ,2,'.','');
+					dataPrc[i].valor_desconto_cliente =  numberFormat( ( empty(x.valor_desconto_cliente) ? 0  : x.valor_desconto_cliente  )   * 100 ,2,'.','');
+				});
+				ng.combinacao.precos = dataPrc ;
+				$.each(ng.combinacao.precos,function(i,x){
+					ng.calcularAllMargens(x);
+				});
+			})
+			.error(function(dataPrc, statusPrc) {
+				console.log('Erro ao buscar os preços');
+			});
+		}
 	}
 
 	ng.existsCombinacao = function(id_produto){
@@ -1491,6 +1506,213 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		$(".has-error").removeClass("has-error");
 		$("#"+id).modal(acao);
 	}
+
+
+	ng.subMenuConstruct = function(arrpai,arr){
+		var menu = [] ;
+		$.each(arr,function(key,value){
+			if(arrpai.id == value.id_pai){
+				var item = {
+					id : value.id,
+					id_pai : value.id_pai,
+					data : {id:value.id.toString()},
+					text : value.descricao_categoria,
+					nodes : ng.subMenuConstruct(value,arr),
+					icone : 'fa-tags'
+				};	
+				if(item.nodes.length == 0) delete item.nodes ;
+				menu.push(item);	
+			}
+		});
+
+		return menu ;
+	}
+	
+	ng.menuConstruct = function(categorias){
+		var menu = [] ;
+		$.each(categorias,function(key,value){
+			if(empty(value.id_pai)){
+				var itens = ng.subMenuConstruct(value,categorias)
+				if(itens.length > 0){
+					menu.push({
+						id : value.id,
+						data : {id:value.id.toString()},
+						text : value.descricao_categoria,
+						nodes : ng.subMenuConstruct(value,categorias),
+						icone : "fa-signal",
+						selectable:false
+					});	
+				}else{
+					menu.push({
+						id : value.id,
+						data : {id:value.id.toString()},
+						text : value.descricao_categoria,
+						icone : "fa-signal",
+						selectable:false
+					});			
+				}
+				
+			}
+		});
+
+		return menu ;
+	}
+
+
+	ng.loadCategoriasTreeview = function() {
+		aj.get(baseUrlApi()+"categorias?tce->id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				menu = ng.menuConstruct(data.categorias);	
+				ng.treeviewConstruct(menu);
+			})
+			.error(function(data, status, headers, config) {
+				
+			});
+	}
+
+	function treeviewCheckChildren(node){
+		if(!empty(node.nodes && node.nodes.length > 0)){
+			treeviewExpanded(node);
+			$.each(node.nodes,function(i,v){
+		        if(!v.state.checked){
+			        $scope.$apply(function () {
+			           ng.produto.categorias.push(v.id);
+			        });
+					$checkableTree.treeview('checkNode', [v.nodeId, {silent: true}]);
+				}
+				treeviewCheckChildren(v);
+			});
+		}
+	}
+
+	function treeviewExpanded(node){
+		if(!node.state.expanded)
+			$('#treeview-modulos').treeview('toggleNodeExpanded', [ node.nodeId, { silent: true } ]);
+	}
+
+	function treeviewCollapsing (node){
+		if(node.state.expanded)
+			$('#treeview-modulos').treeview('toggleNodeExpanded', [ node.nodeId, { silent: true } ]);
+	}
+
+	function treeviewUnCheckChildren(node){
+		if(!empty(node.nodes && node.nodes.length > 0)){
+			$.each(node.nodes,function(i,v){
+		        if(v.state.checked){
+		        	var index = ng.produto.categorias.indexOf(v.id);
+		            $scope.$apply(function () {
+		           	   ng.produto.categorias.splice(index,1);
+		        	});
+					$checkableTree.treeview('uncheckNode', [v.nodeId, {silent: true}]);
+				}
+				treeviewUnCheckChildren(v);
+			});
+		}
+	}
+
+	function checkPai(node){
+		var parent = $checkableTree.treeview('getParent', node);
+		if(!empty(parent.state)){
+			if(!parent.state.checked){
+				 $scope.$apply(function () {
+		           ng.produto.categorias.push(parent.id);
+		        });
+				$checkableTree.treeview('checkNode', [parent.nodeId, {silent: true}]);
+			}
+		}
+	}
+
+	ng.treeviewConstruct = function(data){
+		console.log(data);
+			$checkableTree = $('#treeview-modulos').treeview({
+	          data: data,
+	          showIcon: false,
+	          expandIcon: 'glyphicon glyphicon-chevron-right',
+	          collapseIcon: 'glyphicon glyphicon-chevron-down',
+	          showCheckbox: true,
+	          showBorder: false,
+	          selectedBackColor: "white",
+	          selectedColor: "#777",
+	          onhoverColor:false,
+	          onNodeChecked: function(event, node) {
+	          	$scope.$apply(function () {
+		           ng.produto.categorias.push(node.id);
+		        });	
+		        checkPai(node);
+		        treeviewCheckChildren(node);
+	          },
+	          onNodeUnchecked: function (event, node) {
+	            var index = ng.produto.categorias.indexOf(node.id);
+	            $scope.$apply(function () {
+	           	   ng.produto.categorias.splice(index,1);
+	        	});
+	        	treeviewUnCheckChildren(node);
+	          },
+	        }).treeview('collapseAll', { silent: true });
+	        var a =$checkableTree.treeview('search',
+            [
+              4,
+              'data.cod_modulo',
+              {
+                ignoreCase: true,
+                exactMatch: true,
+                revealResults: false
+              }
+            ]
+          );
+
+	       console.log(a);
+	}
+
+	ng.checkedTreeview = function(categorias){
+		var treeview = $('#treeview-modulos').treeview('getUnselected', null);
+		$.each(treeview,function(i,v){
+			if(_in(v.id,categorias)){
+				$checkableTree.treeview('checkNode', [v.nodeId, {silent: true}]);
+				treeviewExpanded(v);
+		        ng.showBoxNovo(true);
+			}else{
+				$checkableTree.treeview('uncheckNode', [v.nodeId, {silent: true}]);
+				treeviewCollapsing(v);
+			}
+		});
+	}
+
+	ng.incluirCombinacao = function(){
+		$('#modal-add-combinacao').modal('hide');
+		if(!empty(ng.combinacao.id_tamanho)){
+			var indexTamanho = getIndex('id',ng.combinacao.id_tamanho,ng.tamanhos);
+			if(!empty(indexTamanho)){
+				ng.combinacao.peso = ng.tamanhos[indexTamanho].nome_tamanho ;
+			}
+		}
+
+		if(!empty(ng.combinacao.id_cor)){
+			var indexCor = getIndex('id',ng.combinacao.id_cor,ng.cores);
+			if(!empty(indexCor)){
+				ng.combinacao.sabor = ng.cores[indexCor].nome_cor ;
+			}
+		}
+
+		if(ng.produto.combinacoes.length == 0){
+			var itemProdutoDefault = angular.copy(ng.produto);
+			itemProdutoDefault.id_combinacao = itemProdutoDefault.id_produto ;
+			ng.produto.combinacoes.push(angular.copy(itemProdutoDefault));
+		}
+		
+		if($.isNumeric(indexEditCombinacao))
+			ng.produto.combinacoes[indexEditCombinacao] = angular.copy(ng.combinacao) ;
+		else
+			ng.produto.combinacoes.push(angular.copy(ng.combinacao)) ;
+		ng.combinacao = angular.copy(produtoTO);
+		indexEditCombinacao = null ;
+	}
+
+
+	ng.loadCategoriasTreeview();
+
+
+
 
 	function defaulErrorHandler(data, status, headers, config) {
 		ng.mensagens('alert-danger','<strong>'+ data +'</strong>');

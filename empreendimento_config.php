@@ -181,6 +181,7 @@
 							<li><a href="#notificacoes" data-toggle="tab"><i class="fa fa-bell"></i> Notificações</a></li>
 							<li><a href="#mod_clinica" ng-if="userLogged.id_empreendimento == 75" data-toggle="tab"><i class="fa fa-list"></i> Controle de Atendimento</a></li>
 							<li><a href="#pedido_personalizado" ng-if="userLogged.id_empreendimento == 51" data-toggle="tab"><i class="fa fa-list"></i> Pedidos Personalizados</a></li>
+							<li><a href="#prestaShop" data-toggle="tab"><i class="fa fa-bell"></i> PrestraShop</a></li>
 							<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
 						</ul>
 					</div>
@@ -1304,6 +1305,39 @@
 									</div>
 								</div>
 
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="pull-right">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigDepositoPadrao($event)" type="submit" class="btn btn-success btn-sm">
+												<i class="fa fa-save"></i> Salvar
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="prestaShop">
+								<div class="alert alert-config-prestashop" style="display:none"></div>
+
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label for="" class="control-label">Integrar com PrestaShop?</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_integrar_prestashop" value="1" name="flg_integrar_prestashop"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_integrar_prestashop" value="0" name="flg_integrar_prestashop"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">

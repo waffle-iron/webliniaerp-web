@@ -949,7 +949,7 @@
 			</div>
 		</div><!-- /main-container -->
 
-			<!-- /Modal empreendimento-->
+		<!-- /Modal empreendimento-->
 		<div class="modal fade" id="list-regime-especial" style="display:none">
   			<div class="modal-dialog">
     			<div class="modal-content">
@@ -1015,7 +1015,6 @@
 		</div>
 		<!-- /.modal -->
 
-
 		<!-- /Modal fornecedor-->
 		<div class="modal fade" id="list_emp" style="display:none">
   			<div class="modal-dialog">
@@ -1063,8 +1062,7 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-
-
+		
 		<!-- Footer
 		================================================== -->
 		<footer>
@@ -1124,6 +1122,7 @@
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
 	<script src="js/bootstrap-treeview.js"></script>
+	<script src="js/jquery.noty.packaged.js"></script>
 
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>

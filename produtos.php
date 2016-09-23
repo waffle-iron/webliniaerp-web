@@ -15,6 +15,9 @@
     <!-- Bootstrap core CSS -->
       <link rel='stylesheet prefetch' href='bootstrap/css/bootstrap.min.css'>
 
+     <!-- ui treeview -->
+    <link rel="stylesheet" href="css/bootstrap-treeview.css"/>
+
 	<!-- Font Awesome -->
 	<link href="css/font-awesome-4.1.0.min.css" rel="stylesheet">
 
@@ -537,29 +540,38 @@
 													</div>
 												</div>
 												<div class="col-sm-4">
-													<div class="form-group" id="peso">
-															<label class="control-label">Categoria</label> <i ng-click="modal('show','modal-nova-categoria')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+													
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<div class="form-group">
+															<label class="control-label">Categoria Padrão</label> <i ng-click="modal('show','modal-nova-categoria')" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
 															<select chosen ng-change="ClearChosenSelect('categoria')"
 														    option="categorias"
 														    ng-model="produto.id_categoria"
 														    ng-options="categoria.id as categoria.descricao_categoria for categoria in categorias">
 															</select>
 													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-12">
-													<div class="form-group"  style="height:200px">
-														<label class="control-label">Descrição Curta</label>
-														<div id="descricao_html_curta"></div>
+													<div class="padding-md" style="padding:0 !important">
+														<div class="panel panel-default" id="modulos">
+															<div class="panel-heading"><i class="fa fa-th fa-lg"></i> Categorias
+																	<span ng-show="perfil.modulos.length > 0" class="pull-right">Selecionados: <span style="background:#504f63" class="badge badge-primary">{{ perfil.modulos.length }}</span></span>
+															</div>
+															<div style="max-height:305px;min-height:305px;overflow:auto" class="panel-body" id="treeview-modulos">
+																
+													        </div>
+													    </div>
 													</div>
 												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-12">
+												<div class="col-sm-6">
 													<div class="form-group" style="height:200px">
 														<label class="control-label">Descrição</label>
 														<div id="descricao_html"></div>
+													</div>
+													<div class="form-group"  style="height:200px">
+														<label class="control-label">Descrição Curta</label>
+														<div id="descricao_html_curta"></div>
 													</div>
 												</div>
 											</div>
@@ -795,8 +807,12 @@
 															<table class="table table-bordered table-condensed table-striped table-hover">
 																<thead>
 																	<tr>
-																		<td colspan="5"><i class="fa fa fa-th fa-lg"></i>Combinações</td>
-																		<td width="60" align="center">
+																		<td colspan="2"><i class="fa fa fa-th fa-lg"></i>Combinações</td>
+																		<td width="90" align="center">
+																		<button type="button" data-loading-text=" Aguarde..." class="btn btn-xs btn-success"
+																    		id="btn-salvar-importador" ng-click="showModalAddCombinacoes()">
+																    		<i class="fa fa-save"></i>
+																    	</button>
 																			<button class="btn btn-xs btn-primary" ng-click="showModalCombinacoes()"><i class="fa fa-plus-circle"></i></button>
 																		</td>
 																	</tr>
@@ -807,20 +823,17 @@
 																	</tr>
 
 																	<tr ng-show="(produto.combinacoes.length > 0)">
-																		<td>#</td>
-																		<td class="text-center">Produto</td>
-																		<td class="text-center">Fabricante</td>
 																		<td class="text-center">Tamanho</td>
 																		<td class="text-center">Sabor/Cor</td>
 																		<td class="text-center" align="center"></td>
 																	</tr>
 																	<tr ng-repeat="item in produto.combinacoes">
-																		<td>{{ item.id_combinacao }}</td>
-																		<td>{{ item.nome }}</td>
-																		<td>{{ item.nome_fabricante }}</td>
 																		<td>{{ item.peso }}</td>
 																		<td>{{ item.sabor }}</td>
 																		<td align="center">
+																			<button  ng-if="produto.id != item.id" type="button" ng-click="ModalEditarCombinacao(item,$index)" class="btn btn-xs btn-warning">
+																				<i class="fa fa-edit"></i>
+																			</button>
 																			<button ng-if="produto.id != item.id" class="btn btn-xs btn-danger" ng-click="delCombinacao($index,item)"><i class="fa fa-trash-o"></i></button>
 																		</td>
 																	</tr>
@@ -1562,6 +1575,131 @@
 		<!-- /.modal -->
 
 
+
+
+
+		<!-- /Modal novo Combinações-->
+		<div class="modal fade" id="modal-add-combinacao" style="display:none">
+  			<div class="modal-dialog modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Nova Combinação</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group" id="codigo_barra">
+									<label class="control-label"><i class="fa fa-barcode"></i> Código de Barras</label>
+									<input   ng-model="combinacao.codigo_barra" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group" id="peso">
+										<label class="control-label">Tamanho </label> <i ng-click="showModalNovoTamanho()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+										<select chosen ng-change="ClearChosenSelect('combinacao')"
+									    option="tamanhos"
+									    ng-model="combinacao.id_tamanho"
+									    ng-options="tamanho.id as tamanho.nome_tamanho for tamanho in tamanhos">
+										</select>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group" id="peso">
+										<label class="control-label">Cor/sabor</label> <i ng-click="showModalNovaCor()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+										<select chosen ng-change="ClearChosenSelect('cor')"
+									    option="cores"
+									    ng-model="combinacao.id_cor"
+									    ng-options="cor.id as cor.nome_cor for cor in cores">
+										</select>
+								</div>
+							</div>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-bordered table-condensed table-striped table-hover">
+								<thead>
+									<tr>
+										<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
+										<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
+										<th class="text-center" colspan="2">Vlr. Atacado</th>
+										<th class="text-center" colspan="2">Vlr. Intermediário</th>
+										<th class="text-center" colspan="2">Vlr. Varejo</th>
+									</tr>
+									<tr>
+										<td class="text-center">%</td>
+										<td class="text-center">R$</td>
+										<td class="text-center">%</td>
+										<td class="text-center">R$</td>
+										<td class="text-center">%</td>
+										<td class="text-center">R$</td>
+									</tr>
+								</thead>
+								<tbody ng-if="combinacao.precos.length == 0">
+									<tr>
+										<td colspan="9" class="text-center">Nenhum empreendimento vinculado ao produto</td>
+									</tr>
+								</tbody>
+								<tbody ng-repeat="preco in combinacao.precos">
+									<tr>
+										<td>
+											#{{preco.id_empreendimento}} - {{ preco.nome_empreendimento }}
+										</td>
+										<td>
+											<input ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
+										</td>
+										<td>
+											<input ng-model="preco.perc_venda_atacado" ng-keyup="calculaMargens('atacado','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+										</td>
+										<td>
+											<input ng-model="preco.valor_venda_atacado" ng-keyup="calculaMargens('atacado','valor',preco)" 
+											 ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+										</td>
+
+										<td>
+											<input ng-model="preco.perc_venda_intermediario" ng-keyup="calculaMargens('intermediario','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+										</td>
+										<td>
+											<input ng-model="preco.valor_venda_intermediario" ng-keyup="calculaMargens('intermediario','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+										</td>
+										<td>
+											<input ng-model="preco.perc_venda_varejo" ng-keyup="calculaMargens('varejo','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+										</td>
+										<td>
+											<input ng-model="preco.valor_venda_varejo" ng-keyup="calculaMargens('varejo','valor',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+				    </div>
+				    <div class="modal-footer float-right">
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn  btn-md btn-default" ng-click="cancelarModal('modal-novo-fabricante')" id="btn-aplicar-sangria">
+				    		<i class="fa fa-times-circle"></i> Cancelar
+				    	</button>
+				    	<button type="button" data-loading-text=" Aguarde..." class="btn  btn-md btn-success"
+				    		id="btn-salvar-fabricante" ng-click="incluirCombinacao()">
+				    		<i class="fa fa-save"></i> Incluir
+				    	</button>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		<!-- Footer
 		================================================== -->
 		<footer>
@@ -1653,6 +1791,16 @@
 
 	<script src="js/fileinput/fileinput.js" type="text/javascript"></script>
     <script src="js/fileinput/locales/pt-BR.js" type="text/javascript"></script>
+
+    <!-- ease -->
+	<script src="js/jquery.ease.js"></script>
+
+	<!-- accounting -->
+	<script type="text/javascript" src="js/accounting.min.js"></script>
+
+    <script src="js/jquery.noty.packaged.js"></script>
+
+    <script src="js/bootstrap-treeview.js"></script>
 
 	 <!-- Fix for old browsers -->
         <script src="http://nervgh.github.io/js/es5-shim.min.js"></script>
