@@ -118,8 +118,10 @@ app.service('FuncionalidadeService', function($http) {
 });
 
 app.service('ConfigService', function($http) {
+	var configuracoes = null ;
 	this.getConfig = function(id_empreendimento) {
-		var configuracoes ;
+		if(configuracoes != null)
+			return configuracoes ;
 		 $.ajax({
 		 	url: baseUrlApi()+"configuracoes/"+id_empreendimento,
 		 	async: false,
@@ -183,4 +185,86 @@ app.service('AsyncAjaxSrvc', function() {
 		});
 		return list;
 	};
+});
+
+app.service('PrestaShop', function($http,ConfigService,UserService) {
+	var user = UserService.getUserLogado() ;
+	conf = ConfigService.getConfig(user.id_empreendimento);
+	var PrestaShop = this ;
+	var sendPrestaShop = (!empty(conf['sistemas_integrados']) && typeof parseJSON(conf['sistemas_integrados']) == 'object' && _in('prestashop',parseJSON(conf['sistemas_integrados']))) ;
+	this.send = function(method,url,dados,id_empreendimento) {
+		if(!sendPrestaShop)
+			return ;
+		$.noty.closeAll();
+		var i = notifcacaoPrestaShop('informacao');
+		if(!empty(dados)){
+			aj[method](url,dados)
+			.success(function(data, status, headers, config) {
+				$.noty.close(i.options.id) ;
+				if(data.status){
+					notifcacaoPrestaShop('sucesso');
+				}else{
+					notifcacaoPrestaShop('erro');
+				}
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 406){
+					$.noty.closeAll();
+					PrestaShop.modal406(data);
+				}else{
+					$.noty.close(i.options.id) ;
+					 notifcacaoPrestaShop('erro');
+				}
+			});
+		}else{
+			aj[method](url)
+			.success(function(data, status, headers, config) {
+				$.noty.close(i.options.id) ;
+				if(data.status){
+					notifcacaoPrestaShop('sucesso');
+				}else{
+					notifcacaoPrestaShop('erro');
+				}
+			})
+			.error(function(data, status, headers, config) {
+				if(status == 406){
+					PrestaShop.modal406(data);
+				}else{
+					$.noty.close(i.options.id) ;
+					 notifcacaoPrestaShop('erro');
+				}
+			});
+		}	
+	}
+
+	this.modal406 = function(errors){
+		$('#modal-pretashop406').modal('hide');
+		var linhas = "";
+		$.each(errors,function(i,v){
+			linhas += '<p style="color: red;">* '+v+' </p>' ;
+		});
+		$('#modal-pretashop406').remove();
+		var htmlModal = '<div class="modal fade" id="modal-pretashop406" style="display:none">'+
+  			'<div class="modal-dialog">'+
+    			'<div class="modal-content">'+
+      				'<div class="modal-header">'+
+        				'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'+
+						'<h4>Validações PrestaShop</span></h4>'+
+						'<p>'+
+							'Os dados foram salvos no WebliniaERP, porem as seguintes validações são obrigatórios para a integração com o PrestaShop'+
+						'</p>'+
+      				'</div>'+
+				    '<div class="modal-body">'+
+				    	'<div class="row">'+
+				    		'<div class="col-sm-12" class="has-error">'+
+				    	   		 linhas +	
+				    		'</div>'+
+				    	'</div>'+
+				   ' </div>'+
+			  	'</div>'+
+			'</div>'+
+		'</div>';
+		$('body').append(htmlModal);
+		$('#modal-pretashop406').modal('show');
+	}
 });

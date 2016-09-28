@@ -126,7 +126,7 @@
 		curl_setopt($ch, CURLOPT_URL,URL_API.'usuario/'.$saida['id_empreendimento'].'/'.$saida['id']);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$usuario  = curl_exec($ch);
-		$usuarioInfo 	 = curl_getinfo($ch);
+		$usuarioInfo = curl_getinfo($ch);
 		curl_close ($ch);
 
 		if($usuarioInfo['http_code'] != 200){

@@ -1,4 +1,4 @@
-app.controller('ClientesController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('ClientesController', function($scope, $http, $window, $dialogs, UserService,PrestaShop){
 
 	var ng = $scope
 		aj = $http;
@@ -408,7 +408,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 		 		ng.loadClientes(0,10);
 		 		if(!empty(data.id_cliente))
 		 			cliente.id = data.id_cliente ;
-		 		ng.salvarPrestaShop(cliente);
+		 		PrestaShop.send('post',baseUrlApi()+"prestashop/usuario/",cliente);
 		 	})
 		 	.error(function(data, status, headers, config) {
 		 		btn.button('reset');
@@ -1001,16 +1001,6 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 				if(status == 404)
 					ng.plano_contas = [];
 			});
-	}
-
-	ng.salvarPrestaShop = function(dados){
-		aj.post(baseUrlApi()+"prestashop/usuario/",dados)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
 	}
 
 	ng.loadEstados();

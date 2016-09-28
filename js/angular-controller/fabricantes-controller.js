@@ -1,5 +1,4 @@
-app.controller('FabricantesController', function($scope, $http, $window, $dialogs, UserService){
-
+app.controller('FabricantesController', function($scope, $http, $window, $dialogs, UserService, PrestaShop){
 	var ng = $scope
 		aj = $http;
 
@@ -169,7 +168,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 			.success(function(data, status, headers, config) {
 				if(!empty(data.fabricante) && !empty(data.fabricante.id))
 					itemPost.id = data.fabricante.id ;
-				ng.salvarPrestaShop(itemPost);
+				PrestaShop.send('post',baseUrlApi()+"prestashop/fabricante",itemPost);
 				ng.mensagens('alert-success','<strong>Fabricante salvo com sucesso!</strong>');
 				ng.showBoxNovo();
 				ng.reset();
@@ -193,26 +192,6 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 			});
 	}
 
-	ng.salvarPrestaShop = function(dados){
-		aj.post(baseUrlApi()+"prestashop/fabricante",dados)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
-	ng.deletePrestaShop = function(id_fabricante,id_empreendimento){
-		aj.delete(baseUrlApi()+"prestashop/fabricante/"+id_fabricante+"/"+id_empreendimento)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
 	ng.editar = function(item) {
 		ng.fabricante = angular.copy(item);
 		ng.showBoxNovo(true);
@@ -228,7 +207,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 					ng.mensagens('alert-success','<strong>Fabricante excluido com sucesso</strong>');
 					ng.reset();
 					ng.load();
-					ng.deletePrestaShop(item.id,ng.userLogged.id_empreendimento);
+					PrestaShop.send('delete',baseUrlApi()+"prestashop/fabricante/"+item.id+"/"+ng.userLogged.id_empreendimento);
 				})
 				.error(defaulErrorHandler);
 		}, undefined);

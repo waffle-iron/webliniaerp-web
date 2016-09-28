@@ -1,4 +1,4 @@
-app.controller('CategoriasController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('CategoriasController', function($scope, $http, $window, $dialogs, UserService,PrestaShop){
 	var ng = $scope
 		aj = $http;
 
@@ -169,7 +169,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 			.success(function(data, status, headers, config) {
 				if( empty(ng.categoria.id) )
 					itemPost.id = data.categoria.id
-				ng.salvarPrestaShop(itemPost);
+				PrestaShop.send('post',baseUrlApi()+"prestashop/categoria",itemPost);
 				ng.mensagens('alert-success','<strong>Categoria salvo com sucesso!</strong>');
 				ng.showBoxNovo();
 				ng.reset();
@@ -193,26 +193,6 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 			});
 	}
 
-	ng.salvarPrestaShop = function(dados) {
-		aj.post(baseUrlApi()+"prestashop/categoria", dados)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
-	ng.deletePrestaShop = function(id_categoria,id_empreendimento) {
-		aj.delete(baseUrlApi()+"prestashop/categoria/"+id_categoria+"/"+id_empreendimento)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
 	ng.editar = function(item) {
 		ng.categoria = angular.copy(item);
 		ng.categoria.id_pai = empty(ng.categoria.id_pai) ? null : ""+ng.categoria.id_pai;
@@ -226,7 +206,7 @@ app.controller('CategoriasController', function($scope, $http, $window, $dialogs
 		dlg.result.then(function(btn){
 			aj.get(baseUrlApi()+"categoria/delete/"+item.id)
 				.success(function(data, status, headers, config) {
-					ng.deletePrestaShop(item.id,ng.userLogged.id_empreendimento);
+					PrestaShop.send('delete',baseUrlApi()+"prestashop/categoria/"+item.id+"/"+ng.userLogged.id_empreendimento);
 					ng.mensagens('alert-success','<strong>Categoria excluido com sucesso</strong>');
 					ng.reset();
 					ng.load();

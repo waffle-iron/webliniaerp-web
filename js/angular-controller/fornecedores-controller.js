@@ -1,5 +1,4 @@
-app.controller('FornecedoresController', function($scope, $http, $window, $dialogs, UserService){
-
+app.controller('FornecedoresController', function($scope, $http, $window, $dialogs, UserService,PrestaShop){
 	var ng = $scope
 		aj = $http;
 
@@ -153,7 +152,7 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 				ng.load();
 				if(!empty(data.id))
 					itemPost.id = data.id ;
-				ng.salvarPrestaShop(itemPost);
+				PrestaShop.send('post',baseUrlApi()+"prestashop/fornecedor/",itemPost);
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
@@ -179,26 +178,6 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 			});
 	}
 
-	ng.salvarPrestaShop = function(dados){
-		aj.post(baseUrlApi()+"prestashop/fornecedor/",dados)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
-	ng.deletePrestaShop = function(id_fornecedor,id_empreendimento) {
-		aj.delete(baseUrlApi()+"prestashop/fornecedor/"+id_fornecedor+"/"+id_empreendimento)
-		.success(function(data, status, headers, config) {
-
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	}
-
 	ng.editar = function(item) {
 		ng.fornecedor = angular.copy(item);
 		if(ng.fornecedor.telefones == false){
@@ -218,7 +197,7 @@ app.controller('FornecedoresController', function($scope, $http, $window, $dialo
 					ng.mensagens('alert-success','<strong>Fornecedores excluido com sucesso</strong>');
 					ng.reset();
 					ng.load();
-					ng.deletePrestaShop(item.id,ng.userLogged.id_empreendimento);
+					PrestaShop.send('delete',baseUrlApi()+"prestashop/fornecedor/"+item.id+"/"+ng.userLogged.id_empreendimento);
 				})
 				.error(defaulErrorHandler);
 		}, undefined);
