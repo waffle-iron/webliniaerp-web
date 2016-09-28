@@ -115,6 +115,18 @@ app.controller('ZeraEstoqueController', function($scope, $http, $window, $dialog
 			});
 	}
 
+	ng.reset = function(){
+		ng.Devolucoes = {itens:[]};
+	}
+
+	ng.busca = {produto: ""};
+
+	ng.resetFilter = function() {
+		ng.busca.produto = "" ;
+		ng.reset();
+		ng.loadProdutos(0,10);
+	}
+
 	ng.loadProdutos = function(offset) {
 		offset = offset == null ? 0 : offset;
 
@@ -130,6 +142,10 @@ app.controller('ZeraEstoqueController', function($scope, $http, $window, $dialog
 
 		if(ng.fabricante != null && ng.fabricante.id > 0)
 			query_string += "&fab->id="+ng.fabricante.id;
+
+		if(ng.busca.produto != ""){
+			query_string += "&("+$.param({'pro->nome':{exp:"like'%"+ng.busca.produto+"%')"}});
+		}
 
 		aj.get(baseUrlApi()+"estoque/deposito/"+ ng.userLogged.id_empreendimento + query_string)
 			.success(function(data, status, headers, config) {

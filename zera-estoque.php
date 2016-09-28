@@ -157,17 +157,24 @@
 							<div class="panel-body">
 								<form class="form" role="form">
 									<div class="row">
-										<div class="col-sm-4">
+										<div class="col-sm-3">
 											<div class="form-group">
 												<label class="control-label">Depósito</label>
-												<select class="form-control input-sm filters" ng-model="deposito" ng-options="i.nme_deposito for i in depositos"></select>
+												<select class="form-control input-sm filters" ng-enter="aplicarFiltro()" ng-model="deposito" ng-options="i.nme_deposito for i in depositos"></select>
 											</div>
 										</div>
 
 										<div class="col-sm-4">
 											<div class="form-group">
+												<label class="control-label">Produto</label>
+												<input ng-model="busca.produto" class="form-control input-sm" ng-enter="aplicarFiltro()">
+											</div>
+										</div>
+
+										<div class="col-sm-3">
+											<div class="form-group">
 												<label class="control-label">Fabricante</label>
-												<select class="form-control input-sm" ng-model="fabricante" ng-options="i.nome_fabricante for i in fabricantes"></select>
+												<select class="form-control input-sm" ng-model="fabricante" ng-options="i.nome_fabricante for i in fabricantes" ng-enter="aplicarFiltro()"></select>
 											</div>
 										</div>
 
