@@ -131,8 +131,9 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 
 		var query_string = "?tfe->id_empreendimento="+ ng.userLogged.id_empreendimento;
 
-		if(ng.busca.text != "")
-			query_string += "&("+$.param({nome_fabricante:{exp:"like '%"+ng.busca.text+"%' OR id = '"+ng.busca.text+"'"}})+")";	
+		if(ng.busca.text != ""){
+			query_string += "&("+$.param({nome_fabricante:{exp:"like'%"+ng.busca.text+"%')"}});
+		}	
 
 		aj.get(baseUrlApi()+"fabricantes/"+ offset +"/"+ limit + query_string)
 			.success(function(data, status, headers, config) {
