@@ -1,6 +1,6 @@
 <?php
 	include_once "util/login/restrito.php";
-	restrito(array());
+	/*restrito(array());*/
 ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="HageERP">
@@ -630,6 +630,13 @@
 								<div class="row">
 									<div class="col-lg-12">
 										<input ng-disabled="produto.id_ordem_producao!=null" type="number" ng-model="produto.qtd" class="form-control" onKeyPress="return SomenteNumero(event);">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-12">
+										<label class="control-label">Observações</label>
+										<textarea rows="5" class="form-control" ng-disabled="produto.id_ordem_producao!=null" ng-model="produto.observacoes"></textarea>
 									</div>
 								</div>
 							</fieldset>

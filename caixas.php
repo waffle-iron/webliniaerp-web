@@ -168,10 +168,17 @@
 										<input ng-model="conta.dsc_conta_bancaria" class="form-control"/>
 									</div>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 									<div class="form-group" id="pth_local">
-										<label class="control-label">IP local do caixa</label>
+										<label class="control-label">IP</label>
 										<input  ng-model="conta.pth_local" class="form-control"/>
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+									<div class="form-group" id="pth_local">
+										<label class="control-label">Qtd. Vias Impressão</label>
+										<input type="number" min="1" max="5" step="1" ng-model="conta.qtd_vias_impressao" class="form-control"/>
 									</div>
 								</div>
 							</div>
@@ -214,35 +221,6 @@
 											</table>	
 										</div>
 									</div>
-									<!--<div class="empreendimentos form-group" id="empreendimentos">
-											<table class="table table-bordered table-condensed table-striped table-hover">
-												<thead>
-													<tr>
-														<td><i class="fa fa-building-o"></i> Depositos</td>
-														<td width="60" align="center">
-															<button class="btn btn-xs btn-primary" ng-click="showEmpreendimentos()"><i class="fa fa-plus-circle"></i></button>
-														</td>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td colspan="2">
-															<table class="table table-bordered table-condensed table-striped table-hover">
-																<thead>
-																	<tr>
-																		<td>Deposito</td>
-																		<td>Ordem de saida</td>
-																		<td width="60" align="center">
-																			
-																		</td>
-																	</tr>
-																</thead>
-															</table>	
-														</td>
-													</tr>
-												</tbody>
-											</table>
-									</div>-->
 								</div>
 							</div>
 							<div class="row">
@@ -328,7 +306,7 @@
 							<thead>
 								<tr>
 									<th>Descrição</th>
-									<th>Ip local</th>
+									<th>IP</th>
 									<th width="80" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>

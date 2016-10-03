@@ -211,7 +211,7 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-sm-3" ng-if="userLogged.id_empreendimento == 51 || userLogged.id_empreendimento == 6">
+												<div class="col-sm-3" ng-if="userLogged.id_empreendimento == 51">
 													<div class="form-group">
 														<label for="" class="control-label">Sub Tipo do produto</label>
 														<select ng-change="changeTipoProduto(produto.campo_extra_selected,'sub_tipo')" chosen ng-change="ClearChosenSelect('produto')"
@@ -322,10 +322,10 @@
 													<thead>
 														<tr>
 															<th class="text-center" rowspan="2" style="line-height: 46px;width: 200px">Empreendimento</th>
-															<th class="text-center" rowspan="2" style="line-height: 46px" >Vlr. Tabela</th>
-															<th class="text-center" colspan="2">Vlr. Atacado</th>
-															<th class="text-center" colspan="2">Vlr. Intermediário</th>
-															<th class="text-center" colspan="2">Vlr. Varejo</th>
+															<th class="text-center" rowspan="2" style="line-height: 46px" >Custo</th>
+															<th class="text-center" colspan="2">Venda (Atacado)</th>
+															<th class="text-center" colspan="2">Venda (Intermediário)</th>
+															<th class="text-center" colspan="2">Venda (Varejo)</th>
 														</tr>
 														<tr>
 															<td class="text-center">%</td>
@@ -347,7 +347,7 @@
 																#{{preco.id_empreendimento}} - {{ preco.nome_empreendimento }}
 															</td>
 															<td>
-																<input ng-disabled="produto.flg_produto_composto == 1" ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
+																<input ng-model="preco.vlr_custo" ng-keyup="calcularAllMargens(preco)"  thousands-formatter type="text" class="form-control input-xs parsley-validated">
 															</td>
 															<td>
 																<input ng-model="preco.perc_venda_atacado" ng-keyup="calculaMargens('atacado','margem',preco)"  ng-disabled="preco.vlr_custo == null || preco.vlr_custo == ''"  thousands-formatter   type="text" class="form-control input-xs parsley-validated maskPorcentagem">
@@ -1402,23 +1402,25 @@
 						    		<div class="col-sm-12" id="nome_importador">
 						    			<label class="control-label">importador:</label>
 						    			<div class="form-group ">
-						    					<input ng-model="importador.nome_importador" type="text"  class="form-control input-sm" >
+						    					<input ng-model="importador.nome_importador" type="text"  class="form-control input-sm" ng-enter="salvarImportador()">
 						    			</div>
 						    		</div>
 						    	</div>
 							</div>
 						</div>
 				    </div>
-				    <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-salvar-importador" ng-click="salvarImportador()">
-				    		<i class="fa fa-save"></i> Salvar
-				    	</button>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+					    	<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-novo-importador')" id="btn-aplicar-sangria">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
+				    		<button type="button" data-loading-text=" Aguarde..." class="btn btn-md btn-success"
+					    		id="btn-salvar-importador" ng-click="salvarImportador()">
+					    		<i class="fa fa-save"></i> Salvar
+					    	</button>
 
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-importador')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
+				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -1439,23 +1441,24 @@
 						    		<div class="col-sm-12" id="nome_tamanho">
 						    			<label class="control-label">tamanho:</label>
 						    			<div class="form-group ">
-						    					<input ng-model="tamanho.nome_tamanho" type="text"  class="form-control input-sm" >
+						    					<input ng-model="tamanho.nome_tamanho" type="text"  class="form-control input-sm" ng-enter="salvarTamanho">
 						    			</div>
 						    		</div>
 						    	</div>
 							</div>
 						</div>
 				    </div>
-				    <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-salvar-tamanho" ng-click="salvarTamanho()">
-				    		<i class="fa fa-save"></i> Salvar
-				    	</button>
-
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-tamanho')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+				    		<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-novo-tamanho')" id="btn-aplicar-sangria">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
+					    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-md btn-success"
+					    		id="btn-salvar-tamanho" ng-click="salvarTamanho()">
+					    		<i class="fa fa-save"></i> Salvar
+					    	</button>
+				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -1476,23 +1479,25 @@
 						    		<div class="col-sm-12" id="nome_fabricante">
 						    			<label class="control-label">Fabricante:</label>
 						    			<div class="form-group ">
-						    					<input ng-model="fabricante.nome_fabricante" type="text"  class="form-control input-sm" >
+						    					<input ng-model="fabricante.nome_fabricante" type="text"  class="form-control input-sm" ng-enter="salvarFabricante()">
 						    			</div>
 						    		</div>
 						    	</div>
 							</div>
 						</div>
 				    </div>
-				    <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-salvar-fabricante" ng-click="salvarFabricante()">
-				    		<i class="fa fa-save"></i> Salvar
-				    	</button>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+					    	<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-novo-fabricante')">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
+				    		<button type="button" data-loading-text=" Aguarde..." class="btn btn-md btn-success"
+					    		id="btn-salvar-fabricante" ng-click="salvarFabricante()">
+					    		<i class="fa fa-save"></i> Salvar
+					    	</button>
 
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-fabricante')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
+				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -1514,28 +1519,31 @@
 						    		<div class="col-sm-12" id="nome_cor">
 						    			<label class="control-label">Cor/Sabor:</label>
 						    			<div class="form-group ">
-						    					<input ng-model="cor_produto.nome_cor" type="text"  class="form-control input-sm" >
+						    					<input ng-model="cor_produto.nome_cor" type="text"  class="form-control input-sm" ng-enter="salvarCorProduto()" >
 						    			</div>
 						    		</div>
 						    	</div>
 							</div>
 						</div>
 				    </div>
-				    <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-salvar-cor" ng-click="salvarCorProduto()">
-				    		<i class="fa fa-save"></i> Salvar
-				    	</button>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+					    	<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-nova-cor')" id="btn-aplicar-sangria">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
+					    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-md btn-success"
+					    		id="btn-salvar-cor" ng-click="salvarCorProduto()">
+					    		<i class="fa fa-save"></i> Salvar
+					    	</button>
 
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-nova-cor')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
+				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
 		<!-- /Modal novo categoria-->
 		<div class="modal fade" id="modal-nova-categoria" style="display:none">
   			<div class="modal-dialog modal-sm">
@@ -1551,23 +1559,25 @@
 						    		<div class="col-sm-12" id="descricao_categoria">
 						    			<label class="control-label">Categoria:</label>
 						    			<div class="form-group ">
-						    					<input ng-model="categoria.descricao_categoria" type="text"  class="form-control input-sm" >
+						    					<input ng-model="categoria.descricao_categoria" type="text" class="form-control input-sm" ng-enter="salvarCategoria()">
 						    			</div>
 						    		</div>
 						    	</div>
 							</div>
 						</div>
 				    </div>
-				    <div class="modal-footer">
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-block btn-md btn-success"
-				    		id="btn-salvar-categoria" ng-click="salvarCategoria()">
-				    		<i class="fa fa-save"></i> Salvar
-				    	</button>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+					    	<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-novo-categoria')" id="btn-aplicar-sangria">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
+					    	<button type="button" data-loading-text=" Aguarde..." class="btn btn-md btn-success"
+					    		id="btn-salvar-categoria" ng-click="salvarCategoria()">
+					    		<i class="fa fa-save"></i> Salvar
+					    	</button>
 
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn btn-block btn-md btn-default" ng-click="cancelarModal('modal-novo-categoria')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
+				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -1672,15 +1682,17 @@
 							</table>
 						</div>
 				    </div>
-				    <div class="modal-footer float-right">
-				    	<button type="button" data-loading-text=" Aguarde..."
-				    		class="btn  btn-md btn-default" ng-click="cancelarModal('modal-novo-fabricante')" id="btn-aplicar-sangria">
-				    		<i class="fa fa-times-circle"></i> Cancelar
-				    	</button>
-				    	<button type="button" data-loading-text=" Aguarde..." class="btn  btn-md btn-success"
-				    		id="btn-salvar-fabricante" ng-click="incluirCombinacao()">
-				    		<i class="fa fa-save"></i> Incluir
-				    	</button>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+				    		<button type="button" data-loading-text=" Aguarde..."
+					    		class="btn  btn-md btn-default" ng-click="cancelarModal('modal-add-combinacao')">
+					    		<i class="fa fa-times-circle"></i> Cancelar
+					    	</button>
+					    	<button type="button" data-loading-text=" Aguarde..." class="btn  btn-md btn-success"
+					    		id="btn-salvar-fabricante" ng-click="incluirCombinacao()">
+					    		<i class="fa fa-save"></i> Incluir
+					    	</button>
+				    	</div>
 				    </div>
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
