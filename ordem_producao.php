@@ -1,6 +1,6 @@
 <?php
 	include_once "util/login/restrito.php";
-	restrito();
+	/*restrito();*/
 ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="HageERP">
@@ -296,11 +296,13 @@
 							</tr>
 							<thead>
 								<tr>
-									<th>#</th>
-									<th class="text-center" style="width: 170px;">Data Criação</th>
-									<th>Responsável</th>
-									<th class="text-center" style="width: 250px;">Status</th>
-									<th width="125" style="text-align: center;">Opções</th>
+									<th>ID OP</th>
+									<th class="text-center">Data Criação</th>
+									<th>Criador</th>
+									<th>Cliente</th>
+									<th>Nº Comanda</th>
+									<th class="text-center">Status</th>
+									<th width="200" style="text-align: center;">Opções</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -308,19 +310,22 @@
 									<td width="80">{{ item.id }}</td>
 									<td  class="text-center">{{ item.dta_create | dateFormat:'dateTime' }}</td>
 									<td>{{ item.nome_responsavel }}</td>
+									<td>{{ item.nome_cliente }}</td>
+									<td>{{ item.dsc_mesa }}</td>
+									<td>{{ item.num_comanda }}</td>
 									<td  class="text-center">{{ item.nome_status }}</td>
 									<td align="center">
-										<button ng-if="item.id_status == 1" data-loading-text="<i class='fa fa-refresh fa-spin'/>" type="button" ng-click="changeStatus(item,2,$event)" tooltip="Iniciar Produção" class="btn btn-xs btn-warning" data-toggle="tooltip" title="Iniciar Produção">
+										<button ng-if="item.id_status == 1" data-loading-text="<i class='fa fa-refresh fa-spin'/>" type="button" ng-click="changeStatus(item,2,$event)" class="btn btn-lg btn-warning">
 											<i class="fa fa-unlock"></i>
 										</button>
 
-										<button ng-if="item.id_status == 2" data-loading-text="<i class='fa fa-refresh fa-spin'/>" type="button" ng-click="changeStatus(item,3,$event)" tooltip="Finalizar Produção" class="btn btn-xs btn-success" data-toggle="tooltip" title="Finalizar Produção">
+										<button ng-if="item.id_status == 2" data-loading-text="<i class='fa fa-refresh fa-spin'/>" type="button" ng-click="changeStatus(item,3,$event)" class="btn btn-lg btn-success">
 											<i class="fa fa-lock"></i>
 										</button>
-										<button type="button" ng-click="showView(item)" class="btn btn-xs btn-primary" data-toggle="tooltip" title="Ver Ordem de Produção">
+										<button type="button" ng-click="showView(item)" class="btn btn-lg btn-primary">
 											<i class="fa fa-tasks"></i>
 										</button>
-										<button type="button" ng-click="delete(item)"  class="btn btn-xs btn-danger delete" data-toggle="tooltip" title="Deletar">
+										<button type="button" ng-click="delete(item)"  class="btn btn-lg btn-danger delete" disabled="disabled">
 											<i class="fa fa-trash-o"></i>
 										</button>
 									</td>
@@ -495,8 +500,11 @@
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4>Detalhes da Ordem de Produção</h4>
 						<p class="muted" style="margin: 0px 0 1px;"><strong>Data Criação </strong> : {{ viewOrdemProducao.dta_create  | dateFormat:"dateTime" }}</p>
-						<p class="muted" style="margin: 0px 0 1px;"><strong>ID </strong> :  #{{ viewOrdemProducao.id }}</p>
-						<p class="muted" style="margin: 0px 0 1px;" ><strong>Responsável :</strong> {{ viewOrdemProducao.nome_responsavel }}</p>
+						<p class="muted" style="margin: 0px 0 1px;"><strong>ID OP. :</strong>  #{{ viewOrdemProducao.id }}</p>
+						<p class="muted" style="margin: 0px 0 1px;" ><strong>Criador :</strong> {{ viewOrdemProducao.nome_responsavel }}</p>
+						<p class="muted" style="margin: 0px 0 1px;" ><strong>Cliente :</strong> {{ viewOrdemProducao.nome_cliente }}</p>
+						<p class="muted" style="margin: 0px 0 1px;" ><strong>Mesa :</strong> {{ viewOrdemProducao.dsc_mesa }}</p>
+						<p class="muted" style="margin: 0px 0 1px;" ><strong>Comanda :</strong> {{ viewOrdemProducao.num_comanda }}</p>
       					<p class="muted" style="margin: 0px 0 1px;"><strong>Status: </strong>{{ viewOrdemProducao.nome_status }}</p>
       				</div>
 				    <div class="modal-body">
@@ -510,7 +518,8 @@
 										<tr>
 											<th class="text-center"  width="100">ID Produto</th>
 											<th class="text-center">Produto</th>
-											<th class="text-center" width="60">qtd</th>
+											<th class="text-center" width="60">Qtd.</th>
+											<th class="text-center" width="150">Obs.</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -518,6 +527,7 @@
 											<td  class="text-center">{{ item.id_produto }}</td>
 											<td>{{ item.nome_produto }}</td>
 											<td class="text-center">{{ item.qtd }}</td>
+											<td class="text-center">{{ item.observacoes }}</td>
 										</tr>
 									</tbody>
 								</table>

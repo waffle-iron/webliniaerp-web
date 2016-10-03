@@ -172,7 +172,7 @@
 				<div class="panel panel-default" id="box-novo">
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
-							<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Dados Empreendimento</a></li>
+							<li><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Dados Empreendimento</a></li>
 							<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
 							<li><a href="#estoque" data-toggle="tab"><i class="fa fa-sitemap"></i> Estoque</a></li>
 							<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
@@ -181,15 +181,16 @@
 							<li><a href="#notificacoes" data-toggle="tab"><i class="fa fa-bell"></i> Notificações</a></li>
 							<li><a href="#mod_clinica" ng-if="userLogged.id_empreendimento == 75" data-toggle="tab"><i class="fa fa-list"></i> Controle de Atendimento</a></li>
 							<li><a href="#pedido_personalizado" ng-if="userLogged.id_empreendimento == 51" data-toggle="tab"><i class="fa fa-list"></i> Pedidos Personalizados</a></li>
-							<li><a href="#prestaShop" data-toggle="tab"><i class="fa fa-bell"></i> PrestraShop</a></li>
+							<li class="active"><a href="#integracoes" data-toggle="tab"><i class="fa fa-code-fork"></i> Integrações</a></li>
 							<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
 						</ul>
 					</div>
 					<div class="panel-body">
 						<div class="tab-content">
-							<div class="tab-pane fade in active" id="basico">
+							<div class="tab-pane fade" id="basico">
 								<form class="formEmprendimento" role="form" enctype="multipart/form-data">
 									<div class="alert alert-basico-loja" style="display:none"></div>	
+									
 									<div class="row">
 										<div class="col-sm-4">
 											<div class="form-group" id="nome_empreendimento">
@@ -226,6 +227,7 @@
 											</div>
 										</div>
 									</div>
+
 									<div class="row">
 										<div class="col-lg-6">
 											<div id="nme_razao_social" class="form-group">
@@ -239,19 +241,8 @@
 												<input class="form-control" ng-model="empreendimento.nme_fantasia">
 											</div>
 										</div>
-										<!--<div class="col-sm-3">
-											<div id="num_inscricao_estadual" class="form-group">
-												<label class="control-label">I.E. </label>
-												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual">
-											</div>
-										</div>
-										<div class="col-sm-3">
-											<div id="num_inscricao_estadual_st" class="form-group">
-												<label class="control-label">I.E ST </label>
-												<input class="form-control" ng-model="empreendimento.num_inscricao_estadual_st">
-											</div>
-										</div>-->
 									</div>
+
 									<div class="row">
 										<div class="col-sm-12">
 											<div class="form-group">
@@ -289,6 +280,7 @@
 											</div>
 										</div>
 									</div>
+
 									<div class="row">
 										<div class="col-sm-2">
 											<div id="cep" class="form-group">
@@ -520,19 +512,23 @@
 								</div>
 								<div class="row">
 									<div class="col-sm-5">
-										<div class="form-group">
-											<label for="" class="control-label">Questionar manutenção dos preços ao concluir orçamentos?</label>
-											<div class="form-group">
-												<label class="label-radio inline">
-													<input ng-model="configuracoes.flg_questionar_manutencao_precos_orcamento" value="1" name="flg_questionar_manutencao_precos_orcamento"   type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Sim</span>
-												</label>
-												<label class="label-radio inline">
-													<input ng-model="configuracoes.flg_questionar_manutencao_precos_orcamento" value="0" name="flg_questionar_manutencao_precos_orcamento"   type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Não</span>
-												</label>
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="form-group">
+													<label for="" class="control-label">Questionar manutenção dos preços ao concluir orçamentos?</label>
+													<div class="form-group">
+														<label class="label-radio inline">
+															<input ng-model="configuracoes.flg_questionar_manutencao_precos_orcamento" value="1" name="flg_questionar_manutencao_precos_orcamento"   type="radio" class="inline-radio">
+															<span class="custom-radio"></span>
+															<span>Sim</span>
+														</label>
+														<label class="label-radio inline">
+															<input ng-model="configuracoes.flg_questionar_manutencao_precos_orcamento" value="0" name="flg_questionar_manutencao_precos_orcamento"   type="radio" class="inline-radio">
+															<span class="custom-radio"></span>
+															<span>Não</span>
+														</label>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -570,17 +566,6 @@
 											</div>
 										</div>
 									</div>
-
-
-
-
-
-
-
-
-
-
-
 								</div>
 								<div class="row">
 									<div class="col-sm-12">
@@ -592,6 +577,7 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="tab-pane fade" id="fiscal">
 								<div class="panel-tab clearfix">
 									<ul class="tab-bar">
@@ -1315,29 +1301,99 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane fade" id="prestaShop">
-								<div class="alert alert-config-prestashop" style="display:none"></div>
 
-								<div class="row">
-									<div class="col-sm-4">
-										<div class="form-group">
-											<label for="" class="control-label">Integrar com PrestaShop?</label>
-											<div class="form-group">
-												<label class="label-radio inline">
-													<input ng-model="configuracoes.flg_integrar_prestashop" value="1" name="flg_integrar_prestashop"   type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Sim</span>
-												</label>
-												<label class="label-radio inline">
-													<input ng-model="configuracoes.flg_integrar_prestashop" value="0" name="flg_integrar_prestashop"   type="radio" class="inline-radio">
-													<span class="custom-radio"></span>
-													<span>Não</span>
-												</label>
+							<div class="tab-pane fade in active" id="integracoes">
+								<div class="panel-tab clearfix">
+									<ul class="tab-bar">
+										<li class="active">
+											<a href="#prestashop" data-toggle="tab">
+												<i class="fa fa-shopping-cart"></i> PrestaShop
+											</a>
+										</li>
+									</ul>
+								</div>
+
+								<div class="tab-content">
+									<div class="tab-pane fade active in" id="prestashop">
+										<div class="row">
+											<div class="col-sm-2">
+												<div class="form-group">
+													<label for="" class="control-label">Ativo</label>
+													<div class="form-group">
+														<label class="label-radio inline">
+															<input ng-model="flg_integrar_prestashop" value="1" name="flg_integrar_prestashop"   type="radio" class="inline-radio">
+															<span class="custom-radio"></span>
+															<span>Sim</span>
+														</label>
+														<label class="label-radio inline">
+															<input ng-model="flg_integrar_prestashop" value="0" name="flg_integrar_prestashop"   type="radio" class="inline-radio">
+															<span class="custom-radio"></span>
+															<span>Não</span>
+														</label>
+													</div>
+												</div>
+											</div>
+
+											<div class="col-sm-5">
+												<div class="form-group" id="prestashop_ws_auth_key"  >
+													<label class="control-label">WebService Auth Key</label>
+													<input ng-model="configuracoes.prestashop_ws_auth_key" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+
+											<div class="col-sm-5">
+												<div class="form-group" id="prestashop_shop_path"  >
+													<label class="control-label">URL Loja Virtual</label>
+													<input ng-model="configuracoes.prestashop_shop_path" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-sm-5">
+												<div class="form-group">
+													<div class="table-responsive">
+														<table class="table table-bordered table-condensed table-striped table-hover">
+															<thead>
+																<th width="200">Perfil WebliniaERP</th>
+																<th>ID Perfil PrestaShop</th>
+																<td width="60" align="center">
+																	<button class="btn btn-xs btn-primary" 
+																		ng-click="addPerfilPrestaShop()">
+																		<i class="fa fa-plus-circle"></i>
+																	</button>
+																</td>
+															</thead>
+															<tbody>
+																<tr ng-repeat="item in configuracoes.perfisPrestaShop">
+																	<td>
+																		<select chosen
+																		    option="plano_contas"
+																		    allow-single-deselect="true"
+																		    ng-model="item.uf"
+																		    ng-options="item.uf as item.nome for item in estados"">
+																		</select>
+																	</td>
+																	<td><input type="text" ng-model="item.num_inscricao_estadual_st" 
+																		class="form-control input-sm"></td>
+																	<td class="text-center">
+																		<button class="btn btn-xs btn-danger" 
+																			ng-click="deleteInscricoesEstaduais($index)">
+																			<i class="fa fa-trash-o"></i>
+																		</button>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								
+
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">
