@@ -172,6 +172,16 @@ app.controller('FaixaDescontoPermitidoController', function($scope, $http, $wind
 		}, undefined);
 	}
 
+	ng.loadPerfis = function() {
+		aj.get(baseUrlApi()+"perfis/0/1000?tpue->id_empreendimento="+ ng.userLogged.id_empreendimento +"&cplSql= ORDER BY tp.nome ASC")
+			.success(function(data, status, headers, config) {
+				ng.perfis = data;
+			})
+			.error(function(data, status, headers, config) {
+				ng.perfis = null;
+			});
+	}
+
 	//funções do modal de usuarios
 
 	ng.loadUsuarios= function(offset,limit) {
@@ -182,7 +192,15 @@ app.controller('FaixaDescontoPermitidoController', function($scope, $http, $wind
 		ng.paginacao_usuarios  = [];
 		ng.usuarios = [];
 
-		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+")&usu->id_perfil[exp]=IN(4,8,5)";
+		var perfisToFilter = _.filter(ng.perfis.perfis, function(perfil){ if(perfil.nome == 'caixa' || perfil.nome == 'vendedor interno' || perfil.nome == 'vendedor externo') { return perfil; } });
+		var perfisIndexes = '';
+		$.each(perfisToFilter, function(i, item){
+			perfisIndexes += item.id;
+			if((i+1) < perfisToFilter.length)
+				perfisIndexes += ',';
+		});
+
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+")&tpue->id_perfil[exp]=IN("+ perfisIndexes +")";
 
 		if(ng.busca.usuarios != ""){
 			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.usuarios+"%' OR usu.apelido LIKE '%"+ng.busca.usuarios+"%')"}});
@@ -246,4 +264,5 @@ app.controller('FaixaDescontoPermitidoController', function($scope, $http, $wind
 	}
 
 	ng.loadFaixas();
+	ng.loadPerfis();
 });

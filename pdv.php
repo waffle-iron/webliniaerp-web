@@ -332,6 +332,7 @@
 								<li><a href="pedido_transferencia.php"><i class="fa fa-arrows-h fa-lg"></i> Transferência</a></li>
 								<li ><a href="#" ng-click="showCadastroRapido()"><i class="fa fa-users"></i> Novo Cliente</a></li>
 								<li><a href="#" ng-click="modalComandas()"><i class="fa fa-table"></i> Comandas</a></li>
+								<li><a href="#" ng-click="modalFechamentosCaixa()"><i class="fa fa-file-text-o"></i> Fechamentos de Caixa</a></li>
 								<li><a href="#" ng-click="modalReforco()"><i class="fa fa-download"></i> Incluir Reforço</a></li>
 								<li><a href="#" ng-click="modalSangria()"><i class="fa fa-upload"></i> Efetuar Sangria</a></li>
 								<li><a href="#" ng-click="modalFechar()"><i class="fa fa-sign-out"></i> Fechar Caixa</a></li>
@@ -1295,21 +1296,24 @@
 
 						    	<div class="row">
 						    		<div class="col-sm-12">
-						    				<table class="table table-bordered table-condensed table-striped table-hover">
-												<thead>
-													<tr>
-														<th  class="text-center">Forma de Pagamento</th>
-														<th  class="text-center">Valor</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr ng-repeat="item in lacamentos_formas_pagamento">
-														<td class="text-center"><strong>{{ item.forma_pagamento }}</strong></td>
-														<td class="text-center"><strong>R$ {{ item.total| numberFormat:2:',':'.' }}</strong></td>
-													</tr>
-												</tbody>
-											</table>
+					    				<table class="table table-bordered table-condensed table-striped table-hover">
+											<thead>
+												<tr>
+													<th  class="text-center">Forma de Pagamento</th>
+													<th  class="text-center">Valor</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="item in lacamentos_formas_pagamento">
+													<td class="text-center"><strong>{{ item.forma_pagamento }}</strong></td>
+													<td class="text-center"><strong>R$ {{ item.total | numberFormat:2:',':'.' }}</strong></td>
+												</tr>
+											</tbody>
+										</table>
 						    		</div>
+					    		</div>
+
+					    		<div class="row">
 						    		<div class="col-sm-12" id="conta_destino">
 						    			<label class="control-label text-center">Conta de destino dos valores em dinheiro</label>
 							    		<select class="form-control input-sm" ng-model="fechamento.id_conta_bancaria">
@@ -1317,6 +1321,30 @@
 										</select>
 									</div>
 						    	</div>
+
+						    	<div class="row" style="margin-top: 10px;">
+						    		<div class="col-sm-12">
+						    			<label class="label-checkbox">
+											<input type="checkbox" 
+												ng-true-value="true" ng-false-value="false" 
+												ng-model="print_report_thermal_printer" 
+												ng-disabled="!enable_print_report_thermal_printer"/>
+											<span class="custom-checkbox"></span> Imprimir Relatório de Fechamento
+										</label>
+									</div>
+						    	</div>
+
+								<div class="row" style="margin-top: 10px;">
+									<div class="col-sm-12">
+										<label class="label-checkbox">
+											<input type="checkbox"
+												   ng-true-value="true" ng-false-value="false"
+												   ng-model="complete_report_thermal_printer"
+												   ng-disabled="!enable_print_report_thermal_printer"/>
+											<span class="custom-checkbox"></span> Incluir Movimentações
+										</label>
+									</div>
+								</div>
 						    </div>
 						    <div class="modal-footer">
 						  		<button type="button"  data-loading-text=" Aguarde..." id="btn-fechar-caixa"
@@ -2394,6 +2422,115 @@
 		</div>
 		<!-- /.modal -->
 
+		<!-- /Modal Fechamentos de Caixa-->
+		<div class="modal fade" id="list_fechamentos_caixa" style="display:none">
+				<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+						<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Fechamentos de Caixa p/ Impressão</span></h4>
+						</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label class="control-label">Data</label>
+									<div class="input-group">
+										<input readonly="readonly" style="background:#FFF;cursor:pointer" 
+											type="text" id="dta_fechamento" class="datepicker form-control input-sm">
+										<span class="input-group-addon" id="cld_dta_fechamento">
+											<i class="fa fa-calendar"></i>
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-1">
+								<div class="form-group">
+									<label class="control-label"><br/></label>
+									<button type="button" class="btn btn-sm btn-primary"
+										ng-click="getFechamentosCaixa(0,10)">
+										<i class="fa fa-filter"></i> Filtrar
+									</button>
+								</div>
+							</div>
+
+							<div class="col-md-1">
+								<div class="form-group">
+									<label class="control-label"><br/></label>
+									<button type="button" class="btn btn-sm btn-default"
+										ng-click="clearDtaFechamento();">
+										<i class="fa fa-ban"></i> Limpar
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-md-12">
+						   		<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(fechamento.aberturas != 0)">
+										<tr>
+											<th class="text-center">Caixa</th>
+											<th class="text-center">Operador</th>
+											<th class="text-center">Dta. Abertura</th>
+											<th class="text-center">Dta. Fechamento</th>
+											<th class="text-center" width="100">Ações</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-if="fechamento.aberturas == null">
+											<th class="text-center" colspan="5">
+												<i class="fa fa-spin fa-spinner"></i>
+												<strong>Aguarde, carregando...</strong>
+											</th>
+										</tr>
+										<tr class="text-center" ng-show="(fechamento.aberturas.length == 0)">
+											<td colspan="5">Nenhum registro encontrado.</td>
+										</tr>
+										<tr ng-repeat="item in fechamento.aberturas">
+											<td class="text-center">{{ item.dsc_conta_bancaria }}</td>
+											<td class="text-center">{{ item.operador }}</td>
+											<td class="text-center">{{ item.dta_abertura }}</td>
+											<td class="text-center">{{ item.dta_fechamento }}</td>
+											<td class="text-center">
+												<a href="rel_movimentacao_caixa.php?id={{ item.id }}" 
+													target="_blank" 
+													class="btn btn-xs btn-default"
+													tooltip title="Visualizar">
+													<i class="fa fa-file-pdf-o"></i>
+												</a>
+												<button type="button" class="btn btn-xs btn-primary"
+													tooltip title="Imprimir"
+													ng-click="getInformacoesFechamentoCaixa(item.id)">
+													<i class="fa fa-print"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					    <div class="row">
+					    	<div class="col-md-12">
+								<div class="input-group pull-right">
+						             <ul class="pagination pagination-xs m-top-none" ng-show="fechamento.paginacao.length > 1">
+										<li ng-repeat="item in fechamento.paginacao" ng-class="{'active': item.current}">
+											<a href="" ng-click="getFechamentosCaixa(item.offset, item.limit)">{{ item.index }}</a>
+										</li>
+									</ul>
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
+					</div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 		<!-- /Modal Comandas-->
 		<div class="modal fade" id="list_comandas" style="display:none">
 				<div class="modal-dialog modal-lg">
@@ -2582,6 +2719,12 @@
   	<script src="js/ng-tags-input.min.js"></script>
     <script type="text/javascript">
    	 var addParamModule = ['angular.chosen','ngTagsInput'] ;
+
+   	 $(document).ready(function() {
+   	 	$('.datepicker').datepicker();
+		$("#cld_dta_fechamento").on("click", function(){$("#dta_fechamento").trigger("focus");});
+		$('.datepicker').on('changeDate', function(ev){$(this).datepicker('hide');});
+   	 });
     </script>
     <script src="js/app.js?version=<?php echo date("dmY-His", filemtime("js/app.js")) ?>"></script>
     <script src="js/auto-complete/AutoComplete.js?version=<?php echo date("dmY-His", filemtime("js/auto-complete/AutoComplete.js")) ?>"></script>

@@ -13,6 +13,8 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 
     ng.editing = false;
 
+    $('#sizeToggle').trigger("click");
+
     ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
 		$(alertClass).fadeIn().addClass(classe).html(msg);
@@ -287,7 +289,7 @@ app.controller('OrdemProducaoController', function($scope, $http, $window, $dial
 				 	ng.list_out_estoque = data.lista;
 				 	//ng.showView(item,true);
 				 }else{
-				 alert('Erro ao Mudar Status')
+				 	alert('Erro ao Mudar Status')
 				}
 			});
 		}, function(){ but.button('reset') } );
