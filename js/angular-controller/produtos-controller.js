@@ -6,7 +6,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.userLogged 	= UserService.getUserLogado();
 	ng.ids_empreendimento_usuario = [] ;
 	console.log(ng.ids_empreendimento_usuario);
-
+	var $checkableTree ;
 	var produtoTO = {
 		id_tamanho : null,
 		id_cor     : null,
@@ -376,7 +376,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					var qtd_ivn = Number(item.qtd_ivn);
 					inventario.id_deposito = item.id_deposito;
 					inventario.itens.push({
-						id           : ng.produto.id_produto,
+						id           : item.id,
 						dta_validade : item.dta_validade,
 						qtd_ivn      : qtd_ivn
 					});
@@ -635,7 +635,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.getEstoque = function(id_produto) {
 			var id_deposito_exists = ""  ;
 			var depositos          = {} ;
-			$http.get(baseUrlApi()+"estoque/?prd->id="+id_produto+"&emp->id_empreendimento="+ng.userLogged.id_empreendimento)
+			$http.get(baseUrlApi()+"estoque/?prd->id="+id_produto+"&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&get_combinacao=true")
 			.success(function(data, status, headers, config) {
 					depositos = data.produtos ;
 					$.each(depositos,function(i,v){
@@ -704,11 +704,28 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	   	    });
 	}
 
+	ng.modalCombinacao = function(){
+		$('#modal-combinacao').modal('show');
+		ng.loadCombinacoes(0,10);
+	}
+
+	ng.loadCombinacoes = function() {
+    	aj.get(baseUrlApi()+"combinacoes/"+ng.produto.id_produto)
+		.success(function(data, status, headers, config) {
+			ng.combinacoes = data ;
+		})
+		.error(function(data, status, headers, config) {
+			ng.combinacoes = [] ;	
+		});
+	}
+
 	ng.modalDepositos = function(){
 		$('#modal-depositos').modal('show');
 		ng.loadDepositos(0,10);
 	}
+
 	ng.inventario_novo = {} ;
+	
 	ng.addDeposito = function(item){
 		ng.inventario_novo.nome_deposito = item.nme_deposito;
 		ng.inventario_novo.id_deposito   = item.id;
@@ -769,14 +786,21 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		if(error > 0)
 			return false;
 
+		var id   = empty(ng.inventario_novo.id) ? ng.produto.id : ng.inventario_novo.id ;
+		var sabor   = empty(ng.inventario_novo.id) ? ng.produto.sabor : ng.inventario_novo.sabor ;
+		var peso = empty(ng.inventario_novo.id) ? ng.produto.peso : ng.inventario_novo.peso ;
+
 		var item = {
+			id   		  : ng.inventario_novo.id,
+			peso       	  : peso,
+			sabor         : sabor,
 			id_deposito   : ng.inventario_novo.id_deposito,
 			nme_deposito  : ng.inventario_novo.nome_deposito,
 			nome_deposito : ng.inventario_novo.nome_deposito,
 			qtd_item      : 0,
 			dta_validade  : dta_validade,
 			qtd_ivn       : ng.inventario_novo.qtd_ivn,
-			flg_visivel   : 1 
+			flg_visivel   : 1 ,
 		}
 
 		ng.produto.estoque.push(item);
@@ -952,6 +976,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.empreendimentoSelected = function(item){
 		var saida = false ;
+		if(typeof item != 'object')
+			return false ;
+
 		$.each(ng.empreendimentosAssociados,function(i,v){
 			if(Number(item.id) == Number(v.id_empreendimento)){
 				saida = true ;
@@ -1566,7 +1593,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 				ng.treeviewConstruct(menu);
 			})
 			.error(function(data, status, headers, config) {
-				
+				ng.treeviewConstruct([]);
 			});
 	}
 
@@ -1621,7 +1648,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			}
 		}
 	}
-
 	ng.treeviewConstruct = function(data){
 		console.log(data);
 			$checkableTree = $('#treeview-modulos').treeview({
@@ -1706,6 +1732,14 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			ng.produto.combinacoes.push(angular.copy(ng.combinacao)) ;
 		ng.combinacao = angular.copy(produtoTO);
 		indexEditCombinacao = null ;
+	}
+
+	ng.addCombinacaoEstoque = function(item){
+		ng.inventario_novo.id = item.id ;
+		ng.inventario_novo.peso = item.peso ;
+		ng.inventario_novo.sabor = item.sabor ;
+		ng.inventario_novo.dsc_combinacao = '#'+item.id+" - "+item.peso+" "+item.sabor ;
+		$('#modal-combinacao').modal('hide');
 	}
 
 
