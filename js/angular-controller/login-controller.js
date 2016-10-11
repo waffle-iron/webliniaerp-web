@@ -83,6 +83,7 @@ app.controller('LoginController', function($scope, $http, $window,$dialogs,UserS
 	}
 
 	ng.addEmp = function(item) {
+		$('.btnSelEmp-'+item.id).button('loading');
 		if(Number(item.flg_debito) == 1 && (id_usuario != 222 && id_usuario != 498) ){
 			$('#list_emp').modal('hide');
 			$('#modal_debito').modal('show');
@@ -104,6 +105,7 @@ app.controller('LoginController', function($scope, $http, $window,$dialogs,UserS
 				window.location.href = data.pagina_principal;
 			})
 			.error(function(data, status, headers, config) {
+				$('#btnSelEmp').button('reset');
 				if(status == 404)
 					$('#alert-acesso-negado').show();
 				else

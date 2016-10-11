@@ -114,7 +114,7 @@
 								<tr ng-repeat="item in empreendimentos">
 									<td>{{ item.nome_empreendimento }}</td>
 									<td width="80">
-										<button ng-click="addEmp(item)" class="btn btn-success btn-xs" type="button">
+										<button id="btnSelEmp-{{item.id}}" ng-click="addEmp(item)" class="btn btn-success btn-xs" type="button" data-loading-text="Aguarde...">
 												<i class="fa fa-check-square-o"></i> Selecionar
 										</button>
 									</td>

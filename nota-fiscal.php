@@ -350,7 +350,7 @@
 									<div class="col-sm-12">
 										<div class="form-group">
 											<label class="control-label">Observações</label>
-											<textarea class="form-control" ng-disabled="processando_autorizacao || autorizado" rows="5"></textarea>
+											<textarea class="form-control" ng-model="NF.informacoes_adicionais_contribuinte" ng-disabled="processando_autorizacao || autorizado" rows="5"></textarea>
 										</div>
 									</div>
 								</div>
@@ -662,7 +662,10 @@
 												<td class="text-middle text-center">{{ item.prod.cEAN }}</td>
 												<td class="text-middle">{{ item.prod.xProd }}</td>
 												<td class="text-middle text-center">{{ item.prod.NCM }}</td>
-												<td class="text-middle text-center">{{ null }}</td>
+												<td class="text-middle text-center">
+													<span ng-show="(item.imposto.ICMS.CST)">{{ item.imposto.ICMS.CST }}/</span>
+													{{ item.imposto.ICMS.CSOSN }}
+												</td>
 												<td class="text-middle text-center">{{ item.prod.CFOP }}</td>
 												<td class="text-middle text-center">{{ item.prod.uCom }}</td>
 												<td class="text-middle text-center">{{ item.prod.qCom }}</td>

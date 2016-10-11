@@ -389,12 +389,12 @@
 						</div>
 
 						<div class="pull-right">
-							<button class="btn btn-sm btn-default" 
-								ng-click="showBoxNovo(true)">
+							<button id="btnCancelarOS" class="btn btn-sm btn-default" 
+								ng-click="showBoxNovo(true)" data-loading-text="Aguarde...">
 								<i class="fa fa-times-circle"></i> Cancelar
 							</button>
-							<button class="btn btn-sm btn-success"
-								ng-click="save()">
+							<button id="btnSalvarOS" class="btn btn-sm btn-success"
+								ng-click="save()" data-loading-text="Aguarde...">
 								<i class="fa fa-save"></i> Salvar Ordem de Serviço
 							</button>
 						</div>
@@ -525,6 +525,16 @@
 						</table>
 					</div>
 				</div>
+
+				<div class="row">
+                    <div class="col-sm-12">
+                        <ul class="pagination m-top-none pull-right" ng-show="paginacao.ordens_servico.length > 1">
+                            <li ng-repeat="item in paginacao.ordens_servico" ng-class="{'active': item.current}">
+                                <a href="" h ng-click="loadOrdensServicos(item.offset,item.limit)">{{ item.index }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 			</div>
 		</div><!-- /main-container -->
 

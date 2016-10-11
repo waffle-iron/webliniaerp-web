@@ -257,7 +257,7 @@ app.controller('SituacaoEspecialController', function($scope, $http, $window, $d
 		$('.has-error').tooltip('destroy')
 		$('.has-error').removeClass('has-error')
 		var error = 0 ;
-		if(empty(ng.produto_cliente.cod_cliente)){
+		/*if(empty(ng.produto_cliente.cod_cliente)){
 			$("#produto-cliente-nme_cliente").addClass("has-error");
 			var formControl = $("#produto-cliente-nme_cliente")
 				.attr("data-toggle", "tooltip")
@@ -266,7 +266,7 @@ app.controller('SituacaoEspecialController', function($scope, $http, $window, $d
 				.attr("data-original-title", "Selecione um cliente");
 			formControl.tooltip();
 			error ++ ;
-		}	
+		}	*/
 		if(empty(ng.produto_cliente.cod_produto)){
 			$("#produto-cliente-nme_produto").addClass("has-error");
 			var formControl = $("#produto-cliente-nme_produto")

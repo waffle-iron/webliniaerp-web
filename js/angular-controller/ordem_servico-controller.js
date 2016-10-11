@@ -67,9 +67,8 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 
 		var query_string = "?(tue->id_empreendimento[exp]=="+ $scope.userLogged.id_empreendimento +"&usu->id[exp]= NOT IN("+ $scope.configuracoes.id_cliente_movimentacao_caixa +","+ $scope.configuracoes.id_usuario_venda_vitrine +"))";
 
-		if($scope.busca.clientes != ""){
-			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+$scope.busca.clientes+"%' OR usu.apelido LIKE '%"+$scope.busca.clientes+"%')"}});
-		}
+		if($scope.busca.clientes != "")
+			query_string += "&"+$.param({'(usu->nome':{exp:"like '%"+$scope.busca.clientes+"%' OR tpj.razao_social like '%"+$scope.busca.clientes+"%' OR tpj.nome_fantasia like '%"+$scope.busca.clientes+"%' OR usu.apelido LIKE '%"+$scope.busca.clientes+"%')"}});
 
 		$http.get(baseUrlApi()+"usuarios/"+ offset +"/"+ limit +"/"+ query_string)
 			.success(function(data, status, headers, config) {
@@ -214,6 +213,9 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 	$scope.save = function() {
 		clearValidationFormStyle();
 
+		$('#btnCancelarOS').button('loading');
+		$('#btnSalvarOS').button('loading');
+
 		var postData = angular.copy($scope.objectModel);
 			postData.id_abertura_caixa 	= $scope.caixa.id;
 			postData.id_plano_conta 	= $scope.configuracoes.id_plano_caixa;
@@ -221,10 +223,16 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 
 		$http.post(baseUrlApi()+"ordem-servico", postData)
 			.success(function(data, status, headers, config) {
+				$('#btnCancelarOS').button('reset');
+				$('#btnSalvarOS').button('reset');
+				
 				$scope.showBoxNovo(true);
 				$scope.loadOrdensServicos(0,10);
 			})
 			.error(function(errors, status, headers, config) {
+				$('#btnCancelarOS').button('reset');
+				$('#btnSalvarOS').button('reset');
+
 				if(status === 406) {
 					$('.alert-form.alert-warning').text("Atenção! Alguns campos obrigatórios não foram preenchidos.").removeClass('hide');
 					applyFormErrors(errors, 'objectModel');

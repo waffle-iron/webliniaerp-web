@@ -430,7 +430,7 @@
 						    		<div class="col-sm-6" id="pagamento_maquineta" ng-if="pagamento.id_forma_pagamento == 5 || pagamento.id_forma_pagamento == 6 ">
 						    			<label class="control-label">Maquineta</label>
 										<select ng-model="pagamento.id_maquineta" class="form-control input-sm">
-											<option ng-repeat="item in maquinetas" value="{{ item.id_maquineta }}">#{{ item.id_maquineta }} - {{ item.dsc_conta_bancaria }}</option>
+											<option ng-repeat="item in maquinetas" value="{{ item.id_maquineta }}">{{ item.num_serie_maquineta }} - {{ item.dsc_conta_bancaria }}</option>
 										</select>
 									</div>
 						    		<div class="col-sm-6" id="numero_parcelas" ng-if="pagamento.id_forma_pagamento == 6">
@@ -1608,6 +1608,7 @@
 											<th rowspan="2" style="line-height: 46px;" class="text-center">Sabor/Cor</th>
 											<th colspan="3" class="text-center">Disponibilidade de Estoque</th>
 											<th rowspan="2" width="80" class="text-center" style="line-height: 46px;">Quantidade</th>
+											<th rowspan="2" width="80" class="text-center" style="line-height: 46px;">R$ Unit.</th>
 											<th rowspan="2" width="80" style="line-height: 46px;"></th>
 										</tr>
 										<tr>
@@ -1618,7 +1619,10 @@
 									</thead>
 									<tbody>
 										<tr ng-if="produtos == null">
-											<th class="text-center" colspan="10" style="text-align:center"><strong>Carregando</strong><img src="assets/imagens/progresso_venda.gif"></th>
+											<th class="text-center" colspan="10" style="text-align:center">
+												<strong>Carregando</strong>
+												<img src="assets/imagens/progresso_venda.gif">
+											</th>
 										</tr>
 										<tr ng-show="(produtos.length == 0)">
 											<td colspan="10">Nenhum produto encontrado</td>
@@ -1632,11 +1636,18 @@
 											<td class="text-center">{{ item.qtd_item }}</td>
 											<td class="text-center">{{ item.qtd_reservada }}</td>
 											<td class="text-center">{{ item.qtd_item - item.qtd_reservada  }}</td>
-											<td><input onKeyPress="return SomenteNumero(event);" ng-keyUp="" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" /></td>
 											<td>
-											<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
-												<i class="fa fa-check-square-o"></i> Selecionar
-											</button>
+												<input onKeyPress="return SomenteNumero(event);" ng-keyUp="" ng-model="item.qtd_total" type="text" class="form-control input-xs" width="50" />
+											</td>
+											<td class="text-right">
+												<span ng-show="margemAplicada.atacado">R$ {{ item.vlr_venda_atacado | numberFormat : 2 : ',' : '.' }}</span>
+												<span ng-show="margemAplicada.intermediario">R$ {{ item.vlr_venda_intermediario | numberFormat : 2 : ',' : '.' }}</span>
+												<span ng-show="margemAplicada.varejo">R$ {{ item.vlr_venda_varejo | numberFormat : 2 : ',' : '.' }}</span>
+											</td>
+											<td>
+												<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
 											</td>
 										</tr>
 									</tbody>
