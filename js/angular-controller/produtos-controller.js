@@ -6,7 +6,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.userLogged 	= UserService.getUserLogado();
 	ng.ids_empreendimento_usuario = [] ;
 	console.log(ng.ids_empreendimento_usuario);
-
+	var $checkableTree ;
 	var produtoTO = {
 		id_tamanho : null,
 		id_cor     : null,
@@ -20,8 +20,17 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					perc_venda_intermediario:0,
 					valor_venda_intermediario:0,
 					vlr_custo:0
-				},
-		precos:[],
+		},
+		precos : [{
+				 	nome_empreendimento: ng.userLogged.nome_empreendimento ,
+					id_empreendimento: ng.userLogged.id_empreendimento,
+					vlr_custo: 0,
+					perc_imposto_compra: 0,
+					perc_desconto_compra: 0,
+					perc_venda_atacado: 0,
+					perc_venda_intermediario: 0,
+					perc_venda_varejo: 0
+		}],
 		combinacoes : [],
 		categorias : []
 	};
@@ -376,7 +385,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					var qtd_ivn = Number(item.qtd_ivn);
 					inventario.id_deposito = item.id_deposito;
 					inventario.itens.push({
-						id           : ng.produto.id_produto,
+						id           : item.id,
 						dta_validade : item.dta_validade,
 						qtd_ivn      : qtd_ivn
 					});
@@ -635,11 +644,12 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.getEstoque = function(id_produto) {
 			var id_deposito_exists = ""  ;
 			var depositos          = {} ;
-			$http.get(baseUrlApi()+"estoque/?prd->id="+id_produto+"&emp->id_empreendimento="+ng.userLogged.id_empreendimento)
+			$http.get(baseUrlApi()+"estoque/?prd->id="+id_produto+"&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&get_combinacao=true")
 			.success(function(data, status, headers, config) {
 					depositos = data.produtos ;
 					$.each(depositos,function(i,v){
 						depositos[i].qtd_ivn   = v.qtd_item ;
+						depositos[i].id = v.id_produto ;
 					});
 
 					ng.produto.estoque = depositos ;
@@ -704,20 +714,37 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	   	    });
 	}
 
+	ng.modalCombinacao = function(){
+		$('#modal-combinacao').modal('show');
+		ng.loadCombinacoes(0,10);
+	}
+
+	ng.loadCombinacoes = function() {
+    	aj.get(baseUrlApi()+"combinacoes/"+ng.produto.id_produto)
+		.success(function(data, status, headers, config) {
+			ng.combinacoes = data ;
+		})
+		.error(function(data, status, headers, config) {
+			ng.combinacoes = [] ;	
+		});
+	}
+
 	ng.modalDepositos = function(){
 		$('#modal-depositos').modal('show');
 		ng.loadDepositos(0,10);
 	}
+
 	ng.inventario_novo = {} ;
+	
 	ng.addDeposito = function(item){
 		ng.inventario_novo.nome_deposito = item.nme_deposito;
 		ng.inventario_novo.id_deposito   = item.id;
 		$('#modal-depositos').modal('hide');
 	}
-	ng.existsDateEstoque = function(dta_validade,id_deposito){
+	ng.existsDateEstoque = function(dta_validade,id_deposito,id){
 		var exists = false ;
 		$.each(ng.produto.estoque,function(i,x){
-			if((dta_validade == x.dta_validade) && (id_deposito == x.id_deposito)){
+			if( (dta_validade == x.dta_validade) && (id_deposito == x.id_deposito) && (id == x.id) ){
 				exists = true ;
 				return;
 			}
@@ -742,7 +769,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			formControl.tooltip();
 		}else{
 			var dta_validade = empty(ng.inventario_novo.dta_validade) ? '2099-12-31' : formatDate(uiDateFormat(ng.inventario_novo.dta_validade,'99/99/999')) ;
-			if(ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito)){
+			if(ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito,ng.inventario_novo.id)){
 				 error ++ ;
 				$("#inventario_novo_validade").addClass("has-error");
 				var formControl = $('#inventario_novo_validade')
@@ -755,7 +782,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		}
 		if(empty(ng.inventario_novo.qtd_ivn)){
 			error ++ ;
-			if(!ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito)){
+			if(!ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito,ng.inventario_novo.id)){
 				$("#inventario_novo_qtd").addClass("has-error");
 				var formControl = $('#inventario_novo_qtd')
 					.attr("data-toggle", "tooltip")
@@ -769,14 +796,21 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		if(error > 0)
 			return false;
 
+		var id   = empty(ng.inventario_novo.id) ? ng.produto.id : ng.inventario_novo.id ;
+		var sabor   = empty(ng.inventario_novo.id) ? ng.produto.sabor : ng.inventario_novo.sabor ;
+		var peso = empty(ng.inventario_novo.id) ? ng.produto.peso : ng.inventario_novo.peso ;
+
 		var item = {
+			id   		  : ng.inventario_novo.id,
+			peso       	  : peso,
+			sabor         : sabor,
 			id_deposito   : ng.inventario_novo.id_deposito,
 			nme_deposito  : ng.inventario_novo.nome_deposito,
 			nome_deposito : ng.inventario_novo.nome_deposito,
 			qtd_item      : 0,
 			dta_validade  : dta_validade,
 			qtd_ivn       : ng.inventario_novo.qtd_ivn,
-			flg_visivel   : 1 
+			flg_visivel   : 1 ,
 		}
 
 		ng.produto.estoque.push(item);
@@ -952,6 +986,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.empreendimentoSelected = function(item){
 		var saida = false ;
+		if(typeof item != 'object')
+			return false ;
+
 		$.each(ng.empreendimentosAssociados,function(i,v){
 			if(Number(item.id) == Number(v.id_empreendimento)){
 				saida = true ;
@@ -1418,6 +1455,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		$('#modal-add-combinacao').modal('show');
 		ng.combinacao 	= angular.copy(produtoTO)  ;
 		ng.combinacao.nome = ng.produto.nome ;
+		ng.combinacao.precos = [] ;
 		$.each(ng.produto.precos,function(i,item){
 			ng.combinacao.precos.push({
 			 	nome_empreendimento: item.nome_empreendimento,
@@ -1566,7 +1604,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 				ng.treeviewConstruct(menu);
 			})
 			.error(function(data, status, headers, config) {
-				
+				ng.treeviewConstruct([]);
 			});
 	}
 
@@ -1621,7 +1659,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			}
 		}
 	}
-
 	ng.treeviewConstruct = function(data){
 		console.log(data);
 			$checkableTree = $('#treeview-modulos').treeview({
@@ -1706,6 +1743,14 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			ng.produto.combinacoes.push(angular.copy(ng.combinacao)) ;
 		ng.combinacao = angular.copy(produtoTO);
 		indexEditCombinacao = null ;
+	}
+
+	ng.addCombinacaoEstoque = function(item){
+		ng.inventario_novo.id = item.id ;
+		ng.inventario_novo.peso = item.peso ;
+		ng.inventario_novo.sabor = item.sabor ;
+		ng.inventario_novo.dsc_combinacao = '#'+item.id+" - "+item.peso+" "+item.sabor ;
+		$('#modal-combinacao').modal('hide');
 	}
 
 

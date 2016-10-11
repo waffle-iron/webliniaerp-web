@@ -1,4 +1,4 @@
-app.controller('InventarioController', function($scope, $http, $window, $dialogs, UserService){
+app.controller('InventarioController', function($scope, $http, $window, $dialogs, UserService, PrestaShop){
 
 	var ng = $scope
 		aj = $http;
@@ -52,6 +52,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
      	}
 
 	    var itens = [] ;
+	    var postPrestaShop = {produtos:[],id_empreendimento:ng.userLogged.id_empreendimento} ;
 		$.each(ng.inventario.itens,function(i,item){
 			$.each(item.validades,function(x,validade){
 				var item_atual = {} ;
@@ -66,6 +67,8 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 				item_atual.qtd_ivn      = validade.qtd;
 
 				itens.push(item_atual);
+
+				postPrestaShop.produtos.push(item.id_produto);
 			});
 		});
 
@@ -80,6 +83,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 				ng.showBoxNovo();
 	        	ng.mensagens('alert-success','<strong>Inventario cadastrada com sucesso</strong>');
 	        	ng.loadUltimosInventarios(0,30);
+	        	PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 	        }).error(function(data, status) {
 	        	$("#btCancelar").show();
 	        	$("#btSalvar").button("reset");

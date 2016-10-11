@@ -196,6 +196,7 @@ function sanitizeString($str) {
 				var data = {
 					fields: [],
 					input_filename: "produtos-narguileste.csv",
+					input_filename: "produtos-hulk-suplementos.csv",
 					output_format: "sql",
 					output_filename: "produtos-narguileste.sql",
 					table_name: "tmp_produtos_narguileste"

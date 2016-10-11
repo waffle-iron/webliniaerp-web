@@ -833,6 +833,23 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 			});
 	}
 
+	ng.loadCountOrcamentosByEmpreendimento = function() {
+		var vlrTotalVendasPeriodoComparativo = 0 ;
+		aj.get(baseUrlApi()+"count_orcamentos_by_empreendimento/dashboard/"+ng.userLogged.id_empreendimento+"/"+ng.userLogged.id)
+			.success(function(data, status, headers, config) {
+				var orcamentos = data  ;
+				$.each(orcamentos,function(i,v){
+					ng.alertas.push({
+						type: 'danger',
+						message: "Você tem "+ v.total_orcamentos +" orçamentos para validar no emp. "+v.nome_empreendimento+"!"
+					});
+				});
+			})
+			.error(function(data, status, headers, config) {
+				console.log('erro ao buscar url '+baseUrlApi()+"count_orcamentos_by_empreendimento/dashboard/"+ng.userLogged.id_empreendimento+"/"+ng.userLogged.id);
+			});
+	}
+
 	ng.loadProdutosVencidos = function() {
 		aj.get(baseUrlApi()+"produtos/vencidos/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
@@ -948,6 +965,7 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 	}
 
 	ng.loadCountOrcamentos(formatDate(getFirstDateOfMonthString()), formatDate(getLastDateOfMonthString()));
+	ng.loadCountOrcamentosByEmpreendimento();
 	ng.loadProdutosVencidos();
 	ng.loadProdutosVencer();
 	ng.loadProdutosEstoqueMinimo();

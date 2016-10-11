@@ -144,14 +144,14 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
 
-    	var query_string = "?group=&emp->id_empreendimento="+$scope.userLogged.id_empreendimento;
+    	var query_string = "?tpe->id_empreendimento="+$scope.userLogged.id_empreendimento+"&tp->flg_excluido=0";
 
     	if($scope.busca.produtos != ""){
-    		query_string += "&"+$.param({'prd->nome':{exp:"like'%"+$scope.busca.produtos+"%' OR fab.nome_fabricante like'%"+$scope.busca.produtos+"%'"}});
+    		query_string += "&"+$.param({'tp->nome':{exp:"like'%"+$scope.busca.produtos+"%' OR tf.nome_fabricante like'%"+$scope.busca.produtos+"%'"}});
     	}
 
 		$scope.produtos = [];
-		$http.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
+		$http.get(baseUrlApi()+"estoque_produtos/null/"+offset+"/"+limit+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC")
 			.success(function(data, status, headers, config) {
 				$.each(data.produtos, function(i, item) {
 					item.id_produto = parseInt(item.id_produto, 10);

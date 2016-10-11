@@ -388,12 +388,23 @@
 										</div>
 										<div class="tab-pane fade" id="estoque">
 											<div ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="row">
-												<div class="col-sm-5" id="inventario_novo_deposito">
+												<div class="col-sm-3" id="inventario_novo_deposito">
 													<label class="control-label">Depósito</label>
 													<div class="input-group">
 											            <input ng-model="inventario_novo.nome_deposito" ng-disabled="true" type="text" class="form-control input-xs" ng-enter="loadDepositos(0,10)">
 											            <div class="input-group-btn">
 											            	<button ng-click="modalDepositos()" tabindex="-2" class="btn btn-xs btn-primary" type="button">
+											            		<i class="fa fa-sitemap"></i>
+											            	</button>
+											            </div>
+											        </div>
+												</div>
+												<div class="col-sm-4" id="inventario_novo_id">
+													<label class="control-label">Combinação</label>
+													<div class="input-group">
+											            <input ng-model="inventario_novo.dsc_combinacao" ng-disabled="true" type="text" class="form-control input-xs" ng-enter="modalCombinacao(0,10)">
+											            <div class="input-group-btn">
+											            	<button ng-click="modalCombinacao()" tabindex="-2" class="btn btn-xs btn-primary" type="button">
 											            		<i class="fa fa-sitemap"></i>
 											            	</button>
 											            </div>
@@ -405,9 +416,9 @@
 														<input ng-model="inventario_novo.dta_validade" ui-mask="99/99/9999"  type="text" class="form-control input-xs">
 													</div>
 												</div>
-												<div class="col-sm-2">
+												<div class="col-sm-1">
 													<div class="form-group" id="inventario_novo_qtd">
-														<label class="control-label">Quantidade</label>
+														<label class="control-label">Qtd.</label>
 														<input ng-model="inventario_novo.qtd_ivn" onkeypress="return SomenteNumero(event);" type="text" class="form-control input-xs">
 													</div>
 												</div>
@@ -421,10 +432,12 @@
 												</div>
 											</div>
 											<div class="row">
-												<div class="col-sm-10">
+												<div class="col-sm-12">
 													<table class="table table-bordered table-condensed table-striped table-hover">
 														<thead>
 															<tr>
+																<th class="text-center">Tamanho</th>
+																<th class="text-center">Peso/Sabor</th>
 																<th class="text-center">Depósito</th>
 																<th class="text-center">Validade</th>
 																<th class="text-center" width="100">Quantidade</th>
@@ -432,6 +445,8 @@
 														</thead>
 														<tbody>
 															<tr ng-repeat="(key, value) in produto.estoque | orderBy:'+nome_deposito'">
+																<td>{{ value.peso }}</td>
+																<td>{{ value.sabor }}</td>
 																<td>{{ value.nome_deposito }}</td>
 																<td class="text-center" ng-if="value.dta_validade != '2099-12-31'">{{ value.dta_validade | dateFormat:'date' }}</td>
 																<td class="text-center" ng-if="value.dta_validade == '2099-12-31'"></td>
@@ -843,6 +858,18 @@
 													</div>
 												</div>
 											</div>	
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-combinacoes')" type='submit' id="btn-salvar-combinacoes" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -1254,7 +1281,6 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-
 		<!-- /Modal depositos-->
 		<div class="modal fade" id="modal-depositos" style="display:none">
   			<div class="modal-dialog">
@@ -1503,7 +1529,6 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-
 		<!-- /Modal novo cor/sabor-->
 		<div class="modal fade" id="modal-nova-cor" style="display:none">
   			<div class="modal-dialog modal-sm">
@@ -1583,11 +1608,6 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-
-
-
-
-
 		<!-- /Modal novo Combinações-->
 		<div class="modal fade" id="modal-add-combinacao" style="display:none">
   			<div class="modal-dialog modal-lg">
@@ -1698,20 +1718,74 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+		<!-- /Modal depositos-->
+		<div class="modal fade" id="modal-combinacao" style="display:none">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Combinação</span></h4>
+      				</div>
+				    <div class="modal-body">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group">
+						            <input ng-model="busca.depositos" ng-enter="loadDepositos(0,10)" type="text" class="form-control input-sm">
+						            <div class="input-group-btn">
+						            	<button ng-click="loadDepositos(0,10)" tabindex="-1" class="btn btn-sm btn-primary" type="button">
+						            		<i class="fa fa-search"></i> Buscar
+						            	</button>
+						            </div> <!-- /input-group-btn -->
+						        </div> <!-- /input-group -->
+							</div><!-- /.col -->
+						</div>
 
+						<br/>
 
+				   		<div class="row">
+				   			<div class="col-sm-12">
+				   				<table class="table table-bordered table-condensed table-striped table-hover">
+									<thead ng-show="(depositos.length != 0)">
+										<tr>
+											<th width="50">#</th>
+											<th>Tamanho</th>
+											<th>Cor/Sabor</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-show="(depositos.length == 0)">
+											<td colspan="3">Não há Depositos cadastrados</td>
+										</tr>
+										<tr ng-repeat="item in combinacoes">
+											<td>{{item.id}}</td>
+											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
+											<td width="50" align="center">
+												<button type="button" class="btn btn-xs btn-success" ng-click="addCombinacaoEstoque(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+				   			</div>
+				   		</div>
 
-
-
-
-
-
-
-
-
-
-
-
+				   		<div class="row">
+					    	<div class="col-sm-12">
+					    		<ul class="pagination pagination-xs m-top-none pull-right" ng-show="paginacao.depositos.length > 1">
+									<li ng-repeat="item in paginacao.depositos" ng-class="{'active': item.current}">
+										<a href="" h ng-click="loadDepositos(item.offset,item.limit)">{{ item.index }}</a>
+									</li>
+								</ul>
+					    	</div>
+				    	</div>
+				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 		<!-- Footer
 		================================================== -->
 		<footer>

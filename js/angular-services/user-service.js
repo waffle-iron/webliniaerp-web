@@ -188,6 +188,7 @@ app.service('AsyncAjaxSrvc', function() {
 });
 
 app.service('PrestaShop', function($http,ConfigService,UserService) {
+	var aj = $http ;
 	var user = UserService.getUserLogado() ;
 	conf = ConfigService.getConfig(user.id_empreendimento);
 	var PrestaShop = this ;

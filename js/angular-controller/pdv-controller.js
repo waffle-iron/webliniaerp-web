@@ -1,4 +1,4 @@
-app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService,CaixaService,$timeout,FuncionalidadeService) {
+app.controller('PDVController', function($scope, $http, $window,$dialogs, UserService,ConfigService,CaixaService,$timeout,FuncionalidadeService,PrestaShop) {
 	var ng = $scope,
 		aj = $http;
 	ng.userLogged 	 		= UserService.getUserLogado();
@@ -299,6 +299,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.salvar() ;
 	}
 
+
+	var postPrestaShop = {produtos:[],id_empreendimento:ng.userLogged.id_empreendimento};
 	ng.efetivarCompra = function(){
 		ng.modalProgressoVenda('show');
 		if(ng.orcamento){
@@ -437,7 +439,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 
 		venda.id_cliente = (venda.id_cliente == "" || venda.id_cliente == undefined) ? ng.caixa.id_cliente_movimentacao_caixa : venda.id_cliente;
 
+		postPrestaShop.produtos = [] ;
 		$.each(produtos,function(index,value){
+			postPrestaShop.produtos.push(value.id_produto);
 			produtos[index].venda_confirmada 	= 1 ;
 			produtos[index].valor_produto 		= value.vlr_unitario;
 			produtos[index].qtd           		= value.qtd_total;
@@ -880,6 +884,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					ng.id_controle_pagamento = data.id_controle_pagamento ;
 					ng.showModalPrint();
 					ng.printPdf();
+					PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 			 	}
 			})
 			.error(function(data, status, headers, config) {
