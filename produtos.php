@@ -858,6 +858,18 @@
 													</div>
 												</div>
 											</div>	
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="pull-right">
+														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
+															<i class="fa fa-times-circle"></i> Cancelar
+														</button>
+														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-combinacoes')" type='submit' id="btn-salvar-combinacoes" class="btn btn-success btn-sm">
+															<i class="fa fa-save"></i> Salvar
+														</button>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

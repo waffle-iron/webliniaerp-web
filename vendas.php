@@ -256,7 +256,7 @@
 											<td class="text-right">R$ {{ item.vlr_total_venda | numberFormat : '2' : ',' : '.'}}</td>
 											<td class="text-center">
 
-												<a href="separar_venda.php?id_venda={{ item.id }}" ng-if="item.id_status_venda == 1" type="button" title="Separar venda no estoque" data-toggle="tooltip" class="btn btn-xs btn-info">
+												<a href="separar_venda.php?id_venda={{ item.id }}" ng-if="item.id_status_venda == 1 || item.id_status_venda == 6" type="button" title="Separar venda no estoque" data-toggle="tooltip" class="btn btn-xs btn-info">
 													<i class="fa fa-th"></i>
 												</a>
 

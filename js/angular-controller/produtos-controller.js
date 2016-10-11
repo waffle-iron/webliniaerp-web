@@ -20,8 +20,17 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					perc_venda_intermediario:0,
 					valor_venda_intermediario:0,
 					vlr_custo:0
-				},
-		precos:[],
+		},
+		precos : [{
+				 	nome_empreendimento: ng.userLogged.nome_empreendimento ,
+					id_empreendimento: ng.userLogged.id_empreendimento,
+					vlr_custo: 0,
+					perc_imposto_compra: 0,
+					perc_desconto_compra: 0,
+					perc_venda_atacado: 0,
+					perc_venda_intermediario: 0,
+					perc_venda_varejo: 0
+		}],
 		combinacoes : [],
 		categorias : []
 	};
@@ -640,6 +649,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					depositos = data.produtos ;
 					$.each(depositos,function(i,v){
 						depositos[i].qtd_ivn   = v.qtd_item ;
+						depositos[i].id = v.id_produto ;
 					});
 
 					ng.produto.estoque = depositos ;
@@ -731,10 +741,10 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.inventario_novo.id_deposito   = item.id;
 		$('#modal-depositos').modal('hide');
 	}
-	ng.existsDateEstoque = function(dta_validade,id_deposito){
+	ng.existsDateEstoque = function(dta_validade,id_deposito,id){
 		var exists = false ;
 		$.each(ng.produto.estoque,function(i,x){
-			if((dta_validade == x.dta_validade) && (id_deposito == x.id_deposito)){
+			if( (dta_validade == x.dta_validade) && (id_deposito == x.id_deposito) && (id == x.id) ){
 				exists = true ;
 				return;
 			}
@@ -759,7 +769,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			formControl.tooltip();
 		}else{
 			var dta_validade = empty(ng.inventario_novo.dta_validade) ? '2099-12-31' : formatDate(uiDateFormat(ng.inventario_novo.dta_validade,'99/99/999')) ;
-			if(ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito)){
+			if(ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito,ng.inventario_novo.id)){
 				 error ++ ;
 				$("#inventario_novo_validade").addClass("has-error");
 				var formControl = $('#inventario_novo_validade')
@@ -772,7 +782,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		}
 		if(empty(ng.inventario_novo.qtd_ivn)){
 			error ++ ;
-			if(!ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito)){
+			if(!ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito,ng.inventario_novo.id)){
 				$("#inventario_novo_qtd").addClass("has-error");
 				var formControl = $('#inventario_novo_qtd')
 					.attr("data-toggle", "tooltip")
@@ -1445,6 +1455,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		$('#modal-add-combinacao').modal('show');
 		ng.combinacao 	= angular.copy(produtoTO)  ;
 		ng.combinacao.nome = ng.produto.nome ;
+		ng.combinacao.precos = [] ;
 		$.each(ng.produto.precos,function(i,item){
 			ng.combinacao.precos.push({
 			 	nome_empreendimento: item.nome_empreendimento,

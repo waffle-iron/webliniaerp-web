@@ -1,6 +1,6 @@
 <?php
 	include_once "util/login/restrito.php";
-	restrito(array(1));
+	//restrito(array(1));
 ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="HageERP">
@@ -525,6 +525,15 @@
 						</table>
 					</div>
 				</div>
+				<div class="row">
+						<div class="col-sm-12">
+							<ul class="pagination pagination-sm m-top-none pull-right" ng-show="paginacao.ordens_servico.length > 1">
+								<li ng-repeat="item in paginacao.ordens_servico" ng-class="{'active': item.current}">
+									<a href="" ng-click="loadOrdensServicos(item.offset,item.limit)">{{ item.index }}</a>
+								</li>
+							</ul>
+						</div>
+					</div>
 			</div>
 		</div><!-- /main-container -->
 
