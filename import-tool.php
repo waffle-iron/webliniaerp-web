@@ -195,7 +195,7 @@ function sanitizeString($str) {
 			$("button#exportToSQL").on("click", function() {
 				var data = {
 					fields: [],
-					input_filename: "produtos-dft.csv",
+					input_filename: "produtos-hulk-suplementos.csv",
 					output_format: "sql",
 					output_filename: "produtos-dft.sql",
 					table_name: "tmp_produtos_dft"
