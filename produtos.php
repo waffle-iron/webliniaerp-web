@@ -1626,7 +1626,7 @@
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group" id="peso">
-										<label class="control-label">Tamanho </label> <i ng-click="showModalNovoTamanho()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+										<label class="control-label">Tamanho </label>
 										<select chosen ng-change="ClearChosenSelect('combinacao')"
 									    option="tamanhos"
 									    ng-model="combinacao.id_tamanho"
@@ -1636,7 +1636,7 @@
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group" id="peso">
-										<label class="control-label">Cor/sabor</label> <i ng-click="showModalNovaCor()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
+										<label class="control-label">Cor/sabor</label>
 										<select chosen ng-change="ClearChosenSelect('cor')"
 									    option="cores"
 									    ng-model="combinacao.id_cor"

@@ -1315,6 +1315,7 @@
 
 								<div class="tab-content">
 									<div class="tab-pane fade active in" id="prestashop">
+										<div class="alert alert-config-prestashop" style="display:none"></div>
 										<div class="row">
 											<div class="col-sm-2">
 												<div class="form-group">
@@ -1350,8 +1351,68 @@
 												</div>
 											</div>
 										</div>
-
 										<div class="row">
+											<div class="col-sm-3">
+												<div class="form-group" id="prestashop_id_perfil_padrao"  >
+													<label class="control-label">ID Perfil Padrão </label>
+													<input ng-model="configuracoes.prestashop_id_perfil_padrao" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group" id="prestashop_depositos"  >
+													<label class="control-label">Depositos </label>
+													<input ng-model="configuracoes.prestashop_depositos" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group" id="prestashop_id_categoria_inicio"  >
+													<label class="control-label">ID Categoria Inicial </label>
+													<input ng-model="configuracoes.prestashop_id_categoria_inicio" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+											<div class="col-sm-2">
+												<div class="form-group" id="prestashop_id_attribute_group_cor"  >
+													<label class="control-label">ID Atributo Cor </label>
+													<input ng-model="configuracoes.prestashop_id_attribute_group_cor" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="form-group" id="prestashop_id_attribute_group_tamanho"  >
+													<label class="control-label">ID Atributo Tamanho </label>
+													<input ng-model="configuracoes.prestashop_id_attribute_group_tamanho" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-3">
+												<div class="form-group" id="prestashop_id_usuario_padrao"  >
+													<label class="control-label">ID Usuario Padrão </label>
+													<input ng-model="configuracoes.prestashop_id_usuario_padrao" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="form-group" id="prestashop_id_conta_bancaria_padrao"  >
+													<label class="control-label">ID Conta Bancaria </label>
+													<input ng-model="configuracoes.prestashop_id_conta_bancaria_padrao" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="form-group" id="prestashop_id_plano_conta_padrao"  >
+													<label class="control-label">ID Plano Padrão </label>
+													<input ng-model="configuracoes.prestashop_id_plano_conta_padrao" 
+														type="text" class="form-control input-sm parsley-validated">
+												</div>
+											</div>
+										</div>
+
+										<!--<div class="row">
 											<div class="col-sm-5">
 												<div class="form-group">
 													<div class="table-responsive">
@@ -1390,14 +1451,14 @@
 													</div>
 												</div>
 											</div>
-										</div>
+										</div>-->
 									</div>
 								</div>
 
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">
-											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigDepositoPadrao($event)" type="submit" class="btn btn-success btn-sm">
+											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfigPrestaShop($event)" type="submit" class="btn btn-success btn-sm">
 												<i class="fa fa-save"></i> Salvar
 											</button>
 										</div>

@@ -386,6 +386,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					inventario.id_deposito = item.id_deposito;
 					inventario.itens.push({
 						id           : item.id,
+						id_produto   : item.id_produto,
 						dta_validade : item.dta_validade,
 						qtd_ivn      : qtd_ivn
 					});
@@ -548,7 +549,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.loadProdutoInsumos = function() {
 		ng.insumos = [];
-		aj.get(baseUrlApi()+"produto/insumos/"+ng.produto.id)
+		aj.get(baseUrlApi()+"produto/get/insumos/"+ng.produto.id)
 			.success(function(data, status, headers, config) {
 				ng.insumos        = data ;
 			})
@@ -801,7 +802,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		var peso = empty(ng.inventario_novo.id) ? ng.produto.peso : ng.inventario_novo.peso ;
 
 		var item = {
-			id   		  : ng.inventario_novo.id,
+			id   		  : ( empty(ng.inventario_novo.id) ? ng.produto.id :  ng.inventario_novo.id ),
+			id_produto    : ( empty(ng.inventario_novo.id) ? ng.produto.id :  ng.inventario_novo.id ),
 			peso       	  : peso,
 			sabor         : sabor,
 			id_deposito   : ng.inventario_novo.id_deposito,
@@ -1156,7 +1158,11 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			.success(function(data, status, headers, config) {
 				btn.button('reset');
 				ng.loadFabricantes(ng.fabricante.nome_fabricante);
-				$('#modal-novo-fabricante').modal('hide');	
+				$('#modal-novo-fabricante').modal('hide');
+				var itemPost = angular.copy(ng.fabricante);
+				if(!empty(data.fabricante) && !empty(data.fabricante.id))
+					itemPost.id = data.fabricante.id ;	
+				PrestaShop.send('post',baseUrlApi()+"prestashop/fabricante",itemPost);
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
@@ -1453,6 +1459,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.showModalAddCombinacoes = function(){
 		indexEditCombinacao = null ;
 		$('#modal-add-combinacao').modal('show');
+		$('#modal-add-combinacao').on('shown.bs.modal', function (e) {
+			$("select").trigger("chosen:updated");
+		});
 		ng.combinacao 	= angular.copy(produtoTO)  ;
 		ng.combinacao.nome = ng.produto.nome ;
 		ng.combinacao.precos = [] ;
@@ -1486,6 +1495,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	ng.ModalEditarCombinacao = function(item,$index){
 		indexEditCombinacao = $index ;
 		$('#modal-add-combinacao').modal('show');
+		$('#modal-add-combinacao').on('shown.bs.modal', function (e) {
+			$("select").trigger("chosen:updated");
+		});
 		ng.combinacao = item ;
 		if($.isNumeric(item.id_combinacao) && typeof item.precos != 'object'){
 			aj.get(baseUrlApi()+"produto/precos?cplSql=tp.id="+item.id_combinacao)

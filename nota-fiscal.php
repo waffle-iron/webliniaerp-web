@@ -417,19 +417,19 @@
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Endereço</label>
-											<input type="text" ng-model="NF.emitente.xLgr" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.emitente.nme_logradouro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-1">
 										<div class="form-group">
 											<label class="control-label">Número</label>
-											<input type="text"  ng-model="NF.emitente.nro" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.num_logradouro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Bairro</label>
-											<input type="text"  ng-model="NF.emitente.xBairro" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.nme_bairro_logradouro" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -438,13 +438,13 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Estado</label>
-											<input type="text"  ng-model="NF.emitente.UF" class="form-control input-sm" readonly="readonly">
+											<input type="text"  ng-model="NF.emitente.estado.uf" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Cidade</label>
-											<input type="text" ng-model="NF.emitente.cMun" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.emitente.cidade.nome" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -520,19 +520,19 @@
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Endereço</label>
-											<input type="text" ng-model="NF.destinatario.xLgr"  class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.nme_logradouro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-1">
 										<div class="form-group">
 											<label class="control-label">Número</label>
-											<input type="text" ng-model="NF.destinatario.nro"  class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.num_logradouro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Bairro</label>
-											<input type="text" ng-model="NF.destinatario.xBairro"  class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.nme_bairro_logradouro"  class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -541,13 +541,13 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">Estado</label>
-											<input type="text" ng-model="NF.destinatario.UF" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.estado.uf" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 									<div class="col-sm-3">
 										<div class="form-group">
 											<label class="control-label">Cidade</label>
-											<input type="text" ng-model="NF.destinatario.cMun" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.destinatario.cidade.nome" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>

@@ -1,5 +1,4 @@
 app.controller('Empreendimento_config-Controller', function($scope, $http, $window, $dialogs, UserService,ConfigService){
-
 	var ng = $scope
 		aj = $http;
 
@@ -159,6 +158,128 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 
+	ng.salvarConfigPrestaShop = function(event){
+		var btn = $(event.target);
+		if(!(btn.is(':button')))
+			btn = $(btn.parent('button'));
+		var chaves = [];
+
+		if(ng.flg_integrar_prestashop == 1){
+			ng.configuracoes.sistemas_integrados = '["prestashop"]' ;
+		}else{
+			ng.configuracoes.sistemas_integrados = '[]' ;
+		}
+
+		var item = {
+			nome 				: 'sistemas_integrados',
+			valor 				: ng.configuracoes.sistemas_integrados,
+			id_empreendimento	: ng.userLogged.id_empreendimento
+		};
+
+		chaves.push(item);
+
+		if(!empty(ng.configuracoes.prestashop_id_perfil_padrao)){
+			var item = {
+				nome 				: 'prestashop_id_perfil_padrao',
+				valor 				: ng.configuracoes.prestashop_id_perfil_padrao,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_depositos)){
+			var item = {
+				nome 				: 'prestashop_depositos',
+				valor 				: ng.configuracoes.prestashop_depositos,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_id_categoria_root)){
+			var item = {
+				nome 				: 'prestashop_id_categoria_root',
+				valor 				: ng.configuracoes.prestashop_id_categoria_root,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_id_categoria_inicio)){
+			var item = {
+				nome 				: 'prestashop_id_categoria_inicio',
+				valor 				: ng.configuracoes.prestashop_id_categoria_inicio,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_id_attribute_group_tamanho)){
+			var item = {
+				nome 				: 'prestashop_id_attribute_group_tamanho',
+				valor 				: ng.configuracoes.prestashop_id_attribute_group_tamanho,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_id_attribute_group_cor)){
+			var item = {
+				nome 				: 'prestashop_id_attribute_group_cor',
+				valor 				: ng.configuracoes.prestashop_id_attribute_group_cor,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_ws_auth_key)){
+			var item = {
+				nome 				: 'prestashop_ws_auth_key',
+				valor 				: ng.configuracoes.prestashop_ws_auth_key,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_shop_path)){
+			var item = {
+				nome 				: 'prestashop_shop_path',
+				valor 				: ng.configuracoes.prestashop_shop_path,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_id_usuario_padrao)){
+			var item = {
+				nome 				: 'prestashop_id_usuario_padrao',
+				valor 				: ng.configuracoes.prestashop_id_usuario_padrao,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_id_conta_bancaria_padrao)){
+			var item = {
+				nome 				: 'prestashop_id_conta_bancaria_padrao',
+				valor 				: ng.configuracoes.prestashop_id_conta_bancaria_padrao,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+		if(!empty(ng.configuracoes.prestashop_id_plano_conta_padrao)){
+			var item = {
+				nome 				: 'prestashop_id_plano_conta_padrao',
+				valor 				: ng.configuracoes.prestashop_id_plano_conta_padrao,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+
+		btn.button('loading');
+		
+		aj.post(baseUrlApi()+"configuracao/save/",{ chaves: chaves })
+			.success(function(data, status, headers, config) {
+				btn.button('reset');
+				ng.mensagens('alert-success', 'Configurações atualizadas com sucesso','.alert-config-prestashop');
+				ng.loadConfig();
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+			});
+	}
+
 	ng.mensagens = function(classe , msg, alertClass){
 		alertClass = alertClass != null  ?  alertClass:'.alert-sistema' ;
 		$(alertClass).fadeIn().addClass(classe).html(msg);
@@ -277,6 +398,13 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 											id_empreendimento : ng.userLogged.id_empreendimento
 										}
 				});
+
+				if(data.sistemas_integrados == '["prestashop"]'){
+					ng.flg_integrar_prestashop = 1 ;
+				}else{
+					ng.flg_integrar_prestashop = 0 ;
+				}
+
 				data.emails_notificacoes = !empty(data.emails_notificacoes) ? JSON.parse(data.emails_notificacoes) : [] ;
 				var emails = [] ;
 				$.each(data.emails_notificacoes,function(i,v){
@@ -1029,5 +1157,4 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 	ng.loadPlanoContasSelect();
 	ng.loadFormasPagamento();
 
-	
 });
