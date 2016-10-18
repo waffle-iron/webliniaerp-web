@@ -158,11 +158,18 @@
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Novo Fabricante</div>
 
 					<div class="panel-body">
-						<form class="form-horizontal" role="form">
+						<form class="form-horizontal" id="form-fabricante" role="form" enctype="multipart/form-data">
 							<div class="form-group" id="nome_fabricante">
 								<label for="descricao" class="col-sm-1 control-label">Descrição</label>
 								<div class="col-sm-11">
 									<input type="text" class="form-control"  ng-model="fabricante.nome_fabricante">
+								</div>
+							</div>
+
+							<div class="form-group" id="nome_fabricante">
+								<label for="descricao" class="col-sm-1 control-label">Imagem</label>
+								<div class="col-sm-11">
+									<input type="file" name="image" />
 								</div>
 							</div>
 
@@ -373,6 +380,9 @@
 
 	<!-- Modernizr -->
 	<script src='js/modernizr.min.js'></script>
+
+	<!-- Jquery Form-->
+	<script src='js/jquery.form.js'></script>
 
     <!-- Pace -->
 	<script src='js/pace.min.js'></script>

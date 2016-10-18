@@ -568,6 +568,14 @@
 									</div>
 								</div>
 								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group" id="pth_local"  >
+											<label class="control-label">Cod. Identificador Balança</label>
+											<input ng-model="configuracoes.cod_identificador_balanca"  type="text" class="form-control input-sm parsley-validated">
+										</div>
+									</div>
+								</div>
+								<div class="row">
 									<div class="col-sm-12">
 										<div class="pull-right">
 											<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="salvarConfig($event)" type="submit" class="btn btn-success btn-sm">

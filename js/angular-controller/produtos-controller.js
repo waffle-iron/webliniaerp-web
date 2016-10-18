@@ -12,6 +12,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		id_cor     : null,
 		flg_produto_composto : 0,
 		estoque:[],
+		peso_frete : 0 ,
 		preco:{
 					perc_venda_atacado:0,
 					valor_venda_atacado:0,
@@ -467,6 +468,9 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.produto.id_cor = ng.produto.id_cor === null ? 0 : Number(ng.produto.id_cor)  ;
 		ng.produto.cod_especializacao_ncm = ng.produto.cod_especializacao_ncm === null ? "" : Number(ng.produto.cod_especializacao_ncm)  ; 
 		ng.produto.ncm_view = item.cod_ncm+" - "+item.dsc_ncm ;
+		if(!$.isNumeric(ng.produto.peso_frete)){
+			ng.produto.peso_frete = 0 ;
+		}
 		if(typeof ng.produto.categorias != 'object'){
 			 ng.produto.categorias = [] ;
 		}else{
