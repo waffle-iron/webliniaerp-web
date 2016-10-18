@@ -287,19 +287,8 @@
 						</div>
 						<div class="row">
 							<div class="col-sm-3">
-								<div class="form-group" id="cod_crt_emitente">
-									<label class="ccontrol-label">CRT Emitente</label> 
-									<select chosen ng-change="ClearChosenSelect('cod_crt_emitente')"
-								    option="chosen_crt_emitente"
-								    allow-single-deselect="true"
-								    ng-model="regra_tributos.filtro_tributos.cod_crt_emitente"
-								    ng-options="crt_emitente.cod_controle_item_nfe as crt_emitente.nme_item for crt_emitente in chosen_crt_emitente">
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-3">
 								<div class="form-group" id="flg_cont_ipi_emitente">
-									<label for="" class="control-label">Cont. IPI Emitente</label>
+									<label for="" class="control-label">Emitente Contribuinte IPI</label>
 									<div class="form-group">
 										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_emitente" ng-true-value="null"  type="radio" class="inline-radio">
@@ -322,7 +311,7 @@
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group" id="flg_cont_icms_emitente">
-									<label for="" class="control-label">Cont. ICMS Emitente</label>
+									<label for="" class="control-label">Emitente Contribuinte ICMS</label>
 									<div class="form-group">
 										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_emitente" ng-true-value="null"  type="radio" class="inline-radio">
@@ -342,6 +331,17 @@
 											<span>Sim</span>
 										</label>
 									</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group" id="cod_crt_emitente">
+									<label class="ccontrol-label">CRT Emitente</label> 
+									<select chosen ng-change="ClearChosenSelect('cod_crt_emitente')"
+								    option="chosen_crt_emitente"
+								    allow-single-deselect="true"
+								    ng-model="regra_tributos.filtro_tributos.cod_crt_emitente"
+								    ng-options="crt_emitente.cod_controle_item_nfe as crt_emitente.nme_item for crt_emitente in chosen_crt_emitente">
+									</select>
 								</div>
 							</div>
 						</div>
@@ -394,7 +394,7 @@
 						<div class="row">
 							<div class="col-sm-3">
 								<div class="form-group" id="flg_cont_ipi_destinatario">
-									<label for="" class="control-label">Cont. IPI Destinatário</label>
+									<label for="" class="control-label">Destinatário Contribuinte IPI</label>
 									<div class="form-group">
 										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_ipi_destinatario" ng-true-value="null"  type="radio" class="inline-radio">
@@ -415,10 +415,11 @@
 										</label>
 									</div>
 								</div>
-							</div>	
+							</div>
+
 							<div class="col-sm-3">
 								<div class="form-group" id="flg_cont_icms_destinatario">
-									<label for="" class="control-label">Cont. ICMS Destinatário</label>
+									<label for="" class="control-label">Destinatário Contribuinte ICMS</label>
 									<div class="form-group">
 										<label class="label-radio inline">
 											<input ng-model="regra_tributos.filtro_tributos.flg_cont_icms_destinatario" ng-true-value="null"  type="radio" class="inline-radio">
@@ -463,9 +464,10 @@
 									</select>
 								</div>
 							</div>
+
 							<div class="col-sm-3">
 								<div class="form-group" id="cod_situacao">
-									<label class="ccontrol-label">Situacao</label> 
+									<label class="ccontrol-label">Situação Especial</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_situacao')"
 								    option="chosen_situacao"
 								    allow-single-deselect="true"
@@ -486,14 +488,6 @@
 								</div>
 							</div>	
 						</div>
-						<div class="row">
-					
-							
-						
-							
-							
-						</div>
-
 
 						<div class="row">
 							<div class="col-sm-4" id="cod_ncm">
@@ -522,48 +516,242 @@
 									</select>
 								</div>
 							</div>
-						</div>
-						<div class="row">
+
 							<div class="col-sm-2">
 								<div class="form-group" id="codigo_barra">
-									<label class="control-label">Número Cest</label>
+									<label class="control-label">Núm. CEST</label>
 									<input ng-model="regra_tributos.filtro_tributos.num_cest" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
 								</div>
 							</div>
 						</div>
 					</fieldset>
+
 					<fieldset>
 						<legend>ICMS</legend>
 						<div class="row" >
-							<div class="col-sm-4">
+							<div class="col-sm-7">
 								<div class="form-group" id="cod_cstcsosn">
 									<label class="ccontrol-label">CSTCSOSN</label> 
 									<select chosen ng-change="ClearChosenSelect('cod_cstcsosn')"
 								    option="chosen_cstcsosn"
 								    allow-single-deselect="true"
 								    ng-model="regra_tributos.configuracao_icms.cod_cstcsosn"
-								    ng-options="cstcsosn.cod_cstcsosn as ('cst: '+cstcsosn.dsc_cst+' - cson: '+cstcsosn.dsc_cson+' - '+cstcsosn.dsc_geral) for cstcsosn in chosen_cstcsosn">
+								    ng-options="cstcsosn.cod_cstcsosn as ('CST: '+cstcsosn.dsc_cst+' - CSOSN: '+cstcsosn.dsc_cson+' - '+cstcsosn.dsc_geral) for cstcsosn in chosen_cstcsosn">
 									</select>
 								</div>
 							</div>
-							<!--<div class="col-sm-2">
-								<div class="form-group" id="flg_incluir_frete_base_ipi">
-									<label for="" class="control-label">Frete Base IPI</label>
+
+							<div class="col-sm-2">
+								<div id="tag_icms" class="form-group">
+									<label class="control-label">TAG ICMS</label>
+									<input type="text" class="form-control input-sm" ng-model="regra_tributos.configuracao_icms.tag_icms">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-3">
+								<div class="form-group" id="cod_modalidade_base_icms">
+									<label class="ccontrol-label">Modalidade Base ICMS</label> 
+									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms')"
+								    option="chosen_base_icms"
+								    allow-single-deselect="true"
+								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms"
+								    ng-options="base_icms.cod_controle_item_nfe as base_icms.nme_item for base_icms in chosen_base_icms">
+									</select>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="vlr_aliquota_icms" class="form-group">
+									<label class="control-label">Alíquota ICMS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_reducao_icms" class="form-group">
+									<label class="control-label">% Redução ICMS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">% MVA Proprio</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_mva_proprio">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">% FCP</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_fcp">
+								</div>
+							</div>
+						</div>
+
+						<div class="row" >
+							<div class="col-sm-3">
+								<div class="form-group" id="cod_modalidade_base_icms_st">
+									<label class="ccontrol-label">Modalidade Base ICMS ST</label> 
+									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms_st')"
+								    option="chosen_base_icms_st"
+								    allow-single-deselect="true"
+								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms_st"
+								    ng-options="base_icms_st.cod_controle_item_nfe as base_icms_st.nme_item for base_icms_st in chosen_base_icms_st">
+									</select>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="vlr_aliquota_icms_st" class="form-group">
+									<label class="control-label">Alíquota ICMS ST</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_st">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_reducao_icms_st" class="form-group">
+									<label class="control-label">% Redução ICMS ST</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms_st">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_mva_ajustado_st" class="form-group">
+									<label class="control-label">% MVA Ajustado ST</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_mva_ajustado_st">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="vlr_aliquota_icms_proprio_st" class="form-group">
+									<label class="control-label">Alíquota ICMS Proprio ST</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_proprio_st">
+								</div>
+							</div>
+						</div>
+
+						<div class="row" >
+							<div class="col-sm-5">
+								<div class="form-group" id="cod_motivo_des_icms">
+									<label class="ccontrol-label">Motivo Desoneração ICMS</label> 
+									<select chosen ng-change="ClearChosenSelect('cod_motivo_des_icms')"
+								    option="chosen_motivo_des_icms"
+								    allow-single-deselect="true"
+								    ng-model="regra_tributos.configuracao_icms.cod_motivo_des_icms"
+								    ng-options="motivo_des_icms.cod_controle_item_nfe as motivo_des_icms.nme_item for motivo_des_icms in chosen_motivo_des_icms">
+									</select>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_base_icms_proprio" class="form-group">
+									<label class="control-label">% Base ICM Proprio</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_base_icms_proprio">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_diferimento" class="form-group">
+									<label class="control-label">% Diferimento</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento">
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div id="num_percentual_diferimento_icms" class="form-group">
+									<label class="control-label">% Diferimento ICMS</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento_icms">
+								</div>
+							</div>
+						</div>
+
+						<div class="row" >
+							<div class="col-sm-3">
+								<div class="form-group" id="cod_convenio_st">
+									<label class="ccontrol-label">Convênio ST</label> 
+									<select chosen 
+								    option="chosen_convenio_st"
+								    allow-single-deselect="true"
+								    ng-model="regra_tributos.configuracao_icms.cod_convenio_st"
+								    ng-options="convenio_st.cod_controle_item_nfe as convenio_st.nme_item for convenio_st in chosen_convenio_st">
+									</select>
+								</div>
+							</div>
+
+							<div class="col-sm-3">
+								<div class="form-group" id="cod_base_tributaria">
+									<label class="ccontrol-label">Base Tributária</label> 
+									<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
+								    option="chosen_base_tributaria"
+								    allow-single-deselect="true"
+								    ng-model="regra_tributos.configuracao_icms.cod_base_tributaria"
+								    ng-options="base_tributaria.cod_base_tributaria as base_tributaria.dsc_base_tributaria for base_tributaria in chosen_base_tributaria">
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_destacar_icms">
+									<label for="" class="control-label">Destacar ICMS</label>
 									<div class="form-group">
 										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_incluir_frete_base_ipi" value="0" type="radio" class="inline-radio">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms" value="0" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>Não</span>
 										</label>
 
 										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_incluir_frete_base_ipi" value="1" type="radio" class="inline-radio">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms" value="1" type="radio" class="inline-radio">
 											<span class="custom-radio"></span>
 											<span>Sim</span>
 										</label>
 									</div>
 								</div>
-							</div> -->
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_destacar_icms_st">
+									<label for="" class="control-label">Destacar ICMS ST</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_st" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_st" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<div class="form-group" id="flg_destacar_icms_des">
+									<label for="" class="control-label">Destacar ICMS Deson.</label>
+									<div class="form-group">
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_des" value="0" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Não</span>
+										</label>
+
+										<label class="label-radio inline">
+											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_des" value="1" type="radio" class="inline-radio">
+											<span class="custom-radio"></span>
+											<span>Sim</span>
+										</label>
+									</div>
+								</div>
+							</div>
+
 							<div class="col-sm-2">
 								<div class="form-group" id="flg_incluir_frete_base_icms">
 									<label for="" class="control-label">Frete Base ICMS</label>
@@ -600,193 +788,9 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-2">
-								<div class="form-group" id="cod_modalidade_base_icms">
-									<label class="ccontrol-label">Modalidade Base ICMS</label> 
-									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms')"
-								    option="chosen_base_icms"
-								    allow-single-deselect="true"
-								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms"
-								    ng-options="base_icms.cod_controle_item_nfe as base_icms.nme_item for base_icms in chosen_base_icms">
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div id="vlr_aliquota_icms" class="form-group">
-									<label class="control-label">Alíquota ICMS</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms">
-								</div>
-							</div>
-						</div>
-						<div class="row" >
-							<div class="col-sm-2">
-								<div id="num_percentual_reducao_icms" class="form-group">
-									<label class="control-label">Per. Redução ICMS</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms">
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div id="num_percentual_mva_proprio" class="form-group">
-									<label class="control-label">Perc. MVA Proprio</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_mva_proprio">
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div id="vlr_aliquota_icms_proprio_st" class="form-group">
-									<label class="control-label">Alíquota ICMS Proprio ST</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_proprio_st">
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div id="num_percentual_reducao_icms_st" class="form-group">
-									<label class="control-label">Per. Redução ICMS ST</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_reducao_icms_st">
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div class="form-group" id="flg_destacar_icms_st">
-									<label for="" class="control-label">Destcar ICMS ST</label>
-									<div class="form-group">
-										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_st" value="0" type="radio" class="inline-radio">
-											<span class="custom-radio"></span>
-											<span>Não</span>
-										</label>
-
-										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_st" value="1" type="radio" class="inline-radio">
-											<span class="custom-radio"></span>
-											<span>Sim</span>
-										</label>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div class="form-group" id="flg_destacar_icms_des">
-									<label for="" class="control-label">Destcar ICMS Des.</label>
-									<div class="form-group">
-										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_des" value="0" type="radio" class="inline-radio">
-											<span class="custom-radio"></span>
-											<span>Não</span>
-										</label>
-
-										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms_des" value="1" type="radio" class="inline-radio">
-											<span class="custom-radio"></span>
-											<span>Sim</span>
-										</label>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row" >
-							<div class="col-sm-2">
-								<div id="num_percentual_mva_ajustado_st" class="form-group">
-									<label class="control-label">Perc. MVA Ajustado ST</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_mva_ajustado_st">
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div class="form-group" id="cod_modalidade_base_icms_st">
-									<label class="ccontrol-label">Modalidade Base ICMS ST</label> 
-									<select chosen ng-change="ClearChosenSelect('cod_modalidade_base_icms_st')"
-								    option="chosen_base_icms_st"
-								    allow-single-deselect="true"
-								    ng-model="regra_tributos.configuracao_icms.cod_modalidade_base_icms_st"
-								    ng-options="base_icms_st.cod_controle_item_nfe as base_icms_st.nme_item for base_icms_st in chosen_base_icms_st">
-									</select>
-								</div>
-							</div>
-						
-							
-							<div class="col-sm-2">
-								<div id="vlr_aliquota_icms_st" class="form-group">
-									<label class="control-label">Alíquota ICMS ST</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_st">
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div id="num_percentual_base_icms_proprio" class="form-group">
-									<label class="control-label">Perc. Base ICM Proprio</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_base_icms_proprio">
-								</div>
-							</div>
-							
-						
-							<div class="col-sm-2">
-								<div class="form-group" id="cod_motivo_des_icms">
-									<label class="ccontrol-label">Motivo Des. ICMS</label> 
-									<select chosen ng-change="ClearChosenSelect('cod_motivo_des_icms')"
-								    option="chosen_motivo_des_icms"
-								    allow-single-deselect="true"
-								    ng-model="regra_tributos.configuracao_icms.cod_motivo_des_icms"
-								    ng-options="motivo_des_icms.cod_controle_item_nfe as motivo_des_icms.nme_item for motivo_des_icms in chosen_motivo_des_icms">
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div id="tag_icms" class="form-group">
-									<label class="control-label">TAG ICMS</label>
-									<input type="text" class="form-control input-sm" ng-model="regra_tributos.configuracao_icms.tag_icms">
-								</div>
-							</div>
-						</div>
-						<div class="row" >
-							<div class="col-sm-2">
-								<div class="form-group" id="cod_convenio_st">
-									<label class="ccontrol-label">Convenio ST</label> 
-									<select chosen 
-								    option="chosen_convenio_st"
-								    allow-single-deselect="true"
-								    ng-model="regra_tributos.configuracao_icms.cod_convenio_st"
-								    ng-options="convenio_st.cod_controle_item_nfe as convenio_st.nme_item for convenio_st in chosen_convenio_st">
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div class="form-group" id="cod_base_tributaria">
-									<label class="ccontrol-label">Base Tributaria</label> 
-									<select chosen ng-change="ClearChosenSelect('cod_base_tributaria')"
-								    option="chosen_base_tributaria"
-								    allow-single-deselect="true"
-								    ng-model="regra_tributos.configuracao_icms.cod_base_tributaria"
-								    ng-options="base_tributaria.cod_base_tributaria as base_tributaria.dsc_base_tributaria for base_tributaria in chosen_base_tributaria">
-									</select>
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<div id="num_percentual_diferimento" class="form-group">
-									<label class="control-label">Perc. Dif</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento">
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div id="num_percentual_diferimento_icms" class="form-group">
-									<label class="control-label">Perc. Dif. ICMS</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_diferimento_icms">
-								</div>
-							</div>
-							<div class="col-sm-3">
-								<div class="form-group" id="flg_destacar_icms">
-									<label for="" class="control-label">Destacar ICMS</label>
-									<div class="form-group">
-										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms" value="0" type="radio" class="inline-radio">
-											<span class="custom-radio"></span>
-											<span>Não</span>
-										</label>
-
-										<label class="label-radio inline">
-											<input ng-model="regra_tributos.configuracao_icms.flg_destacar_icms" value="1" type="radio" class="inline-radio">
-											<span class="custom-radio"></span>
-											<span>Sim</span>
-										</label>
-									</div>
-								</div>
-							</div>
 						</div>
 					</fieldset>
+					
 					<fieldset>
 						<legend>IPI</legend>
 						<div class="row">
@@ -831,6 +835,7 @@
 								</div>
 						</div>
 					</fieldset>
+					
 					<fieldset>
 						<legend>PIS COFINS</legend>
 						<div class="row" >
@@ -899,6 +904,7 @@
 							</div>
 						</div>
 					</fieldset>
+					
 					</div>
 					<br/></br/>
 					<div class="row" ng-if="editing_filtro == false">
@@ -1066,7 +1072,7 @@
 										<tr>
 											<th >NCM</th>
 											<th >Descrição</th>
-											<th >Perc. IPI</th>
+											<th >% IPI</th>
 											<th colspan="2">selecionar</th>
 										</tr>
 									</thead>
