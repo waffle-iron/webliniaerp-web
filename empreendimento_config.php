@@ -172,8 +172,8 @@
 				<div class="panel panel-default" id="box-novo">
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
-							<li><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Dados Empreendimento</a></li>
-							<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine Virtual</a></li>
+							<li class="active"><a href="#basico" data-toggle="tab"><i class="fa  fa-star-o"></i> Dados Gerais</a></li>
+							<li><a href="#loja" data-toggle="tab"><i class="fa fa-cloud"></i> Vitrine</a></li>
 							<li><a href="#estoque" data-toggle="tab"><i class="fa fa-sitemap"></i> Estoque</a></li>
 							<li><a href="#pdv" data-toggle="tab"><i class="fa fa-desktop"></i> PDV</a></li>
 							<li><a href="#mesas" data-toggle="tab"><i class="fa fa-table"></i> Controle Mesas</a></li>
@@ -181,13 +181,13 @@
 							<li><a href="#notificacoes" data-toggle="tab"><i class="fa fa-bell"></i> Notificações</a></li>
 							<li><a href="#mod_clinica" ng-if="userLogged.id_empreendimento == 75" data-toggle="tab"><i class="fa fa-list"></i> Controle de Atendimento</a></li>
 							<li><a href="#pedido_personalizado" ng-if="userLogged.id_empreendimento == 51" data-toggle="tab"><i class="fa fa-list"></i> Pedidos Personalizados</a></li>
-							<li class="active"><a href="#integracoes" data-toggle="tab"><i class="fa fa-code-fork"></i> Integrações</a></li>
+							<li><a href="#integracoes" data-toggle="tab"><i class="fa fa-code-fork"></i> Integrações</a></li>
 							<!--<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-barcode"></i> &nbsp;Fiscal</a></li>-->
 						</ul>
 					</div>
 					<div class="panel-body">
 						<div class="tab-content">
-							<div class="tab-pane fade" id="basico">
+							<div class="tab-pane fade in active" id="basico">
 								<form class="formEmprendimento" role="form" enctype="multipart/form-data">
 									<div class="alert alert-basico-loja" style="display:none"></div>	
 									
@@ -1310,7 +1310,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade in active" id="integracoes">
+							<div class="tab-pane fade" id="integracoes">
 								<div class="panel-tab clearfix">
 									<ul class="tab-bar">
 										<li class="active">
