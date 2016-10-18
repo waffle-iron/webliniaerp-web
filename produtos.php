@@ -831,7 +831,7 @@
 																    		id="btn-salvar-importador" ng-click="showModalAddCombinacoes()">
 																    		<i class="fa fa-save"></i>
 																    	</button>
-																			<button class="btn btn-xs btn-primary" ng-click="showModalCombinacoes()"><i class="fa fa-plus-circle"></i></button>
+																			<!--<button class="btn btn-xs btn-primary" ng-click="showModalCombinacoes()"><i class="fa fa-plus-circle"></i></button>-->
 																		</td>
 																	</tr>
 																</thead>
