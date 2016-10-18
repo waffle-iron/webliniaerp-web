@@ -1495,6 +1495,16 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.produto.combinacoes.push(item);
 	}
 
+	ng.addCombinacaoDefault = function(item){
+		if(typeof ng.produto.combinacoes != 'object' )
+			ng.produto.combinacoes = [] ;
+		if(ng.produto.combinacoes.length == 0){
+			var itemProdutoDefault = angular.copy(ng.produto);
+			itemProdutoDefault.id_combinacao = itemProdutoDefault.id_produto ;
+			ng.produto.combinacoes.push(angular.copy(itemProdutoDefault));
+		}
+	}
+
 	var indexEditCombinacao = null ;
 	ng.ModalEditarCombinacao = function(item,$index){
 		indexEditCombinacao = $index ;

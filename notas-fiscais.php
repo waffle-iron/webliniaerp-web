@@ -284,6 +284,12 @@
 																		</a>
 																	</li>
 																	<li ng-show="(nota.cod_venda && nota.status == 'autorizado')" 
+																		ng-click="modalCorrecao(nota,$index)">
+																		<a href="">
+																			<i class="fa fa-edit"></i> Correções
+																		</a>
+																	</li>
+																	<li ng-show="(nota.cod_venda && nota.status == 'autorizado')" 
 																		ng-click="modalCancelar(nota,$index)">
 																		<a href="">
 																			<i class="fa fa-times-circle"></i> Cancelar Nota
@@ -424,6 +430,114 @@
 				    		<i class="fa fa-ban"></i> Cancelar Nota
 				    	</button>
 				    </div>
+			  	</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+
+		<!-- /Modal novo tamanho-->
+		<div class="modal fade" id="modal-corrigir-nota" style="display:none">
+  			<div class="modal-dialog modal modal-lg">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4>Corrigir Nota N°{{ notaCorrigir.dados_emissao.num_documento_fiscal }}</span></h4>		
+      				</div>
+				    <div class="modal-body">
+				    	<fieldset>
+							<legend class="clearfix">
+								<a ng-show="!flg_nova_correcao" class="btn btn-info btn-xs" id="btn-novo" ng-click="showNovaCorrrecao(true)"><i class="fa fa-plus-circle"></i> Novo Correção</a>
+								<a ng-show="flg_nova_correcao" class="btn btn-info btn-xs" id="btn-novo" ng-click="showNovaCorrrecao(false)"><i class="fa fa-minus-circle"></i> Novo Correção</a>
+							</legend >
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="alert alert-correcao" style="display:none"></div>
+									</div>
+								</div>
+								<div class="row" ng-show="flg_nova_correcao">
+									<div class="col-sm-12">
+										<div class="form-group" >
+											<label class="control-label">Texto para correção</label>
+											<textarea  ng-model="notaCorrigir.correcao" class="form-control" rows="5"></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="row pull-right" ng-show="flg_nova_correcao">
+									<div class="col-sm-12">
+										<button type="button" data-loading-text=" Aguarde..."
+								    		class="btn btn-md btn-default" ng-click="showNovaCorrrecao(false)" id="btn-aplicar-sangria">
+								    		<i class="fa fa-times-circle"></i> Cancelar 
+								    	</button>
+								    	<button type="button" id="btn-corrigir-nota" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." class="btn btn-md btn-success" ng-click="corrgirNfe()">
+								    		<i class="fa fa-save"></i> Salvar 
+								    	</button>
+									</div>
+								</div>
+						</fieldset>
+				    	<fieldset>
+							<legend class="clearfix"><span class="">Correções</span></legend>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="alert alert-list-correcoes" style="display:none"></div>
+					    			<table class="table table-bordered table-condensed table-striped table-hover">
+										<thead>
+											<th class="text-middle" width="50">Seguencia</th>
+											<th class="text-middle">Correção</th>
+											<th class="text-middle">PDF</th>
+											<th class="text-middle">XML</th>
+											<th class="text-middle text-center">status</th>
+											<th class="text-middle"></th>
+										</thead>
+										<tbody>
+											<tr ng-if="nota_correcoes.length == 0">
+												<td colspan="6" class="text-center">
+													Não existe correções para esta nota
+												</td>
+											</tr>
+											<tr ng-repeat="item in nota_correcoes">
+												<td class="text-center">{{ item.numero_sequencial_evento }}</td>
+												<td class="">{{ item.carta_correcao }}</td>
+												<td class=""><a ng-show="(item.status == 'autorizado')"  href="{{ item.caminho_pdf }}" target="_blank">link</td>
+												<td class=""><a ng-show="(item.status == 'autorizado')"  href="{{ item.caminho_xml }}" target="_blank">link</td>
+												<td class="text-center">
+													<span class="label label-warning"
+														ng-show="(item.status == 'processando_autorizacao')" 
+														data-toggle="tooltip">
+														Processando autorização
+													</span>
+													<span class="label label-danger"
+														ng-show="(item.status == 'erro_autorizacao')" 
+														data-toggle="tooltip">
+														Erro na Autorização
+													</span>
+													<span class="label label-success"
+														ng-show="(item.status == 'autorizado')" 
+														data-toggle="tooltip">
+														Autorizado
+													</span>
+												</td>
+												<td>
+													<button type="button" id="btn-cancelar-nota" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" class="btn btn-xs btn-success" ng-click="atualizarCorrecao(item,$index)">
+											    		<i class="fa fa-refresh"></i>
+											    	</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</fieldset>
+				    </div>
+				    <!--<div class="modal-footer">
+				    	<button type="button" data-loading-text=" Aguarde..."
+				    		class="btn btn-md btn-default" ng-click="cancelarModal('modal-novo-tamanho')" id="btn-aplicar-sangria">
+				    		<i class="fa fa-times-circle"></i> Cancelar Operação
+				    	</button>
+				    	<button type="button" id="btn-cancelar-nota" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde..." class="btn btn-md btn-success" ng-click="cacelarNfe()">
+				    		<i class="fa fa-ban"></i> Cancelar Nota
+				    	</button>
+				    </div>-->
 			  	</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div>

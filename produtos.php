@@ -1630,7 +1630,7 @@
 							<div class="col-sm-4">
 								<div class="form-group" id="peso">
 										<label class="control-label">Tamanho </label>
-										<select chosen ng-change="ClearChosenSelect('combinacao')"
+										<select chosen ng-change="ClearChosenSelect('combinacao');addCombinacaoDefault()"
 									    option="tamanhos"
 									    ng-model="combinacao.id_tamanho"
 									    ng-options="tamanho.id as tamanho.nome_tamanho for tamanho in tamanhos">
@@ -1640,7 +1640,7 @@
 							<div class="col-sm-4">
 								<div class="form-group" id="peso">
 										<label class="control-label">Cor/sabor</label>
-										<select chosen ng-change="ClearChosenSelect('cor')"
+										<select chosen ng-change="ClearChosenSelect('cor');addCombinacaoDefault()"
 									    option="cores"
 									    ng-model="combinacao.id_cor"
 									    ng-options="cor.id as cor.nome_cor for cor in cores">
