@@ -203,44 +203,48 @@ angular.module('filters', [])
 	    };
 	})
 	.directive('thousandsFormatter', function ($filter) {
-	    var precision = 2;
 	    return {
 	        require: 'ngModel',
-	              link: function (scope, element, attrs, ctrl) {
-
+	            link: function (scope, element, attrs, ctrl) {
+	            precision = !empty(attrs.precision) && $.isNumeric(attrs.precision)? Number(attrs.precision) : 2 ; 
 	            ctrl.$formatters.push(function (data) {
 	            	if(data != null && data != undefined){
-		                var formatted = $filter('numberFormat')(data,2,',','.');
+	            		 precision = !empty(attrs.precision) && $.isNumeric(attrs.precision)? Number(attrs.precision) : 2 ; 
+		                var formatted = $filter('numberFormat')(data,precision,',','.');
 		                $(element).val(formatted);
-		                if(formatted != '0,00' )
+		                var emptyDecimal = ""+$filter('numberFormat')(0,precision,',','.') ;
+		                if(formatted != emptyDecimal )
 		                	return formatted;
 		                else{
 		                	ctrl.$setViewValue('0');
 		                	ctrl.$render();
-		                	return '0,00';
+		                	return emptyDecimal;
 		                }
 	            	}else
 	            		return '';
 	            });
 
 	            element.bind('focusout', function (event) {
-		       		if(element.val() == '0,00')
+	            	var emptyDecimal = ""+$filter('numberFormat')(0,precision,',','.') ;
+		       		if(element.val() == emptyDecimal)
 		       			element.val('');
 	            });
 
 	            element.bind('focusin', function (event) {
+	            	var emptyDecimal = ""+$filter('numberFormat')(0,precision,',','.') ;
 		       		if(element.val() == '')
-		       			element.val('0,00');
+		       			element.val(emptyDecimal);
 	            });
 
 	            ctrl.$parsers.push(function (data) {
+	            	precision = !empty(attrs.precision) && $.isNumeric(attrs.precision)? Number(attrs.precision) : 2 ; 
 	                var plainNumber = data.replace(/[^\d|\-+|\+]/g, '');
 	                var length = plainNumber.length;
 	                var intValue = plainNumber.substring(0,length-precision);
 	                var decimalValue = plainNumber.substring(length-precision,length)
 	                var plainNumberWithDecimal = intValue + '.' + decimalValue;
 	                //convert data from view format to model format
-	                var formatted = $filter('numberFormat')(plainNumberWithDecimal,2,',','.');
+	                var formatted = $filter('numberFormat')(plainNumberWithDecimal,precision,',','.');
 	                element.val(formatted);
 
 	                return isNaN(Number(plainNumberWithDecimal)) ? 0 : Number(plainNumberWithDecimal);

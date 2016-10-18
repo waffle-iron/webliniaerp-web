@@ -587,6 +587,15 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item10);
 		}
 
+		if(ng.configuracoes.cod_identificador_balanca != undefined){
+			var item10 = {
+							nome 				:'cod_identificador_balanca',
+							valor 				:ng.configuracoes.cod_identificador_balanca , 
+							id_empreendimento	:ng.userLogged.id_empreendimento
+						}
+			chaves.push(item10);
+		}
+
 		btn.button('loading');
 		var pth_local_sucess = false ;
 		if(ng.config.pth_local != undefined){

@@ -164,7 +164,7 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 		itemPost.nome_fabricante 	= ng.fabricante.nome_fabricante;
 		itemPost.empreendimentos = ng.empreendimentosAssociados;
 
-		aj.post(baseUrlApi()+url, itemPost)
+		/*aj.post(baseUrlApi()+url, itemPost)
 			.success(function(data, status, headers, config) {
 				if(!empty(data.fabricante) && !empty(data.fabricante.id))
 					itemPost.id = data.fabricante.id ;
@@ -189,7 +189,41 @@ app.controller('FabricantesController', function($scope, $http, $window, $dialog
 						formControl.tooltip();
 					});
 				}
-			});
+			});*/
+
+
+		$('#form-fabricante').ajaxForm({
+		 	url: baseUrlApi()+url,
+		 	type: 'post',
+		 	data:itemPost,
+		 	success:function(data){
+		 		if(!empty(data.fabricante) && !empty(data.fabricante.id))
+					itemPost.id = data.fabricante.id ;
+				PrestaShop.send('post',baseUrlApi()+"prestashop/fabricante",itemPost);
+				ng.mensagens('alert-success','<strong>Fabricante salvo com sucesso!</strong>');
+				ng.showBoxNovo();
+				ng.reset();
+				ng.load();
+		 	},
+		 	error:function(data){
+		 		if(data.status == 406) {
+					var errors = data.responseJSON;
+
+					$.each(errors, function(i, item) {
+						$("#"+i).addClass("has-error");
+
+						var formControl = $($("#"+i).find(".form-control")[0])
+							.attr("data-toggle", "tooltip")
+							.attr("data-placement", "bottom")
+							.attr("title", item)
+							.attr("data-original-title", item);
+						formControl.tooltip();
+					});
+				}
+		 	}
+		}).submit();
+
+
 	}
 
 	ng.editar = function(item) {
