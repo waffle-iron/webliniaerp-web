@@ -143,9 +143,82 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 				$('#modal-cencelar-nota').modal('hide');
 				ng.mensagens('alert-danger','<b>Erro ao cacelar nota</b>','.alert-list-notas');
 				btn.button('reset');	
-		});
+		});	
+	}
 
-		
+	ng.flg_nova_correcao = false ;
+	ng.showNovaCorrrecao = function(status){
+		ng.flg_nova_correcao = status ;
+	}
+
+	ng.notaCorrigir = null ;
+	ng.nota_correcoes = [] ;
+
+	ng.modalCorrecao = function(item,index){
+		ng.nota_correcoes = [] ;
+		aj.get(baseUrlApi()+"nota_fiscal/?cod_empreendimento="+ng.userLogged.id_empreendimento+"&cod_venda="+item.cod_venda)
+			.success(function(data, status, headers, config) {
+				data.dados_emissao.data_emissao = formatDateBR(data.dados_emissao.data_emissao);
+				ng.notaCorrigir = data ;
+				ng.notaCorrigir.dados_emissao.chave_nfe = item.chave_nfe ;
+				ng.notaCorrigir.dados_emissao.valor_total = item.valor_total ;
+				ng.notaCorrigir.dados_emissao.id_ref = item.cod_nota_fiscal
+				ng.notaCorrigir.index = index ;
+				$('#modal-corrigir-nota').modal('show');
+			})
+			.error(function(data, status, headers, config) {
+				ng.notaCorrigir = [] ;
+		});
+		aj.get(baseUrlApi()+"correcoes_nota_fiscal?cod_nota_fiscal="+item.cod_nota_fiscal)
+			.success(function(data, status, headers, config) {
+				ng.nota_correcoes = data ;
+			})
+			.error(function(data, status, headers, config) {
+				ng.nota_correcoes = [] ;
+		});
+	}
+
+	ng.atualizarCorrecao = function(item,index){
+		var btn = $(event.target);
+			if(!btn.is('button'))
+				btn = $(event.target).parent();
+		btn.button('loading');
+		aj.get(baseUrlApi()+"correcao_nota_fiscal/atualizar/"+item.cod_nota_fiscal+"/"+item.id+"/"+item.numero_sequencial_evento+"/"+ng.userLogged.id_empreendimento)
+			.success(function(data, status, header =s, config) {
+				btn.button('reset');
+				ng.nota_correcoes[index] = data ;
+			})
+			.error(function(data, status, headers, config) {
+				btn.button('reset');
+				alert('erro ao atualizar');
+		});
+	}
+
+	ng.corrgirNfe = function(){
+		var btn = $('#btn-corrigir-nota');
+		btn.button('loading');
+
+		aj.get(baseUrlApi()+'nota_fiscal/corrigir/'+ng.notaCorrigir.dados_emissao.id_ref+'/'+ng.notaCorrigir.correcao+'/'+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				$('#modal-cencelar-nota').modal('hide');
+				ng.mensagens('alert-success','<b>Pedido de correção enviado com sucesso</b>','.alert-list-correcoes');
+				btn.button('reset');
+				ng.showNovaCorrrecao(false);
+				ng.nota_correcoes = data ;
+				ng.notaCorrigir.correcao = null ;
+				aj.get(baseUrlApi()+"correcoes_nota_fiscal?cod_nota_fiscal="+ng.notaCorrigir.dados_emissao.id_ref)
+				.success(function(data, status, headers, config) {
+					ng.nota_correcoes = data ;
+				})
+				.error(function(data, status, headers, config) {
+					ng.nota_correcoes = [] ;
+		});
+			})
+			.error(function(data, status, headers, config) {
+				$('#modal-cencelar-nota').modal('hide');
+				ng.mensagens('alert-danger','<b>Erro ao corrigir nota</b>','.alert-correcao');
+				btn.button('reset');	
+		});	
 	}
 
 	ng.mensagens = function(classe , msg, alertClass){

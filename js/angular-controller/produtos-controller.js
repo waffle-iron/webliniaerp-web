@@ -380,7 +380,6 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 					dta_contagem 			: dta_contagem,
 					itens                   : []               
 				}
-
 			$.each(itens,function(y,item){
 				if(!(Number(item.qtd_item) == Number(item.qtd_ivn))){
 					var qtd_ivn = Number(item.qtd_ivn);
@@ -389,7 +388,8 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 						id           : item.id,
 						id_produto   : item.id_produto,
 						dta_validade : item.dta_validade,
-						qtd_ivn      : qtd_ivn
+						qtd_ivn      : qtd_ivn,
+						uniqid       : ( empty(item.uniqid) ? null : item.uniqid )
 					});
 				}
 			});
@@ -800,24 +800,44 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 		if(error > 0)
 			return false;
+		if(empty(ng.inventario_novo.uniqid)){
+			var id   = empty(ng.inventario_novo.id) ? ng.produto.id : ng.inventario_novo.id ;
+			var sabor   = empty(ng.inventario_novo.id) ? ng.produto.sabor : ng.inventario_novo.sabor ;
+			var peso = empty(ng.inventario_novo.id) ? ng.produto.peso : ng.inventario_novo.peso ;
+			var item = {
+				id   		  : ( empty(ng.inventario_novo.id) ? ng.produto.id :  ng.inventario_novo.id ),
+				id_produto    : ( empty(ng.inventario_novo.id) ? ng.produto.id :  ng.inventario_novo.id ),
+				peso       	  : peso,
+				sabor         : sabor,
+				id_deposito   : ng.inventario_novo.id_deposito,
+				nme_deposito  : ng.inventario_novo.nome_deposito,
+				nome_deposito : ng.inventario_novo.nome_deposito,
+				qtd_item      : 0,
+				dta_validade  : dta_validade,
+				qtd_ivn       : ng.inventario_novo.qtd_ivn,
+				flg_visivel   : 1 ,
+			}
+		}else{
+			var id   =  null ;
+			var sabor   =  ng.inventario_novo.sabor ;
+			var peso =  ng.inventario_novo.peso ;
 
-		var id   = empty(ng.inventario_novo.id) ? ng.produto.id : ng.inventario_novo.id ;
-		var sabor   = empty(ng.inventario_novo.id) ? ng.produto.sabor : ng.inventario_novo.sabor ;
-		var peso = empty(ng.inventario_novo.id) ? ng.produto.peso : ng.inventario_novo.peso ;
-
-		var item = {
-			id   		  : ( empty(ng.inventario_novo.id) ? ng.produto.id :  ng.inventario_novo.id ),
-			id_produto    : ( empty(ng.inventario_novo.id) ? ng.produto.id :  ng.inventario_novo.id ),
-			peso       	  : peso,
-			sabor         : sabor,
-			id_deposito   : ng.inventario_novo.id_deposito,
-			nme_deposito  : ng.inventario_novo.nome_deposito,
-			nome_deposito : ng.inventario_novo.nome_deposito,
-			qtd_item      : 0,
-			dta_validade  : dta_validade,
-			qtd_ivn       : ng.inventario_novo.qtd_ivn,
-			flg_visivel   : 1 ,
+			var item = {
+				uniqid        : ng.inventario_novo.uniqid,
+				id   		  : null,
+				id_produto    : null,
+				peso       	  : peso,
+				sabor         : sabor,
+				id_deposito   : ng.inventario_novo.id_deposito,
+				nme_deposito  : ng.inventario_novo.nome_deposito,
+				nome_deposito : ng.inventario_novo.nome_deposito,
+				qtd_item      : 0,
+				dta_validade  : dta_validade,
+				qtd_ivn       : ng.inventario_novo.qtd_ivn,
+				flg_visivel   : 1 ,
+			}
 		}
+	
 
 		ng.produto.estoque.push(item);
 		ng.inventario_novo = [] ;
@@ -1495,6 +1515,78 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.produto.combinacoes.push(item);
 	}
 
+	ng.incluirCombinacaoDefault = function(){
+		if(ng.produto.combinacoes.length == 0){
+			var itemProdutoDefault = angular.copy(ng.produto);
+
+			var inventario_novo = {} ;
+			inventario_novo.id = null ;
+			inventario_novo.peso = null ;
+			inventario_novo.sabor = null ;
+			inventario_novo.uniqid = uniqid() ;
+
+			itemProdutoDefault.uniqid = inventario_novo.uniqid ;
+
+			if(!empty(itemProdutoDefault.id_tamanho)){
+				var indexTamanho = getIndex('id',itemProdutoDefault.id_tamanho,ng.tamanhos);
+				if(!empty(indexTamanho)){
+					itemProdutoDefault.peso = ng.tamanhos[indexTamanho].nome_tamanho ;
+					inventario_novo.peso = ng.tamanhos[indexTamanho].nome_tamanho ;
+				}
+			}
+
+			if(!empty(itemProdutoDefault.id_cor)){
+				var indexCor = getIndex('id',itemProdutoDefault.id_cor,ng.cores);
+				if(!empty(indexCor)){
+					itemProdutoDefault.sabor = ng.cores[indexCor].nome_cor ;
+					inventario_novo.sabor = ng.cores[indexCor].nome_cor ;
+				}
+			}
+
+			if(typeof ng.combinacoes_sem_cadastro != 'object')
+				ng.combinacoes_sem_cadastro = [] ;
+
+			ng.combinacoes_sem_cadastro.push(inventario_novo);
+
+			itemProdutoDefault.id_combinacao = itemProdutoDefault.id_produto ;
+			ng.produto.combinacoes.push(angular.copy(itemProdutoDefault));
+		}else{
+			var itemProdutoDefault = angular.copy(ng.produto);
+
+			var inventario_novo = {} ;
+			inventario_novo.id = null ;
+			inventario_novo.peso = null ;
+			inventario_novo.sabor = null ;
+			
+			var index = getIndex('id_produto',itemProdutoDefault.id,ng.produto.combinacoes) ;
+
+			if(index == null)
+				return ;
+
+			inventario_novo.uniqid =ng.produto.combinacoes[index].uniqid ;
+			itemProdutoDefault.uniqid =ng.produto.combinacoes[index].uniqid ;
+			var index_deposito =  getIndex('uniqid',ng.produto.combinacoes[index].uniqid ,ng.combinacoes_sem_cadastro) ;
+			if(!empty(itemProdutoDefault.id_tamanho)){
+				var indexTamanho = getIndex('id',itemProdutoDefault.id_tamanho,ng.tamanhos);
+				if(!empty(indexTamanho)){
+					itemProdutoDefault.peso = ng.tamanhos[indexTamanho].nome_tamanho ;
+					inventario_novo.peso = ng.tamanhos[indexTamanho].nome_tamanho ;
+				}
+			}
+
+			if(!empty(itemProdutoDefault.id_cor)){
+				var indexCor = getIndex('id',itemProdutoDefault.id_cor,ng.cores);
+				if(!empty(indexCor)){
+					itemProdutoDefault.sabor = ng.cores[indexCor].nome_cor ;
+					inventario_novo.sabor = ng.cores[indexCor].nome_cor ;
+				}
+			}
+			itemProdutoDefault.id_combinacao = itemProdutoDefault.id_produto ;
+			ng.produto.combinacoes[index] = itemProdutoDefault ;
+			ng.combinacoes_sem_cadastro[index_deposito] = inventario_novo ;
+		}
+	}
+
 	var indexEditCombinacao = null ;
 	ng.ModalEditarCombinacao = function(item,$index){
 		indexEditCombinacao = $index ;
@@ -1733,10 +1825,28 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 
 	ng.incluirCombinacao = function(){
 		$('#modal-add-combinacao').modal('hide');
+		var inventario_novo = {} ;
+		inventario_novo.id = null ;
+		inventario_novo.peso = null ;
+		inventario_novo.sabor = null ;
+		index_deposito = null ;
+
+		if(!$.isNumeric(indexEditCombinacao)){
+			inventario_novo.uniqid = uniqid() ;
+			ng.combinacao.uniqid = inventario_novo.uniqid ;
+		}
+		else if(!empty(ng.produto.combinacoes[indexEditCombinacao].uniqid)){
+			ng.combinacao.uniqid = ng.produto.combinacoes[indexEditCombinacao].uniqid ;
+			inventario_novo.uniqid = ng.produto.combinacoes[indexEditCombinacao].uniqid ;
+			var index_deposito =  getIndex('uniqid',ng.produto.combinacoes[indexEditCombinacao].uniqid ,ng.combinacoes_sem_cadastro) ;
+		}
+
+
 		if(!empty(ng.combinacao.id_tamanho)){
 			var indexTamanho = getIndex('id',ng.combinacao.id_tamanho,ng.tamanhos);
 			if(!empty(indexTamanho)){
 				ng.combinacao.peso = ng.tamanhos[indexTamanho].nome_tamanho ;
+				inventario_novo.peso = ng.tamanhos[indexTamanho].nome_tamanho ;
 			}
 		}
 
@@ -1744,6 +1854,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			var indexCor = getIndex('id',ng.combinacao.id_cor,ng.cores);
 			if(!empty(indexCor)){
 				ng.combinacao.sabor = ng.cores[indexCor].nome_cor ;
+				inventario_novo.sabor = ng.cores[indexCor].nome_cor ;
 			}
 		}
 
@@ -1753,10 +1864,19 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 			ng.produto.combinacoes.push(angular.copy(itemProdutoDefault));
 		}
 		
-		if($.isNumeric(indexEditCombinacao))
+		if($.isNumeric(indexEditCombinacao)){
 			ng.produto.combinacoes[indexEditCombinacao] = angular.copy(ng.combinacao) ;
-		else
+			if(index_deposito!=null){
+				ng.combinacoes_sem_cadastro[index_deposito] = inventario_novo ;
+			}
+		}else{
+
+			if(typeof ng.combinacoes_sem_cadastro != 'object')
+				ng.combinacoes_sem_cadastro = [] ;
+			ng.combinacoes_sem_cadastro.push(inventario_novo);
+
 			ng.produto.combinacoes.push(angular.copy(ng.combinacao)) ;
+		}
 		ng.combinacao = angular.copy(produtoTO);
 		indexEditCombinacao = null ;
 	}
@@ -1765,6 +1885,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		ng.inventario_novo.id = item.id ;
 		ng.inventario_novo.peso = item.peso ;
 		ng.inventario_novo.sabor = item.sabor ;
+		ng.inventario_novo.uniqid = !empty(item.uniqid) ? item.uniqid  : null ;
 		ng.inventario_novo.dsc_combinacao = '#'+item.id+" - "+item.peso+" "+item.sabor ;
 		$('#modal-combinacao').modal('hide');
 	}

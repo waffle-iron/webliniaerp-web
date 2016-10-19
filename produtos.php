@@ -186,7 +186,7 @@
 										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
 										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
 										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
-										<li ng-if="isNumeric(produto.id)" ><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>
+										<li><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>
 									</ul>
 								</div>
 								<form id="formProdutos" role="form" enctype="multipart/form-data">
@@ -239,7 +239,7 @@
 												<div class="col-sm-2">
 													<div class="form-group" id="peso">
 															<label class="control-label">Tamanho </label> <i ng-click="showModalNovoTamanho()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-															<select chosen ng-change="ClearChosenSelect('produto')"
+															<select chosen ng-change="ClearChosenSelect('produto');incluirCombinacaoDefault()"
 														    option="tamanhos"
 														    ng-model="produto.id_tamanho"
 														    ng-options="tamanho.id as tamanho.nome_tamanho for tamanho in tamanhos">
@@ -249,7 +249,7 @@
 												<div class="col-sm-2">
 													<div class="form-group" id="peso">
 															<label class="control-label">Cor/sabor</label> <i ng-click="showModalNovaCor()" style="cursor:pointer;color: #9ad268;" class="fa fa-plus-circle fa-lg"></i>
-															<select chosen ng-change="ClearChosenSelect('cor')"
+															<select chosen ng-change="ClearChosenSelect('cor');incluirCombinacaoDefault()"
 														    option="cores"
 														    ng-model="produto.id_cor"
 														    ng-options="cor.id as cor.nome_cor for cor in cores">
@@ -1630,7 +1630,7 @@
 							<div class="col-sm-4">
 								<div class="form-group" id="peso">
 										<label class="control-label">Tamanho </label>
-										<select chosen ng-change="ClearChosenSelect('combinacao')"
+										<select chosen ng-change="ClearChosenSelect('combinacao');addCombinacaoDefault()"
 									    option="tamanhos"
 									    ng-model="combinacao.id_tamanho"
 									    ng-options="tamanho.id as tamanho.nome_tamanho for tamanho in tamanhos">
@@ -1640,7 +1640,7 @@
 							<div class="col-sm-4">
 								<div class="form-group" id="peso">
 										<label class="control-label">Cor/sabor</label>
-										<select chosen ng-change="ClearChosenSelect('cor')"
+										<select chosen ng-change="ClearChosenSelect('cor');addCombinacaoDefault()"
 									    option="cores"
 									    ng-model="combinacao.id_cor"
 									    ng-options="cor.id as cor.nome_cor for cor in cores">
@@ -1761,6 +1761,16 @@
 											<td colspan="3">Não há Depositos cadastrados</td>
 										</tr>
 										<tr ng-repeat="item in combinacoes">
+											<td>{{item.id}}</td>
+											<td>{{ item.peso }}</td>
+											<td>{{ item.sabor }}</td>
+											<td width="50" align="center">
+												<button type="button" class="btn btn-xs btn-success" ng-click="addCombinacaoEstoque(item)">
+													<i class="fa fa-check-square-o"></i> Selecionar
+												</button>
+											</td>
+										</tr>
+										<tr ng-repeat="item in combinacoes_sem_cadastro">
 											<td>{{item.id}}</td>
 											<td>{{ item.peso }}</td>
 											<td>{{ item.sabor }}</td>
