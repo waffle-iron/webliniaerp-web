@@ -83,26 +83,33 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		}else
 			$('#modal-calculando').modal({ backdrop: 'static',keyboard: false});
 		var post = { 
-			id_empreendimento : ng.userLogged.id_empreendimento,
-			id_venda          : id_venda,
-			cod_operacao      : cod_operacao
+			id_empreendimento 					: ng.userLogged.id_empreendimento,
+			id_venda 							: id_venda,
+			cod_operacao 						: cod_operacao,
+			transportadora 						: ng.NF.transportadora,
+			volumes 							: ng.NF.volumes,
+			informacoes_adicionais_contribuinte : ng.NF.informacoes_adicionais_contribuinte
 		 } ;
-		var copy_dados = angular.copy(nfTO);
-		copy_dados.dados_emissao.tipo_documento = ng.NF.dados_emissao.tipo_documento;
-		copy_dados.dados_emissao.local_destino = ng.NF.dados_emissao.local_destino ;
-		copy_dados.dados_emissao.finalidade_emissao = ng.NF.dados_emissao.finalidade_emissao ;
-		copy_dados.dados_emissao.consumidor_final = ng.NF.dados_emissao.consumidor_final;
-		copy_dados.dados_emissao.forma_pagamento = ng.NF.dados_emissao.forma_pagamento;
-		copy_dados.dados_emissao.presenca_comprador = ng.NF.dados_emissao.presenca_comprador;
-		copy_dados.dados_emissao.cod_nota_fiscal = ng.NF.dados_emissao.cod_nota_fiscal;
-		copy_dados.dados_emissao.cod_venda = ng.NF.dados_emissao.cod_venda;
-		copy_dados.dados_emissao.cod_operacao = ng.NF.dados_emissao.cod_operacao;
 
-		copy_dados.transportadora.modalidade_frete = ng.NF.transportadora.modalidade_frete;
+		var copy_dados = angular.copy(nfTO);
+			copy_dados.dados_emissao.tipo_documento = ng.NF.dados_emissao.tipo_documento;
+			copy_dados.dados_emissao.local_destino = ng.NF.dados_emissao.local_destino ;
+			copy_dados.dados_emissao.finalidade_emissao = ng.NF.dados_emissao.finalidade_emissao ;
+			copy_dados.dados_emissao.consumidor_final = ng.NF.dados_emissao.consumidor_final;
+			copy_dados.dados_emissao.forma_pagamento = ng.NF.dados_emissao.forma_pagamento;
+			copy_dados.dados_emissao.presenca_comprador = ng.NF.dados_emissao.presenca_comprador;
+			copy_dados.dados_emissao.cod_nota_fiscal = ng.NF.dados_emissao.cod_nota_fiscal;
+			copy_dados.dados_emissao.cod_venda = ng.NF.dados_emissao.cod_venda;
+			copy_dados.dados_emissao.cod_operacao = ng.NF.dados_emissao.cod_operacao;
+			copy_dados.transportadora.modalidade_frete = ng.NF.transportadora.modalidade_frete;
+
+		var copyNF = angular.copy(ng.NF);
+
 		aj.post(baseUrlApi()+"nfe/calcular",post)
 			.success(function(data, status, headers, config) {
 				ng.nfeCalculada = true;
 				ng.disableSendNf = false ;
+				
 				data.dados_emissao.tipo_documento = copy_dados.dados_emissao.tipo_documento ;
 				data.dados_emissao.local_destino = copy_dados.dados_emissao.local_destino ;
 				data.dados_emissao.finalidade_emissao = copy_dados.dados_emissao.finalidade_emissao ;
@@ -112,10 +119,12 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 				data.dados_emissao.cod_nota_fiscal = copy_dados.dados_emissao.cod_nota_fiscal ;
 				data.dados_emissao.cod_venda = copy_dados.dados_emissao.cod_venda ;
 				data.dados_emissao.cod_operacao = copy_dados.dados_emissao.cod_operacao ;
-				if(data.transportadora == undefined) data.transportadora = {id:null,modalidade_frete:null} ;
-				data.transportadora.modalidade_frete = copy_dados.transportadora.modalidade_frete ;
 
 				ng.NF = data;
+				ng.NF.transportadora = copyNF.transportadora;
+				ng.NF.volumes = copyNF.volumes;
+				ng.NF.informacoes_adicionais_contribuinte = copyNF.informacoes_adicionais_contribuinte;
+
 				if(event != null){
 					$('#modal-operacao').modal('hide');
 					btn.button('reset');
@@ -192,6 +201,32 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		ng.NF.transportadora.nme_bairro_logradouro 	=  item.nme_bairro;
 		ng.NF.transportadora.estado 				=  ((typeof item.estado == 'object')  ? item.estado : null );
 		ng.NF.transportadora.cidade 				=  ((typeof item.cidade == 'object')  ? item.cidade : null );
+	}
+
+	ng.abreModalInclusaoVolume = function() {
+		ng.volume = {};
+		$('#modal-volume').modal('show');
+	}
+
+	ng.cancelaInclusaoVolume = function() {
+		ng.volume = {};
+		$('#modal-volume').modal('hide');
+	}
+
+	ng.incluiVolume = function() {
+		if(empty(ng.NF.volumes))
+			ng.NF.volumes = [];
+
+		ng.volume.peso_liquido = $('input[ng-model="volume.peso_liquido"]').val();
+		ng.volume.peso_bruto = $('input[ng-model="volume.peso_bruto"]').val();
+
+		ng.NF.volumes.push(ng.volume);
+		ng.volume = {};
+		$('#modal-volume').modal('hide');
+	}
+
+	ng.removeVolume = function(item) {
+		ng.NF.volumes = _.without(ng.NF.volumes, item);
 	}
 
 	ng.sendNfe = function(){

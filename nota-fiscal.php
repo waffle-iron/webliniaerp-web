@@ -123,9 +123,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a class="btn btn-sm pull-right logoutConfirm_open"  href="#logoutConfirm">
-						<i class="fa fa-power-off"></i>
-					</a>
+					<?php include("menu-bar-buttons.php"); ?>
 				</div><!-- /size-toggle -->
 				<div class="user-block clearfix">
 					<img src="img/hage.png" alt="User Avatar">
@@ -639,21 +637,21 @@
 												<th class="text-right" width="100">Peso Liq. (Kg)</th>
 												<th class="text-right" width="100">Peso Bruto. (Kg)</th>
 												<th class="text-center" width="100">
-													<button type="button" class="btn btn-success btn-xs">
+													<button type="button" class="btn btn-success btn-xs" ng-click="abreModalInclusaoVolume()">
 														<i class="fa fa-plus-circle"></i> Incluir
 													</button>
 												</th>
 											</thead>
 											<tbody>
-												<tr>
-													<td class="text-center">1</td>
-													<td>Caixa</td>
-													<td></td>
-													<td class="text-center"></td>
-													<td class="text-right">2,500</td>
-													<td class="text-right">2,500</td>
+												<tr ng-repeat="item in NF.volumes">
+													<td class="text-center">{{ item.quantidade }}</td>
+													<td>{{ item.especie }}</td>
+													<td>{{ item.marca }}</td>
+													<td class="text-center">{{ item.numero }}</td>
+													<td class="text-right">{{ item.peso_liquido }}</td>
+													<td class="text-right">{{ item.peso_bruto }}</td>
 													<td class="text-center">
-														<button type="button" class="btn btn-danger btn-xs">
+														<button type="button" class="btn btn-danger btn-xs" ng-click="removeVolume(item)">
 															<i class="fa fa-trash-o"></i>
 														</button>
 													</td>
@@ -874,14 +872,62 @@
 
 		<!-- /Modal Processando-->
 		<div class="modal fade" id="modal-volume" style="display:none">
-  			<div class="modal-dialog modal-sm">
+  			<div class="modal-dialog modal-md">
     			<div class="modal-content">
-      				<div class="modal-header"></div>
+      				<div class="modal-header">
+      					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      					<h4 class="modal-title">Inclusão de Volume</h4>
+      				</div>
 				    <div class="modal-body">
 				    	<div class="row">
-				    		<div class="col-sm-12">
-				    			<i class='fa fa-refresh fa-spin'></i> Aguarde! Calculando Nota
-							</div>
+				    		<div class="col-sm-2">
+				    			<div class="form-group">
+				    				<label class="control-label">Qtd.</label>
+				    				<input type="text" class="form-control input-sm" ng-model="volume.quantidade">
+				    			</div>
+				    		</div>
+				    		<div class="col-sm-5">
+				    			<div class="form-group">
+				    				<label class="control-label">Espécie</label>
+				    				<input type="text" class="form-control input-sm" ng-model="volume.especie">
+				    			</div>
+				    		</div>
+				    		<div class="col-sm-5">
+				    			<div class="form-group">
+				    				<label class="control-label">Marca</label>
+				    				<input type="text" class="form-control input-sm" ng-model="volume.marca">
+				    			</div>
+				    		</div>
+				    	</div>
+				    	<div class="row">
+				    		<div class="col-sm-2">
+				    			<div class="form-group">
+				    				<label class="control-label">Numeração</label>
+				    				<input type="text" class="form-control input-sm" ng-model="volume.numero">
+				    			</div>
+				    		</div>
+				    		<div class="col-sm-3">
+				    			<label class="control-label">Peso Liq. (Kg)</label>
+				    			<div class="form-group">
+				    				<input type="text" class="form-control input-sm" ng-model="volume.peso_liquido" thousands-formatter precision="3">
+				    			</div>
+				    		</div>
+				    		<div class="col-sm-3">
+				    			<label class="control-label">Peso Bruto. (Kg)</label>
+				    			<div class="form-group">
+				    				<input type="text" class="form-control input-sm" ng-model="volume.peso_bruto" thousands-formatter precision="3">
+				    			</div>
+				    		</div>
+				    	</div>
+				    </div>
+				    <div class="modal-footer clearfix">
+				    	<div class="pull-right">
+				    		<button type="button" class="btn btn-sm btn-default" ng-click="cancelaInclusaoVolume()" data-dismiss="modal">
+				    			<i class="fa fa-times-circle"></i> Cancelar
+				    		</button>
+				    		<button type="button" class="btn btn-sm btn-success" ng-click="incluiVolume()">
+				    			<i class="fa fa-plus-circle"></i> Incluir
+				    		</button>
 				    	</div>
 				    </div>
 			  	</div>
@@ -951,6 +997,9 @@
 
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
+
+	<!-- UnderscoreJS -->
+	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
 	<!-- Moment -->
 	<script src="js/moment/moment.min.js"></script>
