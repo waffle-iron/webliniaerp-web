@@ -193,17 +193,17 @@
 
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
-							<li class="active"><a href="#geral" data-toggle="tab"><i class="fa fa-gear"></i> Dados de Emissão</a></li>
+							<li><a href="#geral" data-toggle="tab"><i class="fa fa-gear"></i> Dados de Emissão</a></li>
 							<li><a href="#emitente" data-toggle="tab"><i class="fa fa-building-o"></i> Dados do Emitente</a></li>
 							<li><a href="#destinatario" data-toggle="tab"><i class="fa fa-user"></i> Dados do Destinatário</a></li>
-							<li ng-show="(NF.transportadora.modalidade_frete != '' && NF.transportadora.modalidade_frete != '9')"><a href="#transportadora" data-toggle="tab"><i class="fa fa-truck"></i> Dados da Transportadora</a></li>
+							<li class="active" ng-show="(NF.transportadora.modalidade_frete != '' && NF.transportadora.modalidade_frete != '9')"><a href="#transportadora" data-toggle="tab"><i class="fa fa-truck"></i> Dados da Transportadora</a></li>
 							<li><a href="#produtos" data-toggle="tab"><i class="fa fa-list"></i> Produtos</a></li>
 							<li><a href="#resumo" data-toggle="tab"><i class="fa fa-bars"></i> Resumo da NF-e</a></li>
 						</ul>
 					</div>
 					<div class="panel-body">
 						<div class="tab-content">
-							<div class="tab-pane fade in active" id="geral">
+							<div class="tab-pane fade in" id="geral">
 								<div class="alert" style="display:none"></div>
 								<div class="row" ng-if="!(processando_autorizacao || autorizado)">
 									<div class="col-sm-6">
@@ -553,7 +553,7 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade in" id="transportadora">
+							<div class="tab-pane fade in active" id="transportadora">
 								<div class="alert" style="display:none"></div>
 
 								<div class="row">
@@ -624,6 +624,42 @@
 											<label class="control-label">Cidade</label>
 											<input type="text" ng-model="NF.transportadora.cidade.nome" class="form-control input-sm" readonly="readonly">
 										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover table-striped table-condensed table-bordered">
+											<caption class="text-left text-bold">Volumes</caption>
+											<thead>
+												<th class="text-center" width="80">Quantidade</th>
+												<th>Espécie</th>
+												<th>Marca</th>
+												<th class="text-center" width="100">Numeração</th>
+												<th class="text-right" width="100">Peso Liq. (Kg)</th>
+												<th class="text-right" width="100">Peso Bruto. (Kg)</th>
+												<th class="text-center" width="100">
+													<button type="button" class="btn btn-success btn-xs">
+														<i class="fa fa-plus-circle"></i> Incluir
+													</button>
+												</th>
+											</thead>
+											<tbody>
+												<tr>
+													<td class="text-center">1</td>
+													<td>Caixa</td>
+													<td></td>
+													<td class="text-center"></td>
+													<td class="text-right">2,500</td>
+													<td class="text-right">2,500</td>
+													<td class="text-center">
+														<button type="button" class="btn btn-danger btn-xs">
+															<i class="fa fa-trash-o"></i>
+														</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>
@@ -835,6 +871,26 @@
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+		<!-- /Modal Processando-->
+		<div class="modal fade" id="modal-volume" style="display:none">
+  			<div class="modal-dialog modal-sm">
+    			<div class="modal-content">
+      				<div class="modal-header"></div>
+				    <div class="modal-body">
+				    	<div class="row">
+				    		<div class="col-sm-12">
+				    			<i class='fa fa-refresh fa-spin'></i> Aguarde! Calculando Nota
+							</div>
+				    	</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 		<!-- Footer
 		================================================== -->
 		<footer>
