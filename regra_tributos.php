@@ -582,13 +582,6 @@
 									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_mva_proprio">
 								</div>
 							</div>
-
-							<div class="col-sm-2">
-								<div id="num_percentual_mva_proprio" class="form-group">
-									<label class="control-label">% FCP</label>
-									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_fcp">
-								</div>
-							</div>
 						</div>
 
 						<div class="row" >
@@ -648,7 +641,7 @@
 
 							<div class="col-sm-2">
 								<div id="num_percentual_base_icms_proprio" class="form-group">
-									<label class="control-label">% Base ICM Proprio</label>
+									<label class="control-label">% Base ICMS Proprio</label>
 									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_base_icms_proprio">
 								</div>
 							</div>
@@ -690,6 +683,22 @@
 								    ng-model="regra_tributos.configuracao_icms.cod_base_tributaria"
 								    ng-options="base_tributaria.cod_base_tributaria as base_tributaria.dsc_base_tributaria for base_tributaria in chosen_base_tributaria">
 									</select>
+								</div>
+							</div>
+
+							<div class="col-sm-2" 
+								ng-if="regra_tributos.filtro_tributos.cod_estado_origem != regra_tributos.filtro_tributos.cod_estado_destino">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">Aliquota ICMS UF Destino</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.vlr_aliquota_icms_uf_destino">
+								</div>
+							</div>
+
+							<div class="col-sm-2"
+								ng-if="regra_tributos.filtro_tributos.cod_estado_origem != regra_tributos.filtro_tributos.cod_estado_destino">
+								<div id="num_percentual_mva_proprio" class="form-group">
+									<label class="control-label">% FCP</label>
+									<input type="text" class="form-control input-sm" mask-moeda ng-model="regra_tributos.configuracao_icms.num_percentual_fcp">
 								</div>
 							</div>
 						</div>
