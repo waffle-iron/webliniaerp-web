@@ -152,71 +152,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.calcTotalCompra();
 	}
 
-	ng.findProductByBarCode = function(offset,limit) {
-		offset = offset == null ? 0  : offset;
-    	limit  = limit  == null ? 20 : limit;
-    	var depositos = ng.caixa.depositos ;
-    	var codigo  = ""+ng.busca.codigo ;
-    	var produto_pesado = false ;
-    	ng.vlr_produto_pesado = {} ;
-    	ng.vlr_produto_pesado.valor_string = null ;
-		ng.vlr_produto_pesado.valor = null  ;
-		if(ng.busca.codigo != "") {
-			if(!empty(ng.config.cod_identificador_balanca)){
-				var first = Number(ng.busca.codigo.substring(0,1)) ;
-				if(first == Number(ng.config.cod_identificador_balanca) && ng.busca.codigo.length == 13){
-					codigo = ng.busca.codigo.substring(1,7) ;
-					ng.vlr_produto_pesado.valor_string  = ""+Number(ng.busca.codigo.substring(7,12));
-					ng.vlr_produto_pesado.valor = ng.vlr_produto_pesado.valor_string.substring(0,(ng.vlr_produto_pesado.valor_string.length - 2 ))+'.'+ng.vlr_produto_pesado.valor_string.substring((ng.vlr_produto_pesado.valor_string.length - 2 ),ng.vlr_produto_pesado.valor_string.length) ;
-					produto_pesado = true ;
-				}
-			}
-			ng.msg = "";
-			ng.busca.ok = !ng.busca.ok;
-			$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+codigo+"%20OR%20prd.id="+codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
-			.success(function(data, status, headers, config) {
-				ng.busca.codigo = "" ;
-				if(data.produtos.length == 1){
-					if(produto_pesado){
-						var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_varejo)) ;
-						var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
-						data.produtos[0].vlr_custo = aux_custo ;
-						data.produtos[0].vlr_custo_real = aux_custo ;
-						data.produtos[0].vlr_venda_varejo = Number(ng.vlr_produto_pesado.valor) ;
-
-						var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_atacado)) ;
-						var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
-						data.produtos[0].vlr_custo = aux_custo ;
-						data.produtos[0].vlr_custo_real = aux_custo ;
-						data.produtos[0].vlr_venda_atacado = Number(ng.vlr_produto_pesado.valor) ;
-
-						var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_intermediario)) ;
-						var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
-						data.produtos[0].vlr_custo = aux_custo ;
-						data.produtos[0].vlr_custo_real = aux_custo ;
-						data.produtos[0].vlr_venda_intermediario = Number(ng.vlr_produto_pesado.valor) ;
-					}
-					ng.incluirCarrinho(data.produtos[0]);
-					$('#buscaCodigo').focus();
-				}else if((data.produtos.length > 1)){
-					ng.cdb_busca          = { status:true, codigo:codigo } ;
-					ng.showProdutos(true);
-				}
-				ng.calcTotalCompra();
-				//ng.verificarCarrinho(data.produtos);
-	        }).error(function(data, status) {
-	        	ng.busca.ok = false;
-				ng.msg = "O código de barra não existe ou o produto não está disponivel em estoque!";
-	   	    });
-
-		}
-		else {
-			ng.showProdutos();
-			//ng.busca.ok = false;
-			//ng.msg = "O código de barras é obrigatório!";
-		}
-	}
-
 	ng.indexItensEstoque = null ;
 	ng.showModal = function(produtos,nome_produto,index){
 		if(index == null){
@@ -1121,7 +1056,13 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
    	ng.loadProdutos = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
-    	var depositos = $.param({'te->id_deposito':{'exp':' IN('+ng.caixa.depositos.join()+')'}}) ;
+    	
+    	var qtd_minima = ng.config.flg_controlar_estoque != undefined && Number(ng.config.flg_controlar_estoque) == 0 ? 'null' : '1' ; 
+
+    	var depositos = '';
+    		
+    	if(qtd_minima != 'null')
+    		depositos = $.param({'te->id_deposito':{'exp':' IN('+ng.caixa.depositos.join()+')'}});
 
     	if(ng.cdb_busca.status == false)
     		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&"+depositos;
@@ -1137,8 +1078,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
     	}
 
 		ng.produtos =  null;
-		var qtd_minima = ng.config.flg_controlar_estoque != undefined && Number(ng.config.flg_controlar_estoque) == 0 ? 'null' : '1' ; 
-		aj.get(baseUrlApi()+"estoque_produtos/"+qtd_minima+"/"+offset+"/"+limit+"/"+query_string)
+		
+		aj.get(baseUrlApi()+"estoque_produtos/"+qtd_minima+"/"+offset+"/"+limit+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC, tt.nome_tamanho ASC, tcp.nome_cor ASC")
 			.success(function(data, status, headers, config) {
 				ng.produtos        = data.produtos ;
 				ng.paginacao.produtos = data.paginacao;
@@ -1146,6 +1087,80 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			.error(function(data, status, headers, config) {
 				ng.produtos = [];
 			});
+	}
+
+	ng.findProductByBarCode = function(offset,limit) {
+		offset = offset == null ? 0  : offset;
+		limit  = limit  == null ? 10 : limit;
+		var depositos = ng.caixa.depositos ;
+		var codigo  = ""+ng.busca.codigo ;
+		var produto_pesado = false ;
+		ng.vlr_produto_pesado = {} ;
+		ng.vlr_produto_pesado.valor_string = null ;
+		ng.vlr_produto_pesado.valor = null  ;
+		if(ng.busca.codigo != "") {
+			if(!empty(ng.config.cod_identificador_balanca)){
+				var first = Number(ng.busca.codigo.substring(0,1)) ;
+				if(first == Number(ng.config.cod_identificador_balanca) && ng.busca.codigo.length == 13){
+					codigo = ng.busca.codigo.substring(1,7) ;
+					ng.vlr_produto_pesado.valor_string  = ""+Number(ng.busca.codigo.substring(7,12));
+					ng.vlr_produto_pesado.valor = ng.vlr_produto_pesado.valor_string.substring(0,(ng.vlr_produto_pesado.valor_string.length - 2 ))+'.'+ng.vlr_produto_pesado.valor_string.substring((ng.vlr_produto_pesado.valor_string.length - 2 ),ng.vlr_produto_pesado.valor_string.length) ;
+					produto_pesado = true ;
+				}
+			}
+			ng.msg = "";
+			ng.busca.ok = !ng.busca.ok;
+			
+			//$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+codigo+"%20OR%20prd.id="+codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
+
+			var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&tp->codigo_barra="+ codigo;
+
+			var qtd_minima = ng.config.flg_controlar_estoque != undefined && Number(ng.config.flg_controlar_estoque) == 0 ? 'null' : '1' ; 
+			if(qtd_minima != 'null')
+    			query_string += "&" + $.param({'te->id_deposito':{'exp':' IN('+ng.caixa.depositos.join()+')'}});
+
+			$http.get(baseUrlApi()+"estoque_produtos/"+qtd_minima+"/"+offset+"/"+limit+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC, tt.nome_tamanho ASC, tcp.nome_cor ASC")
+				.success(function(data, status, headers, config) {
+					ng.busca.codigo = "" ;
+					if(data.produtos.length == 1){
+						if(produto_pesado){
+							var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_varejo)) ;
+							var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
+							data.produtos[0].vlr_custo = aux_custo ;
+							data.produtos[0].vlr_custo_real = aux_custo ;
+							data.produtos[0].vlr_venda_varejo = Number(ng.vlr_produto_pesado.valor) ;
+
+							var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_atacado)) ;
+							var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
+							data.produtos[0].vlr_custo = aux_custo ;
+							data.produtos[0].vlr_custo_real = aux_custo ;
+							data.produtos[0].vlr_venda_atacado = Number(ng.vlr_produto_pesado.valor) ;
+
+							var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_intermediario)) ;
+							var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
+							data.produtos[0].vlr_custo = aux_custo ;
+							data.produtos[0].vlr_custo_real = aux_custo ;
+							data.produtos[0].vlr_venda_intermediario = Number(ng.vlr_produto_pesado.valor) ;
+						}
+						ng.incluirCarrinho(data.produtos[0]);
+						$('#buscaCodigo').focus();
+					}else if((data.produtos.length > 1)){
+						ng.cdb_busca          = { status:true, codigo:codigo } ;
+						ng.showProdutos(true);
+					}
+					ng.calcTotalCompra();
+					//ng.verificarCarrinho(data.produtos);
+		        }).error(function(data, status) {
+		        	ng.busca.ok = false;
+					ng.msg = "O código de barra não existe ou o produto não está disponivel em estoque!";
+		   	    });
+
+		}
+		else {
+			ng.showProdutos();
+			//ng.busca.ok = false;
+			//ng.msg = "O código de barras é obrigatório!";
+		}
 	}
 
 	ng.addProduto = function(item){
@@ -2873,8 +2888,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 		ng.clientes = [];
-		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+")";
-		query_string += "&"+$.param({'usu->id_perfil':{exp:" IN(1,4,5,8)"}});
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+") AND (usu.flg_tipo='usuario')";
+		//query_string += "&"+$.param({'usu->id_perfil':{exp:" IN(1,4,5,8)"}});
 
 		if(ng.busca.vendedor != ""){
 			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.vendedor+"%' OR usu.apelido LIKE '%"+ng.busca.vendedor+"%')"}});

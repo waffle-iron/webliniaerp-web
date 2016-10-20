@@ -446,14 +446,13 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 
 	ng.showValidades = function(item) {
 		ng.produto = item;
-
-		if(ng.produto.validades == null || typeof(ng.produto.validades) == "undefined")
-			ng.produto.validades = [];
-
 		$("#list_validades").modal('show');
 	}
 
 	ng.addValidadeItem = function() {
+		if(ng.produto.validades == null || typeof(ng.produto.validades) == "undefined")
+			ng.produto.validades = [];
+		
 		ng.produto.validades.push(ng.itemValidade);
 		ng.itemValidade = {};
 		ng.atualizaQtdValidadeItens();
@@ -682,9 +681,11 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
     }
 
     ng.addProduto = function(item){
+    	ng.produto = item;
+	    ng.itemValidade = { validade: '', qtd: item.qtd };
 	    ng.entradaEstoque.push(item);
+	    ng.addValidadeItem();
     	ng.atualizaTotal();
-    	$("#list_produtos").modal("hide");
     }
 
 	$scope.loadProdutos = function(offset,limit) {
@@ -694,7 +695,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
     	var query_string = "?tpe->id_empreendimento="+$scope.userLogged.id_empreendimento+"&tp->flg_excluido=0";
 
     	if($scope.pesquisa.produto != ""){
-    		query_string += "&"+$.param({'tp->nome':{exp:"like'%"+$scope.pesquisa.produto+"%' OR tf.nome_fabricante like'%"+$scope.pesquisa.produto+"%'"}});
+    		query_string += "&"+$.param({'(tp->nome':{exp:"like'%"+$scope.pesquisa.produto+"%' OR tf.nome_fabricante like'%"+$scope.pesquisa.produto+"%')"}});
     	}
 
 		$scope.produtos = [];

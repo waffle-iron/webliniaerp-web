@@ -147,11 +147,11 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
     	var query_string = "?tpe->id_empreendimento="+$scope.userLogged.id_empreendimento+"&tp->flg_excluido=0";
 
     	if($scope.busca.produtos != ""){
-    		query_string += "&"+$.param({'tp->nome':{exp:"like'%"+$scope.busca.produtos+"%' OR tf.nome_fabricante like'%"+$scope.busca.produtos+"%'"}});
+    		query_string += "&"+$.param({'(tp->nome':{exp:"like'%"+$scope.busca.produtos+"%' OR tf.nome_fabricante like'%"+$scope.busca.produtos+"%')"}});
     	}
 
 		$scope.produtos = [];
-		$http.get(baseUrlApi()+"estoque_produtos/null/"+offset+"/"+limit+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC")
+		$http.get(baseUrlApi()+"estoque_produtos/null/"+offset+"/"+limit+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC, tt.nome_tamanho ASC, tcp.nome_cor ASC")
 			.success(function(data, status, headers, config) {
 				$.each(data.produtos, function(i, item) {
 					item.id_produto = parseInt(item.id_produto, 10);

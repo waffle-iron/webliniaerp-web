@@ -167,7 +167,13 @@
 					<span class="shortcut-icon">
 						<i class="fa fa-table"></i>
 					</span>
-					<span class="text">Controle de Mesas</span>
+					<span class="text">Mesas</span>
+				</a>
+				<a href="ordem-servico.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-columns"></i>
+					</span>
+					<span class="text">O.S.</span>
 				</a>
 				<a href="controle-atendimento.php" ng-if="userLogged.id_empreendimento == 75" class="shortcut-link">
 					<span class="shortcut-icon">
@@ -189,7 +195,7 @@
 				<a href="lancamentos.php" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-money"></i></span>
-					<span class="text">Lanç. Financeiros</span>
+					<span class="text">Financeiro</span>
 				</a>
 				<a href="produtos.php" class="shortcut-link">
 					<span class="shortcut-icon">

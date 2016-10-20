@@ -361,7 +361,7 @@
 													Nenhum item adicionado
 												</td>
 											</tr>
-											<tr ng-repeat="($index, item) in entradaEstoque | orderBy: 'nome_produto' : false" ng-class="{'danger': (item.flg_localizado == false)}">
+											<tr ng-repeat="($index, item) in entradaEstoque | orderBy: 'nome_produto' : false track by $index" ng-class="{'danger': (item.flg_localizado == false)}">
 												<td style="line-height: 1.5; vertical-align: middle;">{{ item.nome_produto }}</td>
 												<td>{{ item.nome_fabricante }}</td>
 												<td>{{ item.peso }}</td>
@@ -559,7 +559,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="input-group">
-						            <input ng-model="pesquisa.produto" type="text" class="form-control input-sm">
+						            <input ng-model="pesquisa.produto" ng-enter="loadProdutos()" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
 						            	<button ng-click="loadProdutos()" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
 						            </div> <!-- /input-group-btn -->
@@ -578,6 +578,7 @@
 											<th>Fabricante</th>
 											<th >Tamanho</th>
 											<th >Sabor/Cor</th>
+											<th >Qtd.</th>
 											<th width="80"></th>
 										</tr>
 									</thead>
@@ -587,6 +588,9 @@
 											<td>{{ item.nome_fabricante }}</td>
 											<td>{{ item.peso }}</td>
 											<td>{{ item.sabor }}</td>
+											<td>
+												<input onKeyPress="return SomenteNumero(event);" ng-keyUp="" ng-model="item.qtd" type="text" class="form-control input-xs" width="50" />
+											</td>
 											<td>
 												<button ng-click="addProduto(item)" class="btn btn-success btn-xs" type="button">
 													<i class="fa fa-check-square-o"></i> Selecionar
