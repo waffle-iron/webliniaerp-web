@@ -295,12 +295,26 @@
 										<input type="text" class="form-control" ng-model="nota.vlr_total_nota_fiscal" readonly="readonly">
 									</div>
 								</div>
+							</div>
+
+							<div class="row">
 								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label"><br></label>
 										<button type="button" class="btn btn-default form-control" ng-click="selProduto()">
-											<i class="fa fa-plus-circle"></i> Adicionar Produto
+											<i class="fa fa-plus-circle"></i> Incluir Produto
 										</button>
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+									<div class="form-group">
+										<label class="control-label"><br></label>
+										<label class="label-checkbox">
+											<input ng-model="nota.flg_alterar_valor_custo" type="checkbox" id="toggleLine" ng-true-value="1" ng-false-value="0">
+											<span class="custom-checkbox"></span>
+											Alterar valor de custo
+										</label>
 									</div>
 								</div>
 							</div>
@@ -316,11 +330,24 @@
 												<th>Produto</th>
 												<th>Fabricante</th>
 												<th>Tamanho</th>
+												<th>Cor/Sabor</th>
 												<th style="width: 60px; text-align: center;" colspan="2">Qtd</th>
-												<th style="width: 80px; text-align: center;">Custo (R$)</th>
-												<th style="width: 70px; text-align: center;">Imp. (%)</th>
-												<th style="width: 75px; text-align: center;">Desc. (%)</th>
-												<th style="width: 120px; text-align: center;">SubTotal</th>
+												<th style="width: 80px; text-align: center;"
+													ng-show="nota.flg_alterar_valor_custo == 1">
+													Custo (R$)
+												</th>
+												<th style="width: 70px; text-align: center;"
+													ng-show="nota.flg_alterar_valor_custo == 1">
+													Imp. (%)
+												</th>
+												<th style="width: 75px; text-align: center;"
+													ng-show="nota.flg_alterar_valor_custo == 1">
+													Desc. (%)
+												</th>
+												<th style="width: 120px; text-align: center;"
+													ng-show="nota.flg_alterar_valor_custo == 1">
+													SubTotal
+												</th>
 												<th style="width: 100px; text-align: center;">
 													<button ng-click="deleteItem()" type="button" class="btn btn-xs btn-danger">
 														<i class="fa fa-trash-o"></i> Remover Todos
@@ -331,31 +358,47 @@
 										<tbody>
 											<tr ng-hide="entradaEstoque.length > 0">
 												<td colspan="10">
-													Nenhum pedido foi selecionado
+													Nenhum item adicionado
 												</td>
 											</tr>
 											<tr ng-repeat="($index, item) in entradaEstoque | orderBy: 'nome_produto' : false" ng-class="{'danger': (item.flg_localizado == false)}">
 												<td style="line-height: 1.5; vertical-align: middle;">{{ item.nome_produto }}</td>
 												<td>{{ item.nome_fabricante }}</td>
 												<td>{{ item.peso }}</td>
+												<td>{{ item.sabor }}</td>
 												<td style="text-align: center;">{{ item.qtd }}</td>
 												<td style="width: 32px;">
 													<button type="button" class="btn btn-xs btn-primary" ng-click="showValidades(item)"><i class="fa fa-calendar"></i></button>
 												</td>
-												<td><input ng-model="item.custo" thousands-formatter ng-keyup="atualizaValores();" ng-blur="atualizaValorTotal();" type="text" class="form-control input-xs"></td>
-												<td><input ng-model="item.imposto" thousands-formatter ng-keyup="atualizaValores();" ng-blur="atualizaValorTotal();" type="text" class="form-control input-xs"></td>
-												<td><input ng-model="item.desconto" thousands-formatter ng-keyup="atualizaValores();" ng-blur="atualizaValorTotal();" type="text" class="form-control input-xs"></td>
-												<td style="text-align: right; line-height: 1.5; vertical-align: middle;">R$ {{ item.total | numberFormat:2:',':'.'}}</td>
-												<td>
+												<td ng-show="nota.flg_alterar_valor_custo == 1">
+													<input ng-model="item.custo" thousands-formatter ng-keyup="atualizaValores();" 
+														ng-blur="atualizaValorTotal();" type="text" class="form-control input-xs">
+												</td>
+												<td ng-show="nota.flg_alterar_valor_custo == 1">
+													<input ng-model="item.imposto" thousands-formatter ng-keyup="atualizaValores();" 
+														ng-blur="atualizaValorTotal();" type="text" class="form-control input-xs">
+												</td>
+												<td ng-show="nota.flg_alterar_valor_custo == 1">
+													<input ng-model="item.desconto" thousands-formatter ng-keyup="atualizaValores();" 
+														ng-blur="atualizaValorTotal();" type="text" class="form-control input-xs">
+												</td>
+												<td style="text-align: right; line-height: 1.5; vertical-align: middle;"
+													ng-show="nota.flg_alterar_valor_custo == 1">
+													R$ {{ item.total | numberFormat:2:',':'.'}}
+												</td>
+												<td class="text-center">
 													<button ng-click="deleteItem(item)" type="button" class="btn btn-xs btn-danger"><i class="fa fa-trash-o"></i> Remover Item</button>
 												</td>
 											</tr>
 											<tr style="font-weight: bold;" ng-show="entradaEstoque.length > 0">
-												<td colspan="3" style="text-align: right;">TOTAIS</td>
+												<td colspan="4" style="text-align: right;">TOTAIS</td>
 												<td style="text-align: center;">{{ qtd_total_entrada }}</td>
-												<td colspan="4"></td>
-												<td style="text-align: right;">R$ {{ valor_total_entrada | numberFormat:2:',':'.' }}</td>
-												<td></td>
+												<td colspan="4" ng-show="nota.flg_alterar_valor_custo == 1"></td>
+												<td style="text-align: right;"
+													ng-show="nota.flg_alterar_valor_custo == 1">
+													R$ {{ valor_total_entrada | numberFormat:2:',':'.' }}
+												</td>
+												<td colspan="{{ (nota.flg_alterar_valor_custo == 1) ? 1 : 2 }}"></td>
 											</tr>
 										</tbody>
 									</table>
@@ -518,7 +561,7 @@
 								<div class="input-group">
 						            <input ng-model="pesquisa.produto" type="text" class="form-control input-sm">
 						            <div class="input-group-btn">
-						            	<button ng-click="loadProdutosBusca()" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
+						            	<button ng-click="loadProdutos()" tabindex="-1" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Buscar</button>
 						            </div> <!-- /input-group-btn -->
 						        </div> <!-- /input-group -->
 							</div><!-- /.col -->
@@ -534,13 +577,13 @@
 											<th>Nome</th>
 											<th>Fabricante</th>
 											<th >Tamanho</th>
-											<th >Sabor/cor</th>
+											<th >Sabor/Cor</th>
 											<th width="80"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr ng-repeat="item in produtos">
-											<td>{{ item.nome }}</td>
+											<td>{{ item.nome_produto }}</td>
 											<td>{{ item.nome_fabricante }}</td>
 											<td>{{ item.peso }}</td>
 											<td>{{ item.sabor }}</td>
@@ -558,7 +601,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<ul class="pagination pagination-xs m-top-none pull-right">
-									<li ng-repeat="item in paginacao_produtos" ng-class="{'active': item.current}">
+									<li ng-repeat="item in paginacao.produtos" ng-class="{'active': item.current}">
 										<a href="" h ng-click="loadProdutos(item.offset,item.limit)">{{ item.index }}</a>
 									</li>
 								</ul>
@@ -931,6 +974,9 @@
 								<tr>
 									<th>#</th>
 									<th>Produto</th>
+									<th>Fabricante</th>
+									<th>Tamanho</th>
+									<th>Cor/Sabor</th>
 									<th>Quantidade</th>
 									<th>Custo</th>
 									<th>Imposto (%)</th>
@@ -942,6 +988,9 @@
 								<tr ng-repeat="item in detalhes">
 									<td>{{ item.id }}</td>
 									<td>{{ item.nome_produto }}</td>
+									<td>{{ item.nome_fabricante }}</td>
+									<td>{{ item.peso }}</td>
+									<td>{{ item.sabor }}</td>
 									<td>{{ item.qtd_item }}</td>
 									<td>R$ {{ item.vlr_custo | numberFormat:2:',':'.' }}</td>
 									<td>{{ item.perc_imposto * 100 | numberFormat:2:',':'.' }} %</td>
@@ -1044,7 +1093,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/estoque-controller.js?<?php echo filemtime('js/angular-controller/estoque-controller.js')?>"></script>
+	<script src="js/angular-controller/estoque-controller.js?<?php/* echo filemtime('js/angular-controller/estoque-controller.js')*/?>"></script>
 	<script type="text/javascript"></script>
 
 	<script type="text/javascript">
