@@ -184,7 +184,7 @@
 										<li ng-if="funcioalidadeAuthorized('alterar_preco')"><a href="#preco" data-toggle="tab"><i class="fa fa-archive"></i>  Preço</a></li>
 										<li><a href="#estoque" data-toggle="tab"><i class="fa fa-list-ol"></i> Estoque</a></li>
 										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
-										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
+										<li><a ng-click="timeCheckedTreeview()" href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
 										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
 										<li ng-if="isNumeric(produto.id)"><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>
 									</ul>
@@ -594,7 +594,12 @@
 													<div class="padding-md" style="padding:0 !important">
 														<div class="panel panel-default" id="modulos">
 															<div class="panel-heading"><i class="fa fa-th fa-lg"></i> Categorias
-																	<span ng-show="perfil.modulos.length > 0" class="pull-right">Selecionados: <span style="background:#504f63" class="badge badge-primary">{{ perfil.modulos.length }}</span></span>
+																	<span ng-show="checando_categorias" class="pull-right">
+																	<i class='fa fa-refresh fa-spin'></i> checando categorias
+																	</span>
+																	<span ng-show="perfil.modulos.length > 0" class="pull-right">
+																	<i class='fa fa-refresh fa-spin'></i> checando categorias
+																	<!--Selecionados: <span style="background:#504f63" class="badge badge-primary">{{ produto.modulos.length }}</span>--></span>
 															</div>
 															<div style="max-height:305px;min-height:305px;overflow:auto" class="panel-body" id="treeview-modulos">
 																

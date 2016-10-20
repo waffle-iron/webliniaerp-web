@@ -1,4 +1,4 @@
-app.controller('ProdutosController', function($scope, $http, $window, $dialogs, UserService,FuncionalidadeService,PrestaShop){
+app.controller('ProdutosController', function($scope,$timeout, $http, $window, $dialogs, UserService,FuncionalidadeService,PrestaShop){
 	var ng = $scope
 		aj = $http;
 
@@ -465,6 +465,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.editar = function(item) {
+		ng.checando_categorias = true ;
 		ng.editing = true ;
 		ng.produto = angular.copy(item);
 
@@ -508,7 +509,7 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 		if(typeof ng.produto.categorias != 'object'){
 			 ng.produto.categorias = [] ;
 		}else{
-			ng.checkedTreeview(ng.produto.categorias);
+			//ng.checkedTreeview(ng.produto.categorias);
 		}
 		$('#descricao_html').trumbowyg('html',ng.produto.descricao);
 		$('#descricao_html_curta').trumbowyg('html',ng.produto.descricao_curta);
@@ -1870,6 +1871,15 @@ app.controller('ProdutosController', function($scope, $http, $window, $dialogs, 
 	}
 
 	ng.loadCategoriasTreeview();
+
+	ng.timeCheckedTreeview = function(){
+		$timeout( function(){ 
+			ng.checkedTreeview(ng.produto.categorias);
+			 $scope.$apply(function () {
+	          ng.checando_categorias = false ;
+	        });
+		 }, 3000);
+	}
 
 
 
