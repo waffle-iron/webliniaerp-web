@@ -184,6 +184,9 @@
 						<tr>
 							<th width="50"></th>
 							<th>Produto</th>
+							<th>Venda</th>
+							<th>Margem</th>
+							<th>Dta. Venda</th>
 							<th>Fabricante</th>
 							<th >Tamanho</th>
 							<th >Sabor/Cor</th>
@@ -211,11 +214,14 @@
 						</tr>
 						<tbody ng-repeat="(key, item) in vendas">
 							<tr class="info">
-								<td colspan="10">{{ key | dateFormat:'date-m/y' }} - <span class="badge ">{{ item.itens.length }}</span><span class="badge pull-right"><a style="cursor:pointer" ng-click="ancoraSaldo(key)">Ir ao saldo do periodo</a></span></td>
+								<td colspan="13">{{ key | dateFormat:'date-m/y' }} - <span class="badge ">{{ countQtdItens(item.itens) }}</span><span class="badge pull-right"><a style="cursor:pointer" ng-click="ancoraSaldo(key)">Ir ao saldo do periodo</a></span></td>
 							</tr>
 							<tr ng-repeat="venda in item.itens" bs-popover>
 								<td class="text-cente">{{ venda.cod_produto }}</td>
 								<td>{{ venda.nme_produto }}</td>
+								<td>#{{ venda.id_venda }}</td>
+								<td>{{ venda.margem_aplicada }}</td>
+								<td>{{ venda.dta_venda | dateFormat }}</td>
 								<td>{{ venda.nome_fabricante }}</td>
 								<td>{{ venda.peso }}</td>
 								<td>{{ venda.sabor }}</td>
@@ -231,7 +237,7 @@
 								<td class="text-right" ng-if="venda.vlr_lucro_bruto < 0"><a style="cursor:pointer;text-decoration: underline;" ng-click="showProdutoDebito(venda)">{{ venda.vlr_lucro_bruto | numberFormat:2:',':'.' }}</a></td>
 							</tr>
 							<tr class="warning" id="saldo_{{key}}">
-							<td class="text-right" colspan="6"><strong class="ng-binding">Saldo</strong></td>
+							<td class="text-right" colspan="9"><strong class="ng-binding">Saldo</strong></td>
 							<td class="text-right">
 								<span class="label label-success ng-binding ng-scope" ng-if="item.saldo_vlr_custo_total >= 0">
 									R$ {{ item.saldo_vlr_custo_total | numberFormat:2:',':'.' }}

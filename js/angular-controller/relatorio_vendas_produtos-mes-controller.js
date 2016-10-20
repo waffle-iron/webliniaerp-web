@@ -68,10 +68,10 @@ app.controller('RelatorioTotalVendasCliente', function($scope, $http, $window,$d
 		}
 
 		queryString = queryString == "" ? "?" : queryString+"&" ;
-		queryString += $.param({'group_by':["DATE_FORMAT(ven.dta_venda,'%m-%Y')","itv.id_produto"]});
+		//queryString += $.param({'group_by':["DATE_FORMAT(ven.dta_venda,'%m-%Y')","itv.id_produto"]});
 		queryString += "&"+$.param({'order_by':["mes_ano_venda DESC"]});
 		
-		aj.get(baseUrlApi()+"produtos/by_venda/"+ng.userLogged.id_empreendimento+"/"+queryString)
+		aj.get(baseUrlApi()+"v2/produtos/by_venda/"+ng.userLogged.id_empreendimento+"/"+queryString)
 			.success(function(data, status, headers, config) {
 				var vendas = _.groupBy(data, "mes_ano_venda");
 				var aux    = {} ;
@@ -238,6 +238,14 @@ app.controller('RelatorioTotalVendasCliente', function($scope, $http, $window,$d
 		setTimeout(function(){
 			$('.alert-sistema').fadeOut('slow');
 		},5000);
+	}
+
+	ng.countQtdItens = function(itens){
+		var total = 0 ;
+		$.each(itens,function(i,v){
+			total += Number(v.qtd_vendida);
+		});
+		return total ;
 	}
 
 	ng.reset();

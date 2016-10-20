@@ -166,12 +166,12 @@
 								</div>
 							</div>
 
-							<div class="form-group" id="nome_fabricante">
+							<!-- <div class="form-group" id="nome_fabricante">
 								<label for="descricao" class="col-sm-1 control-label">Imagem</label>
 								<div class="col-sm-11">
 									<input type="file" name="image" />
 								</div>
-							</div>
+							</div> -->
 
 							<div class="empreendimentos form-group">
 								<div class="col-sm-12">

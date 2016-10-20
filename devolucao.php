@@ -183,6 +183,11 @@
 							</div>
 						</div>
 						<div class="row">
+							<div class="col-sm-12" >
+								<div style="display:none" class="alert alert-validade"></div>
+							</div>
+						</div>
+						<div class="row">
 							<div class="col-sm-12" ng-if="venda.id != undefined && view.cadastar_cliente == false">
 								<strong>Cliente:</strong> {{ venda.nome_cliente }} | <strong>Data da Venda:</strong> {{ venda.dta_venda | dateFormat }} | <strong>Vendedor:</strong> {{ venda.nome_usuario }}
 							</div>
