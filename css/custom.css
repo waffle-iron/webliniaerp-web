@@ -427,3 +427,8 @@ legend {
 	padding-left: 0px;
 	padding-top: 2px;
 }
+
+.btn-sm, 
+.btn-group-sm > .btn {
+	padding: 5px 4px;
+}

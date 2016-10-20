@@ -217,9 +217,6 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		if(empty(ng.NF.volumes))
 			ng.NF.volumes = [];
 
-		ng.volume.peso_liquido = $('input[ng-model="volume.peso_liquido"]').val();
-		ng.volume.peso_bruto = $('input[ng-model="volume.peso_bruto"]').val();
-
 		ng.NF.volumes.push(ng.volume);
 		ng.volume = {};
 		$('#modal-volume').modal('hide');

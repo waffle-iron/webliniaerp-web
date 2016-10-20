@@ -163,6 +163,12 @@
 					</span>
 					<span class="text">PDV</span>
 				</a>
+				<a href="controle-mesas.php" class="shortcut-link">
+					<span class="shortcut-icon">
+						<i class="fa fa-table"></i>
+					</span>
+					<span class="text">Controle de Mesas</span>
+				</a>
 				<a href="controle-atendimento.php" ng-if="userLogged.id_empreendimento == 75" class="shortcut-link">
 					<span class="shortcut-icon">
 						<i class="fa fa-list"></i>

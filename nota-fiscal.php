@@ -191,17 +191,17 @@
 
 					<div class="panel-tab clearfix">
 						<ul class="tab-bar">
-							<li><a href="#geral" data-toggle="tab"><i class="fa fa-gear"></i> Dados de Emissão</a></li>
+							<li class="active"><a href="#geral" data-toggle="tab"><i class="fa fa-gear"></i> Dados de Emissão</a></li>
 							<li><a href="#emitente" data-toggle="tab"><i class="fa fa-building-o"></i> Dados do Emitente</a></li>
 							<li><a href="#destinatario" data-toggle="tab"><i class="fa fa-user"></i> Dados do Destinatário</a></li>
-							<li class="active" ng-show="(NF.transportadora.modalidade_frete != '' && NF.transportadora.modalidade_frete != '9')"><a href="#transportadora" data-toggle="tab"><i class="fa fa-truck"></i> Dados da Transportadora</a></li>
+							<li ng-show="(NF.transportadora.modalidade_frete != '' && NF.transportadora.modalidade_frete != '9')"><a href="#transportadora" data-toggle="tab"><i class="fa fa-truck"></i> Dados da Transportadora</a></li>
 							<li><a href="#produtos" data-toggle="tab"><i class="fa fa-list"></i> Produtos</a></li>
 							<li><a href="#resumo" data-toggle="tab"><i class="fa fa-bars"></i> Resumo da NF-e</a></li>
 						</ul>
 					</div>
 					<div class="panel-body">
 						<div class="tab-content">
-							<div class="tab-pane fade in" id="geral">
+							<div class="tab-pane fade in active" id="geral">
 								<div class="alert" style="display:none"></div>
 								<div class="row" ng-if="!(processando_autorizacao || autorizado)">
 									<div class="col-sm-6">
@@ -551,10 +551,10 @@
 								</div>
 							</div>
 
-							<div class="tab-pane fade in active" id="transportadora">
+							<div class="tab-pane fade in" id="transportadora">
 								<div class="alert" style="display:none"></div>
 
-								<div class="row">
+								<div class="row" ng-if="!(processando_autorizacao || autorizado)">
 									<div class="col-sm-10">
 										<div class="form-group">
 											<label class="control-label">Transportadora</label> 
@@ -571,14 +571,14 @@
 									<div class="col-sm-2">
 										<div class="form-group">
 											<label class="control-label">CNPJ</label>
-											<input type="text" value="{{ NF.transportadora.CNPJ }}" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.transportadora.CNPJ" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 
 									<div class="col-sm-5">
 										<div class="form-group">
 											<label class="control-label">Nome Fantasia</label>
-											<input type="text" value="{{ NF.transportadora.xFant }}" class="form-control input-sm" readonly="readonly">
+											<input type="text" ng-model="NF.transportadora.xFant" class="form-control input-sm" readonly="readonly">
 										</div>
 									</div>
 								</div>
@@ -636,8 +636,9 @@
 												<th class="text-center" width="100">Numeração</th>
 												<th class="text-right" width="100">Peso Liq. (Kg)</th>
 												<th class="text-right" width="100">Peso Bruto. (Kg)</th>
-												<th class="text-center" width="100">
-													<button type="button" class="btn btn-success btn-xs" ng-click="abreModalInclusaoVolume()">
+												<th class="text-center" width="100" ng-if="!(processando_autorizacao || autorizado)">
+													<button type="button" class="btn btn-success btn-xs" 
+														ng-click="abreModalInclusaoVolume()">
 														<i class="fa fa-plus-circle"></i> Incluir
 													</button>
 												</th>
@@ -650,8 +651,9 @@
 													<td class="text-center">{{ item.numero }}</td>
 													<td class="text-right">{{ item.peso_liquido }}</td>
 													<td class="text-right">{{ item.peso_bruto }}</td>
-													<td class="text-center">
-														<button type="button" class="btn btn-danger btn-xs" ng-click="removeVolume(item)">
+													<td class="text-center" ng-if="!(processando_autorizacao || autorizado)">
+														<button type="button" class="btn btn-danger btn-xs" 
+															ng-click="removeVolume(item)">
 															<i class="fa fa-trash-o"></i>
 														</button>
 													</td>

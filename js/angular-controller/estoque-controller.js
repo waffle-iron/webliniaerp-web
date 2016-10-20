@@ -27,6 +27,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
     ng.paginacao_pedidos 		= {};
     ng.pesquisa 			= {produto:"",fornecedores:""};
     ng.fornecedor           = {};
+    ng.nota.flg_alterar_valor_custo = 1;
 
 	$("#arquivo-nota").change(function() {
 		var filename = $(this).val().split('\\').pop();
@@ -140,13 +141,13 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		}
 
 		$.each(ng.entradaEstoque, function(i, item) {
-			if(!item.flg_localizado) {
+			if(!empty(ng.nota.xml_nfe) && !item.flg_localizado) {
 				$dialogs.notify('Atenção!','Alguns produtos não foram localizados!<br/>Não será possível realizar a entrada da NF.');
 				return false;
 			}
 		});
 
-		if(!ng.validarCusto()){
+		if(ng.flg_alterar_valor_custo == 1 && !ng.validarCusto()){
 			$dialogs.notify('Atenção!','Alguns produtos estão sem valor de custo!<br/>Não será possível realizar a entrada da NF.');
 			return false;
 		}
@@ -681,45 +682,32 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
     }
 
     ng.addProduto = function(item){
-    	var itemList = {};
-	    	itemList.nome_produto      = item.nome;
-	    	itemList.id_produto        = item.id;
-	    	itemList.custo_compra      = item.custo_compra;
-	    	itemList.nome_fabricante   = item.nome_fabricante;
-	    	itemList.peso   			= item.peso;
-	    ng.novoPedido.push(itemList);
+	    ng.entradaEstoque.push(item);
     	ng.atualizaTotal();
     	$("#list_produtos").modal("hide");
     }
 
-    ng.loadProdutosBusca = function(){
-    	pesquisa_produto = ng.pesquisa.produto;
-    	ng.loadProdutos() ;
-    }
-
-    ng.loadProdutos = function(offset,limit) {
-    	offset = offset == null ? 0  : offset;
+	$scope.loadProdutos = function(offset,limit) {
+		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
-		ng.produtos = [];
-		ng.paginacao_produtos = [];
 
-		var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
+    	var query_string = "?tpe->id_empreendimento="+$scope.userLogged.id_empreendimento+"&tp->flg_excluido=0";
 
-		if(pesquisa_produto != ""){
-    		query_string += "&"+$.param({'produto->nome':{exp:"like'%"+pesquisa_produto+"%' OR fabricante.nome_fabricante like'%"+pesquisa_produto+"%'"}});
+    	if($scope.pesquisa.produto != ""){
+    		query_string += "&"+$.param({'tp->nome':{exp:"like'%"+$scope.pesquisa.produto+"%' OR tf.nome_fabricante like'%"+$scope.pesquisa.produto+"%'"}});
     	}
 
-		aj.get(baseUrlApi()+"produtos_by_fornecedor/"+ng.nota.id_fornecedor+"/"+offset+"/"+limit+"/"+query_string)
+		$scope.produtos = [];
+		$http.get(baseUrlApi()+"estoque_produtos/null/"+offset+"/"+limit+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC")
 			.success(function(data, status, headers, config) {
-				$.each(data.paginacao,function(i,item){
-					ng.paginacao_produtos.push(item);
+				$.each(data.produtos, function(i, item) {
+					item.id_produto = parseInt(item.id_produto, 10);
+					$scope.produtos.push(item);
 				});
-				$.each(data.produtos,function(i,item){
-					ng.produtos.push(item);
-				});
+				$scope.paginacao.produtos = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
-
+				$scope.produtos = [];
 			});
 	}
 

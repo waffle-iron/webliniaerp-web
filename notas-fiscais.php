@@ -286,7 +286,7 @@
 																	<li ng-show="(nota.cod_venda && nota.status == 'autorizado')" 
 																		ng-click="modalCorrecao(nota,$index)">
 																		<a href="">
-																			<i class="fa fa-edit"></i> Correções
+																			<i class="fa fa-edit"></i> Cartas de Correção
 																		</a>
 																	</li>
 																	<li ng-show="(nota.cod_venda && nota.status == 'autorizado')" 
@@ -482,12 +482,10 @@
 									<div class="alert alert-list-correcoes" style="display:none"></div>
 					    			<table class="table table-bordered table-condensed table-striped table-hover">
 										<thead>
-											<th class="text-middle" width="50">Seguencia</th>
+											<th class="text-middle" width="50">Sequência</th>
 											<th class="text-middle">Correção</th>
-											<th class="text-middle">PDF</th>
-											<th class="text-middle">XML</th>
-											<th class="text-middle text-center">status</th>
-											<th class="text-middle"></th>
+											<th class="text-middle text-center">Status</th>
+											<th class="text-center" width="200">Ações</th>
 										</thead>
 										<tbody>
 											<tr ng-if="nota_correcoes.length == 0">
@@ -498,8 +496,6 @@
 											<tr ng-repeat="item in nota_correcoes">
 												<td class="text-center">{{ item.numero_sequencial_evento }}</td>
 												<td class="">{{ item.carta_correcao }}</td>
-												<td class=""><a ng-show="(item.status == 'autorizado')"  href="{{ item.caminho_pdf }}" target="_blank">link</td>
-												<td class=""><a ng-show="(item.status == 'autorizado')"  href="{{ item.caminho_xml }}" target="_blank">link</td>
 												<td class="text-center">
 													<span class="label label-warning"
 														ng-show="(item.status == 'processando_autorizacao')" 
@@ -517,9 +513,23 @@
 														Autorizado
 													</span>
 												</td>
-												<td>
-													<button type="button" id="btn-cancelar-nota" data-loading-text="<i class='fa fa-refresh fa-spin'></i>" class="btn btn-xs btn-success" ng-click="atualizarCorrecao(item,$index)">
-											    		<i class="fa fa-refresh"></i>
+												<td class="text-center">
+													<button type="button" id="btn-cancelar-nota" 
+														data-loading-text="<i class='fa fa-refresh fa-spin'></i>" 
+														class="btn btn-xs btn-success" 
+														ng-click="atualizarCorrecao(item,$index)"
+														ng-show="(item.status != 'autorizado')">
+											    		<i class="fa fa-refresh"></i> Atualizar Status
+											    	</button>
+
+											    	<a href="{{ item.caminho_pdf }}" target="_blank" class="btn btn-xs btn-primary"
+											    		ng-show="(item.status == 'autorizado')">
+											    		<i class="fa fa-file-pdf-o"></i> Ver PDF
+											    	</button>
+
+											    	<a href="{{ item.caminho_pdf }}" target="_blank" class="btn btn-xs btn-primary"
+											    		ng-show="(item.status == 'autorizado')">
+											    		<i class="fa fa-file-code-o"></i> Ver XML
 											    	</button>
 												</td>
 											</tr>

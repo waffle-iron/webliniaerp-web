@@ -26,7 +26,7 @@ app.controller('PedidosFornecedoresController', function($scope, $http, $window,
 		ng.PedidosFornecedores = {itens:[]};
 	}
 
-   	ng.busca = { solicitante: "", fornecedor: ""};
+   	ng.busca = { solicitante: "", fornecedor: "", fornecedores:""};
 		ng.resetFilter = function() {
 			$("#datapedido").val("");
 			ng.busca.solicitante = "" ;
