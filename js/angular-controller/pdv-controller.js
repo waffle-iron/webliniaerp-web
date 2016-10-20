@@ -253,37 +253,42 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		}
 	}
 
+
 	ng.incluirCarrinho = function(produto){
 		produto = angular.copy(produto);
 		if(ng.margemAplicada.atacado){
-
 			produto.vlr_unitario    	 = produto.vlr_venda_atacado;
 			produto.vlr_real        	 = produto.vlr_venda_atacado;
 			produto.perc_margem_aplicada = produto.margem_atacado;
+			ng.margem_aplicada_venda 	 = 'atacado';
 
 		}else if(ng.margemAplicada.varejo){
 
 			produto.vlr_unitario		 = produto.vlr_venda_varejo;
 			produto.vlr_real       		 = produto.vlr_venda_varejo;
 			produto.perc_margem_aplicada = produto.margem_varejo;
+			ng.margem_aplicada_venda 	 = 'varejo';
 
 		}else if(ng.margemAplicada.intermediario){
 
 			produto.vlr_unitario		 = produto.vlr_venda_intermediario;
 			produto.vlr_real       		 = produto.vlr_venda_intermediario;
 			produto.perc_margem_aplicada = produto.margem_intermediario;
+			ng.margem_aplicada_venda 	 = 'intermediario';
 
 		}else if(ng.margemAplicada.parceiro){
 
 			produto.vlr_unitario    	 = produto.vlr_custo_real;
 			produto.vlr_real       		 = produto.vlr_custo_real;
 			produto.perc_margem_aplicada = 0 ;
+			ng.margem_aplicada_venda 	 = 'parceiro';
 
 		}else{
 			produto.vlr_unitario    	 = produto.vlr_venda_varejo;
 			produto.vlr_real        	 = produto.vlr_venda_varejo;
 			produto.perc_margem_aplicada = produto.margem_varejo;
 			ng.margemAplicada.varejo = true ;
+			produto.margem_aplicada 	 = 'varejo';
 		}
 		produto.valor_desconto = empty(produto.valor_desconto) ?  0 : produto.valor_desconto ; 
 
@@ -466,6 +471,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 							id_empreendimento	: ng.userLogged.id_empreendimento,
 							id_deposito 		: ng.caixa.depositos,
 							id_status_venda 	: ng.orcamento ? 1 : 4,
+							margem_aplicada     : ng.margem_aplicada_venda,
 							dta_venda           : (empty(params.id_orcamento) ? null : moment().format('YYYY-MM-DD HH:mm:ss') )
 						};
 
@@ -1021,23 +1027,28 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					produto.vlr_unitario    	 = produto.vlr_venda_atacado;
 					produto.vlr_real        	 = produto.vlr_venda_atacado;
 					produto.perc_margem_aplicada = produto.margem_atacado;
+					ng.margem_aplicada_venda 	 = 'atacado';
 				}else if(ng.margemAplicada.varejo){
 					produto.vlr_unitario		 = produto.vlr_venda_varejo;
 					produto.vlr_real       		 = produto.vlr_venda_varejo;
 					produto.perc_margem_aplicada = produto.margem_varejo;
+					ng.margem_aplicada_venda 	 = 'varejo';
 				}else if(ng.margemAplicada.intermediario){
 					produto.vlr_unitario		 = produto.vlr_venda_intermediario;
 					produto.vlr_real       		 = produto.vlr_venda_intermediario;
 					produto.perc_margem_aplicada = produto.margem_intermediario;	
+					ng.margem_aplicada_venda 	 = 'intermediario';
 				}else if(ng.margemAplicada.parceiro){
 					produto.vlr_unitario    	 = produto.vlr_custo_real;
 					produto.vlr_real       		 = produto.vlr_custo_real;
 					produto.perc_margem_aplicada = 0 ;
+					ng.margem_aplicada_venda 	 = 'parceiro';
 				}else{
 					ng.margemAplicada.varejo = true ;
 					produto.vlr_unitario		 = produto.vlr_venda_varejo;
 					produto.vlr_real       		 = produto.vlr_venda_varejo;
 					produto.perc_margem_aplicada = produto.margem_varejo;
+					ng.margem_aplicada_venda 	 = 'varejo';
 				}
 				produto.valor_desconto = empty(produto.valor_desconto) ?  0 : produto.valor_desconto ; 
 

@@ -719,6 +719,21 @@ function notifcacaoPrestaShop(tipo){
     
 }
 
+function exibirNoty(msg,type){
+
+     var x = noty({
+        text        : "<div style='font-size:12px'>"+msg+"</div>",
+        type        : type,
+        dismissQueue: false,
+        layout      : 'topRight',
+        theme       : 'relax',
+        timeout     : 5000
+    });
+   
+    return x ;
+    
+}
+
  (function($) {
           // duck-punching to make attr() return a map
           var _old = $.fn.attr;

@@ -274,8 +274,10 @@ app.controller('DevolucaoController', function($scope, $http, $window,$dialogs, 
 
 		$.each(itens_validos,function(i,v){
 			if(empty(v.dta_devolvida)){
-				$("#dta_validade-devolvida-"+i).parent().addClass("has-error");
-				error ++ ;
+				itens_validos[i].dta_validade = '122099';
+				itens_validos[i].dta_devolvida = '122099';
+				//$("#dta_validade-devolvida-"+i).parent().addClass("has-error");
+				//error ++ ;
 			}
 			if(empty(v.qtd_devolvida)){
 				$("#qtd-devolvida-"+i).parent().addClass("has-error");

@@ -186,7 +186,7 @@
 										<li><a href="#fornecedores" data-toggle="tab"><i class="fa fa-truck"></i> Fornecedores</a></li>
 										<li><a href="#informacoes_complemetares" data-toggle="tab"><i class="fa fa-cubes"></i> Informações Complementares</a></li>
 										<li><a href="#fiscal" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Fiscal</a></li>
-										<li><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>
+										<li ng-if="isNumeric(produto.id)"><a href="#combinacoes" data-toggle="tab"><i class="fa fa-file-text-o"></i> &nbsp;Combinações</a></li>
 									</ul>
 								</div>
 								<form id="formProdutos" role="form" enctype="multipart/form-data">
@@ -554,10 +554,30 @@
 															</select>
 													</div>
 												</div>
+											</div>
+											<div class="row">
 												<div class="col-sm-2">
 													<div class="form-group" id="qtd_minima_estoque">
 														<label class="control-label">Peso KG</label>
 														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" thousands-formatter precision="6" ng-model="produto.peso_frete" type="text" class="form-control input-sm">
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="qtd_minima_estoque">
+														<label class="control-label">Largura do pacote</label>
+														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" thousands-formatter precision="6" ng-model="produto.largura_pacote" type="text" class="form-control input-sm">
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="qtd_minima_estoque">
+														<label class="control-label">Altura do pacote</label>
+														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" thousands-formatter precision="6" ng-model="produto.altura_pacote" type="text" class="form-control input-sm">
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="form-group" id="qtd_minima_estoque">
+														<label class="control-label">Profundidade do pacote</label>
+														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" thousands-formatter precision="6" ng-model="produto.profundidade_pacote" type="text" class="form-control input-sm">
 													</div>
 												</div>
 											</div>
