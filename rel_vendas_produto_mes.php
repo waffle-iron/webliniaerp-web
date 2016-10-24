@@ -153,7 +153,7 @@
 									<div class="form-group">
 										<label class="control-label">Produtos</label>
 										<div class="input-group">
-											<input ng-click="showProdutos(0,10)" type="text" class="form-control" ng-model="produto.nome_produto" readonly="readonly" style="cursor: pointer;"></input>
+											<input ng-click="showProdutos(0,10)" type="text" class="form-control" ng-model="produto.nome" readonly="readonly" style="cursor: pointer;"></input>
 											<span class="input-group-btn">
 												<button ng-enter="showProdutos(0,10)" ng-click="showProdutos(0,10)" type="button" class="btn"><i class="fa fa-archive"></i></button>
 											</span>
@@ -220,7 +220,7 @@
 								<td class="text-cente">{{ venda.cod_produto }}</td>
 								<td>{{ venda.nme_produto }}</td>
 								<td>#{{ venda.id_venda }}</td>
-								<td>{{ venda.margem_aplicada }}</td>
+								<td>{{ venda.margem_aplicada | uppercase }}</td>
 								<td>{{ venda.dta_venda | dateFormat }}</td>
 								<td>{{ venda.nome_fabricante }}</td>
 								<td>{{ venda.peso }}</td>
@@ -334,7 +334,7 @@
 										</tr>
 										<tr ng-repeat="item in produtos">
 											<td>{{ item.id_produto }}</td>
-											<td>{{ item.nome_produto }}</td>
+											<td>{{ item.nome }}</td>
 											<td>{{ item.nome_fabricante }}</td>
 											<td>{{ item.peso }}</td>
 											<td>

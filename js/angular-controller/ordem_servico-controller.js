@@ -135,6 +135,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 
 	$scope.selectServico = function(item) {
 		item.cod_status_servico = 1;
+		item.qtd_pedido = 1;
 		$scope.objectModel.servicos.push(item);
 		$scope.recalculaTotais();
 		$("#list_servicos").modal("hide");
@@ -186,7 +187,11 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 
 	$scope.recalculaTotais = function() {
 		$scope.objectModel.vlr_total_servicos = _.reduce($scope.objectModel.servicos, function(value, item){
-			return value + item.vlr_procedimento;
+			return value + (parseInt(item.qtd_pedido, 10) * item.vlr_procedimento);
+		}, 0);
+
+		$scope.objectModel.qtd_total_servicos = _.reduce($scope.objectModel.servicos, function(value, item){
+			return value + parseInt(item.qtd_pedido, 10);
 		}, 0);
 
 		$scope.objectModel.vlr_total_produtos = _.reduce($scope.objectModel.produtos, function(value, item){
@@ -220,6 +225,9 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			postData.id_abertura_caixa 	= $scope.caixa.id;
 			postData.id_plano_conta 	= $scope.configuracoes.id_plano_caixa;
 			postData.dta_ordem_servico 	= moment(postData.dta_ordem_servico, 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
+
+		delete postData.criador.modulosAssociatePage;
+		delete postData.criador.empreendimento_usuario;
 
 		$http.post(baseUrlApi()+"ordem-servico", postData)
 			.success(function(data, status, headers, config) {
