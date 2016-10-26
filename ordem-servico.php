@@ -253,6 +253,7 @@
 										<thead>
 											<th class="text-center text-middle" width="70">Código</th>
 											<th class="text-middle">Descrição</th>
+											<th class="text-center text-middle" width="60">Qtd.</th>
 											<th class="text-center text-middle" width="90">Valor</th>
 											<th class="text-center text-middle" width="150">Status</th>
 											<th class="text-center text-middle" width="40">
@@ -265,7 +266,7 @@
 										</thead>
 										<tbody>
 											<tr ng-show="(objectModel.servicos == null || objectModel.servicos.length == 0)">
-												<td class="text-center" colspan="5">Nenhum serviço foi adicionado!</td>
+												<td class="text-center" colspan="6">Nenhum serviço foi adicionado!</td>
 											</tr>
 											<tr ng-repeat="item in objectModel.servicos">
 												<td class="text-center text-middle">
@@ -274,9 +275,15 @@
 												<td class="text-middle">
 													{{ item.dsc_procedimento }}
 												</td>
+												<td class="text-center text-middle">
+													<input type="text" class="form-control input-xs text-center"
+														ng-model="item.qtd_pedido" 
+														ng-keyup="recalculaTotais()">
+												</td>
 												<td class="text-right text-middle">
 													<input type="text" class="form-control input-xs text-center"
-														ng-model="item.vlr_procedimento" mask-moeda><!--ng-keyup="recalculaTotais('')"-->
+														ng-model="item.vlr_procedimento" mask-moeda
+														ng-keyup="recalculaTotais()">
 												</td>
 												<td class="text-middle">
 													<select chosen option="status_servico" ng-model="item.cod_status_servico"
@@ -295,6 +302,9 @@
 										<tfoot ng-show="(objectModel.servicos.length > 0)">
 											<th class="text-right text-middle" colspan="2">
 												Total Serviços
+											</th>
+											<th class="text-center text-middle">
+												{{ objectModel.qtd_total_servicos }}
 											</th>
 											<th class="text-right text-middle">
 												R$ {{ objectModel.vlr_total_servicos | numberFormat : 2 : ',' : '.' }}

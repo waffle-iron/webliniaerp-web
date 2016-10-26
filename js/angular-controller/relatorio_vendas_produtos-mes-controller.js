@@ -210,14 +210,15 @@ app.controller('RelatorioTotalVendasCliente', function($scope, $http, $window,$d
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 20 : limit;
 
-    	var query_string = "?group=&emp->id_empreendimento="+ng.userLogged.id_empreendimento;
+    	var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
 
     	if(ng.busca.produtos != ""){
-    		query_string += "&("+$.param({'prd->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
+    		query_string += "&("+$.param({'pro->nome':{exp:"like'%"+ng.busca.produtos+"%' OR fab.nome_fabricante like'%"+ng.busca.produtos+"%'"}})+")";
     	}
 
 		ng.produtos = [];
-		aj.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
+		//aj.get(baseUrlApi()+"estoque/"+offset+"/"+limit+"/"+query_string)
+		aj.get(baseUrlApi()+"produtos/"+ offset +"/"+ limit +"/"+query_string)
 			.success(function(data, status, headers, config) {
 				ng.produtos        = data.produtos ;
 				ng.paginacao.produtos = data.paginacao;

@@ -1113,7 +1113,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			if(!empty(ng.config.cod_identificador_balanca)){
 				var first = Number(ng.busca.codigo.substring(0,1)) ;
 				if(first == Number(ng.config.cod_identificador_balanca) && ng.busca.codigo.length == 13){
-					codigo = ng.busca.codigo.substring(1,7) ;
+					codigo = Number(ng.busca.codigo.substring(1,7));
 					ng.vlr_produto_pesado.valor_string  = ""+Number(ng.busca.codigo.substring(7,12));
 					ng.vlr_produto_pesado.valor = ng.vlr_produto_pesado.valor_string.substring(0,(ng.vlr_produto_pesado.valor_string.length - 2 ))+'.'+ng.vlr_produto_pesado.valor_string.substring((ng.vlr_produto_pesado.valor_string.length - 2 ),ng.vlr_produto_pesado.valor_string.length) ;
 					produto_pesado = true ;

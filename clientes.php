@@ -577,7 +577,7 @@
 												</select>
 											</div>
 										</div>
-										<div class="col-sm-4">
+										<div class="col-sm-2">
 											<div class="form-group">
 												<label for="" class="control-label">Contribuinte ICMS</label>
 												<div class="form-group">
@@ -595,7 +595,25 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-sm-4">
+										<div class="col-sm-2">
+											<div class="form-group">
+												<label for="" class="control-label">Isento da I.E.</label>
+												<div class="form-group">
+													<label class="label-radio inline">
+														<input ng-model="cliente.flg_isento_inscricao_estadual" value="0" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Não</span>
+													</label>
+
+													<label class="label-radio inline">
+														<input ng-model="cliente.flg_isento_inscricao_estadual" value="1" type="radio" class="inline-radio">
+														<span class="custom-radio"></span>
+														<span>Sim</span>
+													</label>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-2">
 											<div class="form-group">
 												<label for="" class="control-label">Contribuinte IPI</label>
 												<div class="form-group">
