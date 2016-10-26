@@ -784,6 +784,9 @@ app.controller('ProdutosController', function($scope,$timeout, $http, $window, $
 	}
 	ng.existsDateEstoque = function(dta_validade,id_deposito,id){
 		var exists = false ;
+		if(empty(ng.produto.estoque)){
+			ng.produto.estoque = [] ;
+		}
 		$.each(ng.produto.estoque,function(i,x){
 			if( (dta_validade == x.dta_validade) && (id_deposito == x.id_deposito) && (id == x.id) ){
 				exists = true ;
