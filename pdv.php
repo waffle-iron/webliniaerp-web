@@ -652,6 +652,23 @@
 										</div>
 									</div>
 					    		</div>
+
+					    		<div class="row" ng-show="(empreendimento.id == 6 || empreendimento.id == 83) && !pagamento_fulso">
+					    			<div class="col-lg-4">
+					    				<div class="form-group cheque_data">
+											<label class="control-label">Data do Lançamento:</label>
+											<div class="input-group">
+												<input type="text" id="dta_venda" class="form-control" date-picker
+													style="background: #FFF; cursor: pointer;"
+													ng-model="data_venda">
+												<span class="input-group-addon" ng-click="focusData($index)">
+													<i class="fa fa-calendar"></i>
+												</span>
+											</div>
+										</div>
+					    			</div>
+					    		</div>
+
 								<table class="table table-bordered table-condensed table-striped table-hover">
 									<thead ng-show="(clientes.length != 0)">
 										<tr>
@@ -1310,12 +1327,17 @@
 													<td class="text-center"><strong>{{ item.forma_pagamento }}</strong></td>
 													<td class="text-center"><strong>R$ {{ item.total | numberFormat:2:',':'.' }}</strong></td>
 												</tr>
+												<tr ng-show="!lacamentos_formas_pagamento">
+													<td colspan="2" class="text-center">
+														<i class="fa fa-spin fa-spinner"></i> Aguarde, carregando...
+													</td>
+												</tr>
 											</tbody>
 										</table>
 						    		</div>
 					    		</div>
 
-					    		<div class="row">
+					    		<div class="row" ng-show="lacamentos_formas_pagamento">
 						    		<div class="col-sm-12" id="conta_destino">
 						    			<label class="control-label text-center">Conta de destino dos valores em dinheiro</label>
 							    		<select class="form-control input-sm" ng-model="fechamento.id_conta_bancaria">
@@ -1324,31 +1346,31 @@
 									</div>
 						    	</div>
 
-						    	<div class="row" style="margin-top: 10px;">
+						    	<div class="row" style="margin-top: 10px;" ng-show="lacamentos_formas_pagamento">
 						    		<div class="col-sm-12">
 						    			<label class="label-checkbox">
 											<input type="checkbox" 
 												ng-true-value="true" ng-false-value="false" 
 												ng-model="print_report_thermal_printer" 
 												ng-disabled="!enable_print_report_thermal_printer"/>
-											<span class="custom-checkbox"></span> Imprimir Relatório de Fechamento
+											<span class="custom-checkbox"></span> Fechamento na Impressora Térmica
 										</label>
 									</div>
 						    	</div>
 
-								<div class="row" style="margin-top: 10px;">
+								<div class="row" style="margin-top: 10px;" ng-show="print_report_thermal_printer">
 									<div class="col-sm-12">
 										<label class="label-checkbox">
 											<input type="checkbox"
 												   ng-true-value="true" ng-false-value="false"
-												   ng-model="complete_report_thermal_printer"
-												   ng-disabled="!enable_print_report_thermal_printer"/>
+												   ng-model="complete_report_thermal_printer"/>
 											<span class="custom-checkbox"></span> Incluir Movimentações
 										</label>
 									</div>
 								</div>
 						    </div>
-						    <div class="modal-footer">
+
+						    <div class="modal-footer" ng-show="lacamentos_formas_pagamento">
 						  		<button type="button"  data-loading-text=" Aguarde..." id="btn-fechar-caixa"
 			    					class="btn btn-md btn-success btn-block" ng-click="fecharPDV()">
 			    					<i class="fa fa-lock"></i> Fechar PDV
