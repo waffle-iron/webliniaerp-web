@@ -200,7 +200,7 @@ app.controller('FaixaDescontoPermitidoController', function($scope, $http, $wind
 				perfisIndexes += ',';
 		});
 
-		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+")&tpue->id_perfil[exp]=IN("+ perfisIndexes +")";
+		query_string = "?(tue->id_empreendimento[exp]=="+ng.userLogged.id_empreendimento+")&usu->flg_tipo=usuario";
 
 		if(ng.busca.usuarios != ""){
 			query_string += "&"+$.param({'(usu->nome':{exp:"like'%"+ng.busca.usuarios+"%' OR usu.apelido LIKE '%"+ng.busca.usuarios+"%')"}});
