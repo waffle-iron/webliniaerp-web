@@ -35,12 +35,12 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 		offset = offset == null ? 0 : offset  ;
 		limit  = limit == null ? 10 : limit  ;
 		ng.produtos = [] ;
-		var queryString = "";
+		var queryString = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
 		if(!empty(ng.busca.id_produto)){
-			queryString += "?pro->id="+ng.busca.id_produto;
+			queryString += "&pro->id="+ng.busca.id_produto;
 		}
 		if(!empty(ng.busca.id_deposito)){
-			queryString += empty(queryString) ? "?dep->id="+ng.busca.id_deposito : "&dep->id="+ng.busca.id_deposito;
+			queryString +=  "&dep->id="+ng.busca.id_deposito;
 		}if( (empty(ng.grupo_busca)) && (!empty(ng.busca.id_deposito)) ){
 			var url = 'relatorio/produto/estoque/'+ng.userLogged.id_empreendimento+'/produto_deposito';
 			ng. agrupar = false ;

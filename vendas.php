@@ -277,7 +277,10 @@
 													<i class="fa fa-edit"></i>
 												</button>-->
 
-												<button type="button" ng-click="excluirOrcamento(item)" ng-disabled="item.venda_confirmada == 1"  title="Excluir Orçamento" data-toggle="tooltip" class="btn btn-xs btn-danger">
+												<button type="button" ng-click="excluirOrcamento(item)" ng-if="item.venda_confirmada == 0"  title="Excluir Orçamento" data-toggle="tooltip" class="btn btn-xs btn-danger">
+													<i class="fa fa-trash-o"></i>
+												</button>
+												<button type="button" ng-click="cancelarVenda(item)" ng-if="item.venda_confirmada == 1"  title="Cancelar Venda" data-toggle="tooltip" class="btn btn-xs btn-danger">
 													<i class="fa fa-trash-o"></i>
 												</button>
 												<a ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar/Editar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">

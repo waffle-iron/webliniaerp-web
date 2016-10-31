@@ -393,7 +393,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 			ng.disabilitarNovoAtendimento = true ;
 		}
 		ng.lista_atendimento = null ;
-		aj.get(baseUrlApi()+"clinica/atendimentos?cplSql=ta.id_empreendimento="+ng.userLogged.id_empreendimento+" AND date_format(ta.dta_entrada,'%Y-%m-%d') = '"+dta+"' ORDER BY ta.dta_entrada ASC")
+		aj.get(baseUrlApi()+"clinica/atendimentos?cplSql=ta.id_empreendimento="+ng.userLogged.id_empreendimento+" AND ta.flg_atendimento_fake<>1 AND date_format(ta.dta_entrada,'%Y-%m-%d') = '"+dta+"' ORDER BY ta.dta_entrada ASC")
 			.success(function(data, status, headers, config) {
 				ng.lista_atendimento = data ;
 			})
@@ -605,9 +605,11 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 				dta_venda : moment().format('YYYY-MM-DD HH:mm:ss'),
 				id_empreendimento : ng.userLogged.id_empreendimento ,
 				id_status_venda : 5 ,
-				id_atendimento : ng.atendimento_selecionado.id
+				id_atendimento : ng.atendimento_selecionado.id,
+				gerar_atendimento_fake : ( ng.hide_add_procedimentos === true ? 1 : 0 )
     		}
-    		aj.post(baseUrlApi()+"clinica/gravarVenda",{venda:ng.venda})
+
+    	aj.post(baseUrlApi()+"clinica/gravarVenda",{venda:ng.venda})
 			.success(function(data, status, headers, config) {
 				ng.atendimento_selecionado.id_venda = data.id_venda;
 				var item = {

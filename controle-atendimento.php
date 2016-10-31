@@ -493,7 +493,7 @@
 							</div>
 
 							<div class="tab-pane fade" id="procedimentos">
-								<form class="form" role="form" ng-show="!hide_add_procedimentos" >
+								<form class="form" role="form" >
 									<div class="row">
 										<div class="col-lg-3">
 											<div class="form-group" id="id_procedimento">

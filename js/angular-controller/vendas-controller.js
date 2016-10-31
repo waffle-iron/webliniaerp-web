@@ -64,7 +64,10 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 				ng.paginacao.vendas = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
-				console.log(data);
+				if(status == 404)
+					ng.vendas = [];
+				else
+					alert('erro ao buscar vendas');
 			});
 	}
 
@@ -318,6 +321,25 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 		});
 	}
 
+	ng.cancelarVenda = function(item) {
+		dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Tem certeza que deseja cancelar esta venda? Os produtos serão retornados ao estoque e os pagamentos vinculados a ela serão cancelados</strong>');
+		dlg.result.then(function(btn){
+			var post = {
+				id_venda : item.id,
+				id_empreendimento : ng.userLogged.id_empreendimento,
+				id_usuario : ng.userLogged.id
+			};
+			aj.post(baseUrlApi()+"venda/cancelar",post)
+			.success(function(data, status, headers, config) {
+				ng.loadVendas(0,10);
+				ng.mensagens('alert-success','venda  cancelada com sucesso','#alert-list-vendas');
+			})
+			.error(function(data, status, headers, config) {
+				ng.mensagens('alert-danger','Erro ao cancelar venda','#alert-list-vendas');
+			});
+		}, undefined);	
+	}
+
 	ng.excluirOrcamento = function(item) {
 		dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Tem certeza que deseja excluir este orçamento?</strong>');
 
@@ -330,9 +352,7 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 			.error(function(data, status, headers, config) {
 				ng.mensagens('alert-danger','Erro ao excluir orçamento','#alert-list-vendas');
 			});
-		}, undefined);
-
-		
+		}, undefined);	
 	}
 	ng.emptyBusca.usuarios = false ;
 	ng.busca.tipo_usuario  = null ;
