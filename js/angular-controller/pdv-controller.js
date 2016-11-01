@@ -673,7 +673,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.gravarVenda = function(venda){
-		if($("#dta_venda").val() != "") {
+		if(!empty($("#dta_venda").val())) {
 			ng.venda.dta_venda = formatDate($("#dta_venda").val());
 		}
 
