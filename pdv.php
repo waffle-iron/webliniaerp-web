@@ -653,7 +653,7 @@
 									</div>
 					    		</div>
 
-					    		<div class="row" ng-show="(empreendimento.id == 6 || empreendimento.id == 83) && !pagamento_fulso">
+					    		<div class="row" ng-show="(empreendimento.id == 6 || empreendimento.id == 83 || empreendimento.id == 86) && !pagamento_fulso">
 					    			<div class="col-lg-4">
 					    				<div class="form-group cheque_data">
 											<label class="control-label">Data do Lançamento:</label>

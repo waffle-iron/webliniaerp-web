@@ -81,7 +81,7 @@
 						<div class="col-sm-4">
 							<div class="form-group">
 								<label class="control-label">Busca:</label>
-								<input type="text" ng-model="busca.nome" class="form-control">
+								<input type="text" ng-model="busca.nome" ng-enter="loadGrade(0,12)" class="form-control">
 							</div>
 						</div>
 
@@ -132,7 +132,7 @@
 								<div class="seperator"></div>
 								<p>
 									<a style="cursor:pointer" class="hoverBorder" href="<?php echo URL_BASE.NICKNAME?>/detalhes?produto={{item.id_produto}}" >
-										<h4>{{ item.nome }} - {{ item.peso }}</h4>
+										<h4>{{ item.nome_produto }} - {{ item.peso }}</h4>
 									</a>
 									<small>{{ item.descricao }}</small>
 									<h4 class="text-danger">R$ {{ item.valor_produto | numberFormat:2:',':'.' }}</h4>

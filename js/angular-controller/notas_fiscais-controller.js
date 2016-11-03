@@ -198,7 +198,7 @@ app.controller('NotasFiscaisController', function($scope, $http, $window, $dialo
 		var btn = $('#btn-corrigir-nota');
 		btn.button('loading');
 
-		aj.get(baseUrlApi()+'nota_fiscal/corrigir/'+ng.notaCorrigir.dados_emissao.id_ref+'/'+ng.notaCorrigir.correcao+'/'+ng.userLogged.id_empreendimento)
+		aj.post(baseUrlApi()+'nota_fiscal/corrigir/'+ng.notaCorrigir.dados_emissao.id_ref+'/'+ng.userLogged.id_empreendimento, { correcao: ng.notaCorrigir.correcao })
 			.success(function(data, status, headers, config) {
 				$('#modal-cencelar-nota').modal('hide');
 				ng.mensagens('alert-success','<b>Pedido de correção enviado com sucesso</b>','.alert-list-correcoes');

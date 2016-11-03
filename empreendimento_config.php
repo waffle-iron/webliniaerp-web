@@ -1253,16 +1253,58 @@
 
 								<div class="row">
 									<div class="col-sm-4">
-										<div class="input-group">
-											<label class="control-label">Depósito Padrão</label>
-							            	<input ng-model="configuracoes.deposito_padrao.nome_deposito" type="text" class="form-control input-sm">
-							            	<div class="input-group-btn" style="top: 11px;">
-							            		<button tabindex="-1" class="btn btn-sm btn-primary" type="button" ng-click="modalDepositos()">
-							            			<i class="fa fa-sitemap"></i>
-						            			</button>
-							            	</div>
-							        	</div>
+										<div class="form-group">
+											<div class="input-group">
+												<label class="control-label">Depósito Padrão</label>
+								            	<input ng-model="configuracoes.deposito_padrao.nome_deposito" type="text" class="form-control input-sm">
+								            	<div class="input-group-btn" style="top: 11px;">
+								            		<button tabindex="-1" class="btn btn-sm btn-primary" type="button" ng-click="modalDepositos()">
+								            			<i class="fa fa-sitemap"></i>
+							            			</button>
+								            	</div>
+								        	</div>
+										</div>
 									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label for="" class="control-label">Usar depósito padrão p/ estoque da Vitrine?</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_deposito_padrao_vitrine" value="1" name="flg_deposito_padrao_vitrine"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_deposito_padrao_vitrine" value="0" name="flg_deposito_padrao_vitrine"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-4">
+										<div class="form-group">
+											<label for="" class="control-label">Exibir produtos sem estoque na Vitrine?</label>
+											<div class="form-group">
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_exibir_produtos_sem_estoque" value="1" name="flg_exibir_produtos_sem_estoque"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+												<label class="label-radio inline">
+													<input ng-model="configuracoes.flg_exibir_produtos_sem_estoque" value="0" name="flg_exibir_produtos_sem_estoque"   type="radio" class="inline-radio">
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
 									<div class="col-sm-4">
 										<div class="form-group">
 											<label for="" class="control-label">Controlar validade nas Transferências entre Depósitos?</label>
@@ -1280,6 +1322,7 @@
 											</div>
 										</div>
 									</div>
+
 									<div class="col-sm-4">
 										<div class="form-group">
 											<label for="" class="control-label">Permitir realizar venda de produtos sem estoque?</label>

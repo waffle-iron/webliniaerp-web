@@ -1730,14 +1730,14 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			formControl.tooltip();
 		}
 
-		if((ng.pagamento.id_maquineta !=  undefined || ng.pagamento.id_maquineta !=  '') && (ng.pagamento.id_forma_pagamento == 5 || ng.pagamento.id_forma_pagamento == 6 )){
+		if((ng.pagamento.id_maquineta !=  undefined || ng.pagamento.id_maquineta !=  '') && ng.pagamento.id_forma_pagamento == 6 ){
 			var taxas = _.findWhere(ng.maquinetas, {id_maquineta: ng.pagamento.id_maquineta}).taxas;
 			var qtdMaxParcelas = 0;
 			$.each(taxas, function(i, taxa){
-				qtdMaxParcelas = parseInt(taxa.qtd_parcelas_inicio, 10);
+				qtdMaxParcelas = parseInt(taxa.qtd_parcelas_fim, 10);
 			});
 
-			if(ng.pagamento.parcelas > qtdMaxParcelas) {
+			if(parseInt(ng.pagamento.parcelas,10) > qtdMaxParcelas) {
 				error ++ ;
 				$("#numero_parcelas").addClass("has-error");
 

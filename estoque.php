@@ -549,7 +549,7 @@
 
 		<!-- /Modal Produtos-->
 		<div class="modal fade" id="list_produtos" style="display:none">
-  			<div class="modal-dialog">
+  			<div class="modal-dialog modal-lg">
     			<div class="modal-content">
       				<div class="modal-header">
         				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -578,7 +578,7 @@
 											<th>Fabricante</th>
 											<th >Tamanho</th>
 											<th >Sabor/Cor</th>
-											<th >Qtd.</th>
+											<th width="80">Qtd.</th>
 											<th width="80"></th>
 										</tr>
 									</thead>
