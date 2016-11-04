@@ -211,8 +211,8 @@
 									<i class="fa fa-arrows-alt"></i> Tela Inteira
 								</button>
 								<div class="btn-group btn-group-xs" role="group" aria-label="Opções de Visualização">
-									<button type="button" class="btn btn-primary">Grade</button>
-									<button type="button" class="btn btn-default">Lista</button>
+									<button type="button" class="btn btn-default">Grade</button>
+									<button type="button" class="btn btn-primary">Lista</button>
 								</div>
 								<i data-toggle="tooltip" data-placement="left" title="Caixa não configurado!" 
 									class="fa fa-circle {{ (caixa != null) ? 'text-success' : 'text-danger' }}"></i>
@@ -222,7 +222,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-lg-9">
-								<div class="row grade-produtos">
+								<div class="row grade-produtos hide">
 									<div class="col-xs-3">
 										<div class="panel panel-default middle-frame">
 											<div class="panel-body">
@@ -405,7 +405,7 @@
 									</div>
 								</div>
 
-								<div class="row lista-produtos hide">
+								<div class="row lista-produtos">
 									<div class="col-lg-12">
 										<table class="table table-hover table-condensed">
 											<thead>
@@ -421,6 +421,120 @@
 												</tr>
 											</thead>
 											<tbody>
+												<tr>
+													<td>
+														<img src="" class="img-responsive">
+													</td>
+													<td>CABO USB TYPE-C IPHONE 6</td>
+													<td>ACESSÓRIOS</td>
+													<td>PHILIPS</td>
+													<td>ROSA</td>
+													<td>PEQUENO</td>
+													<td>R$ 99,90</td>
+													<td>
+														<!--<button class="btn btn-block btn-xs btn-danger">
+															<i class="fa fa-trash-o"></i> Remover
+														</button>-->
+														<button class="btn btn-block btn-xs btn-primary">
+															<i class="fa fa-check-circle"></i> Selecionar
+														</button>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<img src="" class="img-responsive">
+													</td>
+													<td>CABO USB TYPE-C IPHONE 6</td>
+													<td>ACESSÓRIOS</td>
+													<td>PHILIPS</td>
+													<td>ROSA</td>
+													<td>PEQUENO</td>
+													<td>R$ 99,90</td>
+													<td>
+														<button class="btn btn-block btn-xs btn-danger">
+															<i class="fa fa-trash-o"></i> Remover
+														</button>
+														<!--<button class="btn btn-block btn-xs btn-primary">
+															<i class="fa fa-check-circle"></i> Selecionar
+														</button>-->
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<img src="" class="img-responsive">
+													</td>
+													<td>CABO USB TYPE-C IPHONE 6</td>
+													<td>ACESSÓRIOS</td>
+													<td>PHILIPS</td>
+													<td>ROSA</td>
+													<td>PEQUENO</td>
+													<td>R$ 99,90</td>
+													<td>
+														<!--<button class="btn btn-block btn-xs btn-danger">
+															<i class="fa fa-trash-o"></i> Remover
+														</button>-->
+														<button class="btn btn-block btn-xs btn-primary">
+															<i class="fa fa-check-circle"></i> Selecionar
+														</button>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<img src="" class="img-responsive">
+													</td>
+													<td>CABO USB TYPE-C IPHONE 6</td>
+													<td>ACESSÓRIOS</td>
+													<td>PHILIPS</td>
+													<td>ROSA</td>
+													<td>PEQUENO</td>
+													<td>R$ 99,90</td>
+													<td>
+														<button class="btn btn-block btn-xs btn-danger">
+															<i class="fa fa-trash-o"></i> Remover
+														</button>
+														<!--<button class="btn btn-block btn-xs btn-primary">
+															<i class="fa fa-check-circle"></i> Selecionar
+														</button>-->
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<img src="" class="img-responsive">
+													</td>
+													<td>CABO USB TYPE-C IPHONE 6</td>
+													<td>ACESSÓRIOS</td>
+													<td>PHILIPS</td>
+													<td>ROSA</td>
+													<td>PEQUENO</td>
+													<td>R$ 99,90</td>
+													<td>
+														<!--<button class="btn btn-block btn-xs btn-danger">
+															<i class="fa fa-trash-o"></i> Remover
+														</button>-->
+														<button class="btn btn-block btn-xs btn-primary">
+															<i class="fa fa-check-circle"></i> Selecionar
+														</button>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<img src="" class="img-responsive">
+													</td>
+													<td>CABO USB TYPE-C IPHONE 6</td>
+													<td>ACESSÓRIOS</td>
+													<td>PHILIPS</td>
+													<td>ROSA</td>
+													<td>PEQUENO</td>
+													<td>R$ 99,90</td>
+													<td>
+														<!--<button class="btn btn-block btn-xs btn-danger">
+															<i class="fa fa-trash-o"></i> Remover
+														</button>-->
+														<button class="btn btn-block btn-xs btn-primary">
+															<i class="fa fa-check-circle"></i> Selecionar
+														</button>
+													</td>
+												</tr>
 												<tr>
 													<td>
 														<img src="" class="img-responsive">
