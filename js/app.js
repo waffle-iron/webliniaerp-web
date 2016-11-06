@@ -857,7 +857,11 @@ app.controller('AlertasController', function($scope, $http, $window, UserService
 	ng.loadProdutosVencidos = function() {
 		aj.get(baseUrlApi()+"produtos/vencidos/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
-				ng.itensVencidos = data.produtos;
+				ng.itensVencidos = [];
+
+				$.each(data.produtos, function(i, produto) {
+					ng.itensVencidos.push(produto);
+				});
 
 				if(ng.itensVencidos.length > 0) {
 					var msg;

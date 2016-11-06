@@ -38,13 +38,13 @@ app.controller('RelatorioContasPagar', function($scope, $http, $window, UserServ
 		if(dtaInicial != "" && dtaFinal != ""){
 			dtaInicial = formatDate(dtaInicial);
 			dtaFinal   = formatDate(dtaFinal);
-			queryString = "&"+$.param({data_pagamento:{exp:"BETWEEN '"+dtaInicial+" 00:00:00' AND '"+dtaFinal+" 23:59:59'"}});
+			queryString += "&"+$.param({data_pagamento:{exp:"BETWEEN '"+dtaInicial+" 00:00:00' AND '"+dtaFinal+" 23:59:59'"}});
 		}else if(dtaInicial != ""){
 			dtaInicial = formatDate(dtaInicial);
-			queryString = "&"+$.param({data_pagamento:{exp:">='"+dtaInicial+"'"}});
+			queryString += "&"+$.param({data_pagamento:{exp:">='"+dtaInicial+"'"}});
 		}else if(dtaFinal != ""){
 			dtaFinal = formatDate(dtaFinal);
-			queryString = "&"+$.param({data_pagamento:{exp:"<='"+dtaFinal+"'"}});
+			queryString += "&"+$.param({data_pagamento:{exp:"<='"+dtaFinal+"'"}});
 		}
 
 		if(ng.fornecedor.id != null && ng.fornecedor.id != ""){

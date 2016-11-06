@@ -127,6 +127,24 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item);
 		}
 
+		if(!empty(ng.configuracoes.flg_exibir_produtos_sem_estoque) || ng.configuracoes.flg_exibir_produtos_sem_estoque == 0 ){
+			var item = {
+				nome 				: 'flg_exibir_produtos_sem_estoque',
+				valor 				: ng.configuracoes.flg_exibir_produtos_sem_estoque,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+
+		if(!empty(ng.configuracoes.flg_deposito_padrao_vitrine) || ng.configuracoes.flg_deposito_padrao_vitrine == 0 ){
+			var item = {
+				nome 				: 'flg_deposito_padrao_vitrine',
+				valor 				: ng.configuracoes.flg_deposito_padrao_vitrine,
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			};
+			chaves.push(item);
+		}
+
 		if(!empty(ng.configuracoes.flg_controlar_validade_transferencia) || ng.configuracoes.flg_controlar_validade_transferencia == 0 ){
 			var item = {
 				nome 				: 'flg_controlar_validade_transferencia',

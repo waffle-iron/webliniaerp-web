@@ -313,15 +313,23 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 			});
 	}
 
+	ng.loadDadosVenda = function() {
+		ng.venda = null;
+		aj.get(baseUrlApi()+"venda/"+ params.id_venda)
+			.success(function(data, status, headers, config) {
+				ng.venda = data;
+			});
+	}
+
 	ng.setDadosEmissao = function(){
 		var cod_operacao = ng.NF.dados_emissao.cod_operacao ;
 		$.each(ng.lista_operacao,function(i,v){
 			if(Number(cod_operacao) == Number(v.cod_operacao)){
-				ng.NF.dados_emissao.local_destino = v.num_local_destino;
-				ng.NF.dados_emissao.finalidade_emissao = v.num_finalidade_emissao;
-				ng.NF.dados_emissao.consumidor_final = v.num_consumidor_final;
-				ng.NF.dados_emissao.tipo_documento = v.num_tipo_documento;
-				ng.NF.dados_emissao.presenca_comprador = v.num_presenca_comprador;
+				ng.NF.dados_emissao.local_destino 		= v.num_local_destino;
+				ng.NF.dados_emissao.finalidade_emissao 	= v.num_finalidade_emissao;
+				ng.NF.dados_emissao.consumidor_final 	= (ng.venda.tipo_cadastro == 'pf') ? "1" : "0"; // 0 - Normal | 1 - Consumidor Final
+				ng.NF.dados_emissao.tipo_documento 		= (ng.venda) ? "1" : v.num_tipo_documento; // 0 - Nota de Entrada | 1 - Nota de Saída
+				ng.NF.dados_emissao.presenca_comprador 	= v.num_presenca_comprador;
 			}
 		});
 	}
@@ -350,6 +358,7 @@ app.controller('NotaFiscalController', function($scope, $http, $window, $dialogs
 		
 		ng.loadTransportadoras();
 		ng.loadOperacaoCombo();
+		ng.loadDadosVenda();
 		ng.loadControleNfe('modalidade_frete','lista_modalidade_frete');
 		ng.loadControleNfe('modalidade_frete','lista_modalidade_frete');
 		ng.loadControleNfe('tipo_documento','lista_tipo_documento');

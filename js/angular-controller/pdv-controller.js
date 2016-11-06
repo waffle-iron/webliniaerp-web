@@ -31,7 +31,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	ng.id_venda_ignore  = null ;
 	ng.sendEmailPdf = false ;
 	ng.emailSendPdfVenda = [] ;
-	ng.print_report_thermal_printer = true;
+	ng.print_report_thermal_printer = false;
     ng.complete_report_thermal_printer = false;
 
 	ng.reforco             = {} ;
@@ -285,8 +285,12 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		btn.button('loading');
 
 		var pagamentos   = [] ;
-		var Today        = new Date();
-		var data_atual   = Today.getDate()+"/"+(Today.getMonth()+1)+"/"+Today.getFullYear();
+		if($("#dta_venda").val() == "") {
+			var Today 		= new Date();
+			var data_atual 	= Today.getDate() +"/"+ (Today.getMonth()+1) +"/"+ Today.getFullYear();
+		}
+		else
+			var data_atual = $("#dta_venda").val();
 
 		$.each(ng.recebidos, function(i,v){
 			var parcelas = Number(v.parcelas);
@@ -669,6 +673,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.gravarVenda = function(venda){
+		if(!empty($("#dta_venda").val())) {
+			ng.venda.dta_venda = formatDate($("#dta_venda").val());
+		}
+
 		if(typeof ng.newCliente == 'object'){
 			ng.venda.newCliente = ng.newCliente ;
 			ng.venda.vlr_saldo_anterior = 0 ;
@@ -1721,6 +1729,27 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				.attr("data-original-title", 'O escolha da maquineta é obrigatório');
 			formControl.tooltip();
 		}
+
+		if((ng.pagamento.id_maquineta !=  undefined || ng.pagamento.id_maquineta !=  '') && ng.pagamento.id_forma_pagamento == 6 ){
+			var taxas = _.findWhere(ng.maquinetas, {id_maquineta: ng.pagamento.id_maquineta}).taxas;
+			var qtdMaxParcelas = 0;
+			$.each(taxas, function(i, taxa){
+				qtdMaxParcelas = parseInt(taxa.qtd_parcelas_fim, 10);
+			});
+
+			if(parseInt(ng.pagamento.parcelas,10) > qtdMaxParcelas) {
+				error ++ ;
+				$("#numero_parcelas").addClass("has-error");
+
+				var formControl = $("#numero_parcelas")
+					.attr("data-toggle", "tooltip")
+					.attr("data-placement", "bottom")
+					.attr("title", 'A quantidade de parcelas excede o limite cadastrado para essa maquineta ['+ qtdMaxParcelas +']')
+					.attr("data-original-title", 'A quantidade de parcelas excede o limite cadastrado para essa maquineta ['+ qtdMaxParcelas +']');
+				formControl.tooltip();
+			}
+		}
+
 		if(ng.pagamento.id_forma_pagamento == 2){
 			$.each(ng.cheques, function(i,v){
 				if(!moment(v.data_pagamento).isValid()){
@@ -2073,7 +2102,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 					vlrTotal += item.total;
 				});
 				ng.enable_print_report_thermal_printer = (vlrTotal > 0);
-				ng.print_report_thermal_printer = (vlrTotal > 0);
 			})
 			.error(function(data, status, headers, config) {
 
@@ -2114,7 +2142,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 						if(ng.print_report_thermal_printer)
 							ng.getInformacoesFechamentoCaixa(ng.caixa_aberto.id);
 						else
-							window.location = 'pdv.php';
+							window.location = 'rel_movimentacao_caixa.php?id='+ng.caixa_aberto.id;
 					})
 					.error(function(data, status, headers, config) {
 						alert('Ocorreu um erro');
@@ -2464,7 +2492,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		aj.get(baseUrlApi()+"dados_venda_cnf/"+ng.id_venda+"/"+ng.caixa_open.id_caixa)
 		.success(function(data, status, headers, config) {
 			if( ng.status_websocket == 2 ){
-				if(!empty(data.printerModel)) {
+				if(!empty(ng.caixa.mod_impressora)) {
 					data.empreendimento.nome_empreendimento = removerAcentosSAT(data.empreendimento.nome_empreendimento);
 					data.venda.nome_usuario = removerAcentosSAT(data.venda.nome_usuario);
 					data.venda.nome_cliente = removerAcentosSAT(data.venda.nome_cliente);

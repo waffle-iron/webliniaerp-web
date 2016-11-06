@@ -432,3 +432,9 @@ legend {
 .btn-group-sm > .btn {
 	padding: 5px 4px;
 }
+
+ul.dropdown-menu.notification {
+	max-height: 500px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}

@@ -5,33 +5,56 @@ app.controller('VitrineController', function($scope, $http, $window, $dialogs, U
 
 	ng.baseUrl 		   = baseUrl();
 	ng.userLogged 	   = UserService.getUserLogado();
-	ng.busca		   = {nome:"" , id_categoria:null, id_fabricante:null};
-	ng.paginacao       = {grade:null}; 
-	ng.desejo 		   = {id_usuario:ng.userLogged.id,id_empreendimento:ng.userLogged.id_empreendimento} ;
+	ng.busca		   = { nome: "", id_categoria: null, id_fabricante: null };
+	ng.paginacao       = { grade: null }; 
+	ng.desejo 		   = { id_usuario: ng.userLogged.id, id_empreendimento: ng.userLogged.id_empreendimento };
+
+	ng.configuracoes = {} ;
+	ng.loadConfig = function(){
+		aj.get(baseUrlApi() +"configuracoes/"+ ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {
+				ng.configuracoes = data;
+				ng.loadGrade(0,12);
+			});
+	}
 
 	ng.loadGrade = function(offset,limit) {
 		offset   = offset == null ? 0  : offset;
     	limit    = limit  == null ? 10 : limit;
+		
 		ng.grade = [];
 		ng.errorBusca = false ;
+		
 		var arr = [];
 		
-		var query_string = "";
-		if(ng.busca.nome != ""){
-			query_string += "&"+$.param({'prd->nome':{exp:"LIKE'%"+ng.busca.nome+"%'"}});
+		var query_string = "?tpe->id_empreendimento="+$scope.userLogged.id_empreendimento+"&tp->flg_excluido=0";
+
+		if(!empty(ng.configuracoes.flg_deposito_padrao_vitrine) && ng.configuracoes.flg_deposito_padrao_vitrine == 1) {
+			if(!empty(ng.configuracoes.id_deposito_padrao)) {
+				var sem_estoque_str = "";
+
+				if(!empty(ng.configuracoes.flg_exibir_produtos_sem_estoque) && ng.configuracoes.flg_exibir_produtos_sem_estoque == 1)
+					sem_estoque_str = " OR tde.id_deposito IS NULL";
+
+				query_string += "&"+$.param({'(tde->id_deposito=':{exp: ng.configuracoes.id_deposito_padrao + sem_estoque_str +")"}});
+			}
 		}
 
+    	if($scope.busca.nome != ""){
+    		query_string += "&"+$.param({'(tp->nome':{exp:"like'%"+$scope.busca.nome+"%' OR tf.nome_fabricante like'%"+$scope.busca.nome+"%' OR tc.descricao_categoria like'%"+$scope.busca.nome+"%')"}});
+    	}
+
 		if(ng.busca.id_categoria != null && ng.busca.id_categoria != ""){
-			query_string +="&prd->id_categoria="+ng.busca.id_categoria;
+			query_string += "&tp->id_categoria="+ ng.busca.id_categoria;
 		}
 
 		if(ng.busca.id_fabricante != null && ng.busca.id_fabricante != ""){
-			query_string +="&prd->id_fabricante="+ng.busca.id_fabricante;
+			query_string += "&tp->id_fabricante="+ ng.busca.id_fabricante;
 		}
 
-		aj.get(baseUrlApi()+"grade/"+offset+"/"+limit+"/?grd->id_empreendimento="+ng.userLogged.id_empreendimento+query_string)
+		//aj.get(baseUrlApi()+"grade/"+offset+"/"+limit+"/?grd->id_empreendimento="+ng.userLogged.id_empreendimento+query_string)
+		aj.get(baseUrlApi()+"estoque_produtos/null/"+offset+"/"+limit+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC, tt.nome_tamanho ASC, tcp.nome_cor ASC")
 			.success(function(data, status, headers, config) {	
-						
 				$.each(data.produtos,function(index,value){
 					if(ng.userLogged.perc_venda == "perc_venda_atacado"){
 						value.valor_produto = value.vlr_venda_atacado;
@@ -39,8 +62,6 @@ app.controller('VitrineController', function($scope, $http, $window, $dialogs, U
 						value.valor_produto	= value.vlr_venda_varejo;
 					}else if(ng.userLogged.perc_venda == "perc_venda_intermediario"){
 						value.valor_produto	= value.vlr_venda_intermediario;
-					}else{
-						value.valor_produto = value.vlr_venda_atacado;
 					}
 
 					if(value.img == null){
@@ -58,7 +79,7 @@ app.controller('VitrineController', function($scope, $http, $window, $dialogs, U
 					ng.grade.push(arr);
 				}
 
-				ng.paginacao.grade  = data.paginacao;
+				ng.paginacao.grade = data.paginacao;
 			})
 			.error(function(data, status, headers, config) {
 				ng.grade 			= [];
@@ -69,7 +90,7 @@ app.controller('VitrineController', function($scope, $http, $window, $dialogs, U
 
 	ng.loadFabricantes = function() {
 
-		aj.get(baseUrlApi()+"fabricantes?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"fabricantes?tfe->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {				
 				ng.fabricantes = data.fabricantes ;
 			})
@@ -80,7 +101,7 @@ app.controller('VitrineController', function($scope, $http, $window, $dialogs, U
 
 	ng.loadCategorias = function() {
 
-		aj.get(baseUrlApi()+"categorias?id_empreendimento="+ng.userLogged.id_empreendimento)
+		aj.get(baseUrlApi()+"categorias?tce->id_empreendimento="+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {				
 				ng.categorias = data.categorias ;
 			})
@@ -162,8 +183,7 @@ app.controller('VitrineController', function($scope, $http, $window, $dialogs, U
 		},5000);
 	}
 			
-
-	ng.loadGrade(0,12);
+	ng.loadConfig();
 	ng.loadFabricantes();
 	ng.loadCategorias();
 	ng.loadEmpreendimento(ng.userLogged.id_empreendimento);

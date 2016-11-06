@@ -226,7 +226,7 @@
 							<div class="row">
 								<div class="col-sm-2">
 									<div class="form-group" id="flg_imprimir_sat_cfe">
-										<label for="" class="control-label">Imprimir cupom fiscal?</label>
+										<label for="" class="control-label">Emitir SAT CF-e?</label>
 										<div class="form-group">
 											<label class="label-radio inline">
 												<input ng-model="conta.flg_imprimir_sat_cfe" value="0" type="radio" class="inline-radio">
@@ -242,6 +242,7 @@
 										</div>
 									</div>
 								</div>
+
 								<div class="col-sm-5" ng-show="conta.flg_imprimir_sat_cfe == 1" >
 									<div class="form-group" id="cod_operacao_padrao_sat_cfe">
 										<label class="control-label">Operação</label> 
@@ -252,6 +253,7 @@
 										</select>
 									</div>
 								</div>
+								
 								<div class="col-sm-3" >
 									<div class="form-group">
 										<label class="control-label">Modelo de Impressora</label> 
