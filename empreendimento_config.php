@@ -1323,7 +1323,16 @@
 
 								<div class="tab-content">
 									<div class="tab-pane fade active in" id="prestashop">
+										<br/>
+										<div class="row pull-right">
+											<div class="col-sm-2">
+												<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Aguarde, salvando..." ng-click="sincronizarDadosPrestaShop()" type="submit" class="btn btn-info btn-sm">
+													<i class='fa fa-refresh'></i> Sincronizar
+												</button>
+											</div>
+										</div>
 										<div class="alert alert-config-prestashop" style="display:none"></div>
+										<br/>
 										<div class="row">
 											<div class="col-sm-2">
 												<div class="form-group">
@@ -1659,6 +1668,82 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+
+		<!-- /Modal Processando Venda-->
+		<div class="modal fade" id="modal-sincronizacao-prestashop" style="display:none">
+  			<div class="modal-dialog error modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+						<h4>Sincronizando dados com PrestaShop</h4>
+      				</div>
+				    <div class="modal-body">
+				    	<div ng-if="modalSincronizacaoPrestashop.status == 'init'">
+					    	<div class="row">
+					    		<div class="col-sm-12" id="valor_pagamento">
+					    			Iniciando sincronização <i class='fa fa-refresh fa-spin'></i>
+								</div>
+					    	</div>
+				    	</div>
+				    	<div ng-if="modalSincronizacaoPrestashop.status == 'in_progress'">
+					    	<div class="row">
+					    		<div class="col-sm-12" id="valor_pagamento">
+					    			{{modalSincronizacaoPrestashop.executando_agora.mensagem}} <i class='fa fa-refresh fa-spin'></i>
+								</div>
+					    	</div>
+					    	<div ng-show="modalSincronizacaoPrestashop.executando_agora.loading!=false" class="progress progress-striped" style="margin-top: 5px;margin-bottom: 5px;">
+								<div class="progress-bar" style="width: {{modalSincronizacaoPrestashop.executando_agora.loading}}%;"></div>
+							</div>
+							<b  ng-show="modalSincronizacaoPrestashop.executando_agora.loading!=false" style="display: block;float: right;"> {{ modalSincronizacaoPrestashop.executando_agora.feito }} de {{ modalSincronizacaoPrestashop.executando_agora.qtd }}</b>
+				    	</div>
+				    	<div ng-if="modalSincronizacaoPrestashop.status == 'success'&& modalSincronizacaoPrestashop.error_validade == false">
+					    	<div class="row">
+					    		<div class="col-sm-12" >
+					    			<div class="alert alert-success">
+										<strong>Sucesso!</strong> todos os dados foram sincronizados.
+									</div>
+								</div>
+					    	</div>
+				    	</div>
+				    	<div ng-if="modalSincronizacaoPrestashop.status == 'success'&& modalSincronizacaoPrestashop.error_validade == true">
+					    	<div class="row">
+					    		<div class="col-sm-12" >
+					    			<div class="alert alert-warning">
+										<strong>Atenção!</strong> Não foi possivel atualizar todos os dados, abaixo segue a lista
+									</div>
+								</div>
+					    	</div>
+					    	<div class="row">
+					    		<div class="col-sm-12" >
+					    			<div ng-repeat="(key, value) in modalSincronizacaoPrestashop.dados_sincronizados">
+					    				<div ng-if="value.error_validade">
+					    					<h5 class="text-center">------------------------------------------------<b> {{ key | uppercase }}</b> ------------------------------------------------</h5>
+					    					<div ng-repeat="item  in value.error_validade"  style=" margin-bottom: 10px;">
+					    						#{{ item.id }} - {{ item.nome }}<br/>
+					    						<span ng-repeat="erro in item.errors" style="display:block;color:red">&nbsp;&nbsp;&nbsp;&nbsp;* {{ erro[0] }}</span>
+					    					</div>
+					    				</div>
+					    			</div>	
+								</div>
+					    	</div>
+				    	</div>
+				    	<div ng-if="modalSincronizacaoPrestashop.status == 'error'">
+					    	<div class="row">
+					    		<div class="col-sm-12" >
+					    			<div class="alert alert-danger">
+										<strong>Erro!</strong> ocorreu um erro durante o processo.
+									</div>
+								</div>
+					    	</div>
+				    	</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 
 		<!-- Footer
 		================================================== -->

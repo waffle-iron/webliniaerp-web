@@ -1149,6 +1149,71 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			});
 	}
 
+	/*ng.modalSincronizacaoPrestashop = {
+	    "status": "in_progress",
+	    "executando_agora": {
+	        "mensagem": "Sincronizando categorias",
+	        "loading": 20,
+	        "index": "categorias",
+	        "qtd": 10,
+	        "feito": 2
+	    },
+	    "dados_sincronizados": {
+	        "categorias": {
+	            "status": "in_progress",
+	            "qtd": 10,
+	            "feito": 2
+	        }
+	    }
+	}*/
+
+
+	ng.sincronizarDadosPrestaShop = function(){
+		dlg = $dialogs.confirm('Atenção!!!' ,'<strong>Tem certeza que deseja Sincronizar todos os dados do empreendimento com o PrestaShop?</strong>');
+
+		dlg.result.then(function(btn){
+			ng.modalSincronizacaoPrestashop = {status:'init'};
+			$('#modal-sincronizacao-prestashop').modal('show');
+
+			var post = {
+				script:'teste.php',
+				params:{
+					id_empreendimento: ng.userLogged.id_empreendimento,
+					baseUrlApi : baseUrlApi()
+				}
+			};
+
+			aj.post(baseUrlApi()+"background/start",post )
+			.success(function(data, status, headers, config) {
+				AtualizarStatusSincronizacaoPrestaShop(data.file_progress);
+			})
+			.error(function(data, status, headers, config) {
+				alert('Erro ao iniciar processo');
+				$('#modal-sincronizacao-prestashop').modal('hide');
+			});
+
+		}, undefined);
+	}
+
+	var setintervalStatusSincronizacaoPrestaShop = null ;
+	function AtualizarStatusSincronizacaoPrestaShop(url){
+		setintervalStatusSincronizacaoPrestaShop = setInterval(function(){
+			aj.get(url)
+			.success(function(data, status, headers, config) {
+				ng.modalSincronizacaoPrestashop = data ;
+				if(data.status != 'in_progress')
+					clearInterval(setintervalStatusSincronizacaoPrestaShop);
+			})
+			.error(function(data, status, headers, config) {
+
+			});
+		},2000);
+	}
+
+	ng.isObject = function(item){
+		return (typeof item == 'object') ;
+	}
+
 
 	ng.loadPerfis();
 	ng.loadEmpreendimento(ng.userLogged.id_empreendimento);
