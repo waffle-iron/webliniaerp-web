@@ -123,10 +123,10 @@
 							<div class="detail pull-left relative">
 								<a style="cursor:pointer" class="hoverBorder" ng-click="semEstoque(item)">
 									<span class="hoverBorderWrapper">
-									<img width="263" height="263" src="<?php echo URL_BASE ?>{{ item.img }}" alt="portfolio">
+									<img width="263" height="263" src="<?php echo URL_BASE ?>/assets/imagens/produtos/{{ item.img }}" alt="portfolio">
 										<span class="hoverBorderInner"></span>
-										<span ng-if="item.qtd_real_estoque > 0"  ng-click="showModalDesejo(item)" class="readMore">+ Detalhes</span>
-										<span ng-if="item.qtd_real_estoque <= 0" ng-click="showModalDesejo(item)" class="readMore" style="background:#DB5959">solicite já!</span>
+										<span ng-if="(item.qtd_item - item.qtd_reservada) > 0"  ng-click="showModalDesejo(item)" class="readMore">+ Detalhes</span>
+										<span ng-if="(item.qtd_item - item.qtd_reservada) <= 0" ng-click="showModalDesejo(item)" class="readMore" style="background:#DB5959">solicite já!</span>
 									</span>
 								</a>
 								<div class="seperator"></div>
@@ -137,7 +137,7 @@
 									<small>{{ item.descricao }}</small>
 									<h4 class="text-danger">R$ {{ item.valor_produto | numberFormat:2:',':'.' }}</h4>
 								<p>
-								<div class="ribbon-wrapper" style="width: 100px;height: 100px;" ng-if="item.qtd_real_estoque <= 0">
+								<div class="ribbon-wrapper" style="width: 100px;height: 100px;" ng-if="(item.qtd_item - item.qtd_reservada) <= 0">
 									<div style="width: 134px;" class="ribbon-inner shadow-pulse bg-danger">
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Esgotado
 									</div>

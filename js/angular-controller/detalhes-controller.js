@@ -12,9 +12,12 @@ app.controller('DetalhesController', function($scope, $http, $window, $dialogs, 
 	var params         = getUrlVars();
 
 	ng.loadProduto = function() {
+		var query_string = "?tpe->id_empreendimento="+$scope.userLogged.id_empreendimento+"&tpe->id_produto="+params.produto+"&tp->flg_excluido=0";
 
-		aj.get(baseUrlApi()+"grade/produto/" + params.produto + "?grd->id_empreendimento="+ng.userLogged.id_empreendimento)
-			.success(function(data, status, headers, config) {				
+		aj.get(baseUrlApi()+"estoque_produtos/null/"+0+"/"+1+"/"+query_string+"&cplSql= ORDER BY tp.nome ASC, tt.nome_tamanho ASC, tcp.nome_cor ASC")
+		//aj.get(baseUrlApi()+"grade/produto/" + params.produto + "?grd->id_empreendimento="+ng.userLogged.id_empreendimento)
+			.success(function(data, status, headers, config) {		
+				data = data.produtos[0];
 				if(ng.userLogged.perc_venda == "perc_venda_atacado"){
 					data.valor_produto = data.vlr_venda_atacado;
 				}else if(ng.userLogged.perc_venda == "perc_venda_varejo"){

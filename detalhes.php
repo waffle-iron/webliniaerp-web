@@ -58,8 +58,8 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="detail pull-left relative">
-						<img src="<?php echo URL_BASE ?>{{produto.img}}"> <!--750x730-->
-						<div class="ribbon-wrapper" style="width: 100px;height: 100px;" ng-if="produto.qtd_real_estoque <= 0">
+						<img src="<?php echo URL_BASE ?>/assets/imagens/produtos/{{produto.img}}"> <!--750x730-->
+						<div class="ribbon-wrapper" style="width: 100px;height: 100px;" ng-if="(produto.qtd_item - produto.qtd_reservada) <= 0">
 							<div style="width: 134px;" class="ribbon-inner shadow-pulse bg-danger">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Esgotado
 							</div>
@@ -70,7 +70,7 @@
 				<div class="col-sm-6">
 					<div class="row">
 						<div class="col-sm-12">
-							<h1>{{ produto.nome }}</h1>
+							<h1>{{ produto.nome_produto }}</h1>
 						</div>
 					</div>
 
@@ -94,9 +94,9 @@
 
 					<div class="row">
 						<div class="col-sm-12">
-							<button type="button" ng-if="exists == false && produto.qtd_real_estoque > 0" ng-click="addCarrinho(produto.id_produto)" class="btn btn-lg btn-success btn-add-carrinho"><i class="fa fa-shopping-cart"></i> Adicionar no carrinho</button>
-							<button type="button" ng-if="exists == true && produto.qtd_real_estoque > 0"  ng-click="delCarrinho(produto.id_produto)" class="btn btn-lg btn-danger btn-del-carrinho"><i class="fa fa-shopping-cart"></i> Retirar do carrinho</button>
-							<button type="button" ng-if="produto.qtd_real_estoque <= 0"  ng-click="semEstoque(produto)" class="btn btn-lg btn-primary btn-del-carrinho"><i class="fa fa-shopping-cart"></i> Solicite já</button>
+							<button type="button" ng-if="exists == false && (produto.qtd_item - produto.qtd_reservada) > 0" ng-click="addCarrinho(produto.id_produto)" class="btn btn-lg btn-success btn-add-carrinho"><i class="fa fa-shopping-cart"></i> Adicionar no carrinho</button>
+							<button type="button" ng-if="exists == true && (produto.qtd_item - produto.qtd_reservada) > 0"  ng-click="delCarrinho(produto.id_produto)" class="btn btn-lg btn-danger btn-del-carrinho"><i class="fa fa-shopping-cart"></i> Retirar do carrinho</button>
+							<button type="button" ng-if="(produto.qtd_item - produto.qtd_reservada) <= 0"  ng-click="semEstoque(produto)" class="btn btn-lg btn-primary btn-del-carrinho"><i class="fa fa-shopping-cart"></i> Solicite já</button>
 						</div>
 					</div>
 				</div>
