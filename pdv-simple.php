@@ -120,10 +120,14 @@
 	    	overflow-y: scroll;
 	    	overflow-x: hidden;
 	    }
+
+	    .error-estoque td {
+			background: #FF9191
+		}
 	</style>
   </head>
 
-  <body class="overflow-hidden" ng-controller="OrdemServicoController" ng-cloak>
+  <body class="overflow-hidden" ng-controller="PdvSimpleController" ng-cloak>
   	<!-- Overlay Div -->
 	<div id="overlay" class="transparent"></div>
 
@@ -201,7 +205,22 @@
 			</div>
 			</div><!-- breadcrumb -->
 
-			<div class="padding-md">
+			<div class="padding-md" ng-if="statusConfig==false">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="alert alert-danger">
+									Não exsite as configurações necessarias para funcionamento do SIMPLE PDV
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+					
+
+			<div class="padding-md" ng-if="statusConfig">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title clearfix">
@@ -211,8 +230,8 @@
 									<i class="fa fa-arrows-alt"></i> Tela Inteira
 								</button>
 								<div class="btn-group btn-group-xs" role="group" aria-label="Opções de Visualização">
-									<button type="button" class="btn btn-default">Grade</button>
-									<button type="button" class="btn btn-primary">Lista</button>
+									<button type="button" class="btn btn-default" ng-class="{'btn-default':tipo_view == 'lista','btn-primary':tipo_view == 'grade'}" ng-click="changeTipoView('grade')">Grade</button>
+									<button type="button" class="btn btn-primary" ng-class="{'btn-default':tipo_view == 'grade','btn-primary':tipo_view == 'lista'}" ng-click="changeTipoView('lista')">Lista</button>
 								</div>
 								<i data-toggle="tooltip" data-placement="left" title="Caixa não configurado!" 
 									class="fa fa-circle {{ (caixa != null) ? 'text-success' : 'text-danger' }}"></i>
@@ -220,192 +239,29 @@
 						</h3>
 					</div>
 					<div class="panel-body">
+						<div class="row" ng-if="out_produtos.length>0">
+							<div class="col-lg-12">
+								<div class="alert alert-danger">
+									Os produtos marcados em vermelho não tem estoque suficiente para a venda
+								</div>
+							</div>
+						</div>
 						<div class="row">
 							<div class="col-lg-9">
-								<div class="row grade-produtos hide">
-									<div class="col-xs-3">
+								<div class="row grade-produtos" ng-show="tipo_view == 'grade'">
+									<div class="col-xs-3" ng-repeat="produto in produtos">
 										<div class="panel panel-default middle-frame">
 											<div class="panel-body">
 												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-primary middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<div class="panel panel-default middle-frame">
-											<div class="panel-body">
-												<div class="text-center container clearfix">
-													<span class="product-name">CABO USB TYPE-C IPHONE 6</span>
-													<span class="product-price">R$ 99,99</span>
+													<span class="product-name">{{ produto.nome_produto }}</span>
+													<span class="product-price">R$ R$ {{ produto.vlr_venda_varejo | numberFormat:2:',':'.' }}</span>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 
-								<div class="row lista-produtos">
+								<div class="row lista-produtos" ng-show="tipo_view == 'lista'">
 									<div class="col-lg-12">
 										<table class="table table-hover table-condensed">
 											<thead>
@@ -421,135 +277,21 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr>
+												<tr ng-repeat="produto in produtos" ng-class="{'error-estoque':isOutEstoque(produto.id)}">
 													<td>
 														<img src="" class="img-responsive">
 													</td>
-													<td>CABO USB TYPE-C IPHONE 6</td>
-													<td>ACESSÓRIOS</td>
-													<td>PHILIPS</td>
-													<td>ROSA</td>
-													<td>PEQUENO</td>
-													<td>R$ 99,90</td>
+													<td>{{ produto.nome_produto }}</td>
+													<td>{{ produto.nome_categoria }}</td>
+													<td>{{ produto.nome_fabricante }}</td>
+													<td>{{ produto.sabor }}</td>
+													<td>{{ produto.peso }}</td>
+													<td>R$ {{ produto.vlr_venda_varejo | numberFormat:2:',':'.' }}</td>
 													<td>
-														<!--<button class="btn btn-block btn-xs btn-danger">
-															<i class="fa fa-trash-o"></i> Remover
-														</button>-->
-														<button class="btn btn-block btn-xs btn-primary">
-															<i class="fa fa-check-circle"></i> Selecionar
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img src="" class="img-responsive">
-													</td>
-													<td>CABO USB TYPE-C IPHONE 6</td>
-													<td>ACESSÓRIOS</td>
-													<td>PHILIPS</td>
-													<td>ROSA</td>
-													<td>PEQUENO</td>
-													<td>R$ 99,90</td>
-													<td>
-														<button class="btn btn-block btn-xs btn-danger">
+														<button ng-show="isSelect(produto)" ng-click="removeProduto(produto)" class="btn btn-block btn-xs btn-danger">
 															<i class="fa fa-trash-o"></i> Remover
 														</button>
-														<!--<button class="btn btn-block btn-xs btn-primary">
-															<i class="fa fa-check-circle"></i> Selecionar
-														</button>-->
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img src="" class="img-responsive">
-													</td>
-													<td>CABO USB TYPE-C IPHONE 6</td>
-													<td>ACESSÓRIOS</td>
-													<td>PHILIPS</td>
-													<td>ROSA</td>
-													<td>PEQUENO</td>
-													<td>R$ 99,90</td>
-													<td>
-														<!--<button class="btn btn-block btn-xs btn-danger">
-															<i class="fa fa-trash-o"></i> Remover
-														</button>-->
-														<button class="btn btn-block btn-xs btn-primary">
-															<i class="fa fa-check-circle"></i> Selecionar
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img src="" class="img-responsive">
-													</td>
-													<td>CABO USB TYPE-C IPHONE 6</td>
-													<td>ACESSÓRIOS</td>
-													<td>PHILIPS</td>
-													<td>ROSA</td>
-													<td>PEQUENO</td>
-													<td>R$ 99,90</td>
-													<td>
-														<button class="btn btn-block btn-xs btn-danger">
-															<i class="fa fa-trash-o"></i> Remover
-														</button>
-														<!--<button class="btn btn-block btn-xs btn-primary">
-															<i class="fa fa-check-circle"></i> Selecionar
-														</button>-->
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img src="" class="img-responsive">
-													</td>
-													<td>CABO USB TYPE-C IPHONE 6</td>
-													<td>ACESSÓRIOS</td>
-													<td>PHILIPS</td>
-													<td>ROSA</td>
-													<td>PEQUENO</td>
-													<td>R$ 99,90</td>
-													<td>
-														<!--<button class="btn btn-block btn-xs btn-danger">
-															<i class="fa fa-trash-o"></i> Remover
-														</button>-->
-														<button class="btn btn-block btn-xs btn-primary">
-															<i class="fa fa-check-circle"></i> Selecionar
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img src="" class="img-responsive">
-													</td>
-													<td>CABO USB TYPE-C IPHONE 6</td>
-													<td>ACESSÓRIOS</td>
-													<td>PHILIPS</td>
-													<td>ROSA</td>
-													<td>PEQUENO</td>
-													<td>R$ 99,90</td>
-													<td>
-														<!--<button class="btn btn-block btn-xs btn-danger">
-															<i class="fa fa-trash-o"></i> Remover
-														</button>-->
-														<button class="btn btn-block btn-xs btn-primary">
-															<i class="fa fa-check-circle"></i> Selecionar
-														</button>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img src="" class="img-responsive">
-													</td>
-													<td>CABO USB TYPE-C IPHONE 6</td>
-													<td>ACESSÓRIOS</td>
-													<td>PHILIPS</td>
-													<td>ROSA</td>
-													<td>PEQUENO</td>
-													<td>R$ 99,90</td>
-													<td>
-														<!--<button class="btn btn-block btn-xs btn-danger">
-															<i class="fa fa-trash-o"></i> Remover
-														</button>-->
-														<button class="btn btn-block btn-xs btn-primary">
+														<button ng-show="!isSelect(produto)" class="btn btn-block btn-xs btn-primary" ng-click="addProduto(produto)">
 															<i class="fa fa-check-circle"></i> Selecionar
 														</button>
 													</td>
@@ -560,16 +302,20 @@
 								</div>
 							</div>
 							<div class="col-lg-3 visible-lg clearfix">
-								<h5 class="text-right">10 iten(s) selecionados</h5>
-								<h3 class="text-right">R$ 999.999,99</h3>
+								<h5 class="text-right">{{ total_itens }} iten(s) selecionados</h5>
+								<h3 class="text-right">R$ {{ vlrTotalCompra | numberFormat:2:',':'.' }}</h3>
 
 								<div class="clearfix padding-sm"></div>
 
-								<button type="button" class="btn btn-block btn-lg btn-success">
+								<button ng-click="efetivarCompra()" type="button" id="btn-fazer-compra" ng-if="total_itens>0" class="btn btn-block btn-lg btn-success">
 									<i class="fa fa-money"></i> Finalizar Venda
 								</button>
 
-								<button type="button" class="btn btn-block btn-lg btn-danger">
+								<button  type="button" id="btn-fazer-compra"  ng-if="total_itens==0" ng-disabled="true" class="btn btn-block btn-lg btn-success">
+									<i class="fa fa-money"></i> Finalizar Venda
+								</button>
+
+								<button type="button" ng-disabled="total_itens==0" class="btn btn-block btn-lg btn-danger">
 									<i class="fa fa-times-circle"></i> Cancelar Venda
 								</button>
 							</div>
@@ -592,6 +338,32 @@
 				</div>
 			</div>
 		</div><!-- /main-container -->
+
+		<!-- /Modal Processando Venda-->
+		<div class="modal fade" id="modal_progresso_venda" style="display:none">
+  			<div class="modal-dialog error modal-md">
+    			<div class="modal-content">
+      				<div class="modal-header">
+						<h4>Processando Venda</h4>
+      				</div>
+
+				    <div class="modal-body">
+				    	<div class="alert alert-reforco" style="display:none"></div>
+
+				    	<div class="row">
+				    		<div class="col-sm-6" id="valor_pagamento">
+				    		<p>
+				    			<strong id="text_status_venda">Verificando estoque</strong><img src="assets/imagens/progresso_venda.gif">
+				    		</p>
+							</div>
+				    	</div>
+				    </div>
+			  	</div>
+			  	<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<!-- Footer
 		================================================== -->
@@ -689,6 +461,9 @@
 
 	<script src='js/agenda/lib/moment.min.js'></script>
 
+	<!-- accounting -->
+	<script type="text/javascript" src="js/accounting.min.js"></script>
+
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script type="text/javascript" src="bower_components/angular-ui-utils/mask.min.js"></script>
@@ -704,7 +479,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/ordem_servico-controller.js?v=<?php echo filemtime('js/angular-controller/ordem_servico-controller.js') ?>"></script>
+	<script src="js/angular-controller/pdv_simple-controller.js?v=<?php echo filemtime('js/angular-controller/pdv_simple-controller.js') ?>"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
 	<script type="text/javascript"></script>
