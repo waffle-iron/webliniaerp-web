@@ -1,4 +1,4 @@
-app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$filter, UserService){
+app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$filter, UserService,PrestaShop){
 
 	var ng = $scope
 		aj = $http;
@@ -153,11 +153,13 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		}
 
 		var validar_validade = true ;
+		var postPrestaShop = {produtos:[]};
 		$.each(ng.entradaEstoque,function(i,item){
 			if(item.validades == undefined){
 				validar_validade = false;
 				return;
 			}
+			postPrestaShop.produtos.push(item.id_produto);
 		});
 
 		if(!validar_validade){
@@ -218,6 +220,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 							'<strong>Entrada cadastrada com sucesso</strong>',
 							'.alert-entrada-lista');
 				ng.loadEntradas(0,20);
+				PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 				// ng.showModalPrecos(); // Inativado temporariamente
 			})
 			.error(function(data, status) {

@@ -107,10 +107,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.dadosOrcamento = orcamento ;
 				ng.caixa.depositos = [ng.config.id_deposito_padrao] ;
 			}
-			if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa)) {
+			if(Number(data.cliente.id) != Number(ng.config.id_cliente_movimentacao_caixa))
 				ng.cliente = data.cliente;
-				ng.setMargemAplicada();
-			}
 			$.each(orcamento.itens,function(i,v){
 				v.valor_desconto_real = Number(v.valor_desconto)/100;
 				v.flg_desconto        = Number(v.desconto_aplicado);
@@ -540,7 +538,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			})
 			.error(function(data, status, headers, config) {
 				alert('Caixa fechado, tente salvar a venda novamente!');
-				//window.location = 'pdv.php';
+				// window.location = 'pdv.php';
 			}); 
 	}
 
@@ -1345,7 +1343,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			})
 			.error(function(data, status, headers, config) {
 				alert('Caixa fechado, tente salvar a venda novamente!');
-				//window.location = 'pdv.php';
+				// window.location = 'pdv.php';
 			});
 		
 
@@ -1519,7 +1517,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			})
 			.error(function(data, status, headers, config) {
 				alert('Caixa fechado, tente salvar a venda novamente!');
-				//window.location = 'pdv.php';
+				// window.location = 'pdv.php';
 			});
 	}
 	/* end */

@@ -1,4 +1,4 @@
-app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
+app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, $window, $dialogs, UserService,ConfigService,PrestaShop){
 	var ng = $scope
 		aj = $http;
 	ng.ctrl = $scope ;
@@ -358,7 +358,9 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 			$('html,body').animate({scrollTop: 0},'slow');
 			error ++ ;
 		}*/
+		var postPrestaShop = {produtos:[]}; 
 		$.each(ng.transferencia.produtos,function(key,item){
+			postPrestaShop.produtos.push(item.id_produto);
 			if(!($.isNumeric(item.qtd_transferida))){
 				$('#td-prd-'+item.id).addClass('has-error');
 				$('#td-prd-'+item.id).find('input').attr("data-placement", "top").attr("title", 'A quantidade para transferência não poder ser vazio').attr("data-original-title", 'A quantidade para transferência não poder ser vazia'); 
@@ -410,6 +412,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 					ng.listaTransferencias.transferencias[index_current_edit] = data[0];
 				else
 					ng.loadtransferencias(0,10);
+				PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');
@@ -418,6 +421,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 				ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
 				$('html,body').animate({scrollTop: 0},'slow');
 	 			ng.loadtransferencias(0,10);
+	 			PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 			});
 		})
 		.error(function(data, status, headers, config) {

@@ -1,4 +1,4 @@
-app.controller('PedidoTransferenciaController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
+app.controller('PedidoTransferenciaController', function($scope, $http, $window, $dialogs, UserService,ConfigService,PrestaShop){
 	var ng = $scope
 		aj = $http;
 	ng.ctrl = $scope ;
@@ -511,7 +511,9 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 		$('.has-error').removeClass('has-error');
 		var error = 0 ;
 		var qtd_atualiza_custo = 0 ;
+		var postPrestaShop = {produtos:[]};
 		$.each(ng.transferencia.produtos,function(key,item){
+			postPrestaShop.produtos.push(item.id_produto);
 			if(!($.isNumeric(item.qtd_recebida))){
 				var id_element = '#td-trasnferencia-qtd-recebida-'+item.id ;
 				$(id_element).addClass('has-error');
@@ -584,6 +586,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 							ng.listaTransferencias.transferencias[index_current_edit] = data[0];
 						else
 							ng.loadtransferencias(0,10);
+						PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 					})
 					.error(function(data, status, headers, config) {
 						btn.button('reset');
@@ -592,6 +595,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 						ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
 						$('html,body').animate({scrollTop: 0},'slow');
 			 			ng.loadtransferencias(0,10);
+			 			PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 					});
 				})
 				.error(function(data, status, headers, config) {
@@ -630,6 +634,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 						ng.listaTransferencias.transferencias[index_current_edit] = data[0];
 					else
 						ng.loadtransferencias(0,10);
+					PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 				})
 				.error(function(data, status, headers, config) {
 					btn.button('reset');
@@ -638,6 +643,7 @@ app.controller('PedidoTransferenciaController', function($scope, $http, $window,
 					ng.mensagens('alert-success','<b>transferência realizada com sucesso</b>','.alert-transferencia-lista');
 					$('html,body').animate({scrollTop: 0},'slow');
 		 			ng.loadtransferencias(0,10);
+		 			PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 				});
 			})
 			.error(function(data, status, headers, config) {

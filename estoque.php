@@ -1082,6 +1082,11 @@
 	<!-- Extras -->
 	<script src="js/extras.js"></script>
 
+	<!-- Moment -->
+	<script src="js/moment/moment.min.js"></script>
+
+	<script src="js/jquery.noty.packaged.js"></script>
+
 	<!-- UnderscoreJS -->
 	<script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
 
