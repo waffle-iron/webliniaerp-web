@@ -123,7 +123,7 @@
 					<div class="detail">
 						<strong>{{ userLogged.nme_usuario }}</strong>
 						<ul class="list-inline">
-							<li><a href="#">{{ userLogged.nome_empreendimento }}</a></li>
+							<li><a href="#">[{{ userLogged.id_empreendimento }}] {{ userLogged.nome_empreendimento }}</a></li>
 						</ul>
 					</div>
 				</div><!-- /user-block -->

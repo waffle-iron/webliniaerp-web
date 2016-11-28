@@ -226,7 +226,7 @@
 												<div class="col-sm-2">
 													<div class="form-group" id="codigo_barra">
 														<label class="control-label"><i class="fa fa-barcode"></i> Código de Barras</label>
-														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.codigo_barra" type="text"  class="form-control input-sm" onKeyPress="return SomenteNumero(event);">
+														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.codigo_barra" type="text"  class="form-control input-sm" >
 													</div>
 												</div>
 
