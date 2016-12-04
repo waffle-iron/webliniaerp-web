@@ -36,7 +36,8 @@ app.controller('ProdutosController', function($scope,$timeout, $http, $window, $
 					perc_venda_varejo: 0
 		}],
 		combinacoes : [],
-		categorias : []
+		categorias : [],
+		flg_controlar_lote : 1
 	};
 
 	ng.produto 			= angular.copy(produtoTO)  ;
@@ -332,7 +333,6 @@ app.controller('ProdutosController', function($scope,$timeout, $http, $window, $
 		$(".has-error").removeClass("has-error");
 
 		ng.produto.id_empreendimento = ng.userLogged.id_empreendimento;
-
 		var produto = angular.copy(ng.produto) ;
 
 		produto.descricao = $('#descricao_html').trumbowyg('html');
@@ -392,7 +392,8 @@ app.controller('ProdutosController', function($scope,$timeout, $http, $window, $
 						id           : item.id,
 						id_produto   : item.id_produto,
 						dta_validade : item.dta_validade,
-						qtd_ivn      : qtd_ivn
+						qtd_ivn      : qtd_ivn,
+						lote         : item.lote
 					});
 				}
 			});
@@ -837,6 +838,19 @@ app.controller('ProdutosController', function($scope,$timeout, $http, $window, $
 			}
 		}
 
+		if(empty(ng.inventario_novo.lote) && Number(ng.produto.flg_controlar_lote) == 1){
+			error ++ ;
+			if(!ng.existsDateEstoque(dta_validade,ng.inventario_novo.id_deposito,ng.inventario_novo.id)){
+				$("#inventario_novo_lote").addClass("has-error");
+				var formControl = $('#inventario_novo_lote')
+					.attr("data-toggle", "tooltip")
+					.attr("data-placement", "bottom")
+					.attr("title", 'Informe o lote')
+					.attr("data-original-title", 'Informa o lote');
+				formControl.tooltip();
+			}
+		}
+
 		if(error > 0)
 			return false;
 
@@ -856,6 +870,7 @@ app.controller('ProdutosController', function($scope,$timeout, $http, $window, $
 			dta_validade  : dta_validade,
 			qtd_ivn       : ng.inventario_novo.qtd_ivn,
 			flg_visivel   : 1 ,
+			lote   		  : ( empty(ng.inventario_novo.lote) ? null :  ng.inventario_novo.lote ),
 		}
 
 		ng.produto.estoque.push(item);
