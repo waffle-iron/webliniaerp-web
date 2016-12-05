@@ -387,6 +387,27 @@
 											</div>
 										</div>
 										<div class="tab-pane fade" id="estoque">
+											<div class="row">
+												<div class="col-sm-3">
+													<div class="form-group">
+														<label for="" class="control-label">Controlar lote ?</label>
+														<div class="form-group">
+															<label class="label-radio inline">
+																<input ng-model="produto.flg_controlar_lote"  name="controlar_lote" value="1" type="radio" class="inline-radio">
+																<span class="custom-radio"></span>
+																<span>sim</span>
+															</label>
+															<label class="label-radio inline">
+																<input ng-model="produto.flg_controlar_lote"  name="controlar_lote" value="0" type="radio" class="inline-radio">
+																<span class="custom-radio"></span>
+																<span>não</span>
+															</label>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
 											<div ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="row">
 												<div class="col-sm-3" id="inventario_novo_deposito">
 													<label class="control-label">Depósito</label>
@@ -416,13 +437,19 @@
 														<input ng-model="inventario_novo.dta_validade" ui-mask="99/99/9999"  type="text" class="form-control input-xs">
 													</div>
 												</div>
+												<div class="col-sm-1" ng-if="produto.flg_controlar_lote==1">
+													<div class="form-group" id="inventario_novo_lote">
+														<label class="control-label" >Lote</label>
+														<input ng-model="inventario_novo.lote" type="text" class="form-control input-xs">
+													</div>
+												</div>
 												<div class="col-sm-1">
 													<div class="form-group" id="inventario_novo_qtd">
 														<label class="control-label">Qtd.</label>
 														<input ng-model="inventario_novo.qtd_ivn" onkeypress="return SomenteNumero(event);" type="text" class="form-control input-xs">
 													</div>
 												</div>
-												<div class="col-sm-2">
+												<div class="col-sm-1">
 													<label class="control-label">&nbsp;</label>
 													<div class="form-group" >
 														<button data-loading-text="Aguarde..." ng-click="addNovoInventario()" type="submit" id="btn-novo_inventario" class="btn btn-success btn-xs">
@@ -440,6 +467,7 @@
 																<th class="text-center">Peso/Sabor</th>
 																<th class="text-center">Depósito</th>
 																<th class="text-center">Validade</th>
+																<th class="text-center" ng-if="produto.flg_controlar_lote==1">Lote</th>
 																<th class="text-center" width="100">Quantidade</th>
 															</tr>
 														</thead>
@@ -450,6 +478,7 @@
 																<td>{{ value.nome_deposito }}</td>
 																<td class="text-center" ng-if="value.dta_validade != '2099-12-31'">{{ value.dta_validade | dateFormat:'date' }}</td>
 																<td class="text-center" ng-if="value.dta_validade == '2099-12-31'"></td>
+																<td class="text-center" ng-if="produto.flg_controlar_lote==1">{{ value.lote }}</td>
 																<td  ng-if="funcioalidadeAuthorized('alterar_quantidade')" class="text-center" >
 																	<input type="text" ng-if="value.flg_visivel == 1"  onkeypress="return SomenteNumero(event);"   class="form-control input-xs text-center" ng-model="value.qtd_ivn" >
 																	<span ng-if="value.flg_visivel != 1">{{ value.qtd_ivn }}</span>

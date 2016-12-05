@@ -1142,27 +1142,32 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				.success(function(data, status, headers, config) {
 					ng.busca.codigo = "" ;
 					if(data.produtos.length == 1){
-						if(produto_pesado){
-							var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_varejo)) ;
-							var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
-							data.produtos[0].vlr_custo = aux_custo ;
-							data.produtos[0].vlr_custo_real = aux_custo ;
-							data.produtos[0].vlr_venda_varejo = Number(ng.vlr_produto_pesado.valor) ;
+						if(data.produtos[0].flg_controlar_lote!=1){
+							if(produto_pesado){
+								var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_varejo)) ;
+								var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
+								data.produtos[0].vlr_custo = aux_custo ;
+								data.produtos[0].vlr_custo_real = aux_custo ;
+								data.produtos[0].vlr_venda_varejo = Number(ng.vlr_produto_pesado.valor) ;
 
-							var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_atacado)) ;
-							var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
-							data.produtos[0].vlr_custo = aux_custo ;
-							data.produtos[0].vlr_custo_real = aux_custo ;
-							data.produtos[0].vlr_venda_atacado = Number(ng.vlr_produto_pesado.valor) ;
+								var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_atacado)) ;
+								var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
+								data.produtos[0].vlr_custo = aux_custo ;
+								data.produtos[0].vlr_custo_real = aux_custo ;
+								data.produtos[0].vlr_venda_atacado = Number(ng.vlr_produto_pesado.valor) ;
 
-							var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_intermediario)) ;
-							var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
-							data.produtos[0].vlr_custo = aux_custo ;
-							data.produtos[0].vlr_custo_real = aux_custo ;
-							data.produtos[0].vlr_venda_intermediario = Number(ng.vlr_produto_pesado.valor) ;
+								var aux_gramas = (Number(ng.vlr_produto_pesado.valor) / Number(data.produtos[0].vlr_venda_intermediario)) ;
+								var aux_custo  = aux_gramas * data.produtos[0].vlr_custo_real ;
+								data.produtos[0].vlr_custo = aux_custo ;
+								data.produtos[0].vlr_custo_real = aux_custo ;
+								data.produtos[0].vlr_venda_intermediario = Number(ng.vlr_produto_pesado.valor) ;
+							}
+							ng.incluirCarrinho(data.produtos[0]);
+							$('#buscaCodigo').focus();
+						}else{
+							ng.modal_lote = data.produtos[0] ;
+							$('#modal-info-lote').modal('show');
 						}
-						ng.incluirCarrinho(data.produtos[0]);
-						$('#buscaCodigo').focus();
 					}else if((data.produtos.length > 1)){
 						ng.cdb_busca          = { status:true, codigo:codigo } ;
 						ng.showProdutos(true);
@@ -1183,15 +1188,22 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 	}
 
 	ng.addProduto = function(item){
-		item.vlr_venda_atacado = round(item.vlr_venda_atacado,2) ;
-		item.vlr_venda_intermediario = round(item.vlr_venda_intermediario,2) ;
-		item.vlr_venda_varejo = round(item.vlr_venda_varejo,2) ;
-		ng.incluirCarrinho(angular.copy(item));
-		item.qtd_total = "";
-		ng.calcTotalCompra();
-		ng.totalPagamento();
-		ng.calculaTroco();
-		$('#foco').focus()
+		if(item.flg_controlar_lote!=1){
+			item.vlr_venda_atacado = round(item.vlr_venda_atacado,2) ;
+			item.vlr_venda_intermediario = round(item.vlr_venda_intermediario,2) ;
+			item.vlr_venda_varejo = round(item.vlr_venda_varejo,2) ;
+			ng.incluirCarrinho(angular.copy(item));
+			item.qtd_total = "";
+			ng.calcTotalCompra();
+			ng.totalPagamento();
+			ng.calculaTroco();
+			$('#foco').focus()
+		}else{
+			ng.modal_lote = item ;
+			ng.modal_lote.qtd = item.qtd_total ;
+			$('#list_produtos').modal('hide');
+			$('#modal-info-lote').modal('show');
+		}
 	}
 
 	ng.addProdutoAutoComplete = function(item){
@@ -3714,6 +3726,84 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.favorecidos = [];
 			});
 	}
+
+
+	ng.inserirProdutoLote = function(produto){
+		var error = 0 ;
+		$("#modal_lote-lote").removeClass('has-error');
+		$("#modal_lote-lote input").tooltip('destroy');
+		$("#modal_lote-validade").removeClass('has-error');
+		$("#modal_lote-validade input").tooltip('destroy');
+		$("#modal_lote-qtd").removeClass('has-error');
+		$("#modal_lote-qtd input").tooltip('destroy');
+
+		if(empty(produto.lote)){
+			error ++ ;
+			$("#modal_lote-lote").addClass('has-error');
+			var formControl = $("#modal_lote-lote input")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'informe o lote')
+				.attr("data-original-title", 'informe o lote');
+			formControl.tooltip();	
+		}
+
+		if(empty(produto.validade)){
+			error ++
+			$("#modal_lote-validade").addClass('has-error');
+			var formControl = $("#modal_lote-validade input")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'informe a validade')
+				.attr("data-original-title", 'informe o validade');
+			formControl.tooltip();	
+		}
+		if(empty(produto.qtd)){
+			error ++
+			$("#modal_lote-qtd").addClass('has-error');
+			var formControl = $("#modal_lote-qtd input")
+				.attr("data-toggle", "tooltip")
+				.attr("data-placement", "bottom")
+				.attr("title", 'informe a quantidade')
+				.attr("data-original-title", 'informe o quantidade');
+			formControl.tooltip();	
+		}
+
+		if(error > 0){
+			return ;
+		}
+
+		$('#btn-modal-lote-inserir').button('loading');
+
+		var post = {
+					id_empreendimento:ng.userLogged.id_empreendimento,
+		        	id_deposito:ng.caixa.depositos,
+		        	produtos:[produto],
+		        	venda_confirmada : ng.venda_confirmada,
+		        	id_vendedor      : Number(ng.vendedor.id_vendedor),
+		        	id_venda_ignore  : (empty(ng.id_venda_ignore) ? null : ng.id_venda_ignore )
+				 }
+
+		aj.post(baseUrlApi()+"venda/verificaEstoque",post)
+		.success(function(data, status, headers, config) {
+			produto.qtd_total = produto.qtd ;
+			ng.incluirCarrinho(produto);
+			ng.calcTotalCompra();
+			ng.totalPagamento();
+			ng.calculaTroco();
+			$('#modal-info-lote').modal('hide');
+			$('#btn-modal-lote-inserir').button('reset');
+		})
+		.error(function(data, status, headers, config) {
+			$('#btn-modal-lote-inserir').button('reset');
+			if(status == 406)
+				ng.mensagens('alert-danger','Produto com estoque insuficiente','#alert-modal-lote');	
+			else
+				ng.mensagens('alert-danger','erro durante a operação','#alert-modal-lote');	
+		});
+
+	}
+
 
 	$('#list_produtos').on('shown.bs.modal', function () {
 		$('#foco').focus()
