@@ -57,7 +57,7 @@ function sanitizeString($str) {
 				<?php
 
 				$lines = array();
-				$pointer = fopen("bnh.csv", "r");
+				$pointer = fopen("tabela_dm.csv", "r");
 
 				?>
 				<table id="produtos" class="table table-hover table-condesed">
@@ -153,6 +153,7 @@ function sanitizeString($str) {
 												$value = str_replace(array("R$ ","R$", '"'), "", $value);
 												$value = (double)str_replace(",", ".", $value);
 												$value = number_format($value, 2);
+												$value = str_replace(",", "", $value);
 												break;
 											default:
 												$value = $value;
@@ -195,10 +196,10 @@ function sanitizeString($str) {
 			$("button#exportToSQL").on("click", function() {
 				var data = {
 					fields: [],
-					input_filename: "bnh.csv",
+					input_filename: "tabela_dm.csv",
 					output_format: "sql",
-					output_filename: "bnh.sql",
-					table_name: "tmp_produtos_importacao"
+					output_filename: "dm_pharma.sql",
+					table_name: "tmp_produtos_importacao_dm_pharma"
 				};
 				$.each($("select"), function(i, field){
 					data.fields.push({

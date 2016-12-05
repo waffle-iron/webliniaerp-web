@@ -70,6 +70,7 @@ if(isset($_GET) && !empty($_GET)) {
 							$value = str_replace(array("R$ ","R$", '"'), "", $value);
 							$value = (double)str_replace(",", ".", $value);
 							$value = number_format($value, 2);
+							$value = str_replace(",", "", $value);
 							break;
 					}
 				}

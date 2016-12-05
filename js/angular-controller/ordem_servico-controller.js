@@ -324,6 +324,7 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			criador: $scope.userLogged,
 			id_empreendimento: $scope.userLogged.id_empreendimento,
 			cod_status_servico: 4,
+			flg_recorrente: 0,
 			servicos: [],
 			produtos: [],
 			vlr_total_servicos: 0,

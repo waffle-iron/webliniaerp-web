@@ -169,7 +169,7 @@
 			</div><!-- /main-header -->
 
 			<div class="padding-md" style="padding-top: 0px !important;">
-				<div class="panel panel-primary" id="box-novo" style="display:none">
+				<div class="panel panel-primary" id="box-novo"><!-- style="display:none" -->
 					<div class="panel-heading">
 						<i class="fa fa-plus-circle"></i> Nova Ordem de Serviço
 						<div class="pull-right">
@@ -228,6 +228,48 @@
 											<input type="text" class="form-control" readonly="readonly" 
 												style="{{ (objectModel.cliente.vlr_saldo_devedor >= 0) ? 'color: #1A7204;' : 'color: #E62C2C;' }}" 
 												value="R$ {{ objectModel.cliente.vlr_saldo_devedor | numberFormat : 2 : ',' : '.' }}">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group element-group">
+											<label class="control-label">Recorrente?</label>
+											<div class="controls">
+												<label class="label-radio inline">
+													<input type="radio" value="0" ng-model="objectModel.flg_recorrente">
+													<span class="custom-radio"></span>
+													<span>Não</span>
+												</label>
+												<label class="label-radio inline">
+													<input type="radio" value="1" ng-model="objectModel.flg_recorrente">
+													<span class="custom-radio"></span>
+													<span>Sim</span>
+												</label>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-sm-3" ng-show="objectModel.flg_recorrente === '1'">
+										<div class="form-group element-group">
+											<label class="control-label">Periodicidade</label>
+											<select class="form-control" ng-model="objectModel.qtd_meses_recorrencia">
+												<option></option>
+												<option value="1">Mensal</option>
+												<option value="2">Bimestral</option>
+												<option value="3">Trimestral</option>
+												<option value="4">Quadrimestral</option>
+												<option value="6">Semestral</option>
+												<option value="12">Anual</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-sm-1" ng-show="objectModel.flg_recorrente === '1'">
+										<div class="form-group element-group">
+											<label class="control-label">Qtd.</label>
+											<input type="text" class="form-control" ng-model="objectModel.qtd_recorrencias" />
 										</div>
 									</div>
 								</div>

@@ -158,6 +158,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 		var produto = angular.copy(item) ;
 		produto.id_produto = item.id ;
 		produto.qtd_pedida = empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida  ;
+		produto.qtd_transferida = empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida  ;
 		produto.add 	   = item.add == 0 ? 0 : 1 ;
 
 		produto.vlr_custo_real = item.vlr_custo_real ;
