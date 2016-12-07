@@ -162,16 +162,13 @@
 			<div class="main-header clearfix">
 				<div class="page-title">
 					<h3 class="no-margin"><i class="fa fa-columns"></i> Ordem de Serviço</h3>
-					<h6>
-						<i class="fa fa-circle {{ (caixa != null) ? 'text-success' : 'text-danger' }}"></i>
-					</h6>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 
 			<div class="padding-md" style="padding-top: 0px !important;">
-				<div class="panel panel-primary" id="box-novo"><!-- style="display:none" -->
+				<div class="panel panel-primary m-top-md" id="box-novo" style="display:none">
 					<div class="panel-heading">
-						<i class="fa fa-plus-circle"></i> Nova Ordem de Serviço
+						<i class="fa fa-plus-circle"></i> Nova Ordem de Serviço <i class="fa fa-circle {{ (caixa != null) ? 'text-success' : 'text-danger' }}"></i>
 						<div class="pull-right">
 							<a class="btn btn-xs btn-{{(!editing) ? 'success' : 'danger'}} btn-novo" ng-click="showBoxNovo()">
 								<i class="fa {{(!editing) ? 'fa-plus-circle' : 'fa-minus-circle'}}"></i> {{(!editing) ? 'Nova O.S.' : 'Cancelar'}}
@@ -238,12 +235,12 @@
 											<label class="control-label">Recorrente?</label>
 											<div class="controls">
 												<label class="label-radio inline">
-													<input type="radio" value="0" ng-model="objectModel.flg_recorrente">
+													<input type="radio" value="0" ng-model="objectModel.flg_recorrente" ng-disabled="objectModel.id">
 													<span class="custom-radio"></span>
 													<span>Não</span>
 												</label>
 												<label class="label-radio inline">
-													<input type="radio" value="1" ng-model="objectModel.flg_recorrente">
+													<input type="radio" value="1" ng-model="objectModel.flg_recorrente" ng-disabled="objectModel.id">
 													<span class="custom-radio"></span>
 													<span>Sim</span>
 												</label>
@@ -254,7 +251,7 @@
 									<div class="col-sm-3" ng-show="objectModel.flg_recorrente === '1'">
 										<div class="form-group element-group">
 											<label class="control-label">Periodicidade</label>
-											<select class="form-control" ng-model="objectModel.qtd_meses_recorrencia">
+											<select class="form-control" ng-model="objectModel.qtd_meses_recorrencia" ng-disabled="objectModel.id">
 												<option></option>
 												<option value="1">Mensal</option>
 												<option value="2">Bimestral</option>
@@ -266,10 +263,17 @@
 										</div>
 									</div>
 
+									<div class="col-sm-1" ng-show="objectModel.id">
+										<div class="form-group element-group">
+											<label class="control-label text-center">Nº</label>
+											<input type="text" class="form-control" ng-model="objectModel.num_controle" disabled="disabled" />
+										</div>
+									</div>
+
 									<div class="col-sm-1" ng-show="objectModel.flg_recorrente === '1'">
 										<div class="form-group element-group">
-											<label class="control-label">Qtd.</label>
-											<input type="text" class="form-control" ng-model="objectModel.qtd_recorrencias" />
+											<label class="control-label text-center">Qtd.</label>
+											<input type="text" class="form-control" ng-model="objectModel.qtd_recorrencias" ng-disabled="objectModel.id" />
 										</div>
 									</div>
 								</div>
@@ -427,9 +431,19 @@
 						</div>
 
 						<div class="row">
-							<div class="col-lg-6"></div>
-							<div class="col-lg-6 text-right">
-								<h2><small>Valor Total</small><br/>R$ {{ objectModel.vlr_total_os | numberFormat : 2 : ',' : '.' }}</h2>
+							<div class="col-lg-8">
+								<div class="form-group element-group">
+									<label class="control-label">Observações Gerais</label>
+									<textarea class="form-control" rows="6"
+										ng-model="objectModel.dsc_observacoes_gerais"></textarea>
+								</div>
+							</div>
+							<div class="col-lg-4 text-right">
+								<h1>
+									<small>Valor Total da OS</small>
+									<br/>
+									R$ {{ objectModel.vlr_total_os | numberFormat : 2 : ',' : '.' }}
+								</h1>
 							</div>
 						</div>
 					</div>
@@ -454,9 +468,9 @@
 				</div>
 				<!-- /panel -->
 
-				<div class="panel panel-default">
+				<div class="panel panel-default m-top-md">
 					<div class="panel-heading">
-						<i class="fa fa-filter"></i> Opções de Filtro
+						<i class="fa fa-filter"></i> Opções de Filtro <i class="fa fa-circle {{ (caixa != null) ? 'text-success' : 'text-danger' }}"></i>
 						<div class="pull-right">
 							<a class="btn btn-xs btn-{{(!editing) ? 'success' : 'danger'}} btn-novo" ng-click="showBoxNovo()" ng-hide="editing">
 								<i class="fa {{(!editing) ? 'fa-plus-circle' : 'fa-minus-circle'}}"></i> {{(!editing) ? 'Nova O.S.' : 'Cancelar'}}

@@ -27,6 +27,12 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 				id: item.cod_cliente,
 				nome: item.nme_cliente
 			},
+			flg_recorrente: item.flg_recorrente.toString(),
+			qtd_meses_recorrencia: item.qtd_meses_recorrencia.toString(),
+			qtd_recorrencias: item.qtd_recorrencias,
+			num_controle: item.num_controle,
+			id_venda_principal: item.id_venda_principal,
+			dsc_observacoes_gerais: item.dsc_observacoes_gerais,
 			id_empreendimento: $scope.userLogged.id_empreendimento,
 			cod_status_servico: item.cod_status_servico,
 			servicos: [],
@@ -40,6 +46,9 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		loadProdutosByIdOrdemServico();
 		loadServicosByIdOrdemServico();
 		$scope.showBoxNovo(false);
+		setTimeout(function() {
+			$scope.$apply();
+		}, 500);
 	}
 
 	$scope.showModal = function(modal, objectDestination) {
@@ -209,9 +218,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
    		$http.get(baseUrlApi()+"pedido_venda/abrir_caixa/"+ $scope.configuracoes.id_caixa_padrao +"/"+ $scope.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				$scope.caixa = data;
-			})
-			.error(function(data, status, headers, config) {
-				console.log(data, status, headers, config);
 			});
 	}
 
@@ -293,9 +299,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 			.success(function(data, status, headers, config) {
 				$scope.ordens_servico = data.itens;
 				$scope.paginacao.ordens_servico = data.paginacao;
-			})
-			.error(function(data, status, headers, config) {
-				console.log(data, status, headers, config);
 			});
 	}
 
@@ -303,9 +306,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		$http.get(baseUrlApi()+"ordem-servico/"+ $scope.objectModel.id +"/produtos")
 			.success(function(data, status, headers, config) {
 				$scope.objectModel.produtos = data;
-			})
-			.error(function(data, status, headers, config) {
-				console.log(data, status, headers, config);
 			});
 	}
 
@@ -313,9 +313,6 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 		$http.get(baseUrlApi()+"ordem-servico/"+ $scope.objectModel.id +"/servicos")
 			.success(function(data, status, headers, config) {
 				$scope.objectModel.servicos = data;
-			})
-			.error(function(data, status, headers, config) {
-				console.log(data, status, headers, config);
 			});
 	}
 

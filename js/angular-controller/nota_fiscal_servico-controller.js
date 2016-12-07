@@ -215,6 +215,8 @@ app.controller('NotaFiscalServicoController', function($scope, $http, $window, $
 		$http.get(baseUrlApi()+"ordem-servico/"+ getUrlVars().id)
 			.success(function(data, status, headers, config) {
 				$scope.nf.ordem_servico = data;
+				if(empty($scope.nf.outros.discriminacao_servico))
+					$scope.nf.outros.discriminacao_servico = data.dsc_observacoes_gerais;
 				if(getDadosTomador)
 					loadDadosTomador();
 				loadServicos();

@@ -20,6 +20,56 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
      /* inicio - Ações de inventario */
      ng.inventario = {id_usuario_responsavel:ng.userLogged.id,nome_usuario:ng.userLogged.nme_usuario,qtd_total:0,itens:[]} ;
 
+     $("#stock-file").change(function() {
+		var filename = $(this).val().split('\\').pop();
+		$(this).parent().find('span').attr('data-title',filename);
+		$(this).parent().find('label').attr('data-title','Trocar CSV');
+		$(this).parent().find('label').addClass('selected');
+	});
+
+     ng.loadDataFromCSV = function() {
+		ng.inventario.itens = [] ; 
+		$('#form-csv').ajaxForm({
+		 	url: baseUrlApi()+"inventario/importar/csv",
+		 	type: 'POST',
+		 	data: {
+		 		id_empreendimento: ng.userLogged.id_empreendimento
+		 	},
+		 	beforeSend: function() {
+		 		$("#loadDataFromCSV").button('loading');
+		 		$("#csv_estoque").removeClass("has-error");
+		 		$("#csv_estoque").tooltip('destroy');
+		 	},
+		 	success:function(data){
+		 		ng.inventario.itens = data;
+		 		ng.atualizaQtdTotal();
+
+				setTimeout(function() {
+					$scope.$apply();
+				}, 500);
+
+		 		$("#loadDataFromCSV").button('reset');
+		 	},
+		 	error: function(data, status, headers, config){
+		 		$("#loadXMLButton").button('reset');
+		 		
+		 		if(data.status == 406) {
+		 			$("#csv_estoque").addClass("has-error");
+
+					var formControl = $($("#csv_estoque"))
+						.attr("data-toggle", "tooltip")
+						.attr("data-placement", "bottom")
+						.attr("title", data.responseText)
+						.attr("data-original-title", data.responseText);
+					formControl.tooltip();
+		 		}
+		 		else {
+		 			defaulErrorHandler(data, status, headers, config);
+		 		}
+		 	}
+		}).submit();
+	}
+
      ng.validadeAllValidades = function(){
      	var validade = true;
      	$.each(ng.inventario.itens,function(i,item){

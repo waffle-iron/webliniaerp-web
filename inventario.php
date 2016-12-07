@@ -164,7 +164,7 @@
 					<div class="panel-heading"><i class="fa fa-plus-circle"></i> Entre com as quantidades dos produtos</div>
 
 					<div class="panel-body">
-						<form role="form">
+						<form id="form-csv" class="form">
 							<div class="row">
 								<div class="col-sm-2">
 									<div class="form-group" id="dta_contagem">
@@ -189,6 +189,42 @@
 								<div class="col-sm-6">
 									<label class="control-label">Responsável</label>
 									<input ng-model="inventario.nome_usuario" type="text" class="form-control input-sm" readonly="readonly" style="background-color: #FFF;">
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group" id="csv_estoque">
+										<label class="control-label" 
+											ng-show="editing == false || (inventario.csv_estoque == '' || inventario.csv_estoque == null)">
+											<i class="fa fa-file-text-o"></i> Arquivo CSV
+										</label>
+										<a href="assets/arquivos_nfe/{{ inventario.csv_estoque }}"  target="_blank">
+											<label style="cursor: pointer;" class="control-label" 
+												ng-hide="editing == false || (inventario.csv_estoque == '' || inventario.csv_estoque == null)">
+												<i class="fa fa-file-text-o"></i> Arquivo CSV
+											</label>
+										</a>
+										<div class="upload-file">
+											<input id="stock-file" name="stock-file" class="foto-nota" type="file" data-file="inventario.foto" accept="text/xml"/>
+											<label data-title="Selecione..." for="stock-file" style="background-color: #eee;">
+												<span data-title="{{ inventario.csv_estoque }}"></span>
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-4">
+									<div class="form-group">
+										<label class="control-label"><br/></label>
+										<div class="controls">
+											<button id="loadDataFromCSV" type="button" class="btn btn-sm btn-info" 
+												ng-click="loadDataFromCSV()" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Aguarde, carregando..."
+												data-toggle="tooltip" title="Ao usar essa opção, o sistema só listará os produtos que encontrar ativos no seu empreendimento!">
+												<i class="fa fa-file-text-o"></i> Carregar itens a partir do CSV
+											</button>
+										</div>
+									</div>
 								</div>
 							</div>
 
@@ -706,6 +742,9 @@
 
 	<!-- Jquery -->
 	<script src="js/jquery-1.10.2.min.js"></script>
+
+	<!-- Jquery Form-->
+	<script src='js/jquery.form.js'></script>
 
 	<!-- Bootstrap -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
