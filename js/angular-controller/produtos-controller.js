@@ -1,4 +1,4 @@
-app.controller('ProdutosController', function($scope,$timeout, $http, $window, $dialogs, UserService,FuncionalidadeService,PrestaShop){
+app.controller('ProdutosController', function($scope, $timeout, $http, $window, $dialogs, UserService, FuncionalidadeService, PrestaShop){
 	var ng = $scope
 		aj = $http;
 
@@ -56,10 +56,10 @@ app.controller('ProdutosController', function($scope,$timeout, $http, $window, $
     ng.depositos = [] ;
     ng.empreendimentosAssociados = [{ id_empreendimento : ng.userLogged.id_empreendimento, nome_empreendimento : ng.userLogged.nome_empreendimento }];
 
-    ng.chosen_forma_aquisicao     = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
-    ng.chosen_origem_mercadoria   = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
-    ng.chosen_tipo_tributacao_ipi = [{cod_controle_item_nfe:null,nme_item:'Selecione'}] ;
-    ng.chosen_especializacao_ncm  = [{cod_especializacao_ncm:null,dsc_especializacao_ncm:'Selecione'}] ;
+    ng.chosen_forma_aquisicao     = [{ cod_controle_item_nfe: null, nme_item : 'Selecione' }];
+    ng.chosen_origem_mercadoria   = [{ cod_controle_item_nfe: null, nme_item : 'Selecione' }];
+    ng.chosen_tipo_tributacao_ipi = [{ cod_controle_item_nfe: null, nme_item : 'Selecione' }];
+    ng.chosen_especializacao_ncm  = [{ cod_especializacao_ncm: null, dsc_especializacao_ncm : 'Selecione' }];
 
     ng.funcioalidadeAuthorized = function(cod_funcionalidade){
     	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);

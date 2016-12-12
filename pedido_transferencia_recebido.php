@@ -288,12 +288,15 @@
 															</div>													
 														</td>
 														<td width="80" class="text-center">{{ item.qtd_pedida }}</td>
-														<td  width="100" align="center" id="td-prd-{{ item.id }}" ><input onKeyPress="return SomenteNumero(event);" style="width: 75px"  ng-model="item.qtd_transferida" type="text" class="form-control input-xs" /></td>
+														<td  width="100" align="center" id="td-prd-{{ item.id }}" >
+															<input onKeyPress="return SomenteNumero(event);" style="width: 75px"
+																ng-model="item.qtd_transferida" type="text" class="form-control input-xs" />
+														</td>
 														<td id="td-prd-deposito-saida-{{ item.id }}">
 															<select chosen ng-change="loadestoque(item)" 
-														    option="depositos_chosen"
-														    ng-model="item.id_deposito_saida"
-														    ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
+														    	option="depositos_chosen"
+														    	ng-model="item.id_deposito_saida"
+														    	ng-options="deposito.id as deposito.nme_deposito for deposito in depositos_chosen">
 															</select>
 														</td>
 														<td align="center">

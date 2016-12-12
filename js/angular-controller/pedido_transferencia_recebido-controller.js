@@ -158,7 +158,7 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 		var produto = angular.copy(item) ;
 		produto.id_produto = item.id ;
 		produto.qtd_pedida = empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida  ;
-		produto.qtd_transferida = empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida  ;
+		produto.qtd_transferida = (!empty(produto.qtd_transferida)) ? produto.qtd_transferida : (empty(produto.qtd_pedida) ? 0 : produto.qtd_pedida) ;
 		produto.add 	   = item.add == 0 ? 0 : 1 ;
 
 		produto.vlr_custo_real = item.vlr_custo_real ;
@@ -493,7 +493,9 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 				ng.transferencia.id_status_transferencia = 2 ;
 				ng.transferencia.produtos = [];
 				ng.showBoxNovo(true);
+				
 				$.each(prd.produtos,function(x,i){ prd.produtos[x].id_item = aux[i.id_produto].id_item; });
+
 				prd.produtos = _.sortBy(prd.produtos,'id_item');
 				$.each(prd.produtos,function(x,i){
 					i.qtd_pedida = aux[i.id_produto].qtd_pedida;
@@ -515,13 +517,16 @@ app.controller('PedidoTransferenciaRecebidoController', function($scope, $http, 
 							ng.addProdutoByValidade(i,true);
 						else	
 							ng.addProdutoByValidade(i);
-					}else{
-						i.qtd_transferida = null ;
-						ng.addProduto(i);
 					}
+					else
+						ng.addProduto(i);
 				});
 				btn.button('reset');
 				$('html,body').animate({scrollTop: 0},'slow');
+
+				setTimeout(function(){
+					$scope.$apply();
+				},500);
 			})
 			.error(function(data, status, headers, config) {
 				btn.button('reset');

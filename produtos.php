@@ -226,7 +226,10 @@
 												<div class="col-sm-2">
 													<div class="form-group" id="codigo_barra">
 														<label class="control-label"><i class="fa fa-barcode"></i> Código de Barras</label>
-														<input ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto"  ng-model="produto.codigo_barra" type="text"  class="form-control input-sm" >
+														<input type="text" class="form-control input-sm"
+															onkeydown="bloquearCtrlJ(event)"
+															ng-disabled="configuracao.id_produto_debito_anterior_cliente == produto.id_produto" 
+															ng-model="produto.codigo_barra" >
 													</div>
 												</div>
 
@@ -309,7 +312,7 @@
 														<button ng-click="showBoxNovo(); reset();" type="submit" class="btn btn-danger btn-sm">
 															<i class="fa fa-times-circle"></i> Cancelar
 														</button>
-														<button data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-informacoes-basicas')"type="submit" id="btn-salvar-informacoes-basicas" class="btn btn-success btn-sm">
+														<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Salvando, Aguarde..." ng-click="salvar('btn-salvar-informacoes-basicas')"type="submit" id="btn-salvar-informacoes-basicas" class="btn btn-success btn-sm">
 															<i class="fa fa-save"></i> Salvar
 														</button>
 													</div>
@@ -1991,6 +1994,13 @@
 			$(this).parent().find('label').attr('data-title','Trocar foto');
 			$(this).parent().find('label').addClass('selected');
 		});*/
+
+		function bloquearCtrlJ(e){
+			if(e.which === 17 || e.which === 74 || e.keyCode == 13)
+				e.preventDefault();
+			else
+				console.log(e.which);
+		}
 	</script>
 	<?php include("google_analytics.php"); ?>
   </body>

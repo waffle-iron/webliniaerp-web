@@ -27,8 +27,8 @@ app.controller('OrdemServicoController', function($scope, $http, $window, $dialo
 				id: item.cod_cliente,
 				nome: item.nme_cliente
 			},
-			flg_recorrente: item.flg_recorrente.toString(),
-			qtd_meses_recorrencia: item.qtd_meses_recorrencia.toString(),
+			flg_recorrente: (!empty(item.flg_recorrente)) ? item.flg_recorrente.toString() : 0,
+			qtd_meses_recorrencia: (!empty(item.qtd_meses_recorrencia)) ? item.qtd_meses_recorrencia.toString() : null,
 			qtd_recorrencias: item.qtd_recorrencias,
 			num_controle: item.num_controle,
 			id_venda_principal: item.id_venda_principal,
