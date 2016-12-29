@@ -167,7 +167,7 @@
 					<span class="shortcut-icon">
 						<i class="fa fa-table"></i>
 					</span>
-					<span class="text">Mesas</span>
+					<span class="text">Posições</span>
 				</a>
 				<a href="ordem-servico.php" class="shortcut-link">
 					<span class="shortcut-icon">

@@ -25,6 +25,28 @@ app.controller('NotaFiscalServicoController', function($scope, $http, $window, $
 
 		$http.get(baseUrlApi()+"regras_servico/"+offset+"/"+limit+encodeURI(queryString) )
 			.success(function(data, status, headers, config) {
+				$.each(data.regras, function(i,item){
+					data.regras[i].prc_tributos = 0;
+
+					if(item.flg_retem_cofins === 1)
+						data.regras[i].prc_tributos += item.prc_retencao_cofins;
+
+					if(item.flg_retem_csll === 1)
+						data.regras[i].prc_tributos += item.prc_retencao_csll;
+					
+					if(item.flg_retem_inss === 1)
+						data.regras[i].prc_tributos += item.prc_retencao_inss;
+					
+					if(item.flg_retem_ir === 1)
+						data.regras[i].prc_tributos += item.prc_retencao_ir;
+					
+					if(item.flg_retem_iss_pf === 1 || item.flg_retem_iss_pj === 1)
+						data.regras[i].prc_tributos += item.prc_retencao_iss;
+					
+					if(item.flg_retem_pis === 1)
+						data.regras[i].prc_tributos += item.prc_retencao_pis;
+				});
+
 				$scope.regrasTributacao = data.regras;
 				$scope.paginacao.regras_tributacao = data.paginacao;
 			})

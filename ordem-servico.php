@@ -393,7 +393,7 @@
 												</td>
 												<td class="text-right text-middle">
 													<input type="text" class="form-control input-xs text-center"
-														ng-model="item.vlr_venda_varejo" mask-moeda 
+														ng-model="item.vlr_venda_varejo" thousands-formatter precision='5'
 														ng-keyup="recalculaTotais()">
 												</td>
 												<td class="text-center text-middle">
@@ -539,7 +539,8 @@
 								<th class="text-center text-middle" width="130">Total Serviços</th>
 								<th class="text-center text-middle" width="130">Total Produto</th>
 								<th class="text-center text-middle" width="130">Total Pedidos</th>
-								<th class="text-center text-middle" width="150">Status</th>
+								<th class="text-center text-middle" width="150">Status OS</th>
+								<th class="text-center text-middle" width="150">Status NFS-e</th>
 							</thead>
 							<tbody>
 								<tr ng-repeat="item in ordens_servico">
@@ -585,6 +586,9 @@
 										<i class="fa fa-circle fa-lg text-{{ item.clr_class }}" 
 											tooltip data-original-title="{{ item.dsc_status }}"></i>
 										{{ item.dsc_status }}
+									</td>
+									<td class="text-middle text-center">
+										{{ item.dsc_status_nfs }}
 									</td>
 								</tr>
 							</tbody>

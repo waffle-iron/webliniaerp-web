@@ -11,6 +11,7 @@ app.controller('ProdutosController', function($scope, $timeout, $http, $window, 
 		id_tamanho : null,
 		id_cor     : null,
 		flg_produto_composto : 0,
+		flg_controlar_lote: 0,
 		estoque:[],
 		peso_frete : 0 ,
 		largura_pacote : 0 ,
@@ -36,8 +37,7 @@ app.controller('ProdutosController', function($scope, $timeout, $http, $window, 
 					perc_venda_varejo: 0
 		}],
 		combinacoes : [],
-		categorias : [],
-		flg_controlar_lote : 1
+		categorias : []
 	};
 
 	ng.produto 			= angular.copy(produtoTO)  ;

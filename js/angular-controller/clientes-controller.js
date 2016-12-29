@@ -380,7 +380,7 @@ app.controller('ClientesController', function($scope, $http, $window, $dialogs, 
 			
 			 aj.get('https://maps.googleapis.com/maps/api/geocode/json?region=BR&address='+address)
 				.success(function(data, status, headers, config) {
-					if(data.status = 'OK'){
+					if(data.status = 'OK' && !empty(data.results)){
 						cliente.num_latitude  = data.results[0].geometry.location.lat ;
 						cliente.num_longitude = data.results[0].geometry.location.lng ;
 						ng.ajaxSalvar(cliente,url,msg,btn);

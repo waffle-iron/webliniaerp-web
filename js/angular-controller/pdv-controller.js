@@ -2843,6 +2843,9 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		btn.button('loading');
 		//ng.new_cliente.id_perfil = 6 ;
 		var new_cliente = angular.copy(ng.new_cliente);
+		new_cliente.id_estado = ng.empreendimento.cod_estado;
+		new_cliente.id_cidade = ng.empreendimento.cod_cidade;
+
 		if(!empty(new_cliente.dta_nacimento))
 			new_cliente.dta_nacimento = moment(new_cliente.dta_nacimento,'DD-MM-YYYY').format('YYYY-MM-DD');
 		aj.post(baseUrlApi()+"cliente/cadastro/rapido",new_cliente)

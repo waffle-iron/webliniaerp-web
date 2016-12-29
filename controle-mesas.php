@@ -291,13 +291,13 @@
 			<div id="breadcrumb">
 				<ul class="breadcrumb">
 					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
-					 <li class="active"><i class="fa fa-table"></i> Controle de Mesas</li>
+					 <li class="active"><i class="fa fa-table"></i> Controle de Posições</li>
 				</ul>
 			</div><!-- breadcrumb -->
 
 			<div class="main-header clearfix hidden-xs">
 				<div class="page-title">
-					<h3 class="no-margin"><i class="fa fa-table"></i> Controle de Mesas</h3>
+					<h3 class="no-margin"><i class="fa fa-table"></i> Controle de Posições</h3>
 				</div><!-- /page-title -->
 			</div><!-- /main-header -->
 

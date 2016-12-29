@@ -674,6 +674,7 @@
 											<th>Desc. Serviço Municipal</th>
 											<th>UF</th>
 											<th>Município</th>
+											<th>% Tributos</th>
 											<th>Ações</th>
 										</tr>
 									</thead>
@@ -684,6 +685,7 @@
 											<td>{{ item.dsc_servico_municipio }}</td>
 											<td>{{ item.uf }}</td>
 											<td>{{ item.municipio }}</td>
+											<td class="text-center">{{ item.prc_tributos }}%</td>
 											<td width="50" align="center">
 												<button type="button" class="btn btn-xs btn-success" ng-click="selectRegraTributacao(item)">
 													<i class="fa fa-check-square-o"></i> Selecionar
