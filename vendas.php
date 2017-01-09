@@ -256,7 +256,7 @@
 											<td class="text-right">R$ {{ item.vlr_total_venda | numberFormat : '2' : ',' : '.'}}</td>
 											<td class="text-center">
 
-												<a href="separar_venda.php?id_venda={{ item.id }}" ng-if="item.id_status_venda == 1 || item.id_status_venda == 6" type="button" title="Separar venda no estoque" data-toggle="tooltip" class="btn btn-xs btn-info">
+												<a ng-disabled="(item.sistema_integrado =='PrestaShop' && item.pagamentos_confirmados_integracao <= 0)" href="separar_venda.php?id_venda={{ item.id }}" ng-if="(item.id_status_venda == 1 || item.id_status_venda == 6)" type="button" title="Separar venda no estoque" data-toggle="tooltip" class="btn btn-xs btn-info">
 													<i class="fa fa-th"></i>
 												</a>
 
@@ -283,7 +283,7 @@
 												<button type="button" ng-click="cancelarVenda(item)" ng-if="item.venda_confirmada == 1"  title="Cancelar Venda" data-toggle="tooltip" class="btn btn-xs btn-danger">
 													<i class="fa fa-trash-o"></i>
 												</button>
-												<a ng-disabled="item.venda_confirmada == 1" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar/Editar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
+												<a ng-disabled="(item.venda_confirmada == 1) || (item.sistema_integrado =='PrestaShop' && item.pagamentos_confirmados_integracao <= 0)" href="pdv.php?id_orcamento={{ item.id }}" title="Finalizar/Editar orçamento" data-toggle="tooltip" class="btn btn-xs btn-success">
 													<i class="fa fa-desktop"></i>
 												</a>
 												<a  href="nota-fiscal.php?id_venda={{ item.id }}" title="Emitir NF-e" data-toggle="tooltip" class="btn btn-xs btn-info">
