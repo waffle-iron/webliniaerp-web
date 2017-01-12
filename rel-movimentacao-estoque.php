@@ -532,7 +532,7 @@
     <script src="js/app.js"></script>
     <script src="js/auto-complete/AutoComplete.js"></script>
     <script src="js/angular-services/user-service.js"></script>
-	<script src="js/angular-controller/rel-movimentacao-estoque-controller.js"></script>
+	<script src="js/angular-controller/rel-movimentacao-estoque-controller.js?version=<?php echo date("dmY-His", filemtime("js/angular-controller/rel-movimentacao-estoque-controller.js")) ?>"></script>
 
 	<script type="text/javascript">
 		function printDiv(id, pg) {

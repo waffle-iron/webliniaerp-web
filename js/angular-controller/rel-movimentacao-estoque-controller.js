@@ -200,7 +200,7 @@ app.controller('RelatorioTotalProdutoEstoque', function($scope, $http, $window, 
 			query_string = empty(query_string) ? 'WHERE '  : query_string ;
 			query_string  += " dta_movimentacao BETWEEN '"+ng.busca.dta_inicial+" 00:00:00' AND '"+ng.busca.dta_final+" 23:59:59'" ;
 		}
-		query_string = "?cplSql= WHERE "+query_string+" ORDER BY dta_movimentacao ASC" ;
+		query_string = "?cplSql= WHERE "+query_string+" ORDER BY dta_movimentacao ASC, tme.id ASC" ;
     	aj.get(baseUrlApi()+"movimentacao_estoque/"+query_string)
 		.success(function(data, status, headers, config) {
 			var saldo_anterior = 0 ;
