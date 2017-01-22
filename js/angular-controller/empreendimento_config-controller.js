@@ -29,6 +29,37 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
     	{ value:'epson_tm_t20'			, dsc:'EPSON TM T20' 		}
 	];
 
+	ng.status_venda = [
+		{
+			"id": 1,
+			"dsc_status": "Pedido Recebido"
+		},
+		{
+			"id": 2,
+			"dsc_status": "Mercadoria Disponível"
+		},
+		{
+			"id": 3,
+			"dsc_status": "Em Transporte"
+		},
+		{
+			"id": 4,
+			"dsc_status": "Entregue/Finalizado"
+		},
+		{
+			"id": 5,
+			"dsc_status": "Pendente"
+		},
+		{
+			"id": 6,
+			"dsc_status": "Aprovada"
+		},
+		{
+			"id": 7,
+			"dsc_status": "Cancelada"
+		}
+	];
+
 
 	ng.loadPlanoContasSelect = function() {
 	 	ng.plano_contas = [{id:null,dsc_completa:"Selecione"}];
@@ -285,6 +316,20 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 			chaves.push(item);
 		}
 
+		if(!empty(ng.status_venda)){
+			var  status_venda = angular.copy(ng.status_venda) ;
+			$.each(status_venda,function(i,v){
+				status_venda[i].referencias = empty(status_venda[i].referencias) ? [] : parseJSON(status_venda[i].referencias);
+			});
+
+			var item = {
+				nome : 'prestashop_referencia_status_venda',
+				valor: JSON.stringify(status_venda),
+				id_empreendimento	: ng.userLogged.id_empreendimento
+			}
+			chaves.push(item);
+		}
+
 		btn.button('loading');
 		
 		aj.post(baseUrlApi()+"configuracao/save/",{ chaves: chaves })
@@ -398,6 +443,14 @@ app.controller('Empreendimento_config-Controller', function($scope, $http, $wind
 		var error = 0 ;
 		aj.get(baseUrlApi()+"configuracoes/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
+
+				if(!empty(data.prestashop_referencia_status_venda)){
+					var status_venda = parseJSON(data.prestashop_referencia_status_venda);
+					$.each(status_venda,function(i,v){
+						status_venda[i].referencias = JSON.stringify(status_venda[i].referencias);
+					});
+					ng.status_venda = status_venda
+				}
 
 				if(!empty(data.regras_servico_padrao) && typeof parseJSON(data.regras_servico_padrao) == 'object' ){
 					ng.regras_servico_padrao = parseJSON(data.regras_servico_padrao);
