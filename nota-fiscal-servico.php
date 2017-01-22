@@ -530,6 +530,13 @@
 											<input type="text" class="form-control input-sm" readonly="readonly" value="R$ {{ nf.total.vlr_ir | numberFormat : 2 : ',' : '.' }}">
 										</div>
 									</div>
+
+									<div class="col-sm-2">
+										<div class="form-group">
+											<label class="control-label">Valor do CSLL</label>
+											<input type="text" class="form-control input-sm" readonly="readonly" value="R$ {{ nf.total.vlr_csll | numberFormat : 2 : ',' : '.' }}">
+										</div>
+									</div>
 								</div>
 
 								<div class="row">
