@@ -27,7 +27,7 @@ app.controller('DashboardController', function($scope, $http, $window, UserServi
 		};
 
 		ng.funcioalidadeAuthorized = function(cod_funcionalidade){
-    	return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
+    		return FuncionalidadeService.Authorized(cod_funcionalidade,ng.userLogged.id_perfil,ng.userLogged.id_empreendimento);
     	}
 
 		// Gráfico de Acompanhamento de vendas Últimos 12 meses

@@ -703,7 +703,7 @@ app.controller('ControleAtendimentoController', function($scope, $http, $window,
 	}
 
     ng.abrirCaixa = function(){
-   		aj.get(baseUrlApi()+"pedido_venda/abrir_caixa/"+ng.configuracoes.id_caixa_atendimento_clinica+"/"+ng.userLogged.id_empreendimento)
+   		aj.get(baseUrlApi()+"pedido_venda/abrir_caixa/"+ ng.configuracoes.id_caixa_atendimento_clinica +"/"+ng.userLogged.id_empreendimento)
 			.success(function(data, status, headers, config) {
 				ng.caixa_aberto = data ;
 				ng.caixa = data ;

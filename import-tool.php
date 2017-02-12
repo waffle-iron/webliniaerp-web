@@ -57,7 +57,7 @@ function sanitizeString($str) {
 				<?php
 
 				$lines = array();
-				$pointer = fopen("produtos-studiosp.csv", "r");
+				$pointer = fopen("nutricenter.csv", "r");
 
 				?>
 				<table id="produtos" class="table table-hover table-condesed">
@@ -196,10 +196,10 @@ function sanitizeString($str) {
 			$("button#exportToSQL").on("click", function() {
 				var data = {
 					fields: [],
-					input_filename: "produtos-studiosp.csv",
+					input_filename: "nutricenter.csv",
 					output_format: "sql",
-					output_filename: "produtos-studiosp.sql",
-					table_name: "tmp_produtos_importacao_studiosp"
+					output_filename: "produtos-nutricenter.sql",
+					table_name: "tmp_produtos_importacao_nutricenter"
 				};
 				$.each($("select"), function(i, field){
 					data.fields.push({

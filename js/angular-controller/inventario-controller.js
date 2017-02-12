@@ -8,6 +8,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 	ng.entradaEstoque 	   = {};
 	ng.utimosInventarios   = [] ;
 	ng.detalhes            = [];
+	ng.busca_cod_barra     = false ;
 
     ng.editing = false;
 
@@ -485,10 +486,70 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 
    	ng.produtos = [] ;
 
-   	ng.showProdutos = function(){
+   	ng.showProdutos = function(clear){
+   		clear = clear == false ? false : true ;
+   		if(clear)
    		ng.busca.produtos = "" ;
    		ng.loadProdutos(0,10);
    		$('#list_produtos').modal('show');
+   	}
+
+   	ng.addFocus = function(){
+   		ng.cod_barra_busca = '';
+   		$('#focus').focus();
+   		ng.busca_cod_barra = true ;
+   	}
+
+   	ng.blurBuscaCodBarra = function(){
+   		ng.busca_cod_barra = false ;
+   		$.noty.closeAll();
+		var i = noty({
+			timeout : 4000,
+			layout: 'topRight',
+			type: 'warning',
+			theme: 'relax',
+			text: 'Busca por codigo de barra desativada',
+		});
+   	}
+
+   	ng.buscaCodBarra = function(){
+   		if(empty(ng.cod_barra_busca)){
+   			$.noty.closeAll();
+			var i = noty({
+				timeout : 4000,
+				layout: 'topRight',
+				type: 'warning',
+				theme: 'relax',
+				text: 'O codigo de barra não pode ser vazio',
+			});
+   			return ;
+   		}
+    	var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
+
+    	if(ng.busca.produtos != ""){
+    		query_string += "&"+$.param({'codigo_barra':ng.cod_barra_busca});
+    	}
+		aj.get(baseUrlApi()+"produtos"+query_string)
+		.success(function(data, status, headers, config) {
+			if(data.produtos.length == 1){
+				item = data.produtos[0];
+				ng.cod_barra_busca = '';
+				ng.addProduto(item);
+			}else{
+				ng.busca.produtos = ng.cod_barra_busca ;
+				ng.showProdutos(false);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$.noty.closeAll();
+			var i = noty({
+				timeout : 4000,
+				layout: 'topRight',
+				type: 'error',
+				theme: 'relax',
+				text: 'Codigo de barra não corresponde a nenhum produto',
+			});
+		});	
    	}
 
    	ng.loadProdutos = function(offset,limit) {
@@ -498,7 +559,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
     	var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
 
     	if(ng.busca.produtos != ""){
-    		query_string += "&"+$.param({'(nome':{exp:"like'%"+ng.busca.produtos+"%' OR nome_fabricante like'%"+ng.busca.produtos+"%')"}});
+    		query_string += "&"+$.param({'(nome':{exp:"like'%"+ng.busca.produtos+"%' OR nome_fabricante like'%"+ng.busca.produtos+"%' OR codigo_barra='"+ng.busca.produtos+"' )"}});
     	}
 
 		ng.produtos = [];
