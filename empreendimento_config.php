@@ -1472,46 +1472,27 @@
 											</div>
 										</div>
 
-										<!--<div class="row">
-											<div class="col-sm-5">
+										<div class="row">
+											<div class="col-sm-12">
 												<div class="form-group">
 													<div class="table-responsive">
 														<table class="table table-bordered table-condensed table-striped table-hover">
 															<thead>
-																<th width="200">Perfil WebliniaERP</th>
-																<th>ID Perfil PrestaShop</th>
-																<td width="60" align="center">
-																	<button class="btn btn-xs btn-primary" 
-																		ng-click="addPerfilPrestaShop()">
-																		<i class="fa fa-plus-circle"></i>
-																	</button>
-																</td>
+																<th>status webliniaErp</th>
+																<th>Referencia PrestaShop</th>
 															</thead>
 															<tbody>
-																<tr ng-repeat="item in configuracoes.perfisPrestaShop">
-																	<td>
-																		<select chosen
-																		    option="plano_contas"
-																		    allow-single-deselect="true"
-																		    ng-model="item.uf"
-																		    ng-options="item.uf as item.nome for item in estados"">
-																		</select>
-																	</td>
-																	<td><input type="text" ng-model="item.num_inscricao_estadual_st" 
+																<tr ng-repeat="item in status_venda">
+																	<td>{{ item.dsc_status }}</td>
+																	<td><input type="text" ng-model="item.referencias" 
 																		class="form-control input-sm"></td>
-																	<td class="text-center">
-																		<button class="btn btn-xs btn-danger" 
-																			ng-click="deleteInscricoesEstaduais($index)">
-																			<i class="fa fa-trash-o"></i>
-																		</button>
-																	</td>
 																</tr>
 															</tbody>
 														</table>
 													</div>
 												</div>
 											</div>
-										</div>-->
+										</div>
 									</div>
 								</div>
 
