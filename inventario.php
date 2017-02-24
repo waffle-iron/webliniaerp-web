@@ -234,6 +234,7 @@
 							<div class="alert alert-itens" style="display:none"></div>
 
 							<div class="row">
+							
 								<div class="col-sm-12">
 									<table class="table table-bordered table-condensed table-striped table-hover">
 										<thead >
@@ -242,8 +243,11 @@
 												<th>Fabricante</th>
 												<th>Tamanho</th>
 												<th style="width: 100px; text-align: center;" colspan="2">Quantidade</th>
-												<td style="width: 100px; text-align: center;">
+												<td style="width: 200px; text-align: center;">
 													<button class="btn btn-xs btn-primary" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i> Adicionar Item</button>
+
+													<button ng-class="{'btn-info':busca_cod_barra==false,'btn-success':busca_cod_barra==true}" class="btn btn-xs" ng-click="addFocus()"><i class="fa fa-barcode"></i></button>
+
 												</td>
 											</tr>
 										</thead>
@@ -714,7 +718,7 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-
+		<input ng-model="cod_barra_busca" ng-blur="blurBuscaCodBarra(cod_barra_busca)"  class="form-control input-sm" style="position: absolute;top: -100px" id="focus" ng-enter="buscaCodBarra()"/>
 		<!-- Footer
 		================================================== -->
 		<footer>
@@ -780,6 +784,8 @@
 	<script src="js/moment/moment.min.js"></script>
 
 	<script src="js/jquery.noty.packaged.js"></script>
+
+
 
 	<!-- AngularJS -->
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>

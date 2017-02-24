@@ -537,7 +537,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				}
 			})
 			.error(function(data, status, headers, config) {
-				alert('Caixa fechado, tente salvar a venda novamente!');
+				if(status === 404)
+					alert('Caixa fechado, tente salvar a venda novamente!');
+				else
+					alert('Encontramos uma falha ao processar a requisição. Feche esta mensagem e clique em salvar novamente!');
 				// window.location = 'pdv.php';
 			}); 
 	}
@@ -1134,7 +1137,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			
 			//$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+codigo+"%20OR%20prd.id="+codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
 
-			var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&tp->codigo_barra="+ codigo;
+			var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0";
+				query_string += "&("+$.param({'tp->id':{exp:"='"+codigo+"%' OR tp.codigo_barra like '%"+codigo+"%'"}})+")";
 
 			var qtd_minima = ng.config.flg_controlar_estoque != undefined && Number(ng.config.flg_controlar_estoque) == 0 ? 'null' : '1' ; 
 			if(qtd_minima != 'null')
@@ -1356,7 +1360,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				}
 			})
 			.error(function(data, status, headers, config) {
-				alert('Caixa fechado, tente salvar a venda novamente!');
+				if(status === 404)
+					alert('Caixa fechado, tente salvar a venda novamente!');
+				else
+					alert('Encontramos uma falha ao processar a requisição. Feche esta mensagem e clique em salvar novamente!');
 				// window.location = 'pdv.php';
 			});
 		
@@ -1530,7 +1537,10 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				}
 			})
 			.error(function(data, status, headers, config) {
-				alert('Caixa fechado, tente salvar a venda novamente!');
+				if(status === 404)
+					alert('Caixa fechado, tente salvar a venda novamente!');
+				else
+					alert('Encontramos uma falha ao processar a requisição. Feche esta mensagem e clique em salvar novamente!');
 				// window.location = 'pdv.php';
 			});
 	}
@@ -3617,6 +3627,8 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		ng.vezes_valor = null
 		ng.imgProduto = 'img/imagem_padrao_produto.gif';
 		ng.cliente  = {id:""};
+		ng.newCliente = null;
+		ng.busca.cliente_outo_complete = "" ;
 		ng.setMargemAplicada();
 		ng.nome_ultimo_produto = null ;
 		$('button').button('reset');

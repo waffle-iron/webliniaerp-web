@@ -983,9 +983,7 @@
 									<th>Cor/Sabor</th>
 									<th>Quantidade</th>
 									<th>Custo</th>
-									<th>Imposto (%)</th>
-									<th>desconto (%)</th>
-									<th>Dta de validade</th>
+									<th>Validade</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -993,12 +991,10 @@
 									<td>{{ item.id }}</td>
 									<td>{{ item.nome_produto }}</td>
 									<td>{{ item.nome_fabricante }}</td>
-									<td>{{ item.peso }}</td>
-									<td>{{ item.sabor }}</td>
+									<td>{{ item.nome_tamanho }}</td>
+									<td>{{ item.nome_cor }}</td>
 									<td>{{ item.qtd_item }}</td>
 									<td>R$ {{ item.vlr_custo | numberFormat:2:',':'.' }}</td>
-									<td>{{ item.perc_imposto * 100 | numberFormat:2:',':'.' }} %</td>
-									<td>{{ item.perc_desconto * 100 | numberFormat:2:',':'.' }} %</td>
 									<td>{{ item.dta_validade | dateFormat:'date' }}</td>
 								</tr>
 							</tbody>

@@ -1,6 +1,6 @@
 <?php
-	include_once "util/login/restrito.php";
-	restrito(array(1));
+	//include_once "util/login/restrito.php";
+	//restrito(array(1));
 ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="HageERP">
@@ -146,7 +146,7 @@
 					</div>
 				</div><!-- /user-block -->
 
-				<?php include_once('menu-modulos.php') ?>
+				<?php /*include_once('menu-modulos.php')*/ ?>
 				
 			</div><!-- /sidebar-inner -->
 		</aside>
