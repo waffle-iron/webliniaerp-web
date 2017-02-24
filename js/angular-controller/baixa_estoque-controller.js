@@ -1,4 +1,4 @@
-app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialogs, UserService,ConfigService){
+app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialogs, UserService,ConfigService,PrestaShop){
 	var ng = $scope
 		aj = $http;
 
@@ -196,8 +196,10 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 			btn.button('reset');
 		}
 		var produtos = [] ;
+		var postPrestaShop = {produtos:[],id_empreendimento:ng.userLogged.id_empreendimento};
 		$.each(ng.estoqueSaida.produtos,function(i,v){
 			produtos.push({id:v.id_produto,qtd_saida:( $.isNumeric(v.qtd_saida) ? v.qtd_saida : 1 )});
+			postPrestaShop.produtos.push(v.id_produto);
 		});
 		var post = {
 			id_empreendimento 	: ng.userLogged.id_empreendimento ,
@@ -211,6 +213,7 @@ app.controller('BaixaEstoqueController', function($scope, $http, $window, $dialo
 			ng.mensagens('alert-success','Baixa realizada com sucesso','.alert-success-baixa');
 			btn.button('reset');
 			ng.estoqueSaida = {produtos:[]} ;
+			PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 		})
 		.error(function(data, status, headers, config) {
 			if(status == 406){

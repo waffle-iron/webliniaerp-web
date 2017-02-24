@@ -721,6 +721,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 				ng.modalProgressoVenda('hide');
 				ng.showModalPrint();
 				ng.printPdf();
+				PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 				return ;
 			}
 		}
@@ -856,6 +857,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 							$('#modal-erro-cacular-impostos').modal({backdrop: 'static', keyboard: false});
 						});
 					}
+					PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 			 	}else{
 			 		var btn = $('#btn-fazer-compra');
 					btn.button('reset');
