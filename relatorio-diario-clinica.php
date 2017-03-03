@@ -155,6 +155,13 @@
 		</aside>
 
 		<div id="main-container">
+			<div id="breadcrumb">
+				<ul class="breadcrumb">
+					 <li><i class="fa fa-home"></i> <a href="dashboard.php">Home</a></li>
+					 <li class="active"><i class="fa fa-file-text-o"></i> Relatório Diário de Atendimento</li>
+				</ul>
+			</div><!-- breadcrumb -->
+
 			<div class="padding-md">
 				<div class="clearfix">
 					<div class="pull-left">
@@ -164,7 +171,7 @@
 
 						<div class="pull-left m-left-sm">
 							<h3 class="m-bottom-xs m-top-xs">Relatório Diário de Atendimento</h3>
-							<span class="text-muted"><strong>COSB II - Alagoinhas</strong></span>
+							<span class="text-muted"><strong>{{ userLogged.nome_empreendimento }}</strong></span>
 						</div>
 					</div>
 

@@ -27,7 +27,8 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
     ng.paginacao_pedidos 		= {};
     ng.pesquisa 			= {produto:"",fornecedores:""};
     ng.fornecedor           = {};
-    ng.nota.flg_alterar_valor_custo = 1;
+    ng.nota.flg_alterar_valor_custo = 0;
+    ng.busca_cod_barra     = false ;
 
 	$("#arquivo-nota").change(function() {
 		var filename = $(this).val().split('\\').pop();
@@ -676,20 +677,91 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
 		//Funções para o modal de produtos
     var pesquisa_produto = ng.pesquisa.produto;
 
-    ng.selProduto = function(){
+    ng.selProduto = function(clear){
+    	clear = clear == false ? false : true ;
+   		if(clear)
+   			ng.pesquisa.produto = "" ;
     	ng.pesquisa.produto = "";
     	pesquisa_produto    = "";
     	ng.loadProdutos();
     	$("#list_produtos").modal("show");
     }
 
-    ng.addProduto = function(item){
+    ng.addProduto = function(item, autoAddQtd){
+    	autoAddQtd = autoAddQtd == false ? false : true;
+
+    	if(autoAddQtd && empty(item.qtd))
+    		item.qtd = 1;
+
     	ng.produto = item;
-	    ng.itemValidade = { validade: '', qtd: item.qtd };
 	    ng.entradaEstoque.push(item);
-	    ng.addValidadeItem();
-    	ng.atualizaTotal();
+
+	    if(autoAddQtd) {
+	    	ng.itemValidade = { validade: '', qtd: item.qtd };
+	    	ng.addValidadeItem();
+    		ng.atualizaTotal();
+    	}
     }
+
+    ng.addFocus = function(){
+   		ng.cod_barra_busca = '';
+   		$('#focus').focus();
+   		ng.busca_cod_barra = true ;
+   	}
+
+   	ng.blurBuscaCodBarra = function(){
+   		ng.busca_cod_barra = false ;
+   		$.noty.closeAll();
+		var i = noty({
+			timeout : 4000,
+			layout: 'topRight',
+			type: 'warning',
+			theme: 'relax',
+			text: 'Busca por codigo de barra desativada',
+		});
+   	}
+
+   	ng.buscaCodBarra = function(){
+   		if(empty(ng.cod_barra_busca)){
+   			$.noty.closeAll();
+			var i = noty({
+				timeout : 4000,
+				layout: 'topRight',
+				type: 'warning',
+				theme: 'relax',
+				text: 'O codigo de barra não pode ser vazio',
+			});
+   			return ;
+   		}
+    	var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento;
+
+    	if(ng.cod_barra_busca != "")
+    		query_string += "&"+$.param({'codigo_barra':ng.cod_barra_busca});
+
+		aj.get(baseUrlApi()+"produtos"+query_string)
+			.success(function(data, status, headers, config) {
+				if(data.produtos.length == 1){
+					item = data.produtos[0];
+					item.nome_produto = item.nome;
+					ng.cod_barra_busca = '';
+					ng.addProduto(item, false);
+					ng.showValidades(item);
+				}else{
+					ng.pesquisa.produto = ng.cod_barra_busca ;
+					ng.selProduto();
+				}
+			})
+			.error(function(data, status, headers, config) {
+				$.noty.closeAll();
+				var i = noty({
+					timeout : 4000,
+					layout: 'topRight',
+					type: 'error',
+					theme: 'relax',
+					text: 'Codigo de barra não corresponde a nenhum produto',
+				});
+			});	
+   	}
 
 	$scope.loadProdutos = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
@@ -698,7 +770,7 @@ app.controller('EstoqueController', function($scope, $http, $window, $dialogs,$f
     	var query_string = "?tpe->id_empreendimento="+$scope.userLogged.id_empreendimento+"&tp->flg_excluido=0";
 
     	if($scope.pesquisa.produto != ""){
-    		query_string += "&"+$.param({'(tp->nome':{exp:"like'%"+$scope.pesquisa.produto+"%' OR tf.nome_fabricante like'%"+$scope.pesquisa.produto+"%')"}});
+    		query_string += "&"+$.param({'(tp->nome':{exp:"like'%"+$scope.pesquisa.produto+"%' OR tp.codigo_barra like'%"+$scope.pesquisa.produto+"%' OR tf.nome_fabricante like'%"+$scope.pesquisa.produto+"%')"}});
     	}
 
 		$scope.produtos = [];

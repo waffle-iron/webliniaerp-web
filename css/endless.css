@@ -330,11 +330,6 @@ aside .size-toggle {
   -moz-box-shadow: 0 1px 0 #34364a;
   -webkit-box-shadow: 0 1px 0 #34364a;
 }
-@media (max-width: 868px) {
-  aside .size-toggle {
-    display: none;
-  }
-}
 aside .size-toggle .btn {
   background-color: transparent;
   color: #e6f1f7;

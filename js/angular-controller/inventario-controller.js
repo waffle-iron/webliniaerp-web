@@ -265,7 +265,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 		ng.loadUltimosInventarios(0,10);
 	}
 
-     ng.loadUltimosInventarios = function(offset,limit) {
+    ng.loadUltimosInventarios = function(offset,limit) {
 		offset = offset == null ? 0  : offset;
     	limit  = limit  == null ? 10 : limit;
 
@@ -343,7 +343,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 		}
 	}
 
-     ng.atualizaQtdTotal = function(){
+    ng.atualizaQtdTotal = function(){
      	var qtd_total = 0;
      	$.each(ng.inventario.itens,function(i,item){
      		qtd_total += parseInt(item.qtd_ivn == null || item.qtd_ivn == "" ? 0 : item.qtd_ivn);
@@ -356,7 +356,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
      	ng.atualizaQtdTotal();
      }
 
-     ng.clearInventario = function(){
+    ng.clearInventario = function(){
      	$('#inventarioData').val();
      	$.each(ng.inventario,function(i,item){
      		if(i == 'itens'){
@@ -372,7 +372,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 
      /* inicio - Ações preços*/
 
-	 ng.showModalPrecos = function(){
+	ng.showModalPrecos = function(){
 		ng.precoProduto = [];
 
 			$.each(ng.inventario.itens, function(x, itemIventario) {
@@ -489,7 +489,7 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
    	ng.showProdutos = function(clear){
    		clear = clear == false ? false : true ;
    		if(clear)
-   		ng.busca.produtos = "" ;
+   			ng.busca.produtos = "" ;
    		ng.loadProdutos(0,10);
    		$('#list_produtos').modal('show');
    	}
@@ -533,8 +533,10 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 		.success(function(data, status, headers, config) {
 			if(data.produtos.length == 1){
 				item = data.produtos[0];
+				item.nome_produto = item.nome;
 				ng.cod_barra_busca = '';
-				ng.addProduto(item);
+				ng.addProduto(item, false);
+				ng.showValidades(item);
 			}else{
 				ng.busca.produtos = ng.cod_barra_busca ;
 				ng.showProdutos(false);
@@ -573,8 +575,13 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 			});
 	}
 
-	ng.addProduto = function(item){
-		item.qtd_ivn = 0;
+	ng.addProduto = function(item, autoAddQtd){
+		autoAddQtd = autoAddQtd == false ? false : true;
+
+		if(autoAddQtd && empty(item.qtd))
+    		item.qtd = 1;
+    	else
+    		item.qtd = 0
 
 		var x = false ;
 
@@ -590,7 +597,11 @@ app.controller('InventarioController', function($scope, $http, $window, $dialogs
 		}
 
 		ng.inventario.itens.push(item);
-		ng.atualizaQtdTotal();
+		if(autoAddQtd) {
+	    	ng.itemValidade = { validade: '', qtd: item.qtd };
+	    	ng.addValidadeItem();
+    		ng.atualizaQtdTotal();
+    	}
 	}
 
 	/* end */

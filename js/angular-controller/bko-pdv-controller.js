@@ -1135,7 +1135,6 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 			
 			//$http.get(baseUrlApi()+"estoque/?group&(prd->codigo_barra[exp]=="+codigo+"%20OR%20prd.id="+codigo+")&emp->id_empreendimento="+ng.userLogged.id_empreendimento+"&prd->flg_excluido=0")
 
-			//var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0&tp->codigo_barra="+ codigo;
 			var query_string = "?tpe->id_empreendimento="+ng.userLogged.id_empreendimento+"&tp->flg_excluido=0";
 				query_string += "&("+$.param({'tp->id':{exp:"='"+codigo+"%' OR tp.codigo_barra like '%"+codigo+"%'"}})+")";
 
@@ -2856,6 +2855,7 @@ app.controller('PDVController', function($scope, $http, $window,$dialogs, UserSe
 		var new_cliente = angular.copy(ng.new_cliente);
 		new_cliente.id_estado = ng.empreendimento.cod_estado;
 		new_cliente.id_cidade = ng.empreendimento.cod_cidade;
+
 		if(!empty(new_cliente.dta_nacimento))
 			new_cliente.dta_nacimento = moment(new_cliente.dta_nacimento,'DD-MM-YYYY').format('YYYY-MM-DD');
 		aj.post(baseUrlApi()+"cliente/cadastro/rapido",new_cliente)

@@ -3,7 +3,6 @@ app.controller('RelatorioDiarioClinicaController', function($scope, $http, $wind
 		aj = $http;
 
 	ng.userLogged 	 		= UserService.getUserLogado();
-	ng.userLogged.nme_logo 	= "logo-clinicas-inteligentes.png";
 
     ng.gerarRelatorio = function(){
     	var dta = moment($('#dta-rel-diario').val(),'DD/MM/YYYY');

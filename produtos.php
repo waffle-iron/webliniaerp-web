@@ -646,7 +646,8 @@
 													</div>
 													<div class="form-group"  style="height:200px">
 														<label class="control-label">Descrição Curta</label>
-														<div id="descricao_html_curta"></div>
+														<!-- <div id="descricao_html_curta"></div> -->
+														<textarea class="form-control" rows="5" ng-model="produto.descricao_curta"></textarea>
 													</div>
 												</div>
 											</div>

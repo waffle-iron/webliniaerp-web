@@ -307,6 +307,16 @@
 									</div>
 								</div>
 
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label class="control-label"><br></label>
+										<button class="btn btn-block form-control" ng-click="addFocus()" 
+											ng-class="{ 'btn-info' : (busca_cod_barra == false), 'btn-success' : (busca_cod_barra == true) }">
+											<i class="fa fa-barcode"></i> Ler Código de Barras
+										</button>
+									</div>
+								</div>
+
 								<div class="col-sm-2">
 									<div class="form-group">
 										<label class="control-label"><br></label>
@@ -504,7 +514,8 @@
 									<th width="150">Data do Recebimento</th>
 									<th>Usuário</th>
 									<th>Fornecedor</th>
-									<th>N° Nota Fiscal</th>
+									<th>N° NF-e</th>
+									<th>Total NF-e</th>
 									<th width="100">Pedido</th>
 									<th>Depósito</th>
 									<th width="80" style="text-align: center;">Detalhes</th>
@@ -522,6 +533,7 @@
 									<td>{{ item.nome_usuario }}</td>
 									<td>{{ item.nome_fornecedor }}</td>
 									<td>{{ item.num_nota_fiscal }}</td>
+									<td>{{ item.vlr_total_nota_fiscal | numberFormat:2:',':'.' }}</td>
 									<td>{{ item.id_pedido_fornecedor }}</td>
 									<td>{{ item.nme_deposito }}</td>
 									<td align="center">
@@ -988,7 +1000,7 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="item in detalhes">
-									<td>{{ item.id }}</td>
+									<td>{{ item.id_produto }}</td>
 									<td>{{ item.nome_produto }}</td>
 									<td>{{ item.nome_fabricante }}</td>
 									<td>{{ item.nome_tamanho }}</td>
@@ -1013,6 +1025,8 @@
 			</div><!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+
+		<input ng-model="cod_barra_busca" ng-blur="blurBuscaCodBarra(cod_barra_busca)"  class="form-control input-sm" style="position: absolute;top: -100px" id="focus" ng-enter="buscaCodBarra()"/>
 
 		<!-- Footer
 		================================================== -->

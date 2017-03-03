@@ -246,7 +246,10 @@
 												<td style="width: 200px; text-align: center;">
 													<button class="btn btn-xs btn-primary" ng-click="showProdutos()"><i class="fa fa-plus-circle"></i> Adicionar Item</button>
 
-													<button ng-class="{'btn-info':busca_cod_barra==false,'btn-success':busca_cod_barra==true}" class="btn btn-xs" ng-click="addFocus()"><i class="fa fa-barcode"></i></button>
+													<button class="btn btn-xs" ng-click="addFocus()" 
+														ng-class="{ 'btn-info' : (busca_cod_barra == false), 'btn-success' : (busca_cod_barra == true) }">
+														<i class="fa fa-barcode"></i>
+													</button>
 
 												</td>
 											</tr>
