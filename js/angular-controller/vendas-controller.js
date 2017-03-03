@@ -1,4 +1,4 @@
-app.controller('VendasController', function($scope, $http, $window, $dialogs, UserService, FuncionalidadeService){
+app.controller('VendasController', function($scope, $http, $window, $dialogs, UserService, FuncionalidadeService,PrestaShop){
 
 	var ng = $scope
 		aj = $http;
@@ -333,6 +333,8 @@ app.controller('VendasController', function($scope, $http, $window, $dialogs, Us
 			.success(function(data, status, headers, config) {
 				ng.loadVendas(0,10);
 				ng.mensagens('alert-success','venda  cancelada com sucesso','#alert-list-vendas');
+				var postPrestaShop = {produtos:[item.id],id_empreendimento:ng.userLogged.id_empreendimento};
+				PrestaShop.send('post',baseUrlApi()+"prestashop/estoque",postPrestaShop);
 			})
 			.error(function(data, status, headers, config) {
 				ng.mensagens('alert-danger','Erro ao cancelar venda','#alert-list-vendas');
